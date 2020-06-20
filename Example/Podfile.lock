@@ -1,0 +1,44 @@
+PODS:
+  - Alamofire (5.2.1)
+  - InputBarAccessoryView (4.3.2):
+    - InputBarAccessoryView/Core (= 4.3.2)
+  - InputBarAccessoryView/Core (4.3.2)
+  - MessageKit (3.1.0):
+    - InputBarAccessoryView (~> 4.3.0)
+  - MINTEL_LiveChat (1.0.0):
+    - Alamofire (~> 5.2)
+    - MessageKit
+    - NVActivityIndicatorView
+    - ServiceSDK/Chat
+  - NVActivityIndicatorView (4.8.0):
+    - NVActivityIndicatorView/Presenter (= 4.8.0)
+  - NVActivityIndicatorView/Presenter (4.8.0)
+  - ServiceSDK/Chat (224.0.0)
+
+DEPENDENCIES:
+  - MINTEL_LiveChat (from `../`)
+
+SPEC REPOS:
+  https://github.com/CocoaPods/Specs.git:
+    - Alamofire
+    - InputBarAccessoryView
+    - MessageKit
+    - NVActivityIndicatorView
+  https://github.com/goinstant/pods-specs-public:
+    - ServiceSDK
+
+EXTERNAL SOURCES:
+  MINTEL_LiveChat:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  Alamofire: e911732990610fe89af59ac0077f923d72dc3dfd
+  InputBarAccessoryView: 7985d418040a05fe894bd4b8328dd43ab35517c3
+  MessageKit: 3beb578737a5aa2bba25cc27c7b6d6faa09af5a7
+  MINTEL_LiveChat: 368dab93b39fd10226a4254345dd80104f2ae889
+  NVActivityIndicatorView: d24b7ebcf80af5dcd994adb650e2b6c93379270f
+  ServiceSDK: dba6ec7a876971f1bb77c19fafa481d4f78e651d
+
+PODFILE CHECKSUM: abfc20ed68adbd9cb040b046189bacb44876a0b4
+
+COCOAPODS: 1.9.1
