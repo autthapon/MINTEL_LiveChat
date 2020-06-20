@@ -33,17 +33,15 @@ TODO: Add long description of the pod here.
   s.ios.deployment_target = '10.0'
 
   s.source_files = 'MINTEL_LiveChat/Classes/**/*'
-  s.resource_bundles = {
-    'ChatBox' => ['MINTEL_LiveChat/Assets/*.{storyboard,xib}']
-  }
-  s.resources = "MINTEL_LiveChat/**/*.{png,json}"
+  s.resources = "MINTEL_LiveChat/Assets/**/*"
   # s.resource_bundles = {
   #   'MINTEL_LiveChat' => ['MINTEL_LiveChat/Assets/*.png']
   # }
   s.dependency 'MessageKit'
   s.dependency 'Alamofire', '~> 5.2'
-
+  s.vendored_frameworks = 'MINTEL_LiveChat/Framework/ServiceCore.framework', 'MINTEL_LiveChat/Framework/ServiceChat.framework'
+  s.preserve_path = 'MINTEL_LiveChat/Frameworks/*'
   # s.public_header_files = 'Pod/Classes/**/*.h'
-  # s.frameworks = 'UIKit', 'MapKit'
+  s.frameworks = 'ServiceCore', 'ServiceChat'
   # s.dependency 'AFNetworking', '~> 2.3'
 end
