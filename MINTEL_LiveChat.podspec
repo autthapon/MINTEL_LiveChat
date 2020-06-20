@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'MINTEL_LiveChat'
-  s.version          = '0.1.0'
+  s.version          = '1.0.0'
   s.summary          = 'A short description of MINTEL_LiveChat.'
 
 # This description is used to generate tags and improve search results.
@@ -26,15 +26,24 @@ TODO: Add long description of the pod here.
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'autthapon@gmail.com' => 'autthapon@gmail.com' }
   s.source           = { :git => 'https://github.com/autthapon@gmail.com/MINTEL_LiveChat.git', :tag => s.version.to_s }
+  s.source           = { :git => 'https://github.com/CocoaPods/Specs.git'}
+  s.source           = { :git => 'https://github.com/goinstant/pods-specs-public'}
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
-  s.ios.deployment_target = '8.0'
+  s.ios.deployment_target = '10.0'
 
   s.source_files = 'MINTEL_LiveChat/Classes/**/*'
-  
+  s.resource_bundles = {
+    'ChatBox' => ['MINTEL_LiveChat/Assets/*.{storyboard,xib}']
+  }
+  s.resources = "MINTEL_LiveChat/**/*.{png,json}"
   # s.resource_bundles = {
   #   'MINTEL_LiveChat' => ['MINTEL_LiveChat/Assets/*.png']
   # }
+  s.dependency 'MessageKit'
+  s.dependency 'Alamofire', '~> 5.2'
+  s.dependency 'ServiceSDK/Chat'
+  s.dependency 'NVActivityIndicatorView'
 
   # s.public_header_files = 'Pod/Classes/**/*.h'
   # s.frameworks = 'UIKit', 'MapKit'

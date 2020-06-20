@@ -7,14 +7,16 @@
 //
 
 import UIKit
+import MINTEL_LiveChat
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
+    var chat:MINTEL_LiveChat!
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+        self.chat = MINTEL_LiveChat.init( frame: CGRect(x: 0, y: 300, width: 80, height: 120))
         // Override point for customization after application launch.
         return true
     }
