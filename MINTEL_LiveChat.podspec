@@ -39,7 +39,7 @@ TODO: Add long description of the pod here.
   s.dependency 'MessageKit'
   s.dependency 'Alamofire', '~> 5.2'
   s.vendored_frameworks = 'MINTEL_LiveChat/Framework/ServiceCore.framework', 'MINTEL_LiveChat/Framework/ServiceChat.framework'
-  s.preserve_paths = 'MINTEL_LiveChat/Frameworks/*'
+  s.preserve_paths = 'MINTEL_LiveChat/Framework/*'
   # s.public_header_files = 'Pod/Classes/**/*.h'
   s.frameworks = 'ServiceCore', 'ServiceChat'
   # s.dependency 'AFNetworking', '~> 2.3'
