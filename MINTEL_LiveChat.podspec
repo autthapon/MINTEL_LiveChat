@@ -21,13 +21,11 @@ Pod::Spec.new do |s|
 TODO: Add long description of the pod here.
                        DESC
 
-  s.homepage         = 'https://github.com/autthapon@gmail.com/MINTEL_LiveChat'
+  s.homepage         = 'https://github.com/autthapon/MINTEL_LiveChat/wiki'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'autthapon@gmail.com' => 'autthapon@gmail.com' }
-  s.source           = { :git => 'https://github.com/autthapon@gmail.com/MINTEL_LiveChat.git', :tag => s.version.to_s }
-  s.source           = { :git => 'https://github.com/CocoaPods/Specs.git'}
-  s.source           = { :git => 'https://github.com/goinstant/pods-specs-public'}
+  s.source           = { :git => 'https://github.com/autthapon/MINTEL_LiveChat.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
   s.ios.deployment_target = '10.0'
