@@ -8,8 +8,8 @@
 
 Pod::Spec.new do |s|
   s.name             = 'MINTEL_LiveChat'
-  s.version          = '1.0.0'
-  s.summary          = 'A short description of MINTEL_LiveChat.'
+  s.version          = '1.0.1'
+  s.summary          = 'MINTEL_LiveChat Library'
 
 # This description is used to generate tags and improve search results.
 #   * Think: What does it do? Why did you write it? What is the focus?
@@ -29,7 +29,8 @@ TODO: Add long description of the pod here.
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
   s.ios.deployment_target = '10.0'
-
+  s.swift_version = '4.2'
+  
   s.source_files = 'MINTEL_LiveChat/Classes/**/*'
   s.resources = "MINTEL_LiveChat/Assets/**/*"
   # s.resource_bundles = {
@@ -38,7 +39,7 @@ TODO: Add long description of the pod here.
   s.dependency 'MessageKit'
   s.dependency 'Alamofire', '~> 5.2'
   s.vendored_frameworks = 'MINTEL_LiveChat/Framework/ServiceCore.framework', 'MINTEL_LiveChat/Framework/ServiceChat.framework'
-  s.preserve_path = 'MINTEL_LiveChat/Frameworks/*'
+  s.preserve_paths = 'MINTEL_LiveChat/Frameworks/*'
   # s.public_header_files = 'Pod/Classes/**/*.h'
   s.frameworks = 'ServiceCore', 'ServiceChat'
   # s.dependency 'AFNetworking', '~> 2.3'
