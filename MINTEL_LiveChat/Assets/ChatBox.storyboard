@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="jPB-Cd-i8W">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Navigation Controller-->
+        <scene sceneID="Sbg-7n-Bb6">
+            <objects>
+                <navigationController modalPresentationStyle="fullScreen" id="jPB-Cd-i8W" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translucent="NO" id="zhT-uJ-hs3">
+                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="barTintColor" red="0.94117647058823528" green="0.53333333333333333" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="Gbh-dQ-TMA" kind="relationship" relationship="rootViewController" id="YvS-7q-g5J"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="6ux-eY-rUC" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1466" y="-138"/>
+        </scene>
+        <!--Chat Box View Controller-->
+        <scene sceneID="9jG-dK-uDb">
+            <objects>
+                <viewController id="Gbh-dQ-TMA" customClass="ChatBoxViewController" customModule="Chat" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="TaP-8m-QwR">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="808"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" red="0.94509803921568625" green="0.94509803921568625" blue="0.94509803921568625" alpha="1" colorSpace="calibratedRGB"/>
+                        <viewLayoutGuide key="safeArea" id="Ren-y1-F13"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="cao-Sc-k8i">
+                        <barButtonItem key="leftBarButtonItem" image="close" id="f4d-pi-gYX">
+                            <connections>
+                                <action selector="closeChatWithSender:" destination="Gbh-dQ-TMA" id="DN3-jt-m3B"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" image="compress" id="jep-w8-h0p">
+                            <connections>
+                                <action selector="collapseWithSender:" destination="Gbh-dQ-TMA" id="qXc-G7-RFP"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Vmh-LI-G4m" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-607.24637681159425" y="-139.28571428571428"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="close" width="16.5" height="16.5"/>
+        <image name="compress" width="16.5" height="16.5"/>
+    </resources>
+</document>
