@@ -62,17 +62,28 @@ open class MyCustomCell: UICollectionViewCell {
             } else if (type == 1) {
                 let menuItems = item["menuItem"] as! [[String: Any]]
                 var yIndex = 0
+                
+                let defaultLabel = UILabel()
                 for i in 0..<menuItems.count {
                     let item = menuItems[i]
                     let actions = item["action"] as! [String:Any]
                     let labelText = actions["label"] as? String ?? ""
-                    let lbl = UILabel(frame: CGRect(x: 0, y: yIndex, width: 200, height: Int(menuHeight)))
+                    
+                    let height = labelText.height(withConstrainedWidth: 300, font: defaultLabel.font)
+                    var setHeight = max(height, CGFloat(menuHeight))
+                    if Int(setHeight) > Int(menuHeight) {
+                        setHeight = setHeight + 5
+                    }
+                    
+                    let lbl = UILabel(frame: CGRect(x: 0, y: yIndex, width: 300, height: Int(setHeight)))
                     lbl.text = labelText
                     lbl.textAlignment = .center
                     lbl.backgroundColor = UIColor.white
                     lbl.layer.masksToBounds = true
                     lbl.layer.borderWidth = 0.5
+                    lbl.numberOfLines = 2
                     lbl.layer.borderColor = UIColor.black.cgColor
+                    lbl.tag = 10000 + i
                     self.contentView.addSubview(lbl)
                     yIndex = yIndex + Int(menuHeight)
                 }
@@ -91,6 +102,8 @@ open class MyCustomCell: UICollectionViewCell {
         }
     }
 }
+
+
 
 open class CustomMessagesFlowLayout: MessagesCollectionViewFlowLayout {
 
@@ -135,7 +148,24 @@ open class CustomMessageSizeCalculator: MessageSizeCalculator {
                 return CGSize(width: layout.collectionView?.frame.size.width ?? 0, height: 30)
             } else if (type == 1) {
                 let menuItems = item["menuItem"] as! [[String: Any]]
-                return CGSize(width: CGFloat(200), height: CGFloat(menuItems.count * menuHeight))
+                
+                var setMenuHeight = 0
+                let defaultLabel = UILabel()
+                for i in 0..<menuItems.count {
+                    let item = menuItems[i]
+                    let actions = item["action"] as! [String:Any]
+                    let labelText = actions["label"] as? String ?? ""
+                    
+                    let height = labelText.height(withConstrainedWidth: 300, font: defaultLabel.font)
+                    var setHeight = max(height, CGFloat(menuHeight))
+                    if Int(setHeight) > Int(menuHeight) {
+                        setHeight = setHeight + 5
+                    }
+                    
+                    setMenuHeight = setMenuHeight + Int(setHeight)
+                }
+                
+                return CGSize(width: CGFloat(300), height: CGFloat(setMenuHeight))
             }
         }
         

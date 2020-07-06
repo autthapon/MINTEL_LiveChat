@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'MINTEL_LiveChat'
-  s.version          = '1.0.1'
+  s.version          = '1.0.2'
   s.summary          = 'MINTEL_LiveChat Library'
 
 # This description is used to generate tags and improve search results.
@@ -37,7 +37,7 @@ TODO: Add long description of the pod here.
   #   'MINTEL_LiveChat' => ['MINTEL_LiveChat/Assets/*.png']
   # }
   s.dependency 'MessageKit'
-  s.dependency 'Alamofire', '~> 5.2'
+  s.dependency 'Alamofire', '~> 4.8.2'
   s.vendored_frameworks = 'MINTEL_LiveChat/Framework/ServiceCore.framework', 'MINTEL_LiveChat/Framework/ServiceChat.framework'
   s.preserve_paths = 'MINTEL_LiveChat/Framework/*'
   # s.public_header_files = 'Pod/Classes/**/*.h'

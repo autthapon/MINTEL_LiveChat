@@ -39,6 +39,8 @@ class ChatViewController: MessagesViewController, MessagesDataSource {
     internal static let user = MockUser(senderId: "2", displayName: "User")
     private var queuePosition:Int = Int.max
     private var salesforceEndChat = false
+    private var imagePicker: ImagePicker!
+    private let urlUpload = "https://asia-east2-tmn-chatbot-integration.cloudfunctions.net/uploadFile"
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
@@ -126,6 +128,7 @@ class ChatViewController: MessagesViewController, MessagesDataSource {
         
         self.navigationController?.navigationBar.isTranslucent = true
         self.navigationController?.navigationBar.barTintColor = UIColor(hexString: orangeColor)
+        self.imagePicker = ImagePicker(presentationController: self, delegate: self)
         
         configureMessageCollectionView()
         configureMessageInputBar()
@@ -197,7 +200,7 @@ class ChatViewController: MessagesViewController, MessagesDataSource {
         messageInputBar.inputTextView.placeholder = "พิมพ์ข้อความที่คุณต้องการ"
         messageInputBar.sendButton.setTitle("", for: .normal)
         messageInputBar.sendButton.image = UIImage(named: "send", in: Bundle(for: ChatViewController.self), compatibleWith: nil)
-//        messageInputBar.setLeftStackViewWidthConstant(to: 32, animated: false)
+        messageInputBar.setLeftStackViewWidthConstant(to: 32, animated: false)
         messageInputBar.setRightStackViewWidthConstant(to: 32, animated: false)
         messageInputBar.setStackViewItems([self.makeButton(named: "image")], forStack: .left, animated: true)
     }
@@ -215,7 +218,25 @@ class ChatViewController: MessagesViewController, MessagesDataSource {
                }.onDeselected {
                    $0.tintColor = UIColor(white: 0.8, alpha: 1)
                }.onTouchUpInside { _ in
-                   print("Item Tapped")
+                   
+                let alertController = UIAlertController(title: "Choose Action", message: "", preferredStyle: .actionSheet)
+                alertController.addAction(UIAlertAction(title: "Image", style: .default, handler: { (alert) in
+                    self.imagePicker.present(from: self.view)
+                }))
+                alertController.addAction(UIAlertAction(title: "File", style: .default, handler: { (alert) in
+                    let importMenu = UIDocumentPickerViewController(documentTypes: ["public.item"], in: .import)
+                    importMenu.delegate = self
+                    
+                    if #available(iOS 11.0, *) {
+                        importMenu.allowsMultipleSelection = false
+                    }
+                    importMenu.modalPresentationStyle = .fullScreen
+                    self.present(importMenu, animated: true, completion: nil)
+                }))
+                alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (alert) in
+                    alertController.dismiss(animated: true, completion: nil)
+                }))
+                self.present(alertController, animated: true, completion: nil)
            }
        }
     
@@ -474,42 +495,85 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
         }
         
         let params : Parameters = ["session_id": MINTEL_LiveChat.userId,"text": text]
-        let url = "https://asia-east2-acm-clt-chatbots.cloudfunctions.net/webhook"
-        AF.request(URL.init(string: url)!, method: .post, parameters: params, encoding: JSONEncoding.default).responseJSON { (response) in
-            switch response.result {
-                case .success(_):
-                    if let json = response.value {
-                        self.setTypingIndicatorViewHidden(true, animated: false, whilePerforming: {
-                            
-                        }) { (success) in
-                            let dict = json as! [String: Any]
-                            let error = dict["error"] as? [String: Any] ?? nil
-                            if (error == nil) {
-                                let messages = dict["messages"] as! [[String: Any]]
-                                messages.forEach { body in
-                                    let type = body["type"] as? String ?? ""
-                                    let text = body["text"] as? String ?? ""
-                                    let quickReply = body["quickReply"] as? [String: Any] ?? nil
-                                    if (type == "text") {
-                                        self.insertMessage(MockMessage(text: text, user: ChatViewController.callCenterUser, messageId: UUID().uuidString, date: Date()))
-                                        if (quickReply != nil) {
-                                            let items = quickReply!["items"] as? [[String:Any]] ?? []
-                                            let theMessage = ["type": 1, "menuItem" : items] as [String : Any]
-                                            self.insertMessage(MockMessage(custom: theMessage, user: ChatViewController.callCenterUser, messageId: UUID().uuidString, date: Date()))
+        let url = "https://asia-east2-tmn-chatbot-integration.cloudfunctions.net/webhook"
+        let header:HTTPHeaders = [
+            "x-api-key": "381b0ac187994f82bdc05c09d1034afa"
+        ]
+       
+        Alamofire
+            .request(url, method: .post, parameters: params, encoding: JSONEncoding.init(), headers: header)
+            .responseJSON { (response) in
+                switch response.result {
+                    case .success(_):
+                        if let json = response.value {
+                            self.setTypingIndicatorViewHidden(true, animated: false, whilePerforming: {
+                                
+                            }) { (success) in
+                                let dict = json as! [String: Any]
+                                let error = dict["error"] as? [String: Any] ?? nil
+                                if (error == nil) {
+                                    let messages = dict["messages"] as! [[String: Any]]
+                                    messages.forEach { body in
+                                        let type = body["type"] as? String ?? ""
+                                        let text = body["text"] as? String ?? ""
+                                        let quickReply = body["quickReply"] as? [String: Any] ?? nil
+                                        if (type == "text") {
+                                            self.insertMessage(MockMessage(text: text, user: ChatViewController.callCenterUser, messageId: UUID().uuidString, date: Date()))
+                                            if (quickReply != nil) {
+                                                let items = quickReply!["items"] as? [[String:Any]] ?? []
+                                                let theMessage = ["type": 1, "menuItem" : items] as [String : Any]
+                                                self.insertMessage(MockMessage(custom: theMessage, user: ChatViewController.callCenterUser, messageId: UUID().uuidString, date: Date()))
+                                            }
                                         }
                                     }
                                 }
                             }
                         }
-                    }
-                    callback([])
-                    break
-                case .failure(let error):
-                    callback([])
-                    print(error)
-                    break
-            }
+                        callback([])
+                        break
+                    case .failure(let error):
+                        callback([])
+                        print(error)
+                        break
+                }
         }
+        
+        
+//        AF.request(URL.init(string: url)!, method: .post, parameters: params, encoding: JSONEncoding.default).responseJSON { (response) in
+//            switch response.result {
+//                case .success(_):
+//                    if let json = response.value {
+//                        self.setTypingIndicatorViewHidden(true, animated: false, whilePerforming: {
+//
+//                        }) { (success) in
+//                            let dict = json as! [String: Any]
+//                            let error = dict["error"] as? [String: Any] ?? nil
+//                            if (error == nil) {
+//                                let messages = dict["messages"] as! [[String: Any]]
+//                                messages.forEach { body in
+//                                    let type = body["type"] as? String ?? ""
+//                                    let text = body["text"] as? String ?? ""
+//                                    let quickReply = body["quickReply"] as? [String: Any] ?? nil
+//                                    if (type == "text") {
+//                                        self.insertMessage(MockMessage(text: text, user: ChatViewController.callCenterUser, messageId: UUID().uuidString, date: Date()))
+//                                        if (quickReply != nil) {
+//                                            let items = quickReply!["items"] as? [[String:Any]] ?? []
+//                                            let theMessage = ["type": 1, "menuItem" : items] as [String : Any]
+//                                            self.insertMessage(MockMessage(custom: theMessage, user: ChatViewController.callCenterUser, messageId: UUID().uuidString, date: Date()))
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }
+//                    callback([])
+//                    break
+//                case .failure(let error):
+//                    callback([])
+//                    print(error)
+//                    break
+//            }
+//        }
     }
     
     private func switchToAgentMode() {
@@ -534,7 +598,76 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
             }
         }
     }
+    
+    private func upload(image: Data, to url: Alamofire.URLRequestConvertible, params: [String: Any], callback: @escaping (Bool) -> Void) {
+        
+//        AF.upload(multipartFormData: { multiPart in
+//            for (key, value) in params {
+//                if let temp = value as? String {
+//                    multiPart.append(temp.data(using: .utf8)!, withName: key)
+//                }
+//                if let temp = value as? Int {
+//                    multiPart.append("\(temp)".data(using: .utf8)!, withName: key)
+//                }
+//                if let temp = value as? NSArray {
+//                    temp.forEach({ element in
+//                        let keyObj = key + "[]"
+//                        if let string = element as? String {
+//                            multiPart.append(string.data(using: .utf8)!, withName: keyObj)
+//                        } else
+//                            if let num = element as? Int {
+//                                let value = "\(num)"
+//                                multiPart.append(value.data(using: .utf8)!, withName: keyObj)
+//                        }
+//                    })
+//                }
+//            }
+//            multiPart.append(image, withName: "file", fileName: "file.png", mimeType: "image/png")
+//        }, with: url)
+//            .uploadProgress(queue: .main, closure: { progress in
+//                //Current upload progress of file
+//                print("Upload Progress: \(progress.fractionCompleted)")
+//            })
+//            .responseJSON(completionHandler: { data in
+//                debugPrint(data)
+//                callback(true)
+//            })
+    }
+    
+    private func mimeType(for data: Data) -> String {
+
+        var b: UInt8 = 0
+        data.copyBytes(to: &b, count: 1)
+
+        switch b {
+        case 0xFF:
+            return "image/jpeg"
+        case 0x89:
+            return "image/png"
+        case 0x47:
+            return "image/gif"
+        case 0x4D, 0x49:
+            return "image/tiff"
+        case 0x25:
+            return "application/pdf"
+        case 0xD0:
+            return "application/vnd"
+        case 0x46:
+            return "text/plain"
+        default:
+            return "application/octet-stream"
+        }
+    }
 }
+
+//struct MyRequest : Alamofire.URLRequestConvertible {
+//
+//    func asURLRequest() throws -> URLRequest {
+//        var req = URLRequest(url: URL(string: "https://asia-east2-tmn-chatbot-integration.cloudfunctions.net/uploadFile")!)
+//        req.method = HTTPMethod.post
+//        return req
+//    }
+//}
 
 extension ChatViewController : SCSChatSessionDelegate {
     public func session(_ session: SCSChatSession!, didError error: Error!, fatal: Bool) {
@@ -665,6 +798,53 @@ extension ChatViewController : SCSChatEventDelegate {
     public func transferToButtonFailed(with session: SCSChatSession!, error: Error!) {
         debugPrint("transferToButtonFailed : ", session)
     }
+}
+
+extension UIImage {
+    func toData (options: NSDictionary, type: CFString) -> Data? {
+        guard let cgImage = cgImage else { return nil }
+        return autoreleasepool { () -> Data? in
+            let data = NSMutableData()
+            guard let imageDestination = CGImageDestinationCreateWithData(data as CFMutableData, type, 1, nil) else { return nil }
+            CGImageDestinationAddImage(imageDestination, cgImage, options)
+            CGImageDestinationFinalize(imageDestination)
+            return data as Data
+        }
+    }
+}
+
+extension ChatViewController: ImagePickerDelegate {
+
+    func didSelect(image: UIImage?) {
+        if (image != nil) {
+            let data = image?.jpegData(compressionQuality: 0.9)
+            let param = [
+                "file" : String(format: "%@.jpg", UUID().uuidString),
+                "session_id" : MINTEL_LiveChat.userId
+            ]
+            
+            if let imageData = data {
+//                self.upload(image: imageData, to: MyRequest() as URLRequestConvertible, params: param) { (success) in
+//                    self.insertMessage(MockMessage(image: image!, user: ChatViewController.user, messageId: UUID().uuidString, date: Date()))
+//                }
+            }
+        }
+    }
+}
+
+extension ChatViewController : UIDocumentPickerDelegate {
     
+    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentAt url: URL) {
+        self.documentPicker(url: url)
+    }
     
+    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
+        if urls.count > 0 {
+            self.documentPicker(url: urls[0])
+        }
+    }
+    
+    private func documentPicker(url: URL) {
+        self.insertMessage(MockMessage(emoji: "🗎", user: ChatViewController.user, messageId: UUID().uuidString, date: Date()))
+    }
 }

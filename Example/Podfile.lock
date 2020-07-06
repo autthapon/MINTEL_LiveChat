@@ -1,12 +1,12 @@
 PODS:
-  - Alamofire (5.2.1)
+  - Alamofire (4.8.2)
   - InputBarAccessoryView (4.3.2):
     - InputBarAccessoryView/Core (= 4.3.2)
   - InputBarAccessoryView/Core (4.3.2)
   - MessageKit (3.1.0):
     - InputBarAccessoryView (~> 4.3.0)
-  - MINTEL_LiveChat (1.0.0):
-    - Alamofire (~> 5.2)
+  - MINTEL_LiveChat (1.0.2):
+    - Alamofire (~> 4.8.2)
     - MessageKit
 
 DEPENDENCIES:
@@ -23,10 +23,10 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  Alamofire: e911732990610fe89af59ac0077f923d72dc3dfd
+  Alamofire: ae5c501addb7afdbb13687d7f2f722c78734c2d3
   InputBarAccessoryView: 7985d418040a05fe894bd4b8328dd43ab35517c3
   MessageKit: 3beb578737a5aa2bba25cc27c7b6d6faa09af5a7
-  MINTEL_LiveChat: 9ad902b3b5ab75c675044667326faa1a69940db5
+  MINTEL_LiveChat: b4716512a714618d4d3b14ddda7bd8407130e1c3
 
 PODFILE CHECKSUM: abfc20ed68adbd9cb040b046189bacb44876a0b4
 
