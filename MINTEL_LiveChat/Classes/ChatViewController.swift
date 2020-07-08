@@ -815,19 +815,19 @@ extension UIImage {
 extension ChatViewController: ImagePickerDelegate {
 
     func didSelect(image: UIImage?) {
-        if (image != nil) {
-            let data = image?.jpegData(compressionQuality: 0.9)
-            let param = [
-                "file" : String(format: "%@.jpg", UUID().uuidString),
-                "session_id" : MINTEL_LiveChat.userId
-            ]
+//        if (image != nil) {
+//            let data = image?.jpegData(compressionQuality: 0.9)
+//            let param = [
+//                "file" : String(format: "%@.jpg", UUID().uuidString),
+//                "session_id" : MINTEL_LiveChat.userId
+//            ]
             
-            if let imageData = data {
+//            if let imageData = data {
 //                self.upload(image: imageData, to: MyRequest() as URLRequestConvertible, params: param) { (success) in
 //                    self.insertMessage(MockMessage(image: image!, user: ChatViewController.user, messageId: UUID().uuidString, date: Date()))
 //                }
-            }
-        }
+//            }
+//        }
     }
 }
 
