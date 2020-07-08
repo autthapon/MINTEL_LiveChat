@@ -200,7 +200,7 @@ class ChatViewController: MessagesViewController, MessagesDataSource {
         messageInputBar.inputTextView.placeholder = "พิมพ์ข้อความที่คุณต้องการ"
         messageInputBar.sendButton.setTitle("", for: .normal)
         messageInputBar.sendButton.image = UIImage(named: "send", in: Bundle(for: ChatViewController.self), compatibleWith: nil)
-        messageInputBar.setLeftStackViewWidthConstant(to: 32, animated: false)
+        messageInputBar.setLeftStackViewWidthConstant(to: 0, animated: false)
         messageInputBar.setRightStackViewWidthConstant(to: 32, animated: false)
         messageInputBar.setStackViewItems([self.makeButton(named: "image")], forStack: .left, animated: true)
     }
@@ -488,12 +488,6 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
     
     func sendPost(text: String, callback: @escaping ([MockMessage]) -> Void) {
         
-        if (text.lowercased() == "agent") {
-            self.switchToAgentMode()
-            callback([])
-            return
-        }
-        
         let params : Parameters = ["session_id": MINTEL_LiveChat.userId,"text": text]
         let url = "https://asia-east2-tmn-chatbot-integration.cloudfunctions.net/webhook"
         let header:HTTPHeaders = [
@@ -516,6 +510,7 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
                                     messages.forEach { body in
                                         let type = body["type"] as? String ?? ""
                                         let text = body["text"] as? String ?? ""
+                                        let intent = body["intent"] as? String ?? ""
                                         let quickReply = body["quickReply"] as? [String: Any] ?? nil
                                         if (type == "text") {
                                             self.insertMessage(MockMessage(text: text, user: ChatViewController.callCenterUser, messageId: UUID().uuidString, date: Date()))
@@ -524,6 +519,10 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
                                                 let theMessage = ["type": 1, "menuItem" : items] as [String : Any]
                                                 self.insertMessage(MockMessage(custom: theMessage, user: ChatViewController.callCenterUser, messageId: UUID().uuidString, date: Date()))
                                             }
+                                        }
+                                        
+                                        if (intent == "04_transfer_to_agent") {
+                                            self.switchToAgentMode()
                                         }
                                     }
                                 }
