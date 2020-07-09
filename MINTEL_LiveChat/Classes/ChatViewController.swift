@@ -28,6 +28,7 @@ import InputBarAccessoryView
 import Alamofire
 import ServiceCore
 import ServiceChat
+import Photos
 
 let menuHeight = 45
 let orangeColor = "#EF8933"
@@ -39,19 +40,20 @@ class ChatViewController: MessagesViewController, MessagesDataSource {
     internal static let user = MockUser(senderId: "2", displayName: "User")
     private var queuePosition:Int = Int.max
     private var salesforceEndChat = false
-    private var imagePicker: ImagePicker!
     private let urlUpload = "https://asia-east2-tmn-chatbot-integration.cloudfunctions.net/uploadFile"
+    private var pickerController: UIImagePickerController? = nil
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
     
     func terminateChat() {
-        self.dismiss(animated: true, completion: nil)
-        MINTEL_LiveChat.messageList.removeAll()
-        MINTEL_LiveChat.instance.chatSessionDelegate = nil
-        MINTEL_LiveChat.instance.chatEventDelegate = nil
-        MINTEL_LiveChat.instance.closeButtonHandle()
+        self.dismiss(animated: true) {
+            MINTEL_LiveChat.messageList.removeAll()
+            MINTEL_LiveChat.instance.chatSessionDelegate = nil
+            MINTEL_LiveChat.instance.chatEventDelegate = nil
+            MINTEL_LiveChat.instance.closeButtonHandle()
+        }
     }
     
     @objc func didTabMenu(_ sender: MyTapGesture? = nil) {
@@ -128,7 +130,12 @@ class ChatViewController: MessagesViewController, MessagesDataSource {
         
         self.navigationController?.navigationBar.isTranslucent = true
         self.navigationController?.navigationBar.barTintColor = UIColor(hexString: orangeColor)
-        self.imagePicker = ImagePicker(presentationController: self, delegate: self)
+        
+        self.pickerController = UIImagePickerController()
+        self.pickerController?.modalPresentationStyle = .fullScreen
+        self.pickerController?.delegate = self
+        self.pickerController?.allowsEditing = true
+        self.pickerController?.mediaTypes = ["public.image"]
         
         configureMessageCollectionView()
         configureMessageInputBar()
@@ -200,43 +207,116 @@ class ChatViewController: MessagesViewController, MessagesDataSource {
         messageInputBar.inputTextView.placeholder = "พิมพ์ข้อความที่คุณต้องการ"
         messageInputBar.sendButton.setTitle("", for: .normal)
         messageInputBar.sendButton.image = UIImage(named: "send", in: Bundle(for: ChatViewController.self), compatibleWith: nil)
-        messageInputBar.setLeftStackViewWidthConstant(to: 0, animated: false)
+        messageInputBar.setLeftStackViewWidthConstant(to: 65, animated: true)
         messageInputBar.setRightStackViewWidthConstant(to: 32, animated: false)
-        messageInputBar.setStackViewItems([self.makeButton(named: "image")], forStack: .left, animated: true)
+        
+        var leftMenu:[InputBarButtonItem] = []
+        leftMenu.append(self.makeCloseButton())
+        if UIImagePickerController.isSourceTypeAvailable(.camera) {
+            leftMenu.append(self.makeCameraButton())
+        }
+        if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
+            leftMenu.append(self.makeImageButton())
+        }
+        
+        messageInputBar.setStackViewItems(leftMenu, forStack: .left, animated: true)
+        messageInputBar.setStackViewItems([makeFileButton(), .flexibleSpace], forStack: .bottom, animated: true)
+        
+//        // Entire InputBar padding
+//        messageInputBar.padding.bottom = 8
+//
+//        // or MiddleContentView padding
+//        messageInputBar.middleContentViewPadding.right = -38
+//
+//        // or InputTextView padding
+//        messageInputBar.inputTextView.textContainerInset.bottom = 8
     }
     
+    private func makeCloseButton() -> InputBarButtonItem {
+        return InputBarButtonItem()
+            .configure {
+//                $0.setSize(CGSize(width: 20, height: 20), animated: false)
+                $0.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: .bold)
+                $0.image = UIImage(named: "close", in: Bundle(for: ChatViewController.self), compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
+                $0.isHighlighted = false
+            }.onSelected {
+                $0.tintColor = .primaryColor
+            }.onDeselected {
+                $0.tintColor = UIColor(white: 0.8, alpha: 1)
+            }.onTouchUpInside { _ in
+        }
+    }
     
-    private func makeButton(named: String) -> InputBarButtonItem {
+    private func makeFileButton() -> InputBarButtonItem {
+        return InputBarButtonItem()
+                    .configure {
+                        $0.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: .bold)
+                        $0.setSize(CGSize(width: 64, height: 64), animated: false)
+                        $0.image = UIImage(named: "file", in: Bundle(for: ChatViewController.self), compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
+                        $0.isHighlighted = false
+                    }.onSelected {
+                        $0.tintColor = .primaryColor
+                    }.onDeselected {
+                        $0.tintColor = UIColor(white: 0.8, alpha: 1)
+                    }.onTouchUpInside { _ in
+                        
+                        let importMenu = UIDocumentPickerViewController(documentTypes: ["com.apple.iwork.pages.pages", "com.apple.iwork.numbers.numbers", "com.apple.iwork.keynote.key","public.image", "com.apple.application", "public.item", "public.content", "public.audiovisual-content", "public.movie", "public.audiovisual-content", "public.video", "public.audio", "public.text", "public.data", "public.zip-archive", "com.pkware.zip-archive", "public.composite-content"], in: .import)
+                        importMenu.delegate = self
+                        importMenu.modalPresentationStyle = .formSheet
+                        importMenu.modalPresentationStyle = .fullScreen
+                        self.present(importMenu, animated: true, completion: nil)
+                }
+    }
+    
+    private func makeCameraButton() -> InputBarButtonItem {
+        return InputBarButtonItem()
+            .configure {
+//             $0.setSize(CGSize(width: 20, height: 20), animated: false)
+             $0.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: .bold)
+             $0.image = UIImage(named: "camera", in: Bundle(for: ChatViewController.self), compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
+            }.onSelected {
+                $0.tintColor = .primaryColor
+            }.onDeselected {
+                $0.tintColor = UIColor(white: 0.8, alpha: 1)
+            }.onTouchUpInside { _ in
+                self.pickerController?.sourceType = .camera
+                self.present(self.pickerController!, animated: true)
+        }
+    }
+    
+    private func makeImageButton() -> InputBarButtonItem {
+        
            return InputBarButtonItem()
                .configure {
-                $0.setSize(CGSize(width: 52, height: 36), animated: false)
+//                $0.setSize(CGSize(width: 20, height: 20), animated: false)
                 $0.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: .bold)
-                $0.image = UIImage(named: named, in: Bundle(for: ChatViewController.self), compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
-                
+                $0.image = UIImage(named: "image", in: Bundle(for: ChatViewController.self), compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
                }.onSelected {
                    $0.tintColor = .primaryColor
                }.onDeselected {
                    $0.tintColor = UIColor(white: 0.8, alpha: 1)
                }.onTouchUpInside { _ in
-                   
-                let alertController = UIAlertController(title: "Choose Action", message: "", preferredStyle: .actionSheet)
-                alertController.addAction(UIAlertAction(title: "Image", style: .default, handler: { (alert) in
-                    self.imagePicker.present(from: self.view)
-                }))
-                alertController.addAction(UIAlertAction(title: "File", style: .default, handler: { (alert) in
-                    let importMenu = UIDocumentPickerViewController(documentTypes: ["public.item"], in: .import)
-                    importMenu.delegate = self
-                    
-                    if #available(iOS 11.0, *) {
-                        importMenu.allowsMultipleSelection = false
-                    }
-                    importMenu.modalPresentationStyle = .fullScreen
-                    self.present(importMenu, animated: true, completion: nil)
-                }))
-                alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (alert) in
-                    alertController.dismiss(animated: true, completion: nil)
-                }))
-                self.present(alertController, animated: true, completion: nil)
+                self.pickerController?.sourceType = .photoLibrary
+                self.present(self.pickerController!, animated: true)
+                
+//                let alertController = UIAlertController(title: "Choose Action", message: "", preferredStyle: .actionSheet)
+//                alertController.addAction(UIAlertAction(title: "Image", style: .default, handler: { (alert) in
+//                    self.imagePicker.present(from: self.view)
+//                }))
+//                alertController.addAction(UIAlertAction(title: "File", style: .default, handler: { (alert) in
+//                    let importMenu = UIDocumentPickerViewController(documentTypes: ["public.item"], in: .import)
+//                    importMenu.delegate = self
+//
+//                    if #available(iOS 11.0, *) {
+//                        importMenu.allowsMultipleSelection = false
+//                    }
+//                    importMenu.modalPresentationStyle = .fullScreen
+//                    self.present(importMenu, animated: true, completion: nil)
+//                }))
+//                alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (alert) in
+//                    alertController.dismiss(animated: true, completion: nil)
+//                }))
+//                self.present(alertController, animated: true, completion: nil)
            }
        }
     
@@ -598,39 +678,48 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
         }
     }
     
-    private func upload(image: Data, to url: Alamofire.URLRequestConvertible, params: [String: Any], callback: @escaping (Bool) -> Void) {
+    private func upload(imageData: Data?, imageName:String?, fileData: Data?, fileName:String?, parameters: [String : Any]) {
         
-//        AF.upload(multipartFormData: { multiPart in
-//            for (key, value) in params {
-//                if let temp = value as? String {
-//                    multiPart.append(temp.data(using: .utf8)!, withName: key)
-//                }
-//                if let temp = value as? Int {
-//                    multiPart.append("\(temp)".data(using: .utf8)!, withName: key)
-//                }
-//                if let temp = value as? NSArray {
-//                    temp.forEach({ element in
-//                        let keyObj = key + "[]"
-//                        if let string = element as? String {
-//                            multiPart.append(string.data(using: .utf8)!, withName: keyObj)
-//                        } else
-//                            if let num = element as? Int {
-//                                let value = "\(num)"
-//                                multiPart.append(value.data(using: .utf8)!, withName: keyObj)
-//                        }
-//                    })
-//                }
-//            }
-//            multiPart.append(image, withName: "file", fileName: "file.png", mimeType: "image/png")
-//        }, with: url)
-//            .uploadProgress(queue: .main, closure: { progress in
-//                //Current upload progress of file
-//                print("Upload Progress: \(progress.fractionCompleted)")
-//            })
-//            .responseJSON(completionHandler: { data in
-//                debugPrint(data)
-//                callback(true)
-//            })
+        let url = "https://us-central1-test-tmn-bot.cloudfunctions.net/uploadFile"
+        
+        let headers: HTTPHeaders = [
+            "Content-type": "multipart/form-data"
+        ]
+        
+        Alamofire.upload(multipartFormData: { (multipartFormData) in
+            for (key, value) in parameters {
+                multipartFormData.append("\(value)".data(using: String.Encoding.utf8)!, withName: key as String)
+            }
+            
+            if let data = fileData {
+                let pathExtention = URL(string: fileName!)!.pathExtension
+                multipartFormData.append(data, withName: "file", fileName: fileName ?? "", mimeType: pathExtention)
+            }
+            
+            if let data = imageData{
+                multipartFormData.append(data, withName: "file", fileName: imageName ?? "", mimeType: self.mimeType(for: data))
+            }
+            
+        }, usingThreshold: UInt64.init(), to: url, method: .post, headers: headers) { (result) in
+            switch result{
+            case .success(let upload, _, _):
+                upload.responseJSON { response in
+                    print("Succesfully uploaded")
+                    if let err = response.error{
+                        debugPrint(err)
+                        self.setTypingIndicatorViewHidden(true, animated: false)
+                        return
+                    }
+                    
+                    debugPrint(response)
+                    debugPrint("Complete")
+                     self.setTypingIndicatorViewHidden(true, animated: false)
+                }
+            case .failure(let error):
+                print("Error in upload: \(error.localizedDescription)")
+                 self.setTypingIndicatorViewHidden(true, animated: false)
+            }
+        }
     }
     
     private func mimeType(for data: Data) -> String {
@@ -658,15 +747,6 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
         }
     }
 }
-
-//struct MyRequest : Alamofire.URLRequestConvertible {
-//
-//    func asURLRequest() throws -> URLRequest {
-//        var req = URLRequest(url: URL(string: "https://asia-east2-tmn-chatbot-integration.cloudfunctions.net/uploadFile")!)
-//        req.method = HTTPMethod.post
-//        return req
-//    }
-//}
 
 extension ChatViewController : SCSChatSessionDelegate {
     public func session(_ session: SCSChatSession!, didError error: Error!, fatal: Bool) {
@@ -812,26 +892,46 @@ extension UIImage {
     }
 }
 
-extension ChatViewController: ImagePickerDelegate {
+extension ChatViewController: UIImagePickerControllerDelegate {
 
-    func didSelect(image: UIImage?) {
-//        if (image != nil) {
-//            let data = image?.jpegData(compressionQuality: 0.9)
-//            let param = [
-//                "file" : String(format: "%@.jpg", UUID().uuidString),
-//                "session_id" : MINTEL_LiveChat.userId
-//            ]
+    public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        self.dismiss(animated: true) {
             
-//            if let imageData = data {
-//                self.upload(image: imageData, to: MyRequest() as URLRequestConvertible, params: param) { (success) in
-//                    self.insertMessage(MockMessage(image: image!, user: ChatViewController.user, messageId: UUID().uuidString, date: Date()))
-//                }
-//            }
-//        }
+        }
+    }
+
+    public func imagePickerController(_ picker: UIImagePickerController,
+                                      didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
+        guard let image = info[.editedImage] as? UIImage else {
+            return
+        }
+        
+        var fileName = "file.jpeg"
+        // Upload Image
+        self.dismiss(animated: true) {
+            // Upload Image
+            self.insertMessage(MockMessage(image: image, user: ChatViewController.user, messageId: UUID().uuidString, date: Date()))
+            
+            self.setTypingIndicatorViewHidden(false, animated: true, whilePerforming: {
+                
+            }) { success in
+                
+                let data = image.jpegData(compressionQuality: 1.0)
+                self.upload(imageData: data, imageName: fileName, fileData: nil, fileName: nil, parameters: ["session_id": MINTEL_LiveChat.userId])
+            }
+        }
     }
 }
 
-extension ChatViewController : UIDocumentPickerDelegate {
+extension ChatViewController: UINavigationControllerDelegate {
+
+}
+
+extension ChatViewController : UIDocumentMenuDelegate, UIDocumentPickerDelegate {
+    func documentMenu(_ documentMenu: UIDocumentMenuViewController, didPickDocumentPicker documentPicker: UIDocumentPickerViewController) {
+        
+    }
+    
     
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentAt url: URL) {
         self.documentPicker(url: url)
@@ -844,6 +944,23 @@ extension ChatViewController : UIDocumentPickerDelegate {
     }
     
     private func documentPicker(url: URL) {
-        self.insertMessage(MockMessage(emoji: "🗎", user: ChatViewController.user, messageId: UUID().uuidString, date: Date()))
+        debugPrint(url)
+        
+        if FileManager.default.fileExists(atPath: url.path){
+            
+            do {
+             // Get the saved data
+             let savedData = try Data(contentsOf: url)
+             // Convert the data back into a string
+             self.upload(imageData: nil, imageName: nil, fileData: savedData, fileName: url.absoluteString, parameters: ["session_id": MINTEL_LiveChat.userId])
+            } catch {
+             // Catch any errors
+             print("Unable to read the file")
+            }
+        }
+        
+        
+        
+//        self.insertMessage(MockMessage(emoji: "🗎", user: ChatViewController.user, messageId: UUID().uuidString, date: Date()))
     }
 }

@@ -85,9 +85,11 @@ extension ChatBoxViewController: MessagesDisplayDelegate {
     }
     
     func configureAvatarView(_ avatarView: AvatarView, for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) {
-//        avatarView.set(avatar: Avatar(image: nil, initials: "SS"))
-//        let avatar = SampleData.shared.getAvatarFor(sender: message.sender)
-//        avatarView.set(avatar: avatar)
+        if isFromCurrentSender(message: message) {
+            
+        } else {
+            avatarView.set(avatar: Avatar(image:UIImage(named: "user"), initials: ""))
+        }
     }
     
     // MARK: - Location Messages
