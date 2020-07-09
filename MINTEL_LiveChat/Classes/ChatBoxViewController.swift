@@ -29,7 +29,7 @@ import ServiceCore
 import ServiceChat
 
 final class ChatBoxViewController: ChatViewController {
-  
+    
     override func configureMessageCollectionView() {
         super.configureMessageCollectionView()
         messagesCollectionView.messagesLayoutDelegate = self
@@ -37,17 +37,23 @@ final class ChatBoxViewController: ChatViewController {
     }
     
     @objc @IBAction func collapse(sender: UIButton) {
-        MINTEL_LiveChat.instance.reLayoutView()
-        self.dismiss(animated: true, completion: nil)
+        if (!self.messageInputBar.sendButton.isAnimating) {
+            self.setTypingIndicatorViewHidden(true, animated: false)
+            MINTEL_LiveChat.instance.reLayoutView()
+            self.dismiss(animated: true, completion: nil)
+        }
     }
     
     @objc @IBAction func closeChat(sender: UIButton) {
-        self.terminateChat()
+        if (!self.messageInputBar.sendButton.isAnimating) {
+            self.terminateChat()
+        }
 //        self.performSegue(withIdentifier: "closePanel", sender: nil)
     }
 }
 
 // MARK: - MessagesDisplayDelegate
+
 
 extension ChatBoxViewController: MessagesDisplayDelegate {
     

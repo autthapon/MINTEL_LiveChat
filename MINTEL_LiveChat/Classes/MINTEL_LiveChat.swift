@@ -12,6 +12,10 @@ import ServiceChat
 let autoDockingDuration: Double = 0.2
 let doubleTapTimeInterval: Double = 0.36
 
+protocol ChatDelegate{
+      func terminate()
+}
+
 public class MINTEL_LiveChat: UIView {
     
     internal static var configuration:LiveChatConfiguration? = nil
@@ -40,6 +44,7 @@ public class MINTEL_LiveChat: UIView {
     
     internal var chatSessionDelegate:SCSChatSessionDelegate? = nil
     internal var chatEventDelegate:SCSChatEventDelegate? = nil
+    internal var chatDelegate:ChatDelegate? = nil
     
     private var longPressGestureRecognizer: UILongPressGestureRecognizer?
     private var tapGestureRecognizer:UITapGestureRecognizer?
@@ -99,7 +104,7 @@ public class MINTEL_LiveChat: UIView {
         }
         
         MINTEL_LiveChat.chatStarted = true
-        
+        MINTEL_LiveChat.userId = UUID().uuidString
         MINTEL_LiveChat.configuration = config
         MINTEL_LiveChat.userName = config.userName
         self.isHidden = false
@@ -226,7 +231,11 @@ public class MINTEL_LiveChat: UIView {
         let loc:CGPoint = sender!.location(in: sender?.view)
         let buttonHeight = (self.frame.size.height * closeButtonHeight) / viewHeight
         if loc.y <= buttonHeight {
-            self.closeButtonHandle()
+            if (self.chatDelegate != nil) {
+                self.chatDelegate?.terminate()
+            } else {
+                self.closeButtonHandle()
+            }
         } else {
             self.tapAction(sender: sender as AnyObject)
         }

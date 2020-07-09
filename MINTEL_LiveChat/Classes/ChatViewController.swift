@@ -50,10 +50,24 @@ class ChatViewController: MessagesViewController, MessagesDataSource {
     
     func terminateChat() {
         self.dismiss(animated: true) {
-            MINTEL_LiveChat.messageList.removeAll()
-            MINTEL_LiveChat.instance.chatSessionDelegate = nil
-            MINTEL_LiveChat.instance.chatEventDelegate = nil
-            MINTEL_LiveChat.instance.closeButtonHandle()
+            self.setTypingIndicatorViewHidden(true, animated: false)
+            self.realTerminateChat()
+        }
+    }
+    
+    func realTerminateChat() {
+        
+        MINTEL_LiveChat.messageList.removeAll()
+        MINTEL_LiveChat.instance.chatSessionDelegate = nil
+        MINTEL_LiveChat.instance.chatEventDelegate = nil
+        MINTEL_LiveChat.instance.closeButtonHandle()
+        
+        
+        if (MINTEL_LiveChat.messageList.count == 0) {
+            let uniqueID = UUID().uuidString
+            let randomSentence = "TrueMoney Care สวัสดีครับ เจ้าหน้าที่ ยินดีให้บริการ สอบถามข้อมูล TrueMoney Wallet แจ้งได้เลยนะครับ"
+            let message = MockMessage(text: randomSentence, user: ChatViewController.callCenterUser, messageId: uniqueID, date: Date())
+            MINTEL_LiveChat.messageList.append(message)
         }
     }
     
@@ -146,6 +160,8 @@ class ChatViewController: MessagesViewController, MessagesDataSource {
         if (!MINTEL_LiveChat.chatBotMode) {
             self.configureSaleForce()
         }
+        
+        MINTEL_LiveChat.instance.chatDelegate = self
         
         self.view.backgroundColor = UIColor(hexString: "#f1f1f1")
         
@@ -372,6 +388,10 @@ class ChatViewController: MessagesViewController, MessagesDataSource {
     }
     
     func messageForItem(at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> MessageType {
+        debugPrint("Row", indexPath.row,  "Section", indexPath.section)
+        if (indexPath.section >= MINTEL_LiveChat.messageList.count) {
+            return MINTEL_LiveChat.messageList[MINTEL_LiveChat.messageList.count - 1]
+        }
         return MINTEL_LiveChat.messageList[indexPath.section]
     }
     
@@ -407,6 +427,13 @@ class ChatViewController: MessagesViewController, MessagesDataSource {
     
     
 }
+
+extension ChatViewController : ChatDelegate {
+    func terminate() {
+        self.realTerminateChat()
+    }
+}
+
 
 // MARK: - MessageCellDelegate
 
@@ -927,13 +954,13 @@ extension ChatViewController: UIImagePickerControllerDelegate {
             // Upload Image
             self.insertMessage(MockMessage(image: image, user: ChatViewController.user, messageId: UUID().uuidString, date: Date()))
             
-            self.setTypingIndicatorViewHidden(false, animated: true, whilePerforming: {
-                
-            }) { success in
+//            self.setTypingIndicatorViewHidden(false, animated: true, whilePerforming: {
+//
+//            }) { success in
                 
                 let data = image.jpegData(compressionQuality: 1.0)
                 self.upload(imageData: data, imageName: fileName, fileData: nil, fileName: nil, parameters: ["session_id": MINTEL_LiveChat.userId])
-            }
+//            }
         }
     }
 }
@@ -965,11 +992,14 @@ extension ChatViewController : UIDocumentMenuDelegate, UIDocumentPickerDelegate 
         
         if FileManager.default.fileExists(atPath: url.path){
             
+            let filename = (url.absoluteString as NSString).lastPathComponent
+            self.insertMessage(MockMessage(text: filename, user: ChatViewController.user, messageId: UUID().uuidString, date: Date()))
+            
             do {
-             // Get the saved data
-             let savedData = try Data(contentsOf: url)
-             // Convert the data back into a string
-             self.upload(imageData: nil, imageName: nil, fileData: savedData, fileName: url.absoluteString, parameters: ["session_id": MINTEL_LiveChat.userId])
+                // Get the saved data
+                let savedData = try Data(contentsOf: url)
+                // Convert the data back into a string
+                self.upload(imageData: nil, imageName: nil, fileData: savedData, fileName: filename, parameters: ["session_id": MINTEL_LiveChat.userId])
             } catch {
              // Catch any errors
              print("Unable to read the file")
