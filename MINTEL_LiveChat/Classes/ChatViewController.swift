@@ -42,6 +42,7 @@ class ChatViewController: MessagesViewController, MessagesDataSource {
     private var salesforceEndChat = false
     private let urlUpload = "https://asia-east2-tmn-chatbot-integration.cloudfunctions.net/uploadFile"
     private var pickerController: UIImagePickerController? = nil
+    private var bottomMenuShow = false
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
@@ -207,43 +208,43 @@ class ChatViewController: MessagesViewController, MessagesDataSource {
         messageInputBar.inputTextView.placeholder = "พิมพ์ข้อความที่คุณต้องการ"
         messageInputBar.sendButton.setTitle("", for: .normal)
         messageInputBar.sendButton.image = UIImage(named: "send", in: Bundle(for: ChatViewController.self), compatibleWith: nil)
-        messageInputBar.setLeftStackViewWidthConstant(to: 65, animated: true)
+        messageInputBar.setLeftStackViewWidthConstant(to: 110, animated: true)
         messageInputBar.setRightStackViewWidthConstant(to: 32, animated: false)
+        messageInputBar.backgroundColor = UIColor(white: 0.3, alpha: 1)
         
         var leftMenu:[InputBarButtonItem] = []
         leftMenu.append(self.makeCloseButton())
-        if UIImagePickerController.isSourceTypeAvailable(.camera) {
-            leftMenu.append(self.makeCameraButton())
-        }
-        if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
-            leftMenu.append(self.makeImageButton())
-        }
+        leftMenu.append(.fixedSpace(5))
+        leftMenu.append(self.makeCameraButton())
+        leftMenu.append(.fixedSpace(5))
+        leftMenu.append(self.makeImageButton())
         
         messageInputBar.setStackViewItems(leftMenu, forStack: .left, animated: true)
+    }
+    
+    private func setUpBottomView() {
+        self.bottomMenuShow = true
         messageInputBar.setStackViewItems([makeFileButton(), .flexibleSpace], forStack: .bottom, animated: true)
-        
-//        // Entire InputBar padding
-//        messageInputBar.padding.bottom = 8
-//
-//        // or MiddleContentView padding
-//        messageInputBar.middleContentViewPadding.right = -38
-//
-//        // or InputTextView padding
-//        messageInputBar.inputTextView.textContainerInset.bottom = 8
+    }
+    
+    private func hideBottomView() {
+        self.bottomMenuShow = false
+        messageInputBar.setStackViewItems([], forStack: .bottom, animated: true)
     }
     
     private func makeCloseButton() -> InputBarButtonItem {
         return InputBarButtonItem()
             .configure {
-//                $0.setSize(CGSize(width: 20, height: 20), animated: false)
+                $0.setSize(CGSize(width: 32, height: 32), animated: false)
                 $0.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: .bold)
-                $0.image = UIImage(named: "close", in: Bundle(for: ChatViewController.self), compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
+                $0.image = UIImage(named: "close", in: Bundle(for: ChatViewController.self), compatibleWith: nil)!
                 $0.isHighlighted = false
-            }.onSelected {
-                $0.tintColor = .primaryColor
-            }.onDeselected {
-                $0.tintColor = UIColor(white: 0.8, alpha: 1)
             }.onTouchUpInside { _ in
+                if (self.bottomMenuShow) {
+                    self.hideBottomView()
+                } else {
+                    self.setUpBottomView()
+                }
         }
     }
     
@@ -251,13 +252,14 @@ class ChatViewController: MessagesViewController, MessagesDataSource {
         return InputBarButtonItem()
                     .configure {
                         $0.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: .bold)
-                        $0.setSize(CGSize(width: 64, height: 64), animated: false)
-                        $0.image = UIImage(named: "file", in: Bundle(for: ChatViewController.self), compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
+                        $0.title = "File"
+                        $0.setSize(CGSize(width: 100, height: 100), animated: false)
+                        $0.image = UIImage(named: "file", in: Bundle(for: ChatViewController.self), compatibleWith: nil)!
                         $0.isHighlighted = false
-                    }.onSelected {
-                        $0.tintColor = .primaryColor
-                    }.onDeselected {
-                        $0.tintColor = UIColor(white: 0.8, alpha: 1)
+                        $0.contentVerticalAlignment = .bottom
+                        $0.contentHorizontalAlignment = .center
+                        $0.alignTextBelow()
+//                        $0.alignImageAndTitleVertically()
                     }.onTouchUpInside { _ in
                         
                         let importMenu = UIDocumentPickerViewController(documentTypes: ["com.apple.iwork.pages.pages", "com.apple.iwork.numbers.numbers", "com.apple.iwork.keynote.key","public.image", "com.apple.application", "public.item", "public.content", "public.audiovisual-content", "public.movie", "public.audiovisual-content", "public.video", "public.audio", "public.text", "public.data", "public.zip-archive", "com.pkware.zip-archive", "public.composite-content"], in: .import)
@@ -271,16 +273,16 @@ class ChatViewController: MessagesViewController, MessagesDataSource {
     private func makeCameraButton() -> InputBarButtonItem {
         return InputBarButtonItem()
             .configure {
-//             $0.setSize(CGSize(width: 20, height: 20), animated: false)
+             $0.setSize(CGSize(width: 32, height: 32), animated: false)
              $0.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: .bold)
-             $0.image = UIImage(named: "camera", in: Bundle(for: ChatViewController.self), compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
-            }.onSelected {
-                $0.tintColor = .primaryColor
-            }.onDeselected {
-                $0.tintColor = UIColor(white: 0.8, alpha: 1)
+             $0.image = UIImage(named: "camera", in: Bundle(for: ChatViewController.self), compatibleWith: nil)!
             }.onTouchUpInside { _ in
-                self.pickerController?.sourceType = .camera
-                self.present(self.pickerController!, animated: true)
+                if UIImagePickerController.isSourceTypeAvailable(.camera) {
+                    self.pickerController?.sourceType = .camera
+                    self.present(self.pickerController!, animated: true)
+                } else {
+                    // TODO
+                }
         }
     }
     
@@ -288,35 +290,16 @@ class ChatViewController: MessagesViewController, MessagesDataSource {
         
            return InputBarButtonItem()
                .configure {
-//                $0.setSize(CGSize(width: 20, height: 20), animated: false)
+                $0.setSize(CGSize(width: 32, height: 32), animated: false)
                 $0.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: .bold)
-                $0.image = UIImage(named: "image", in: Bundle(for: ChatViewController.self), compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
-               }.onSelected {
-                   $0.tintColor = .primaryColor
-               }.onDeselected {
-                   $0.tintColor = UIColor(white: 0.8, alpha: 1)
+                $0.image = UIImage(named: "image", in: Bundle(for: ChatViewController.self), compatibleWith: nil)!
                }.onTouchUpInside { _ in
-                self.pickerController?.sourceType = .photoLibrary
-                self.present(self.pickerController!, animated: true)
-                
-//                let alertController = UIAlertController(title: "Choose Action", message: "", preferredStyle: .actionSheet)
-//                alertController.addAction(UIAlertAction(title: "Image", style: .default, handler: { (alert) in
-//                    self.imagePicker.present(from: self.view)
-//                }))
-//                alertController.addAction(UIAlertAction(title: "File", style: .default, handler: { (alert) in
-//                    let importMenu = UIDocumentPickerViewController(documentTypes: ["public.item"], in: .import)
-//                    importMenu.delegate = self
-//
-//                    if #available(iOS 11.0, *) {
-//                        importMenu.allowsMultipleSelection = false
-//                    }
-//                    importMenu.modalPresentationStyle = .fullScreen
-//                    self.present(importMenu, animated: true, completion: nil)
-//                }))
-//                alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (alert) in
-//                    alertController.dismiss(animated: true, completion: nil)
-//                }))
-//                self.present(alertController, animated: true, completion: nil)
+                if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
+                    self.pickerController?.sourceType = .photoLibrary
+                    self.present(self.pickerController!, animated: true)
+                } else {
+                    // TODO
+                }
            }
        }
     
@@ -906,7 +889,7 @@ extension ChatViewController: UIImagePickerControllerDelegate {
             return
         }
         
-        var fileName = "file.jpeg"
+        let fileName = "file.jpeg"
         // Upload Image
         self.dismiss(animated: true) {
             // Upload Image

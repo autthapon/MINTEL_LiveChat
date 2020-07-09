@@ -43,6 +43,7 @@ final class ChatBoxViewController: ChatViewController {
     
     @objc @IBAction func closeChat(sender: UIButton) {
         self.terminateChat()
+//        self.performSegue(withIdentifier: "closePanel", sender: nil)
     }
 }
 
@@ -133,7 +134,7 @@ extension ChatBoxViewController: MessagesDisplayDelegate {
 extension ChatBoxViewController: MessagesLayoutDelegate {
     
     func cellTopLabelHeight(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGFloat {
-        return 10
+        return 5
     }
     
     func cellBottomLabelHeight(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGFloat {
@@ -141,7 +142,7 @@ extension ChatBoxViewController: MessagesLayoutDelegate {
     }
     
     func messageTopLabelHeight(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGFloat {
-        return 5
+        return 0
     }
     
     func messageBottomLabelHeight(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGFloat {

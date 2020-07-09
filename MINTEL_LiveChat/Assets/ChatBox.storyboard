@@ -29,7 +29,7 @@
         <!--Chat Box View Controller-->
         <scene sceneID="9jG-dK-uDb">
             <objects>
-                <viewController id="Gbh-dQ-TMA" customClass="ChatBoxViewController" customModule="Chat" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="Gbh-dQ-TMA" customClass="ChatBoxViewController" customModule="MINTEL_LiveChat" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="TaP-8m-QwR">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="808"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -40,6 +40,7 @@
                         <barButtonItem key="leftBarButtonItem" image="close" id="f4d-pi-gYX">
                             <connections>
                                 <action selector="closeChatWithSender:" destination="Gbh-dQ-TMA" id="DN3-jt-m3B"/>
+                                <segue destination="jwH-yd-7vY" kind="show" identifier="closePanel" id="t25-WK-Acj"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" image="compress" id="jep-w8-h0p">
@@ -52,6 +53,22 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Vmh-LI-G4m" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-607.24637681159425" y="-139.28571428571428"/>
+        </scene>
+        <!--Close View Controller-->
+        <scene sceneID="fzk-1k-i0K">
+            <objects>
+                <viewController id="jwH-yd-7vY" customClass="CloseViewController" customModule="MINTEL_LiveChat" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="ESm-wt-Hl4">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="808"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <viewLayoutGuide key="safeArea" id="2U9-N3-Fd1"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="1t2-Sb-rr6"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="sOq-j9-I0v" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="155" y="-139"/>
         </scene>
     </scenes>
     <resources>
