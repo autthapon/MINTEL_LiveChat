@@ -212,6 +212,10 @@ class ChatViewController: MessagesViewController, MessagesDataSource {
         messageInputBar.setRightStackViewWidthConstant(to: 32, animated: false)
         messageInputBar.backgroundColor = UIColor(white: 0.3, alpha: 1)
         
+        self.leftMenuWithCloseBottom()
+    }
+    
+    private func leftMenuWithOpenBottom() {
         var leftMenu:[InputBarButtonItem] = []
         leftMenu.append(self.makeCloseButton())
         leftMenu.append(.fixedSpace(5))
@@ -219,17 +223,31 @@ class ChatViewController: MessagesViewController, MessagesDataSource {
         leftMenu.append(.fixedSpace(5))
         leftMenu.append(self.makeImageButton())
         
-        messageInputBar.setStackViewItems(leftMenu, forStack: .left, animated: true)
+        messageInputBar.setStackViewItems(leftMenu, forStack: .left, animated: false)
+    }
+    
+    private func leftMenuWithCloseBottom() {
+        var leftMenu:[InputBarButtonItem] = []
+        leftMenu.append(self.makePlusButton())
+        leftMenu.append(.fixedSpace(5))
+        leftMenu.append(self.makeCameraButton())
+        leftMenu.append(.fixedSpace(5))
+        leftMenu.append(self.makeImageButton())
+        
+        messageInputBar.setStackViewItems(leftMenu, forStack: .left, animated: false)
     }
     
     private func setUpBottomView() {
         self.bottomMenuShow = true
-        messageInputBar.setStackViewItems([makeFileButton(), .flexibleSpace], forStack: .bottom, animated: true)
+        messageInputBar.setStackViewItems([makeFileButton(), .flexibleSpace], forStack: .bottom, animated: false)
+        self.leftMenuWithOpenBottom()
+        self.messageInputBar.layoutStackViews()
     }
     
     private func hideBottomView() {
         self.bottomMenuShow = false
         messageInputBar.setStackViewItems([], forStack: .bottom, animated: true)
+        self.leftMenuWithCloseBottom()
     }
     
     private func makeCloseButton() -> InputBarButtonItem {
@@ -248,18 +266,32 @@ class ChatViewController: MessagesViewController, MessagesDataSource {
         }
     }
     
+    private func makePlusButton() -> InputBarButtonItem {
+        return InputBarButtonItem()
+            .configure {
+                $0.setSize(CGSize(width: 32, height: 32), animated: false)
+                $0.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: .bold)
+                $0.image = UIImage(named: "plus", in: Bundle(for: ChatViewController.self), compatibleWith: nil)!
+                $0.isHighlighted = false
+            }.onTouchUpInside { _ in
+                if (self.bottomMenuShow) {
+                    self.hideBottomView()
+                } else {
+                    self.setUpBottomView()
+                }
+        }
+    }
+    
     private func makeFileButton() -> InputBarButtonItem {
         return InputBarButtonItem()
                     .configure {
                         $0.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: .bold)
-                        $0.title = "File"
+//                        $0.title = "File"
                         $0.setSize(CGSize(width: 100, height: 100), animated: false)
                         $0.image = UIImage(named: "file", in: Bundle(for: ChatViewController.self), compatibleWith: nil)!
                         $0.isHighlighted = false
                         $0.contentVerticalAlignment = .bottom
                         $0.contentHorizontalAlignment = .center
-                        $0.alignTextBelow()
-//                        $0.alignImageAndTitleVertically()
                     }.onTouchUpInside { _ in
                         
                         let importMenu = UIDocumentPickerViewController(documentTypes: ["com.apple.iwork.pages.pages", "com.apple.iwork.numbers.numbers", "com.apple.iwork.keynote.key","public.image", "com.apple.application", "public.item", "public.content", "public.audiovisual-content", "public.movie", "public.audiovisual-content", "public.video", "public.audio", "public.text", "public.data", "public.zip-archive", "com.pkware.zip-archive", "public.composite-content"], in: .import)
@@ -929,6 +961,8 @@ extension ChatViewController : UIDocumentMenuDelegate, UIDocumentPickerDelegate 
     private func documentPicker(url: URL) {
         debugPrint(url)
         
+        self.hideBottomView()
+        
         if FileManager.default.fileExists(atPath: url.path){
             
             do {
@@ -941,9 +975,5 @@ extension ChatViewController : UIDocumentMenuDelegate, UIDocumentPickerDelegate 
              print("Unable to read the file")
             }
         }
-        
-        
-        
-//        self.insertMessage(MockMessage(emoji: "🗎", user: ChatViewController.user, messageId: UUID().uuidString, date: Date()))
     }
 }
