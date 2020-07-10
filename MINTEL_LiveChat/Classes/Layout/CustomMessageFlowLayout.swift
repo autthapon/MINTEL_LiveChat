@@ -41,24 +41,27 @@ open class MyCustomCell: UICollectionViewCell {
             let type = item["type"] as! Int
             if (type == 2) {
                 
+                self.contentView.layer.cornerRadius = 0
+                self.contentView.layer.masksToBounds = true
+                self.contentView.layer.borderColor = UIColor.white.cgColor
+                self.contentView.layer.borderWidth = 0
                 self.contentView.subviews.forEach({ $0.removeFromSuperview() })
+                
                 let line = UIView(frame: CGRect(x: 5, y: self.contentView.center.y, width: self.contentView.frame.size.width - 10, height: 1))
                 line.backgroundColor = UIColor.black
                 self.contentView.addSubview(line)
-                
+
                 let msg = item["msg"] as! String
-                let labelText = UILabel()
-                labelText.text = String(format: "   %@   ", msg)
-                labelText.backgroundColor = UIColor.white
-                labelText.font = UIFont.systemFont(ofSize: 12)
-                labelText.sizeToFit()
-                labelText.center = self.contentView.center
-                self.contentView.addSubview(labelText)
-                self.contentView.layer.cornerRadius = 0
-                self.contentView.layer.masksToBounds = true
-                self.contentView.layer.borderColor = UIColor.clear.cgColor
-                self.contentView.layer.borderWidth = 0
-                
+                let lbl = UILabel(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: 30))
+                lbl.text = String(format: "   %@   ", msg)
+                lbl.textAlignment = .center
+                lbl.font = UIFont.systemFont(ofSize: 12)
+                lbl.backgroundColor = UIColor.white
+                lbl.layer.masksToBounds = true
+                lbl.layer.borderWidth = 0
+                lbl.tag = 10000
+                self.contentView.addSubview(lbl)
+             
             } else if (type == 1) {
                 let menuItems = item["menuItem"] as! [[String: Any]]
                 var yIndex = 0

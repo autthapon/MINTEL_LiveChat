@@ -388,7 +388,7 @@ class ChatViewController: MessagesViewController, MessagesDataSource {
     }
     
     func messageForItem(at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> MessageType {
-        debugPrint("Row", indexPath.row,  "Section", indexPath.section)
+//        debugPrint("Row", indexPath.row,  "Section", indexPath.section)
         if (indexPath.section >= MINTEL_LiveChat.messageList.count) {
             return MINTEL_LiveChat.messageList[MINTEL_LiveChat.messageList.count - 1]
         }
@@ -611,9 +611,10 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
     func sendPost(text: String, callback: @escaping ([MockMessage]) -> Void) {
         
         let params : Parameters = ["session_id": MINTEL_LiveChat.userId,"text": text]
-        let url = "https://asia-east2-tmn-chatbot-integration.cloudfunctions.net/webhook"
+        let url = String(format: "%@/webhook", MINTEL_LiveChat.configuration?.webHookBaseUrl ?? "")
+//        let url = "https://asia-east2-tmn-chatbot-integration.cloudfunctions.net/webhook"
         let header:HTTPHeaders = [
-            "x-api-key": "381b0ac187994f82bdc05c09d1034afa"
+            "x-api-key": MINTEL_LiveChat.configuration?.xApikey ?? "" // "381b0ac187994f82bdc05c09d1034afa"
         ]
        
         Alamofire
@@ -622,17 +623,22 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
                 switch response.result {
                     case .success(_):
                         if let json = response.value {
+                            debugPrint(json)
                             self.setTypingIndicatorViewHidden(true, animated: false, whilePerforming: {
                                 
                             }) { (success) in
                                 let dict = json as! [String: Any]
                                 let error = dict["error"] as? [String: Any] ?? nil
                                 if (error == nil) {
+                                    let intent = dict["intent"] as? String ?? ""
+                                    if (intent == "08_wait_for_call") {
+                                        self.switchToAgentMode()
+                                    }
+                                    
                                     let messages = dict["messages"] as! [[String: Any]]
                                     messages.forEach { body in
                                         let type = body["type"] as? String ?? ""
                                         let text = body["text"] as? String ?? ""
-                                        let intent = body["intent"] as? String ?? ""
                                         let quickReply = body["quickReply"] as? [String: Any] ?? nil
                                         if (type == "text") {
                                             self.insertMessage(MockMessage(text: text, user: ChatViewController.callCenterUser, messageId: UUID().uuidString, date: Date()))
@@ -641,10 +647,6 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
                                                 let theMessage = ["type": 1, "menuItem" : items] as [String : Any]
                                                 self.insertMessage(MockMessage(custom: theMessage, user: ChatViewController.callCenterUser, messageId: UUID().uuidString, date: Date()))
                                             }
-                                        }
-                                        
-                                        if (intent == "04_transfer_to_agent") {
-                                            self.switchToAgentMode()
                                         }
                                     }
                                 }
@@ -722,7 +724,7 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
     
     private func upload(imageData: Data?, imageName:String?, fileData: Data?, fileName:String?, parameters: [String : Any]) {
         
-        let url = "https://us-central1-test-tmn-bot.cloudfunctions.net/uploadFile"
+        let url = String(format: "%@/uploadFile", MINTEL_LiveChat.configuration?.uploadBaseUrl ?? "") // "https://us-central1-test-tmn-bot.cloudfunctions.net/uploadFile"
         
         let headers: HTTPHeaders = [
             "Content-type": "multipart/form-data"
@@ -753,9 +755,19 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
                         return
                     }
                     
-                    debugPrint(response)
-                    debugPrint("Complete")
-                     self.setTypingIndicatorViewHidden(true, animated: false)
+                    if (!MINTEL_LiveChat.chatBotMode) {
+                        
+                        if let json = response.value {
+                            debugPrint(json)
+                            let dict = json as! [String: Any]
+                            let url = dict["url"] as? String ?? ""
+                            if url.count > 0 {
+                                ServiceCloud.shared().chatCore.session.sendMessage(url)
+                            }
+                        }
+                    }
+                    
+                    self.setTypingIndicatorViewHidden(true, animated: false)
                 }
             case .failure(let error):
                 print("Error in upload: \(error.localizedDescription)")
@@ -838,6 +850,7 @@ extension ChatViewController : SCSChatEventDelegate {
             let msgItems = ["type" : 2, "msg" : msg] as [String : Any]
             let message = MockMessage(custom: msgItems, user: ChatViewController.callCenterUser, messageId: UUID().uuidString, date: Date())
             self.insertMessage(message)
+            
             self.title = ChatViewController.callCenterUser.displayName
             
             let ignoreMessage = ["Connecting", "agent", "Your place", "TrueMoney Care สวัสดีครับ"]
