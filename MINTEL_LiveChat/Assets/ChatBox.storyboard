@@ -39,7 +39,7 @@
                     <navigationItem key="navigationItem" id="cao-Sc-k8i">
                         <barButtonItem key="leftBarButtonItem" image="close" id="f4d-pi-gYX">
                             <connections>
-                                <action selector="closeChatWithSender:" destination="Gbh-dQ-TMA" id="DN3-jt-m3B"/>
+                                <action selector="showConfirmationCloseViewWithSender:" destination="Gbh-dQ-TMA" id="idZ-YA-1lL"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" image="compress" id="jep-w8-h0p">
@@ -48,26 +48,77 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="btnBack" destination="syu-79-8J7" id="CHd-dw-Wj4"/>
+                        <outlet property="btnConfirmClose" destination="3U7-6Y-a8o" id="imQ-Lm-lSc"/>
+                        <outlet property="viewConfirm" destination="PJI-ud-K4a" id="VZ4-W7-wvR"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Vmh-LI-G4m" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <view contentMode="scaleToFill" id="PJI-ud-K4a">
+                    <rect key="frame" x="0.0" y="0.0" width="414" height="808"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="สิ้นสุดการแชท" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7gp-uv-azP">
+                            <rect key="frame" x="20" y="239.5" width="374" height="29"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="24"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="หลังจากจบแชทแล้วคุณยังสามารถบันทึกเนื้อหาที่คุยได้" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EHM-S5-lVu">
+                            <rect key="frame" x="21" y="311" width="373" height="20.5"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3U7-6Y-a8o">
+                            <rect key="frame" x="20" y="426" width="374" height="56"/>
+                            <color key="backgroundColor" red="0.94117647059999998" green="0.53333333329999999" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="56" id="ZhK-Hb-tru"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                            <state key="normal" title="ยืนยันสิ้นสุดการแชท">
+                                <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </state>
+                            <connections>
+                                <action selector="closeChatWithSender:" destination="Gbh-dQ-TMA" eventType="touchUpInside" id="Z9S-di-BgF"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="syu-79-8J7">
+                            <rect key="frame" x="20" y="507" width="374" height="56"/>
+                            <color key="backgroundColor" red="0.94117647059999998" green="0.53333333329999999" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="56" id="PJQ-EH-t56"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                            <state key="normal" title="กลับ">
+                                <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </state>
+                            <connections>
+                                <action selector="backToNormalWithSender:" destination="Gbh-dQ-TMA" eventType="touchUpInside" id="Las-Xa-OTq"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                    <constraints>
+                        <constraint firstItem="YbY-Gz-QCh" firstAttribute="trailing" secondItem="syu-79-8J7" secondAttribute="trailing" constant="20" id="7Nv-la-5iW"/>
+                        <constraint firstItem="7gp-uv-azP" firstAttribute="leading" secondItem="YbY-Gz-QCh" secondAttribute="leading" constant="20" id="BuW-dk-DVa"/>
+                        <constraint firstItem="YbY-Gz-QCh" firstAttribute="trailing" secondItem="7gp-uv-azP" secondAttribute="trailing" constant="20" id="Cj2-SI-lli"/>
+                        <constraint firstItem="7gp-uv-azP" firstAttribute="centerY" secondItem="PJI-ud-K4a" secondAttribute="centerY" constant="-150" id="Eu8-Pi-G1D"/>
+                        <constraint firstItem="3U7-6Y-a8o" firstAttribute="leading" secondItem="YbY-Gz-QCh" secondAttribute="leading" constant="20" id="JMO-fh-bYD"/>
+                        <constraint firstItem="syu-79-8J7" firstAttribute="leading" secondItem="YbY-Gz-QCh" secondAttribute="leading" constant="20" id="P4T-Pw-bUi"/>
+                        <constraint firstItem="EHM-S5-lVu" firstAttribute="leading" secondItem="YbY-Gz-QCh" secondAttribute="leading" constant="21" id="iXL-L3-One"/>
+                        <constraint firstItem="EHM-S5-lVu" firstAttribute="top" secondItem="7gp-uv-azP" secondAttribute="bottom" constant="42.5" id="kVv-0r-ftW"/>
+                        <constraint firstItem="YbY-Gz-QCh" firstAttribute="trailing" secondItem="EHM-S5-lVu" secondAttribute="trailing" constant="20" id="rcC-Lh-XsW"/>
+                        <constraint firstItem="YbY-Gz-QCh" firstAttribute="trailing" secondItem="3U7-6Y-a8o" secondAttribute="trailing" constant="20" id="sS5-Uf-Cfy"/>
+                        <constraint firstItem="3U7-6Y-a8o" firstAttribute="centerY" secondItem="PJI-ud-K4a" secondAttribute="centerY" constant="50" id="tE1-xI-FJe"/>
+                        <constraint firstItem="syu-79-8J7" firstAttribute="top" secondItem="3U7-6Y-a8o" secondAttribute="bottom" constant="25" id="zjM-6O-fsk"/>
+                    </constraints>
+                    <viewLayoutGuide key="safeArea" id="YbY-Gz-QCh"/>
+                </view>
             </objects>
             <point key="canvasLocation" x="-607.24637681159425" y="-139.28571428571428"/>
-        </scene>
-        <!--Close View Controller-->
-        <scene sceneID="fzk-1k-i0K">
-            <objects>
-                <viewController id="jwH-yd-7vY" customClass="CloseViewController" customModule="MINTEL_LiveChat" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="ESm-wt-Hl4">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                        <viewLayoutGuide key="safeArea" id="2U9-N3-Fd1"/>
-                    </view>
-                    <navigationItem key="navigationItem" id="1t2-Sb-rr6"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="sOq-j9-I0v" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="155" y="-139"/>
         </scene>
     </scenes>
     <resources>

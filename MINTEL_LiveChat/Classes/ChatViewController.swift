@@ -29,6 +29,7 @@ import Alamofire
 import ServiceCore
 import ServiceChat
 import Photos
+import SafariServices
 
 let menuHeight = 45
 let orangeColor = "#EF8933"
@@ -62,12 +63,36 @@ class ChatViewController: MessagesViewController, MessagesDataSource {
         MINTEL_LiveChat.instance.chatEventDelegate = nil
         MINTEL_LiveChat.instance.closeButtonHandle()
         
-        
         if (MINTEL_LiveChat.messageList.count == 0) {
             let uniqueID = UUID().uuidString
             let randomSentence = "TrueMoney Care สวัสดีครับ เจ้าหน้าที่ ยินดีให้บริการ สอบถามข้อมูล TrueMoney Wallet แจ้งได้เลยนะครับ"
             let message = MockMessage(text: randomSentence, user: ChatViewController.callCenterUser, messageId: uniqueID, date: Date())
             MINTEL_LiveChat.messageList.append(message)
+        }
+        
+        self.openSurvey()
+    }
+    
+    private func openSurvey() {
+        if let url = URL(string: String(format: "https://truemoney--c.ap12.visual.force.com/apex/MINTEL_ExternalChatSurvey?uid=%@", MINTEL_LiveChat.userId) ) {
+            var vc:UIViewController? = nil
+            
+            if #available(iOS 11.0, *) {
+                let config = SFSafariViewController.Configuration()
+                config.entersReaderIfAvailable = false
+                vc = SFSafariViewController(url: url, configuration: config)
+            } else {
+                vc = SFSafariViewController(url: url)
+            }
+            
+            let currentViewController = UIApplication.shared.keyWindow?.rootViewController
+//            currentViewController?.dismiss(animated: true, completion: nil)
+
+            if self.presentedViewController == nil {
+                currentViewController?.present(vc!, animated: true, completion: nil)
+            } else {
+                self.present(vc!, animated: true, completion: nil)
+            }
         }
     }
     

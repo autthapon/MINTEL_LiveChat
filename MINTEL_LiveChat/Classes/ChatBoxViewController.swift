@@ -27,13 +27,25 @@ import MapKit
 import MessageKit
 import ServiceCore
 import ServiceChat
+import SafariServices
 
 final class ChatBoxViewController: ChatViewController {
     
+    @IBOutlet weak var btnConfirmClose:UIButton!
+    @IBOutlet weak var btnBack:UIButton!
+    @IBOutlet weak var viewConfirm:UIView!
+    
     override func configureMessageCollectionView() {
         super.configureMessageCollectionView()
+        self.configureCloseView()
         messagesCollectionView.messagesLayoutDelegate = self
         messagesCollectionView.messagesDisplayDelegate = self
+    }
+    
+    private func configureCloseView() {
+        self.btnBack.layer.borderColor = UIColor(hexString: "#F08833").cgColor
+        self.btnBack.layer.borderWidth = 1.0
+        
     }
     
     @objc @IBAction func collapse(sender: UIButton) {
@@ -45,10 +57,22 @@ final class ChatBoxViewController: ChatViewController {
     }
     
     @objc @IBAction func closeChat(sender: UIButton) {
+        
         if (!self.messageInputBar.sendButton.isAnimating) {
             self.terminateChat()
         }
-//        self.performSegue(withIdentifier: "closePanel", sender: nil)
+    }
+    
+    @objc @IBAction func showConfirmationCloseView(sender: UIButton) {
+        
+        self.messageInputBar.isHidden = true
+        self.viewConfirm.frame = CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: self.view.frame.size.height)
+        self.view.addSubview(self.viewConfirm)
+    }
+    
+    @objc @IBAction func backToNormal(sender: UIButton) {
+        self.messageInputBar.isHidden = false
+        self.viewConfirm.removeFromSuperview()
     }
 }
 
