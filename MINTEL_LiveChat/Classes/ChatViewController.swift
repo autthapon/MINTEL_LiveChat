@@ -74,24 +74,28 @@ class ChatViewController: MessagesViewController, MessagesDataSource {
     }
     
     private func openSurvey() {
-        if let url = URL(string: String(format: "https://truemoney--c.ap12.visual.force.com/apex/MINTEL_ExternalChatSurvey?uid=%@", MINTEL_LiveChat.userId) ) {
-            var vc:UIViewController? = nil
+        if let urlString = MINTEL_LiveChat.configuration?.surveyFormUrl {
             
-            if #available(iOS 11.0, *) {
-                let config = SFSafariViewController.Configuration()
-                config.entersReaderIfAvailable = false
-                vc = SFSafariViewController(url: url, configuration: config)
-            } else {
-                vc = SFSafariViewController(url: url)
-            }
-            
-            let currentViewController = UIApplication.shared.keyWindow?.rootViewController
-//            currentViewController?.dismiss(animated: true, completion: nil)
+            let urlStringWithUserSessionId = urlString.replacingOccurrences(of: "sessionId", with: MINTEL_LiveChat.userId)
+            if let url = URL(string: urlStringWithUserSessionId) {
+                var vc:UIViewController? = nil
+                
+                if #available(iOS 11.0, *) {
+                    let config = SFSafariViewController.Configuration()
+                    config.entersReaderIfAvailable = false
+                    vc = SFSafariViewController(url: url, configuration: config)
+                } else {
+                    vc = SFSafariViewController(url: url)
+                }
+                
+                let currentViewController = UIApplication.shared.keyWindow?.rootViewController
+    //            currentViewController?.dismiss(animated: true, completion: nil)
 
-            if self.presentedViewController == nil {
-                currentViewController?.present(vc!, animated: true, completion: nil)
-            } else {
-                self.present(vc!, animated: true, completion: nil)
+                if self.presentedViewController == nil {
+                    currentViewController?.present(vc!, animated: true, completion: nil)
+                } else {
+                    self.present(vc!, animated: true, completion: nil)
+                }
             }
         }
     }

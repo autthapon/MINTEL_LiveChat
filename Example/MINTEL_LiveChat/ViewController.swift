@@ -27,10 +27,11 @@ class ViewController: UIViewController {
         let webhookUrl:String           = "https://asia-east2-tmn-chatbot-integration.cloudfunctions.net"
         let uploadUrl:String            = "https://us-central1-test-tmn-bot.cloudfunctions.net"
         let xApiKey:String              = "381b0ac187994f82bdc05c09d1034afa"
+        let surveryFormUrl:String       = "https://truemoney--c.ap12.visual.force.com/apex/MINTEL_ExternalChatSurvey?uid=sessionId"
 
 //        let config = LiveChatConfiguration.init(withUserName: "Note", withSalesforceLiveAgentPod: liveagentPod, withSalesForceOrdId: ordID, withSalesforceDeployId: deployID, withSalesforceButtonId: buttonID)
         
-        let config = LiveChatConfiguration(withUserName: "Note", withSalesforceLiveAgentPod: liveagentPod, withSalesForceOrdId: ordID, withSalesforceDeployId: deployID, withSalesforceButtonId: buttonID, withWebHookBaseUrl: webhookUrl, withXApiKey: xApiKey, withUploadBaseUrl: uploadUrl)
+        let config = LiveChatConfiguration(withUserName: "Note", withSalesforceLiveAgentPod: liveagentPod, withSalesForceOrdId: ordID, withSalesforceDeployId: deployID, withSalesforceButtonId: buttonID, withWebHookBaseUrl: webhookUrl, withXApiKey: xApiKey, withUploadBaseUrl: uploadUrl, withSurveyFormUrl: surveryFormUrl)
         
         appDelegate.chat.startChat(config: config)
     }
