@@ -213,18 +213,61 @@ class ChatViewController: MessagesViewController, MessagesDataSource {
     
     func loadFirstMessages() {
         
-        DispatchQueue.global(qos: .userInitiated).async {
-            
-            if (MINTEL_LiveChat.messageList.count == 0) {
-                let uniqueID = UUID().uuidString
-                let randomSentence = "TrueMoney Care สวัสดีครับ เจ้าหน้าที่ ยินดีให้บริการ สอบถามข้อมูล TrueMoney Wallet แจ้งได้เลยนะครับ"
-                let message = MockMessage(text: randomSentence, user: ChatViewController.callCenterUser, messageId: uniqueID, date: Date())
-                MINTEL_LiveChat.messageList.append(message)
-            }
-            DispatchQueue.main.async {
-                self.messagesCollectionView.reloadData()
-                self.messagesCollectionView.scrollToBottom()
-            }
+        loadAnnouncement()
+        
+//        DispatchQueue.global(qos: .userInitiated).async {
+//
+//            if (MINTEL_LiveChat.messageList.count == 0) {
+//                let uniqueID = UUID().uuidString
+//                let randomSentence = "TrueMoney Care สวัสดีครับ เจ้าหน้าที่ ยินดีให้บริการ สอบถามข้อมูล TrueMoney Wallet แจ้งได้เลยนะครับ"
+//                let message = MockMessage(text: randomSentence, user: ChatViewController.callCenterUser, messageId: uniqueID, date: Date())
+//                MINTEL_LiveChat.messageList.append(message)
+//            }
+//            DispatchQueue.main.async {
+//                self.messagesCollectionView.reloadData()
+//                self.messagesCollectionView.scrollToBottom()
+//            }
+//        }
+    }
+    
+    func loadAnnouncement() {
+        
+        let params: Parameters = [:]
+        let url = (MINTEL_LiveChat.configuration?.announcementUrl ?? "").replacingOccurrences(of: "sessionId", with: MINTEL_LiveChat.userId)
+        let header:HTTPHeaders = [
+            "x-api-key": MINTEL_LiveChat.configuration?.xApikey ?? "" // "381b0ac187994f82bdc05c09d1034afa"
+        ]
+       
+        Alamofire
+            .request(url, method: .post, parameters: params, encoding: JSONEncoding.init(), headers: header)
+            .responseJSON { (response) in
+                switch response.result {
+                case .success(_):
+                    if let json = response.value {
+                        debugPrint(json)
+                        let dict = json as! [String: Any]
+                        let desc = dict["Description__c"] as? String ?? ""
+                        
+                        if desc.count > 0 {
+                            DispatchQueue.global(qos: .userInitiated).async {
+                    
+                                if (MINTEL_LiveChat.messageList.count == 0) {
+                                    let uniqueID = UUID().uuidString
+                                    let message = MockMessage(text: desc, user: ChatViewController.callCenterUser, messageId: uniqueID, date: Date())
+                                    MINTEL_LiveChat.messageList.append(message)
+                                }
+                                DispatchQueue.main.async {
+                                    self.messagesCollectionView.reloadData()
+                                    self.messagesCollectionView.scrollToBottom()
+                                }
+                            }
+                        }
+                        
+                    }
+                    break
+                case .failure( _):
+                    break
+                }
         }
     }
     

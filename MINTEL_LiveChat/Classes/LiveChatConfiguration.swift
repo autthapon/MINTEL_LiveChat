@@ -18,8 +18,9 @@ public class LiveChatConfiguration {
     internal var salesforceDeployID:String!
     internal var salesforceButtonID:String!
     internal var surveyFormUrl:String?
+    internal var announcementUrl:String?
     
-    public init(withUserName userName:String, withSalesforceLiveAgentPod salesforceLiveAgentPod:String, withSalesForceOrdId salesforceOrdId:String, withSalesforceDeployId salesforceDeployId:String, withSalesforceButtonId salesforceButtonId:String, withWebHookBaseUrl webhookBaseUrl:String, withXApiKey xapiKey:String, withUploadBaseUrl uploadBaseUrl:String, withSurveyFormUrl surveyFormUrl:String?) {
+    public init(withUserName userName:String, withSalesforceLiveAgentPod salesforceLiveAgentPod:String, withSalesForceOrdId salesforceOrdId:String, withSalesforceDeployId salesforceDeployId:String, withSalesforceButtonId salesforceButtonId:String, withWebHookBaseUrl webhookBaseUrl:String, withXApiKey xapiKey:String, withUploadBaseUrl uploadBaseUrl:String, withSurveyFormUrl surveyFormUrl:String?, withAnnouncementUrl announcementUrl:String) {
         self.userName = userName
         self.salesforceLiveAgentPod = salesforceLiveAgentPod
         self.salesforceOrdID = salesforceOrdId
@@ -29,5 +30,6 @@ public class LiveChatConfiguration {
         self.xApikey = xapiKey
         self.uploadBaseUrl = uploadBaseUrl
         self.surveyFormUrl = surveyFormUrl
+        self.announcementUrl = announcementUrl
     }
 }
