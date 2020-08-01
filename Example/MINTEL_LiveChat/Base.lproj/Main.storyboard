@@ -26,7 +26,7 @@
         <!--View Controller-->
         <scene sceneID="ufC-wZ-h7g">
             <objects>
-                <viewController id="vXZ-lx-hvc" customClass="ViewController" customModule="Chat_Example" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="vXZ-lx-hvc" customClass="ViewController" customModule="MINTEL_LiveChat_Example" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="jyV-Pf-zRb"/>
                         <viewControllerLayoutGuide type="bottom" id="2fi-mo-0CV"/>
@@ -71,6 +71,16 @@
                     <view key="view" contentMode="scaleToFill" id="XgB-Mb-SXq">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rUC-G3-WKt">
+                                <rect key="frame" x="313" y="67" width="46" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Button"/>
+                                <connections>
+                                    <segue destination="ERU-3G-yEd" kind="presentation" modalPresentationStyle="fullScreen" id="asx-Kv-rU0"/>
+                                </connections>
+                            </button>
+                        </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                     </view>
                     <navigationItem key="navigationItem" id="MXo-Sk-oLE"/>
@@ -78,6 +88,42 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="P45-5h-VeL" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="938" y="133"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="KRR-wI-HfX">
+            <objects>
+                <navigationController id="ERU-3G-yEd" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="eqi-Yf-5Kz"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="E96-Ki-b98">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="nAW-fP-ZZb" kind="relationship" relationship="rootViewController" id="DFn-Go-1cf"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ac9-60-3xq" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1737" y="133"/>
+        </scene>
+        <!--Second View Controller-->
+        <scene sceneID="a41-o7-3Nv">
+            <objects>
+                <viewController id="nAW-fP-ZZb" customClass="SecondViewController" customModule="MINTEL_LiveChat_Example" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="V9M-Mx-YaY"/>
+                        <viewControllerLayoutGuide type="bottom" id="AEI-wJ-CJL"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="DeP-bd-p4K">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="bfu-xO-rsE"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="PIZ-4A-9hB" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2500" y="133"/>
         </scene>
     </scenes>
 </document>
