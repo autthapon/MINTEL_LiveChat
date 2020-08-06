@@ -43,7 +43,7 @@ final class ChatBoxViewController: ChatViewController {
     }
     
     private func configureCloseView() {
-        self.btnBack.layer.borderColor = UIColor(hexString: "#F08833").cgColor
+        self.btnBack.layer.borderColor = UIColor(MyHexString: "#F08833").cgColor
         self.btnBack.layer.borderWidth = 1.0
         
     }
@@ -103,7 +103,7 @@ extension ChatBoxViewController: MessagesDisplayDelegate {
     // MARK: - All Messages
     
     func backgroundColor(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UIColor {
-        return isFromCurrentSender(message: message) ? UIColor(hexString: "#EF8933") : UIColor(hexString: "#f1f1f1")
+        return isFromCurrentSender(message: message) ? UIColor(MyHexString: "#EF8933") : UIColor(MyHexString: "#f1f1f1")
     }
     
     func messageStyle(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> MessageStyle {

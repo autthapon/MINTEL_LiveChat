@@ -76,6 +76,7 @@ public class MINTEL_LiveChat: UIView {
     }
     
     public func reLayoutView() {
+        self.layer.zPosition = 1
         if (MINTEL_LiveChat.chatBotMode) {
             self.userImageView.isHidden = false
             self.callCenterLabel.isHidden = false
@@ -103,6 +104,7 @@ public class MINTEL_LiveChat: UIView {
             return
         }
         
+        self.layer.zPosition = 1
         MINTEL_LiveChat.chatStarted = true
         MINTEL_LiveChat.userId = UUID().uuidString
         MINTEL_LiveChat.configuration = config
@@ -156,8 +158,8 @@ public class MINTEL_LiveChat: UIView {
         self.closeButton.setImage(UIImage(named: "close", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil), for: .normal)
         self.closeButton.setTitleColor(UIColor.black, for: .normal)
         self.closeButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
-        self.closeButton.backgroundColor = UIColor(hexString: "#F08833")
-        self.closeButton.roundCorners([.topLeft, .topRight], radius: CGFloat(cornerRadius))
+        self.closeButton.backgroundColor = UIColor(MyHexString: "#F08833")
+        self.closeButton.MyRoundCorners([.topLeft, .topRight], radius: CGFloat(cornerRadius))
         self.closeButton.isUserInteractionEnabled = false
         
         let image = UIImage(named: "user", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil)
@@ -190,7 +192,7 @@ public class MINTEL_LiveChat: UIView {
         self.queueLabel.isHidden = true
         self.addSubview(self.queueLabel)
         
-        self.backgroundColor = UIColor(hexString: "#F1F1F1")
+        self.backgroundColor = UIColor(MyHexString: "#F1F1F1")
         self.layer.cornerRadius = CGFloat(cornerRadius)
         self.layer.shadowColor = UIColor.black.cgColor
         self.layer.shadowOpacity = 0.5
@@ -200,11 +202,26 @@ public class MINTEL_LiveChat: UIView {
     
     private func addButtonToKeyWindow() {
         
-        if let keyWindow = UIApplication.shared.keyWindow {
-            keyWindow.addSubview(self)
-        } else if (UIApplication.shared.windows.first != nil) {
-            UIApplication.shared.windows.first?.addSubview(self)
-        }
+        let obj = UIApplication.shared.windows.first
+        obj?.addSubview(self)
+        
+        self.layer.zPosition = 1
+//        UIApplication.shared.keyWindow?.addSubview(self)
+        
+//        let keyWindow = UIApplication.shared.connectedScenes
+//            .filter({$0.activationState == .foregroundActive})
+//            .map({$0 as? UIWindowScene})
+//            .compactMap({$0})
+//            .first?.windows
+//            .filter({$0.isKeyWindow}).first
+//
+//        keyWindow.addSubview(self)
+        
+//        if let keyWindow = UIApplication.shared.keyWindow {
+//            keyWindow.addSubview(self)
+//        } else if (UIApplication.shared.windows.first != nil) {
+//            UIApplication.shared.windows.first?.addSubview(self)
+//        }
     }
     
     private func removeButtonFromKeyWindow() {
@@ -275,6 +292,8 @@ public class MINTEL_LiveChat: UIView {
 //                }
                 
 //                if (isOpen) {
+                
+                    self.layer.zPosition = 0
                     let bundle = Bundle(for: type(of: self))
                     let storyboard = UIStoryboard(name: "ChatBox", bundle: bundle)
                     let vc = storyboard.instantiateInitialViewController()!

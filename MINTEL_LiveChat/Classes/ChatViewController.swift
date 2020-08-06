@@ -173,7 +173,7 @@ class ChatViewController: MessagesViewController, MessagesDataSource {
     override func viewDidLoad() {
         
         self.navigationController?.navigationBar.isTranslucent = true
-        self.navigationController?.navigationBar.barTintColor = UIColor(hexString: orangeColor)
+        self.navigationController?.navigationBar.barTintColor = UIColor(MyHexString: orangeColor)
         
         self.pickerController = UIImagePickerController()
         self.pickerController?.modalPresentationStyle = .fullScreen
@@ -192,7 +192,7 @@ class ChatViewController: MessagesViewController, MessagesDataSource {
         
         MINTEL_LiveChat.instance.chatDelegate = self
         
-        self.view.backgroundColor = UIColor(hexString: "#f1f1f1")
+        self.view.backgroundColor = UIColor(MyHexString: "#f1f1f1")
         
         super.viewDidLoad()
     }
@@ -292,7 +292,7 @@ class ChatViewController: MessagesViewController, MessagesDataSource {
     
     func configureMessageInputBar() {
         messageInputBar.delegate = self
-        messageInputBar.inputTextView.tintColor = UIColor(hexString: "#EF8933")
+        messageInputBar.inputTextView.tintColor = UIColor(MyHexString: "#EF8933")
         messageInputBar.inputTextView.placeholder = "พิมพ์ข้อความที่คุณต้องการ"
         messageInputBar.sendButton.setTitle("", for: .normal)
         messageInputBar.sendButton.image = UIImage(named: "send", in: Bundle(for: ChatViewController.self), compatibleWith: nil)

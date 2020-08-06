@@ -17,8 +17,8 @@ class SecondViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        let appDelegate = (UIApplication.shared.delegate as! AppDelegate)
-        appDelegate.chat.sendToFront()
+//        
+//        let appDelegate = (UIApplication.shared.delegate as! AppDelegate)
+//        appDelegate.chat.sendToFront()
     }
 }

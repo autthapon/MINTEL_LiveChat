@@ -72,7 +72,7 @@ open class MyCustomCell: UICollectionViewCell {
                     let actions = item["action"] as! [String:Any]
                     let labelText = actions["label"] as? String ?? ""
                     
-                    let height = labelText.height(withConstrainedWidth: 300, font: defaultLabel.font)
+                    let height = labelText.MyHeight(withConstrainedWidth: 300, font: defaultLabel.font)
                     var setHeight = max(height, CGFloat(menuHeight))
                     if Int(setHeight) > Int(menuHeight) {
                         setHeight = setHeight + 5
@@ -159,7 +159,7 @@ open class CustomMessageSizeCalculator: MessageSizeCalculator {
                     let actions = item["action"] as! [String:Any]
                     let labelText = actions["label"] as? String ?? ""
                     
-                    let height = labelText.height(withConstrainedWidth: 300, font: defaultLabel.font)
+                    let height = labelText.MyHeight(withConstrainedWidth: 300, font: defaultLabel.font)
                     var setHeight = max(height, CGFloat(menuHeight))
                     if Int(setHeight) > Int(menuHeight) {
                         setHeight = setHeight + 5
