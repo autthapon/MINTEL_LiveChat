@@ -112,11 +112,11 @@ public class MINTEL_LiveChat: UIView {
         self.isHidden = false
         UIApplication.shared.keyWindow?.bringSubviewToFront(self)
         
-        if (!MINTEL_LiveChat.chatBotMode) {
-            self.startSaleForce()
-        } else {
-            self.tapAction(sender: UIButton())
-        }
+//        if (!MINTEL_LiveChat.chatBotMode) {
+//            self.startSaleForce()
+//        } else {
+//            self.tapAction(sender: UIButton())
+//        }
     }
     
     public func sendToFront() {
