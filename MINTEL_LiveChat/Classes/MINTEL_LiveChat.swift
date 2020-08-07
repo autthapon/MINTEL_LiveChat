@@ -119,10 +119,6 @@ public class MINTEL_LiveChat: UIView {
         }
     }
     
-    public func sendToFront() {
-        UIApplication.shared.keyWindow?.bringSubviewToFront(self)
-    }
-    
     internal func startSaleForce() {
         
         self.configureSaleForce()

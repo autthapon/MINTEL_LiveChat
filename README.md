@@ -32,4 +32,3 @@ MINTEL_LiveChat is available under the MIT license. See the LICENSE file for mor
 ## How To Use
 1. I suggest you to new instance of MINTEL_LiveChat in Appdelegate to make sure that it has only one instance at a time. 
 2. When you want to startChat please call. startChat(config) method 
-3. When the views are changeds please call "sendToFront()" to bring Chat Head to the top most of all views. you can call "sendToFront()" in viewDidAppear method of UIViewController
