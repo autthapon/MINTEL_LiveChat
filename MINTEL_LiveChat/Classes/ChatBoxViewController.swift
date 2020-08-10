@@ -103,14 +103,14 @@ extension ChatBoxViewController: MessagesDisplayDelegate {
     // MARK: - All Messages
     
     func backgroundColor(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UIColor {
-        return isFromCurrentSender(message: message) ? UIColor(MyHexString: "#EF8933") : UIColor(MyHexString: "#f1f1f1")
+        return isFromCurrentSender(message: message) ? UIColor(MyHexString: "#FF8300") : UIColor(MyHexString: "#EBEBEB")
     }
     
     func messageStyle(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> MessageStyle {
         
-        let tail: MessageStyle.TailCorner = isFromCurrentSender(message: message) ? .bottomRight : .bottomLeft
-        return .bubbleTail(tail, .curved)
-//        return .bubble
+//        let tail: MessageStyle.TailCorner = isFromCurrentSender(message: message) ? .bottomRight : .bottomLeft
+//        return .bubbleTail(tail, .curved)
+        return .bubble
 //        return .bubbleOutline(.black)
 //        return .none
     }

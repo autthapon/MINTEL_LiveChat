@@ -16,7 +16,10 @@
                         <rect key="frame" x="0.0" y="44" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <color key="barTintColor" red="0.94117647058823528" green="0.53333333333333333" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="barTintColor" red="0.96078431372549022" green="0.96078431372549022" blue="0.96078431372549022" alpha="1" colorSpace="calibratedRGB"/>
+                        <textAttributes key="titleTextAttributes">
+                            <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
+                        </textAttributes>
                     </navigationBar>
                     <connections>
                         <segue destination="Gbh-dQ-TMA" kind="relationship" relationship="rootViewController" id="YvS-7q-g5J"/>
@@ -37,14 +40,14 @@
                         <viewLayoutGuide key="safeArea" id="Ren-y1-F13"/>
                     </view>
                     <navigationItem key="navigationItem" id="cao-Sc-k8i">
-                        <barButtonItem key="leftBarButtonItem" image="close" id="f4d-pi-gYX">
-                            <connections>
-                                <action selector="showConfirmationCloseViewWithSender:" destination="Gbh-dQ-TMA" id="idZ-YA-1lL"/>
-                            </connections>
-                        </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" image="compress" id="jep-w8-h0p">
+                        <barButtonItem key="leftBarButtonItem" image="compress" id="jep-w8-h0p">
                             <connections>
                                 <action selector="collapseWithSender:" destination="Gbh-dQ-TMA" id="qXc-G7-RFP"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" image="close" id="f4d-pi-gYX">
+                            <connections>
+                                <action selector="showConfirmationCloseViewWithSender:" destination="Gbh-dQ-TMA" id="idZ-YA-1lL"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>

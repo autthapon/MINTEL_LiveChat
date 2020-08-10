@@ -32,9 +32,11 @@ open class MyCustomCell: UICollectionViewCell {
     
     var tapGuesture:MyTapGesture?
     open func configure(with message: MessageType, at indexPath: IndexPath, and messagesCollectionView: MessagesCollectionView, tapGuesture : MyTapGesture) {
+        
+        let custom = message as! MockMessage
 
         self.tapGuesture = tapGuesture
-        switch message.kind {
+        switch custom.kind {
         case .custom(let items) :
             
             let item = items as! [String: Any]
@@ -60,6 +62,7 @@ open class MyCustomCell: UICollectionViewCell {
                 lbl.layer.masksToBounds = true
                 lbl.layer.borderWidth = 0
                 lbl.tag = 10000
+                lbl.padding = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
                 self.contentView.addSubview(lbl)
              
             } else if (type == 1) {
@@ -67,6 +70,30 @@ open class MyCustomCell: UICollectionViewCell {
                 var yIndex = 0
                 
                 let defaultLabel = UILabel()
+                if let title = custom.title {
+                    if (title.count > 0) {
+                        let height = title.MyHeight(withConstrainedWidth: 300, font: defaultLabel.font)
+                        var setHeight = max(height, CGFloat(menuHeight))
+                        if Int(setHeight) > Int(menuHeight) {
+                            setHeight = setHeight + 25
+                        }
+                        
+                        let lbl = UILabel(frame: CGRect(x: 0, y: yIndex, width: 300, height: Int(setHeight)))
+                        lbl.text = title
+                        lbl.textAlignment = .center
+                        lbl.backgroundColor = UIColor(MyHexString: "#EBEBEB")
+                        lbl.layer.masksToBounds = true
+                        lbl.layer.borderWidth = 0.5
+                        lbl.numberOfLines = 10
+                        lbl.textColor = UIColor(MyHexString: "#090909")
+                        lbl.layer.borderColor = UIColor(MyHexString: "#EBEBEB").cgColor
+                        lbl.tag = 9999
+                        lbl.padding = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
+                        self.contentView.addSubview(lbl)
+                        yIndex = yIndex + Int(setHeight)
+                    }
+                }
+                
                 for i in 0..<menuItems.count {
                     let item = menuItems[i]
                     let actions = item["action"] as! [String:Any]
@@ -84,17 +111,18 @@ open class MyCustomCell: UICollectionViewCell {
                     lbl.backgroundColor = UIColor.white
                     lbl.layer.masksToBounds = true
                     lbl.layer.borderWidth = 0.5
-                    lbl.numberOfLines = 2
-                    lbl.layer.borderColor = UIColor.black.cgColor
+                    lbl.numberOfLines = 10
+                    lbl.textColor = UIColor(MyHexString: "#FF8300")
+                    lbl.layer.borderColor = UIColor(MyHexString: "#EBEBEB").cgColor
                     lbl.tag = 10000 + i
                     self.contentView.addSubview(lbl)
-                    yIndex = yIndex + Int(menuHeight)
+                    yIndex = yIndex + Int(setHeight)
                 }
                 
                 self.contentView.layer.cornerRadius = 20
                 self.contentView.layer.masksToBounds = true
-                self.contentView.layer.borderColor = UIColor.black.cgColor
-                self.contentView.layer.borderWidth = 0.5
+                self.contentView.layer.borderColor = UIColor(MyHexString: "#EBEBEB").cgColor
+                self.contentView.layer.borderWidth = 1
                 
                 if let gesture = self.tapGuesture {
                     self.contentView.addGestureRecognizer(gesture)
@@ -143,7 +171,7 @@ open class CustomMessageSizeCalculator: MessageSizeCalculator {
     open override func sizeForItem(at indexPath: IndexPath) -> CGSize {
         guard let layout = layout else { return .zero }
         let messagesCollectionView = layout as! MessagesCollectionViewFlowLayout
-        let message = messagesCollectionView.messagesDataSource.messageForItem(at: indexPath, in: layout.collectionView as! MessagesCollectionView)
+        let message = messagesCollectionView.messagesDataSource.messageForItem(at: indexPath, in: layout.collectionView as! MessagesCollectionView) as! MockMessage
         if case .custom(let items) = message.kind {
             let item = items as! [String: Any]
             let type = item["type"] as! Int
@@ -154,6 +182,19 @@ open class CustomMessageSizeCalculator: MessageSizeCalculator {
                 
                 var setMenuHeight = 0
                 let defaultLabel = UILabel()
+                
+                if let title = message.title {
+                    if (title.count > 0) {
+                        let height = title.MyHeight(withConstrainedWidth: 300, font: defaultLabel.font)
+                        var setHeight = max(height, CGFloat(menuHeight))
+                        if Int(setHeight) > Int(menuHeight) {
+                            setHeight = setHeight + 25
+                        }
+                        
+                        setMenuHeight = setMenuHeight + Int(setHeight)
+                    }
+                }
+                
                 for i in 0..<menuItems.count {
                     let item = menuItems[i]
                     let actions = item["action"] as! [String:Any]

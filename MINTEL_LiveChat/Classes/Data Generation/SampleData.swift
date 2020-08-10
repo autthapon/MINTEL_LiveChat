@@ -195,7 +195,7 @@ final internal class SampleData {
         case .Phone:
             return MockMessage(text: "123-456-7890", user: user, messageId: uniqueID, date: date)
         case .Custom:
-            return MockMessage(custom: "Someone left the conversation", user: system, messageId: uniqueID, date: date)
+            return MockMessage(custom: "Someone left the conversation", title:nil, user: system, messageId: uniqueID, date: date)
         case .ShareContact:
             let randomContact = Int(arc4random_uniform(UInt32(contactsToShare.count)))
             return MockMessage(contact: contactsToShare[randomContact], user: user, messageId: uniqueID, date: date)

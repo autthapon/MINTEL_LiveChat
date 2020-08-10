@@ -95,16 +95,22 @@ internal struct MockMessage: MessageType {
     var sentDate: Date
     var kind: MessageKind
     var user: MockUser
-
-    private init(kind: MessageKind, user: MockUser, messageId: String, date: Date) {
+    var title:String?
+    
+    private init(kind: MessageKind, title:String?, user: MockUser, messageId: String, date: Date) {
         self.kind = kind
+        self.title = title
         self.user = user
         self.messageId = messageId
         self.sentDate = date
     }
+
+    private init(kind: MessageKind, user: MockUser, messageId: String, date: Date) {
+        self.init(kind: kind, title: nil, user: user, messageId: messageId, date: date)
+    }
     
-    init(custom: Any?, user: MockUser, messageId: String, date: Date) {
-        self.init(kind: .custom(custom), user: user, messageId: messageId, date: date)
+    init(custom: Any?, title:String?, user: MockUser, messageId: String, date: Date) {
+        self.init(kind: .custom(custom), title: title, user: user, messageId: messageId, date: date)
     }
 
     init(text: String, user: MockUser, messageId: String, date: Date) {

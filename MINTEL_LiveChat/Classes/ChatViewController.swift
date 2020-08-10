@@ -31,13 +31,13 @@ import ServiceChat
 import Photos
 import SafariServices
 
-let menuHeight = 45
+let menuHeight = 55
 let orangeColor = "#EF8933"
 
 /// A base class for the example controllers
 class ChatViewController: MessagesViewController, MessagesDataSource {
     
-    internal static var callCenterUser = MockUser(senderId: "1", displayName: "Agent")
+    internal static var callCenterUser = MockUser(senderId: "1", displayName: "TMN Chatbot")
     internal static let user = MockUser(senderId: "2", displayName: "User")
     private var queuePosition:Int = Int.max
     private var salesforceEndChat = false
@@ -63,12 +63,12 @@ class ChatViewController: MessagesViewController, MessagesDataSource {
         MINTEL_LiveChat.instance.chatEventDelegate = nil
         MINTEL_LiveChat.instance.closeButtonHandle()
         
-        if (MINTEL_LiveChat.messageList.count == 0) {
-            let uniqueID = UUID().uuidString
-            let randomSentence = "TrueMoney Care สวัสดีครับ เจ้าหน้าที่ ยินดีให้บริการ สอบถามข้อมูล TrueMoney Wallet แจ้งได้เลยนะครับ"
-            let message = MockMessage(text: randomSentence, user: ChatViewController.callCenterUser, messageId: uniqueID, date: Date())
-            MINTEL_LiveChat.messageList.append(message)
-        }
+//        if (MINTEL_LiveChat.messageList.count == 0) {
+//            let uniqueID = UUID().uuidString
+//            let randomSentence = "TrueMoney Care สวัสดีครับ เจ้าหน้าที่ ยินดีให้บริการ สอบถามข้อมูล TrueMoney Wallet แจ้งได้เลยนะครับ"
+//            let message = MockMessage(text: randomSentence, user: ChatViewController.callCenterUser, messageId: uniqueID, date: Date())
+//            MINTEL_LiveChat.messageList.append(message)
+//        }
         
         self.openSurvey()
     }
@@ -115,8 +115,10 @@ class ChatViewController: MessagesViewController, MessagesDataSource {
             let type = item["type"] as! Int
             if (type == 2) {
             } else {
+                let custom = sender?.message as? MockMessage
+                let title = custom?.title
                 let menuItems = item["menuItem"] as? [[String :Any]]
-                let text = self.getMessageText(point: loc, message:menuItems ?? [])
+                let text = self.getMessageText(point: loc, title:title, message:menuItems ?? []) ?? ""
                 if (text.count > 0) {
                     
                     self.insertMessage(MockMessage(text: text, user: ChatViewController.user, messageId: UUID().uuidString, date: Date()))
@@ -150,15 +152,35 @@ class ChatViewController: MessagesViewController, MessagesDataSource {
         }
     }
     
-    private func getMessageText(point:CGPoint, message:[[String:Any]]) -> String {
-        let position = floor(point.y / CGFloat(menuHeight))
-        let item = message[Int(position)]
-        let action = item["action"] as? [String:Any] ?? nil
-        if (action == nil) {
-            return ""
+    private func getMessageText(point:CGPoint, title: String?, message:[[String:Any]]) -> String? {
+        
+        var setMenuHeight = 0
+        let defaultLabel = UILabel()
+        
+        if let myTitle = title {
+            if (myTitle.count > 0) {
+                let height = myTitle.MyHeight(withConstrainedWidth: 300, font: defaultLabel.font)
+                var setHeight = max(height, CGFloat(menuHeight))
+                if Int(setHeight) > Int(menuHeight) {
+                    setHeight = setHeight + 25
+                }
+                
+                setMenuHeight = setMenuHeight + Int(setHeight)
+            }
         }
-        let text = action?["text"] as? String ?? ""
-        return text
+        
+        let position = floor((point.y - CGFloat(setMenuHeight)) / CGFloat(menuHeight))
+        if (position > -1) {
+            let item = message[Int(position)]
+            let action = item["action"] as? [String:Any] ?? nil
+            if (action == nil) {
+                return ""
+            }
+            let text = action?["text"] as? String ?? ""
+            return text
+        } else {
+            return nil
+        }
     }
     
     /// The `BasicAudioController` controll the AVAudioPlayer state (play, pause, stop) and udpate audio cell UI accordingly.
@@ -173,7 +195,7 @@ class ChatViewController: MessagesViewController, MessagesDataSource {
     override func viewDidLoad() {
         
         self.navigationController?.navigationBar.isTranslucent = true
-        self.navigationController?.navigationBar.barTintColor = UIColor(MyHexString: orangeColor)
+        self.navigationController?.navigationBar.barTintColor = UIColor(MyHexString: "#F5F5F5")
         
         self.pickerController = UIImagePickerController()
         self.pickerController?.modalPresentationStyle = .fullScreen
@@ -192,7 +214,7 @@ class ChatViewController: MessagesViewController, MessagesDataSource {
         
         MINTEL_LiveChat.instance.chatDelegate = self
         
-        self.view.backgroundColor = UIColor(MyHexString: "#f1f1f1")
+        self.view.backgroundColor = UIColor(MyHexString: "#FFFFFF")
         
         super.viewDidLoad()
     }
@@ -274,7 +296,7 @@ class ChatViewController: MessagesViewController, MessagesDataSource {
     func configureMessageCollectionView() {
         
         let flowLayout = CustomMessagesFlowLayout()
-        flowLayout.menuHeight = menuHeight
+        flowLayout.menuHeight = 20
         messagesCollectionView = MessagesCollectionView(frame: .zero, collectionViewLayout: flowLayout)
         messagesCollectionView.messagesDataSource = self
         messagesCollectionView.messageCellDelegate = self
@@ -292,7 +314,7 @@ class ChatViewController: MessagesViewController, MessagesDataSource {
     
     func configureMessageInputBar() {
         messageInputBar.delegate = self
-        messageInputBar.inputTextView.tintColor = UIColor(MyHexString: "#EF8933")
+        messageInputBar.inputTextView.tintColor = UIColor(MyHexString: "#F5F5F5")
         messageInputBar.inputTextView.placeholder = "พิมพ์ข้อความที่คุณต้องการ"
         messageInputBar.sendButton.setTitle("", for: .normal)
         messageInputBar.sendButton.image = UIImage(named: "send", in: Bundle(for: ChatViewController.self), compatibleWith: nil)
@@ -710,14 +732,15 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
                                     let messages = dict["messages"] as! [[String: Any]]
                                     messages.forEach { body in
                                         let type = body["type"] as? String ?? ""
-                                        let text = body["text"] as? String ?? ""
+//                                        let text = body["text"] as? String ?? ""
+                                        let quickReplyTitle = body["text"] as? String ?? ""
                                         let quickReply = body["quickReply"] as? [String: Any] ?? nil
                                         if (type == "text") {
-                                            self.insertMessage(MockMessage(text: text, user: ChatViewController.callCenterUser, messageId: UUID().uuidString, date: Date()))
+//                                            self.insertMessage(MockMessage(text: text, user: ChatViewController.callCenterUser, messageId: UUID().uuidString, date: Date()))
                                             if (quickReply != nil) {
                                                 let items = quickReply!["items"] as? [[String:Any]] ?? []
                                                 let theMessage = ["type": 1, "menuItem" : items] as [String : Any]
-                                                self.insertMessage(MockMessage(custom: theMessage, user: ChatViewController.callCenterUser, messageId: UUID().uuidString, date: Date()))
+                                                self.insertMessage(MockMessage(custom: theMessage, title: quickReplyTitle,  user: ChatViewController.callCenterUser, messageId: UUID().uuidString, date: Date()))
                                             }
                                         }
                                     }
@@ -900,7 +923,7 @@ extension ChatViewController : SCSChatSessionDelegate {
         DispatchQueue.main.async {
             let msg = "Session end by agent"
             let msgItems = ["type" : 2, "msg" : msg] as [String : Any]
-            let message = MockMessage(custom: msgItems, user: ChatViewController.callCenterUser, messageId: UUID().uuidString, date: Date())
+            let message = MockMessage(custom: msgItems, title: nil, user: ChatViewController.callCenterUser, messageId: UUID().uuidString, date: Date())
             self.insertMessage(message)
             
             self.messageInputBar.sendButton.isEnabled = false
@@ -920,7 +943,7 @@ extension ChatViewController : SCSChatEventDelegate {
             ChatViewController.callCenterUser.displayName = agentjoinedEvent.sender?.name ?? "Agent"
             let msg = String(format: "%@ joined the chat", ChatViewController.callCenterUser.displayName)
             let msgItems = ["type" : 2, "msg" : msg] as [String : Any]
-            let message = MockMessage(custom: msgItems, user: ChatViewController.callCenterUser, messageId: UUID().uuidString, date: Date())
+            let message = MockMessage(custom: msgItems, title: nil, user: ChatViewController.callCenterUser, messageId: UUID().uuidString, date: Date())
             self.insertMessage(message)
             
             self.title = ChatViewController.callCenterUser.displayName
@@ -960,7 +983,7 @@ extension ChatViewController : SCSChatEventDelegate {
         DispatchQueue.main.async {
             let msg = "Agent left from the chat."
             let msgItems = ["type" : 2, "msg" : msg] as [String : Any]
-            let message = MockMessage(custom: msgItems, user: ChatViewController.callCenterUser, messageId: UUID().uuidString, date: Date())
+            let message = MockMessage(custom: msgItems, title: nil, user: ChatViewController.callCenterUser, messageId: UUID().uuidString, date: Date())
             self.insertMessage(message)
         }
     }
