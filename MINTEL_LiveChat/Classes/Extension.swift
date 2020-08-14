@@ -5,7 +5,7 @@
 //  Created by Autthapon Sukjaroen on 13/6/2563 BE.
 //
 
-extension UIColor {
+internal extension UIColor {
     
     convenience init(MyHexString: String, alpha: CGFloat = 1.0) {
         let hexString: String = MyHexString.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
@@ -75,7 +75,9 @@ extension UILabel {
     }
 }
 
-extension UIView {
+
+
+internal extension UIView {
 
     func MyRoundCorners(_ corners: UIRectCorner, radius: CGFloat) {
          let path = UIBezierPath(roundedRect: self.bounds, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
@@ -83,9 +85,45 @@ extension UIView {
          mask.path = path.cgPath
          self.layer.mask = mask
     }
+    
+    func MyEdges(_ edges: UIRectEdge, to view: UIView, offset: UIEdgeInsets) {
+        if edges.contains(.top) || edges.contains(.all) {
+            self.topAnchor.constraint(equalTo: view.topAnchor, constant: offset.top).isActive = true
+        }
+        
+        if edges.contains(.bottom) || edges.contains(.all) {
+            self.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: offset.bottom).isActive = true
+        }
+        
+        if edges.contains(.left) || edges.contains(.all) {
+            self.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: offset.left).isActive = true
+        }
+        
+        if edges.contains(.right) || edges.contains(.all) {
+            self.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: offset.right).isActive = true
+        }
+    }
+    
+    func MyEdges(_ edges: UIRectEdge, to layoutGuide: UILayoutGuide, offset: UIEdgeInsets) {
+        if edges.contains(.top) || edges.contains(.all) {
+            self.topAnchor.constraint(equalTo: layoutGuide.topAnchor, constant: offset.top).isActive = true
+        }
+        
+        if edges.contains(.bottom) || edges.contains(.all) {
+            self.bottomAnchor.constraint(equalTo: layoutGuide.bottomAnchor, constant: offset.bottom).isActive = true
+        }
+        
+        if edges.contains(.left) || edges.contains(.all) {
+            self.leadingAnchor.constraint(equalTo: layoutGuide.leadingAnchor, constant: offset.left).isActive = true
+        }
+        
+        if edges.contains(.right) || edges.contains(.all) {
+            self.trailingAnchor.constraint(equalTo: layoutGuide.trailingAnchor, constant: offset.right).isActive = true
+        }
+    }
 }
 
-extension String {
+internal extension String {
     func MyHeight(withConstrainedWidth width: CGFloat, font: UIFont) -> CGFloat {
         let constraintRect = CGSize(width: width, height: .greatestFiniteMagnitude)
         let boundingBox = self.boundingRect(with: constraintRect, options: .usesLineFragmentOrigin, attributes: [NSAttributedString.Key.font: font], context: nil)

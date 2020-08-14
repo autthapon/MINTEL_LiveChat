@@ -25,7 +25,6 @@ public class MINTEL_LiveChat: UIView {
     internal static var instance:MINTEL_LiveChat!
     internal static var agentState = 1
     internal static var chatBotMode = true
-    internal static var messageList: [MockMessage] = []
     
     private var draggable: Bool = true
     private var dragging: Bool = false
@@ -41,10 +40,6 @@ public class MINTEL_LiveChat: UIView {
     private var queueTitleLabel:UILabel!
     private var queueLabel:UILabel!
     private var callCenterLabel:UILabel!
-    
-    internal var chatSessionDelegate:SCSChatSessionDelegate? = nil
-    internal var chatEventDelegate:SCSChatEventDelegate? = nil
-    internal var chatDelegate:ChatDelegate? = nil
     
     private var longPressGestureRecognizer: UILongPressGestureRecognizer?
     private var tapGestureRecognizer:UITapGestureRecognizer?
@@ -86,7 +81,7 @@ public class MINTEL_LiveChat: UIView {
             if (MINTEL_LiveChat.agentState == 5) {
                 self.userImageView.isHidden = false
                 self.callCenterLabel.isHidden = false
-                self.callCenterLabel.text = ChatViewController.callCenterUser.displayName
+                self.callCenterLabel.text = "TODO"
                 self.queueTitleLabel.isHidden = true
                 self.queueLabel.isHidden = true
             } else {
@@ -112,11 +107,11 @@ public class MINTEL_LiveChat: UIView {
         self.isHidden = false
         UIApplication.shared.keyWindow?.bringSubviewToFront(self)
         
-//        if (!MINTEL_LiveChat.chatBotMode) {
-//            self.startSaleForce()
-//        } else {
-//            self.tapAction(sender: UIButton())
-//        }
+        if (!MINTEL_LiveChat.chatBotMode) {
+            self.startSaleForce()
+        } else {
+            self.tapAction(sender: UIButton())
+        }
     }
     
     public func sendToFront() {
@@ -170,7 +165,7 @@ public class MINTEL_LiveChat: UIView {
         
         self.callCenterLabel = UILabel(frame: CGRect(x: 0, y: self.userImageView.frame.origin.y + self.userImageView.frame.size.height, width: self.frame.size.width, height: 25))
         self.callCenterLabel.font = UIFont.systemFont(ofSize: 14)
-        self.callCenterLabel.text = ChatViewController.callCenterUser.displayName
+        self.callCenterLabel.text = "TODO"
         self.callCenterLabel.textAlignment = .center
         self.addSubview(self.callCenterLabel)
         
@@ -252,11 +247,11 @@ public class MINTEL_LiveChat: UIView {
         let loc:CGPoint = sender!.location(in: sender?.view)
         let buttonHeight = (self.frame.size.height * closeButtonHeight) / viewHeight
         if loc.y <= buttonHeight {
-            if (self.chatDelegate != nil) {
-                self.chatDelegate?.terminate()
-            } else {
+//            if (self.chatDelegate != nil) {
+//                self.chatDelegate?.terminate()
+//            } else {
                 self.closeButtonHandle()
-            }
+//            }
         } else {
             self.tapAction(sender: sender as AnyObject)
         }
@@ -417,9 +412,6 @@ public class MINTEL_LiveChat: UIView {
 extension MINTEL_LiveChat : SCSChatSessionDelegate {
     public func session(_ session: SCSChatSession!, didError error: Error!, fatal: Bool) {
         debugPrint("Error : ", error)
-        if (self.chatSessionDelegate != nil) {
-            self.chatSessionDelegate?.session(session, didError: error, fatal: fatal)
-        }
     }
     
     public func session(_ session: SCSChatSession!, didUpdateQueuePosition position: NSNumber!, estimatedWaitTime waitTime: NSNumber!) {
@@ -434,122 +426,95 @@ extension MINTEL_LiveChat : SCSChatSessionDelegate {
             }
         }
         
-        if (self.chatSessionDelegate != nil) {
-            self.chatSessionDelegate?.session?(session, didUpdateQueuePosition: position, estimatedWaitTime: waitTime)
-        }
+        NotificationCenter.default.post(name: Notification.Name(SalesForceNotifId.didUpdatePosition),
+                object: nil,
+                userInfo:["session": session, "position": position.intValue])
     }
     
     public func session(_ session: SCSChatSession!, didEnd endEvent: SCSChatSessionEndEvent!) {
         debugPrint("Session End")
         MINTEL_LiveChat.agentState = 1
-        if (self.chatSessionDelegate != nil) {
-            self.chatSessionDelegate?.session?(session, didEnd: endEvent)
-        }
+        
+        NotificationCenter.default.post(name: Notification.Name(SalesForceNotifId.didEnd),
+                object: nil,
+                userInfo:["session": session, "event": endEvent])
     }
     
     public func session(_ session: SCSChatSession!, didTransitionFrom previous: SCSChatSessionState, to current: SCSChatSessionState) {
-//        debugPrint("Transition " , previous, current)
-        if (self.chatSessionDelegate != nil) {
-            self.chatSessionDelegate?.session?(session, didTransitionFrom: previous, to: current)
-        } else {
-            if previous == SCSChatSessionState.connecting && current == SCSChatSessionState.queued {
-                DispatchQueue.main.async {
-                    self.queueLabel.tag = Int.max
-                }
+        if previous == SCSChatSessionState.connecting && current == SCSChatSessionState.queued {
+            DispatchQueue.main.async {
+                self.queueLabel.tag = Int.max
             }
         }
     }
 }
 
 extension MINTEL_LiveChat : SCSChatEventDelegate {
+    
     public func session(_ session: SCSChatSession!, agentJoined agentjoinedEvent: SCSAgentJoinEvent!) {
-        MINTEL_LiveChat.agentState = 5
-        if (self.chatEventDelegate != nil) {
-            self.chatEventDelegate?.session(session, agentJoined: agentjoinedEvent)
-        } else {
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .seconds(1)) {
-                
-                let bundle = Bundle(for: type(of: self))
-                let storyboard = UIStoryboard(name: "ChatBox", bundle: bundle)
-                let vc = storyboard.instantiateInitialViewController()!
-                let viewController = UIApplication.shared.windows.first!.rootViewController!
-                viewController.modalPresentationStyle = .fullScreen
-                viewController.present(vc, animated: true, completion: nil)
-            }
-        }
+
+        NotificationCenter.default.post(name: Notification.Name(SalesForceNotifId.agentJoined),
+                    object: nil,
+                    userInfo:["session": session, "event": agentjoinedEvent])
         
+//        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .seconds(1)) {
+//
+//            let bundle = Bundle(for: type(of: self))
+//            let storyboard = UIStoryboard(name: "ChatBox", bundle: bundle)
+//            let vc = storyboard.instantiateInitialViewController()!
+//            let viewController = UIApplication.shared.windows.first!.rootViewController!
+//            viewController.modalPresentationStyle = .fullScreen
+//            viewController.present(vc, animated: true, completion: nil)
+//        }
     }
     
     public func session(_ session: SCSChatSession!, agentLeftConference agentLeftConferenceEvent: SCSAgentLeftConferenceEvent!) {
         MINTEL_LiveChat.agentState = 1
         debugPrint("Agent Left")
-        if (self.chatEventDelegate != nil) {
-            self.chatEventDelegate?.session(session, agentLeftConference: agentLeftConferenceEvent)
-        }
+        
+        NotificationCenter.default.post(name: Notification.Name(SalesForceNotifId.agentLeftConference),
+                object: nil,
+                userInfo:["session": session, "event": agentLeftConferenceEvent])
     }
     
     public func session(_ session: SCSChatSession!, processedOutgoingMessage message: SCSUserTextEvent!) {
         debugPrint("process Outgoing Message : ", message)
-        if (self.chatEventDelegate != nil) {
-            self.chatEventDelegate?.session(session, processedOutgoingMessage: message)
-        }
     }
     
     public func session(_ session: SCSChatSession!, didUpdateOutgoingMessageDeliveryStatus message: SCSUserTextEvent!) {
         debugPrint("didUpdateOutgoingMessageDeliveryStatus : ", message)
-        if (self.chatEventDelegate != nil) {
-            self.chatEventDelegate?.session(session, didUpdateOutgoingMessageDeliveryStatus: message)
-        }
     }
     
     public func session(_ session: SCSChatSession!, didSelectMenuItem menuEvent: SCSChatMenuSelectionEvent!) {
         debugPrint("didSelectMenuItem : ", menuEvent)
-        if (self.chatEventDelegate != nil) {
-            self.chatEventDelegate?.session(session, didSelectMenuItem: menuEvent)
-        }
     }
     
     public func session(_ session: SCSChatSession!, didReceiveMessage message: SCSAgentTextEvent!) {
         debugPrint("didReceiveMessage : ", message)
-        if (self.chatEventDelegate != nil) {
-            self.chatEventDelegate?.session(session, didReceiveMessage: message)
-        }
+        
+        NotificationCenter.default.post(name: Notification.Name(SalesForceNotifId.didReceiveMessage),
+                object: nil,
+                userInfo:["session": session, "message": message])
     }
     
     public func session(_ session: SCSChatSession!, didReceiveChatBotMenu menuEvent: SCSChatBotMenuEvent!) {
         debugPrint("didReceiveChatBotMenu : ", menuEvent)
-        if (self.chatEventDelegate != nil) {
-            self.chatEventDelegate?.session(session, didReceiveChatBotMenu: menuEvent)
-        }
     }
     
     public func session(_ session: SCSChatSession!, didReceiveFileTransferRequest fileTransferEvent: SCSFileTransferEvent!) {
         debugPrint("didReceiveFileTransferRequest : ", fileTransferEvent)
-        if (self.chatEventDelegate != nil) {
-            self.chatEventDelegate?.session(session, didReceiveFileTransferRequest: fileTransferEvent)
-        }
     }
     
     public func transferToButtonInitiated(with session: SCSChatSession!) {
         debugPrint("transferToButtonInitiated : ", session)
-        if (self.chatEventDelegate != nil) {
-            self.chatEventDelegate?.transferToButtonInitiated(with: session)
-        }
     }
     
     public func transferToButtonCompleted(with session: SCSChatSession!) {
         debugPrint("transferToButtonCompleted : ", session)
-        if (self.chatEventDelegate != nil) {
-            self.chatEventDelegate?.transferToButtonCompleted(with: session)
-        }
     }
     
     public func transferToButtonFailed(with session: SCSChatSession!, error: Error!) {
         debugPrint("transferToButtonFailed : ", session)
-        if (self.chatEventDelegate != nil) {
-            self.chatEventDelegate?.transferToButtonFailed(with: session, error: error)
-        }
     }
-    
-    
+
 }

@@ -29,10 +29,10 @@
             </objects>
             <point key="canvasLocation" x="-1466" y="-138"/>
         </scene>
-        <!--Chat Box View Controller-->
+        <!--View Controller-->
         <scene sceneID="9jG-dK-uDb">
             <objects>
-                <viewController id="Gbh-dQ-TMA" customClass="ChatBoxViewController" customModule="MINTEL_LiveChat" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="Gbh-dQ-TMA" customClass="ViewController" customModule="MINTEL_LiveChat" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="TaP-8m-QwR">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="808"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -40,22 +40,9 @@
                         <viewLayoutGuide key="safeArea" id="Ren-y1-F13"/>
                     </view>
                     <navigationItem key="navigationItem" id="cao-Sc-k8i">
-                        <barButtonItem key="leftBarButtonItem" image="compress" id="jep-w8-h0p">
-                            <connections>
-                                <action selector="collapseWithSender:" destination="Gbh-dQ-TMA" id="qXc-G7-RFP"/>
-                            </connections>
-                        </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" image="close" id="f4d-pi-gYX">
-                            <connections>
-                                <action selector="showConfirmationCloseViewWithSender:" destination="Gbh-dQ-TMA" id="idZ-YA-1lL"/>
-                            </connections>
-                        </barButtonItem>
+                        <barButtonItem key="leftBarButtonItem" image="compress" id="jep-w8-h0p"/>
+                        <barButtonItem key="rightBarButtonItem" image="close" id="f4d-pi-gYX"/>
                     </navigationItem>
-                    <connections>
-                        <outlet property="btnBack" destination="syu-79-8J7" id="CHd-dw-Wj4"/>
-                        <outlet property="btnConfirmClose" destination="3U7-6Y-a8o" id="imQ-Lm-lSc"/>
-                        <outlet property="viewConfirm" destination="PJI-ud-K4a" id="VZ4-W7-wvR"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Vmh-LI-G4m" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <view contentMode="scaleToFill" id="PJI-ud-K4a">
@@ -84,9 +71,6 @@
                             <state key="normal" title="ยืนยันสิ้นสุดการแชท">
                                 <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </state>
-                            <connections>
-                                <action selector="closeChatWithSender:" destination="Gbh-dQ-TMA" eventType="touchUpInside" id="Z9S-di-BgF"/>
-                            </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="syu-79-8J7">
                             <rect key="frame" x="20" y="507" width="374" height="56"/>
@@ -98,9 +82,6 @@
                             <state key="normal" title="กลับ">
                                 <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </state>
-                            <connections>
-                                <action selector="backToNormalWithSender:" destination="Gbh-dQ-TMA" eventType="touchUpInside" id="Las-Xa-OTq"/>
-                            </connections>
                         </button>
                     </subviews>
                     <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
@@ -125,7 +106,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="close" width="16.5" height="16.5"/>
-        <image name="compress" width="16.5" height="16.5"/>
+        <image name="close" width="14" height="14"/>
+        <image name="compress" width="18" height="18"/>
     </resources>
 </document>
