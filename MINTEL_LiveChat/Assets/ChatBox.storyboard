@@ -40,9 +40,20 @@
                         <viewLayoutGuide key="safeArea" id="Ren-y1-F13"/>
                     </view>
                     <navigationItem key="navigationItem" id="cao-Sc-k8i">
-                        <barButtonItem key="leftBarButtonItem" image="compress" id="jep-w8-h0p"/>
-                        <barButtonItem key="rightBarButtonItem" image="close" id="f4d-pi-gYX"/>
+                        <barButtonItem key="leftBarButtonItem" image="compress" id="jep-w8-h0p">
+                            <connections>
+                                <action selector="collapseChat" destination="Gbh-dQ-TMA" id="Pqe-DR-uLc"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" image="close" id="f4d-pi-gYX">
+                            <connections>
+                                <action selector="closeChat" destination="Gbh-dQ-TMA" id="eTe-fo-UsC"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="viewConfirm" destination="PJI-ud-K4a" id="N98-ch-cBF"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Vmh-LI-G4m" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <view contentMode="scaleToFill" id="PJI-ud-K4a">
@@ -71,6 +82,9 @@
                             <state key="normal" title="ยืนยันสิ้นสุดการแชท">
                                 <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </state>
+                            <connections>
+                                <action selector="confirmExitChat" destination="Gbh-dQ-TMA" eventType="touchUpInside" id="vZ1-Ru-rlA"/>
+                            </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="syu-79-8J7">
                             <rect key="frame" x="20" y="507" width="374" height="56"/>
@@ -82,6 +96,9 @@
                             <state key="normal" title="กลับ">
                                 <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </state>
+                            <connections>
+                                <action selector="hideConfirmExit" destination="Gbh-dQ-TMA" eventType="touchUpInside" id="lQr-sh-yNd"/>
+                            </connections>
                         </button>
                     </subviews>
                     <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
@@ -106,7 +123,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="close" width="14" height="14"/>
+        <image name="close" width="16" height="16"/>
         <image name="compress" width="18" height="18"/>
     </resources>
 </document>

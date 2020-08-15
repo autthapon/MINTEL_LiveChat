@@ -25,6 +25,9 @@ func randomString(length: Int) -> String {
     return randomString
 }
 
+let extraSpacing: CGFloat = 10
+let padding: CGFloat = 8
+
 class CustomTableViewCell: UITableViewCell {
     
     var tapGuesture:MyTapGuesture?
@@ -74,11 +77,11 @@ class CustomTableViewCell: UITableViewCell {
         }
     }
     
-    let extraSpacing: CGFloat = 10
+    
     
     let innerSpacing: CGFloat = 4
     
-    let padding: CGFloat = 8
+    
     
     let secondaryPadding: CGFloat = 8
     
@@ -118,7 +121,7 @@ class CustomTableViewCell: UITableViewCell {
     }
     
     fileprivate static func createSystemMessage(text: String) -> UILabel {
-        let lbl = PaddingLabel(withInsets: 3, 3, 3, 3)
+        let lbl = PaddingLabel(withInsets: 0.5, 0.5, 3, 3)
         lbl.font = UIFont.systemFont(ofSize: 12)
         lbl.text = text
         lbl.backgroundColor = UIColor(MyHexString: "#EBEBEB")
@@ -144,10 +147,10 @@ class CustomTableViewCell: UITableViewCell {
         
         let lbl = CustomTableViewCell.createSystemMessage(text: text)
         let screen = UIScreen.main.bounds
-        let xPosition = (screen.width - lbl.frame.size.width) / 2.0
+        let xPosition = (screen.width - (lbl.frame.size.width + 25)) / 2.0
         
-        lbl.frame = CGRect(x: xPosition, y: 10, width: lbl.frame.size.width + 25, height: lbl.frame.size.height + 20)
-        lbl.layer.cornerRadius = 18
+        lbl.frame = CGRect(x: xPosition, y: 10, width: lbl.frame.size.width + 25, height: lbl.frame.size.height + 10.0)
+        lbl.layer.cornerRadius = 10
         lbl.backgroundColor = UIColor(MyHexString: "#EBEBEB")
         lbl.layer.masksToBounds = true
         
@@ -159,7 +162,7 @@ class CustomTableViewCell: UITableViewCell {
         
         let lbl = CustomTableViewCell.createSystemMessageType2(text: text)
         let screen = UIScreen.main.bounds
-        let xPosition = (screen.width - lbl.frame.size.width) / 2.0
+        let xPosition = (screen.width - (lbl.frame.size.width + 35)) / 2.0
         
         lbl.frame = CGRect(x: xPosition, y: 10, width: lbl.frame.size.width + 35, height: lbl.frame.size.height + 10)
         lbl.layer.cornerRadius = 12
@@ -183,12 +186,12 @@ class CustomTableViewCell: UITableViewCell {
     
     static func calcRowHeightSystemMessage(text: String) -> CGFloat {
         let lbl = createSystemMessage(text: text)
-        return lbl.frame.size.height + 40
+        return lbl.frame.size.height + 25
     }
     
     static func calcRowHeightSystemMessageType2(text: String) -> CGFloat {
         let lbl = createSystemMessage(text: text)
-        return lbl.frame.size.height + 40
+        return lbl.frame.size.height + 25
     }
     
     func setupReceiversMenuCell() {
@@ -287,20 +290,22 @@ class CustomTableViewCell: UITableViewCell {
     func renderAgentJoin() {
         self.setupSystemMessage()
         
-        let lbl = CustomTableViewCell.createSystemMessage(text: "Agent Joined")
         let screen = UIScreen.main.bounds
-        let xPosition = (screen.width - lbl.frame.size.width) / 2.0
+        let imgView = UIImageView(image: UIImage(named: "agent", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil))
+        self.contentView.addSubview(imgView)
+        var xPosition = (screen.width - imgView.image!.size.width) / 2.0
+        imgView.frame = CGRect(x: xPosition, y: 10, width: imgView.image!.size.width, height: imgView.image!.size.height)
         
-        lbl.frame = CGRect(x: xPosition, y: 10, width: lbl.frame.size.width + 25, height: lbl.frame.size.height + 20)
-        lbl.layer.cornerRadius = 18
-        lbl.backgroundColor = UIColor(MyHexString: "#EBEBEB")
-        lbl.layer.masksToBounds = true
-        
+        let lbl = CustomTableViewCell.createSystemMessage(text: "Agent Joined")
         self.contentView.addSubview(lbl)
+        xPosition = (screen.width - (lbl.frame.size.width + 25)) / 2.0
+        lbl.frame = CGRect(x: xPosition, y: 10 + imgView.image!.size.height + 2, width: lbl.frame.size.width + 25, height: lbl.frame.size.height + 20)
+        lbl.backgroundColor = UIColor(MyHexString: "#FFFFFF")
+        lbl.layer.masksToBounds = true
     }
     
     static func calcAgentJoinCellHeight() -> CGFloat {
-        return 50
+        return 80
     }
     
     static func calcImageCellHeight(_ image:UIImage) -> CGFloat {
@@ -353,32 +358,31 @@ class CustomTableViewCell: UITableViewCell {
     
     func setupMenuCell(_ title:String,_ menus:[[String:Any]]) {
         
-        var width = UIScreen.main.bounds.size.width - (padding + padding + (self.avatarView.image?.size.width ?? 0.0) + 10.0)
-        width = width - 3.0
+        self.contentView.addSubview(self.avatarView)
+        self.avatarView.image = UIImage(named: "chatbot", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil)
+        self.avatarView.MyEdges([.left, .top], to: self.contentView, offset: UIEdgeInsets(top: padding, left: padding, bottom: -padding, right: -padding))
         
-        let defaultLabel = UILabel()
-        defaultLabel.font = UIFont.systemFont(ofSize: 16.0)
-        let height = title.MyHeight(withConstrainedWidth: width, font: defaultLabel.font)
-        var setHeight = max(height, CGFloat(menuHeight))
-        setHeight = setHeight + 20
-        
-        
-        bgView.layer.cornerRadius = 20
-        bgView.layer.masksToBounds = true
+        let offset = UIEdgeInsets(top: padding - 8.0, left: padding + (self.avatarView.image?.size.width ?? 0.0) + 10.0, bottom: -padding, right: -padding)
+        self.contentView.addSubview(bgView)
+        bgView.MyEdges([.left, .top, .bottom], to: self.contentView, offset: offset)
+        bgView.layer.cornerRadius = 18
+        bgView.backgroundColor = UIColor(MyHexString: "#EBEBEB")
+        bgView.trailingAnchor.constraint(lessThanOrEqualTo: self.contentView.trailingAnchor, constant: -extraSpacing).isActive = true
+        bgView.layer.borderWidth = 0.5
         bgView.layer.borderColor = UIColor(MyHexString: "#EBEBEB").cgColor
-        bgView.layer.borderWidth = 1
+        bgView.layer.masksToBounds = true
         
-        for view in bgView.subviews {
-            if view is UILabel {
-                view.removeFromSuperview()
-            }
-        }
+        self.textView.isHidden = true
+        self.topLabel.isHidden = true
+        self.bottomLabel.isHidden = true
         
-        print(title, setHeight, height, width)
-        
-        var yIndex = CGFloat(0.0)
+        var yIndex = bgView.frame.origin.y
+        let width = UIScreen.main.bounds.size.width - (8.0 + (self.avatarView.image?.size.width ?? 0.0) + 10.0 + extraSpacing)
+        var height = title.MyHeight(withConstrainedWidth: width, font: UIFont.systemFont(ofSize: 16.0))
+        height = max(height, 40.0)
         let lbl = PaddingLabel(withInsets: 8, 8, 18, 18)
-        lbl.frame = CGRect(x: 0.0, y: yIndex, width: width, height: setHeight)
+        bgView.addSubview(lbl)
+        lbl.frame = CGRect(x: 0.0, y: yIndex, width: width, height: height + 16)
         lbl.text = title
         lbl.font = UIFont.systemFont(ofSize: 16.0)
         lbl.textAlignment = .center
@@ -386,24 +390,22 @@ class CustomTableViewCell: UITableViewCell {
         lbl.layer.masksToBounds = true
         lbl.layer.borderWidth = 0.5
         lbl.numberOfLines = 10
+        lbl.layer.masksToBounds = true
+//        lbl.layer.cornerRadius = 18
         lbl.textColor = UIColor(MyHexString: "#090909")
         lbl.layer.borderColor = UIColor(MyHexString: "#EBEBEB").cgColor
         lbl.tag = 9999
-//        lbl.padding = UIEdgeInsets(top: 10, left: 25, bottom: 10, right: 25)
-        bgView.addSubview(lbl)
-        yIndex = yIndex + setHeight
+        yIndex = yIndex + lbl.frame.size.height
 
         for i in 0..<menus.count {
             let item = menus[i]
             let actions = item["action"] as! [String:Any]
             let labelText = actions["label"] as? String ?? ""
-            
-            let height = labelText.MyHeight(withConstrainedWidth: width, font: defaultLabel.font)
-            var setHeight = max(height, CGFloat(menuHeight))
-            setHeight = setHeight + 20
-            
+
+            height = labelText.MyHeight(withConstrainedWidth: width, font: UIFont.systemFont(ofSize: 16.0))
+            height = max(40.0, height)
             let lbl = PaddingLabel(withInsets: 8, 8, 18, 18)
-            lbl.frame = CGRect(x: 0.0, y: yIndex, width: width, height: setHeight)
+            lbl.frame = CGRect(x: 0.0, y: yIndex, width: width, height: height + 16)
             lbl.text = labelText
             lbl.font = UIFont.systemFont(ofSize: 16.0)
             lbl.textAlignment = .center
@@ -413,46 +415,32 @@ class CustomTableViewCell: UITableViewCell {
             lbl.numberOfLines = 10
             lbl.textColor = UIColor(MyHexString: "#FF8300")
             lbl.layer.borderColor = UIColor(MyHexString: "#EBEBEB").cgColor
-//            lbl.padding = UIEdgeInsets(top: 10, left: 25, bottom: 10, right: 25)
             lbl.tag = 10000 + i
             self.menuLabel.append(lbl)
             bgView.addSubview(lbl)
-            yIndex = yIndex + setHeight
+            yIndex = yIndex + lbl.frame.size.height
         }
     }
     
     static func calcMenuCellHeight(_ title:String,_ menus:[[String:Any]]) -> CGFloat {
-        
-        let padding = 8.0
-        var width = UIScreen.main.bounds.size.width - CGFloat(2 * padding)  + CGFloat(50.0)
-        width = width - 3.0
-        
-        var allHeight = CGFloat(0.0)
-        let defaultLabel = UILabel()
-        defaultLabel.font = UIFont.systemFont(ofSize: 16.0)
-        let height = title.MyHeight(withConstrainedWidth: width, font: defaultLabel.font)
-        var setHeight = max(height, CGFloat(menuHeight))
-        if Int(setHeight) > Int(menuHeight) {
-            setHeight = setHeight + 20
-        }
-        
-        allHeight = allHeight + setHeight
-        
+        var yIndex = CGFloat(0.0)
+        let image = UIImage(named: "chatbot", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil)
+        let width = UIScreen.main.bounds.size.width - (8.0 + (image?.size.width ?? 0.0) + 10.0 + extraSpacing)
+        var height = title.MyHeight(withConstrainedWidth: width, font: UIFont.systemFont(ofSize: 16.0))
+        height = max(height, 40.0)
+        yIndex = yIndex + height + 16
+
         for i in 0..<menus.count {
             let item = menus[i]
             let actions = item["action"] as! [String:Any]
             let labelText = actions["label"] as? String ?? ""
-            
-            let height = labelText.MyHeight(withConstrainedWidth: width, font: defaultLabel.font)
-            var setHeight = max(height, CGFloat(menuHeight))
-            setHeight = setHeight + 20
-            
-            allHeight = allHeight + setHeight
+
+            height = labelText.MyHeight(withConstrainedWidth: width, font: UIFont.systemFont(ofSize: 16.0))
+            height = max(40.0, height)
+            yIndex = yIndex + height + 16
         }
         
-        allHeight = allHeight + CGFloat(menuHeight + 14)
-        
-        return allHeight
+        return CGFloat(yIndex + 15)
     }
     
     required init?(coder: NSCoder) {

@@ -11,7 +11,6 @@ import Photos
 import PhotosUI
 import AVFoundation
 
-
 internal class CellIds {
     
     static let senderCellId = "senderCellId"
@@ -21,6 +20,14 @@ internal class CellIds {
     static let systemMessageType2CellId = "systemMessageType2CellId"
     static let imageMessageCellId = "imageCellId"
     static let agentJoinCellId = "agentJoinCellId"
+}
+
+internal class MINTELNotifId {
+    static let userIsTyping = "MINTEL_userIsTyping"
+    static let userIsNotTyping = "MINTEL_userIsNotTyping"
+    static let botTyped = "MINTEL_botTyped"
+    static let toAgentMode = "MINTEL_toAgentMode"
+    static let reallyExitChat = "MINTEL_reallyExitChat"
 }
 
 internal class SalesForceNotifId {
@@ -49,10 +56,11 @@ class ViewController: UIViewController {
     }
     
     let imagePanelHeight:CGFloat = 245.0
-    var items = [MyMessage]()
+    
     var imagePicker: UIImagePickerController!
     var fetchResult: PHFetchResult<PHAsset>!
     var assetCollection: PHAssetCollection!
+    @IBOutlet weak var viewConfirm:UIView!
 
     fileprivate let imageManager = PHCachingImageManager()
     fileprivate var thumbnailSize: CGSize!
@@ -86,6 +94,28 @@ class ViewController: UIViewController {
     
     var inputTextViewBottomConstraint: NSLayoutConstraint!
     
+    @IBAction func collapseChat() {
+        self.dismiss(animated: true, completion: nil)
+    }
+    
+    @IBAction func closeChat() {
+        if (MINTEL_LiveChat.chatInProgress) {
+            self.viewConfirm.frame = CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: self.view.frame.size.height)
+            self.view.addSubview(self.viewConfirm)
+        } else {
+            self.dismiss(animated: true, completion: nil)
+            MINTEL_LiveChat.instance.closeButtonHandle()
+        }
+    }
+    
+    @IBAction func hideConfirmExit() {
+        self.viewConfirm.removeFromSuperview()
+    }
+    
+    @IBAction func confirmExitChat() {
+        MINTEL_LiveChat.instance.reallyEndChat()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.title = "TMN Chatbot"
@@ -103,17 +133,39 @@ class ViewController: UIViewController {
             fetchResult = PHAsset.fetchAssets(with: allPhotosOptions)
         }
         
-        let date = Date()
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "HH:mm"
-        let date24 = dateFormatter.string(from: date)
-        
-        self.items.append(MyMessage(systemMessageType1: String(format: "Chat Initiated %@", date24)))
         self.tableView.reloadData()
         self.tableView.scrollToBottom()
-        self.getAnnouncementMessage()
+        self.setupNotification()
         self.setupSaleForcesNotification()
+    }
+    
+    fileprivate func setupNotification() {
         
+        
+        NotificationCenter.default.addObserver(self,
+                selector: #selector(botTyped(_:)),
+                name: Notification.Name(MINTELNotifId.botTyped),
+                object: nil)
+        
+        NotificationCenter.default.addObserver(self,
+                selector: #selector(toAgentModeFromNotification(_:)),
+                name: Notification.Name(MINTELNotifId.toAgentMode),
+                object: nil)
+        
+        NotificationCenter.default.addObserver(self,
+            selector: #selector(MINTEL_reallyEndChat(_:)),
+            name: Notification.Name(MINTELNotifId.reallyExitChat),
+            object: nil)
+    }
+    
+    @objc func botTyped(_ notification: Notification) {
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+            self.tableView.scrollToBottom()
+        }
+    }
+    
+    @objc func toAgentModeFromNotification(_ notification: Notification) {
         self.switchToAgentMode()
     }
     
@@ -208,7 +260,7 @@ class ViewController: UIViewController {
 extension ViewController: UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return items.count
+        return MINTEL_LiveChat.items.count
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -216,7 +268,7 @@ extension ViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let item = self.items[indexPath.section]
+        let item = MINTEL_LiveChat.items[indexPath.section]
         let agent = item.agent
         
         var cellIdentifierId:String
@@ -244,6 +296,11 @@ extension ViewController: UITableViewDataSource {
             case .systemMessageType2(let txt):
                 cell.renderSystemMessageType2(text: txt)
             case .text(let txt):
+                if (item.bot) {
+                    cell.avatarView.image = UIImage(named: "chatbot", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil)
+                } else {
+                    cell.avatarView.image = UIImage(named: "agent", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil)
+                }
                 cell.textView.text = txt
             case .menu(let title, let menus):
                 cell.setupMenuCell(title, menus)
@@ -280,43 +337,44 @@ extension ViewController: UITableViewDataSource {
     fileprivate func findMenuOnTap(menus:[[String: Any]], title:String, yPosition:CGFloat) {
         print("yPosition", yPosition)
         
-        let defaultLabel = UILabel()
-        defaultLabel.font = UIFont.systemFont(ofSize: 16.0)
-        let height = title.MyHeight(withConstrainedWidth: 300.0, font: defaultLabel.font)
-        var headerHeight = max(height, CGFloat(menuHeight))
-        if Int(headerHeight) > Int(menuHeight) {
-            headerHeight = headerHeight + 20
+        if (!MINTEL_LiveChat.chatBotMode) {
+            return
         }
         
-        print("header height", headerHeight)
-        
-        var yIndex = CGFloat(0.0)
+        if (!MINTEL_LiveChat.chatInProgress) {
+            return
+        }
         
         var targetAction:[String:Any]? = nil
+        var yIndex = CGFloat(0.0)
+        let image = UIImage(named: "chatbot", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil)
+        let width = UIScreen.main.bounds.size.width - (8.0 + (image?.size.width ?? 0.0) + 10.0 + extraSpacing)
+        var height = title.MyHeight(withConstrainedWidth: width, font: UIFont.systemFont(ofSize: 16.0))
+        height = max(height, 40.0)
+        yIndex = yIndex + height + 16
+
         for i in 0..<menus.count {
             let item = menus[i]
             let actions = item["action"] as! [String:Any]
             let labelText = actions["label"] as? String ?? ""
+
+            height = labelText.MyHeight(withConstrainedWidth: width, font: UIFont.systemFont(ofSize: 16.0))
+            height = max(40.0, height)
             
-            let height = labelText.MyHeight(withConstrainedWidth: 300.0, font: defaultLabel.font)
-            var setHeight = max(height, CGFloat(menuHeight))
-            setHeight = setHeight + 20
-            
-            print("yIndex" , yIndex)
-            if (yPosition >= (yIndex + headerHeight)) {
+            if (yPosition >= yIndex) {
                 targetAction = actions
             }
             
-            yIndex = yIndex + setHeight
+            yIndex = yIndex + height + 16
         }
         
         if (targetAction != nil) {
             let text = targetAction?["text"] as? String ?? ""
             if (text.count > 0) {
-                self.items.append(MyMessage(text: text, agent: false))
+                MINTEL_LiveChat.items.append(MyMessage(text: text, agent: false))
                 self.tableView.reloadData()
                 self.tableView.scrollToBottom()
-                self.sendPost(text: text)
+                MINTEL_LiveChat.sendPost(text: text)
             }
         }
     }
@@ -325,7 +383,7 @@ extension ViewController: UITableViewDataSource {
 extension ViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         
-        let item = self.items[indexPath.section]
+        let item = MINTEL_LiveChat.items[indexPath.section]
 
         switch item.kind {
         case .systemMessageType1(let txt):
@@ -382,13 +440,13 @@ extension ViewController: InputTextViewDelegate {
     func didPressSendButton(_ text: String, _ sender: UIButton, _ textView: UITextView) {
         print(text)
         if (text.trimmingCharacters(in: .whitespacesAndNewlines).count > 0) {
-            self.items.append(MyMessage(text: text, agent: false))
+            MINTEL_LiveChat.items.append(MyMessage(text: text, agent: false))
             self.tableView.reloadData()
             self.tableView.scrollToBottom()
             textView.text = ""
             
             if (MINTEL_LiveChat.chatBotMode) {
-                self.sendPost(text: text)
+                MINTEL_LiveChat.sendPost(text: text)
             } else {
                 self.sendMessageToSaleForce(text: text)
             }
@@ -578,7 +636,7 @@ extension ViewController : UIDocumentMenuDelegate, UIDocumentPickerDelegate {
         if FileManager.default.fileExists(atPath: url.path){
             
             let filename = (url.absoluteString as NSString).lastPathComponent
-            self.items.append(MyMessage(text: filename, agent: false))
+            MINTEL_LiveChat.items.append(MyMessage(text: filename, agent: false))
             self.tableView.reloadData()
             self.tableView.scrollToBottom()
             do {
@@ -637,7 +695,7 @@ extension ViewController : UICollectionViewDataSource, UICollectionViewDelegate 
                 
                 let fileName = "file.jpeg"
                 let data = image!.jpegData(compressionQuality: 1.0)
-                self.items.append(MyMessage(image: image!))
+                MINTEL_LiveChat.items.append(MyMessage(image: image!))
                 self.tableView.reloadData()
                 self.tableView.scrollToBottom()
                 self.upload(imageData: data, imageName: fileName, fileData: nil, fileName: nil, parameters: ["session_id": "1"])

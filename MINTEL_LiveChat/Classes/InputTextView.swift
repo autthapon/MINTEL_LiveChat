@@ -250,16 +250,15 @@ extension InputTextView: UITextViewDelegate {
             self.textViewHeightConstraint.constant = calcHeight
         }
         
-//        if textView.text.isEmpty {
-//            if secondRightButton.tag == 121 {
-//                self.showCameraAndMicButton()
-//            }
-//        }else {
-//            if secondRightButton.tag == 120 {
-//                self.showSendButton()
-//            }
-//        }
-        
+        if textView.text.isEmpty {
+            NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.userIsNotTyping),
+                object: nil,
+                userInfo:nil)
+        } else {
+            NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.userIsTyping),
+                object: nil,
+                userInfo:nil)
+        }
     }
     
 }
@@ -268,14 +267,12 @@ extension InputTextView: UITextViewDelegate {
 extension InputTextView {
     internal func setupSaleForceEvent() {
         NotificationCenter.default.addObserver(self,
-            selector: #selector(saleForcesDidEnd(_:)),
-            name: Notification.Name(SalesForceNotifId.didEnd),
-            object: nil)
+                selector: #selector(MINTEL_reallyEndChat(_:)),
+                name: Notification.Name(MINTELNotifId.reallyExitChat),
+                object: nil)
     }
     
-    @objc func saleForcesDidEnd(_ notification: Notification) {
-        let _:SCSChatSession = notification.userInfo?["session"] as! SCSChatSession
-        let _:SCSChatSessionEndEvent = notification.userInfo?["event"] as! SCSChatSessionEndEvent
+    @objc func MINTEL_reallyEndChat(_ notification: Notification) {
 
         DispatchQueue.main.async {
             self.textView.resignFirstResponder()

@@ -36,15 +36,64 @@ extension ViewController {
                 selector: #selector(saleForcesDidEnd(_:)),
                 name: Notification.Name(SalesForceNotifId.didEnd),
                 object: nil)
+        
+        NotificationCenter.default.addObserver(self,
+                selector: #selector(saleForceUserTyping(_:)),
+                name: Notification.Name(MINTELNotifId.userIsTyping),
+                object: nil)
+        
+        NotificationCenter.default.addObserver(self,
+                selector: #selector(MINTEL_reallyEndChat(_:)),
+                name: Notification.Name(MINTELNotifId.reallyExitChat),
+                object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(appWillTerminate), name: UIApplication.willTerminateNotification, object: nil)
+    }
+    
+    @objc func appWillTerminate() {
+        switch MINTEL_LiveChat.agentState {
+        case .waiting: break
+        case .end: break
+        case .joined:
+            ServiceCloud.shared().chatCore.stopSession()
+            break
+        }
+    }
+    
+    @objc func MINTEL_reallyEndChat(_ notification: Notification) {
+        self.reallyEndChat()
+    }
+    
+    @objc func saleForceUserTyping(_ notification: Notification) {
+        switch MINTEL_LiveChat.agentState {
+        case .waiting: break
+        case .end: break
+        case .joined:
+            ServiceCloud.shared().chatCore.session.isUserTyping = true
+            break
+        }
+        
+    }
+    
+    @objc func saleForceUserNotTyping(_ notification: Notification) {
+        switch MINTEL_LiveChat.agentState {
+        case .waiting: break
+        case .end: break
+        case .joined:
+            ServiceCloud.shared().chatCore.session.isUserTyping = false
+            break
+        }
     }
     
     @objc func saleForcesDidUpdateQueuePosition(_ notification: Notification) {
         let _:SCSChatSession = notification.userInfo?["session"] as! SCSChatSession
         let position:Int = notification.userInfo?["position"] as! Int
         
+        MINTEL_LiveChat.agentState = .waiting
+        
         if (self.queuePosition > position && position > 0) {
             self.queuePosition = position
-            self.items.append(MyMessage(systemMessageType1: String(format: "Queue Position:%d", self.queuePosition)))
+            MINTEL_LiveChat.items.append(MyMessage(systemMessageType1: String(format: "Queue Position:%d", self.queuePosition)))
             DispatchQueue.main.async {
                 self.tableView.reloadData()
                 self.tableView.scrollToBottom()
@@ -55,17 +104,20 @@ extension ViewController {
     @objc func saleForcesAgentJoined(_ notification: Notification) {
         let _:SCSChatSession = notification.userInfo?["session"] as! SCSChatSession
         let _:SCSAgentJoinEvent = notification.userInfo?["event"] as! SCSAgentJoinEvent
-        self.items.append(MyMessage(agentJoin: true))
+        MINTEL_LiveChat.items.append(MyMessage(agentJoin: true))
+        MINTEL_LiveChat.agentState = .joined
         DispatchQueue.main.async {
             self.tableView.reloadData()
             self.tableView.scrollToBottom()
         }
+        
+        self.sendChatbotMessage()
     }
     
     @objc func saleForcesDidReceivedMessage(_ notification: Notification) {
         let _:SCSChatSession = notification.userInfo?["session"] as! SCSChatSession
         let textEvent:SCSAgentTextEvent = notification.userInfo?["message"] as! SCSAgentTextEvent
-        self.items.append(MyMessage(text: textEvent.text, agent: true, bot: false))
+        MINTEL_LiveChat.items.append(MyMessage(text: textEvent.text, agent: true, bot: false))
         DispatchQueue.main.async {
             self.tableView.reloadData()
             self.tableView.scrollToBottom()
@@ -75,35 +127,25 @@ extension ViewController {
     @objc func saleForcesAgentLeft(_ notification: Notification) {
         let _:SCSChatSession = notification.userInfo?["session"] as! SCSChatSession
         let _:SCSAgentLeftConferenceEvent = notification.userInfo?["event"] as! SCSAgentLeftConferenceEvent
-        
-        let date = Date()
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "dd/MM/yyyy HH:mm"
-        let date24 = dateFormatter.string(from: date)
-        
-        self.items.append(MyMessage(systemMessageType1: String(format: "Chat ended %@", date24)))
-        DispatchQueue.main.async {
-            self.tableView.reloadData()
-            self.tableView.scrollToBottom()
-        }
+        MINTEL_LiveChat.instance.reallyEndChat()
     }
     
     @objc func saleForcesDidEnd(_ notification: Notification) {
         let _:SCSChatSession = notification.userInfo?["session"] as! SCSChatSession
         let _:SCSChatSessionEndEvent = notification.userInfo?["event"] as! SCSChatSessionEndEvent
+        MINTEL_LiveChat.instance.reallyEndChat()
+    }
+    
+    fileprivate func reallyEndChat() {
         
-        let date = Date()
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "dd/MM/yyyy HH:mm"
-        let date24 = dateFormatter.string(from: date)
-        
-        self.items.append(MyMessage(systemMessageType1: String(format: "Chat ended %@", date24)))
         DispatchQueue.main.async {
             self.tableView.reloadData()
             self.tableView.scrollToBottom()
             self.hideImagePanel()
             self.inputTextView.resignFirstResponder()
         }
+        
+        self.viewConfirm.removeFromSuperview()
     }
     
     /*
@@ -174,11 +216,37 @@ extension ViewController {
     }
     
     func switchToAgentMode() {
-        self.items.append(MyMessage(systemMessageType2: "Routing you to a Live Agent"))
+        MINTEL_LiveChat.items.append(MyMessage(systemMessageType2: "Routing you to a Live Agent"))
         self.tableView.reloadData()
         self.tableView.scrollToBottom()
         MINTEL_LiveChat.chatBotMode = false
         MINTEL_LiveChat.instance.startSaleForce()
+    }
+    
+    fileprivate func sendChatbotMessage() {
+        let ignoreMessage = ["Connecting", "agent", "Your place", "TrueMoney Care สวัสดีครับ"]
+        
+        MINTEL_LiveChat.items.forEach { (item) in
+            var shouldIgnore = false
+            var txtToSend = ""
+            switch item.kind {
+                case .text(let txt):
+                    txtToSend = txt
+                    for i in 0...ignoreMessage.count - 1 {
+                        if (txt.starts(with: ignoreMessage[i])) {
+                            shouldIgnore = true
+                            break
+                        }
+                    }
+                break
+            default:
+                break
+            }
+            
+            if (!shouldIgnore && txtToSend.count > 0) {
+                ServiceCloud.shared().chatCore.session.sendMessage(txtToSend)
+            }
+        }
     }
     
 }
