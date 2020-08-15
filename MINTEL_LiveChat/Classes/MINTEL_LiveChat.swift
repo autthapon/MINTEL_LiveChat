@@ -188,8 +188,65 @@ public class MINTEL_LiveChat: UIView {
                                                      deploymentId: MINTEL_LiveChat.configuration?.salesforceDeployID,
                                                      buttonId: MINTEL_LiveChat.configuration?.salesforceButtonID) {
 
-            config.visitorName = MINTEL_LiveChat.userName // Make Argument
+            config.visitorName = String(format:"%@ %@", MINTEL_LiveChat.configuration?.firstname ?? "", MINTEL_LiveChat.configuration?.lastname ?? "")
             config.queueStyle = .position // Fixed
+            
+            let firstNameField = SCSPrechatObject(label: "First Name", value: MINTEL_LiveChat.configuration?.firstname ?? "")
+            let lastNameField = SCSPrechatObject(label: "Last Name", value: MINTEL_LiveChat.configuration?.lastname ?? "")
+            let emailField = SCSPrechatObject(label: "Email", value: MINTEL_LiveChat.configuration?.email ?? "")
+            let phoneFiled = SCSPrechatObject(label: "Phone", value: MINTEL_LiveChat.configuration?.phone ?? "")
+            let tmnIdFiled = SCSPrechatObject(label: "TMN_ID_CLT__c", value: MINTEL_LiveChat.configuration?.tmnId ?? "")
+            let contactEntity = SCSPrechatEntity(entityName: "Contact")
+            contactEntity.saveToTranscript = "Contact"
+            
+            let firstNameEntityField = SCSPrechatEntityField(fieldName: "FirstName", label: "First Name")
+            firstNameEntityField.doFind = false
+            firstNameEntityField.isExactMatch = false
+            firstNameEntityField.doCreate = true
+            contactEntity.entityFieldsMaps.add(firstNameEntityField)
+            
+            let lastNameEntityField = SCSPrechatEntityField(fieldName: "LastName", label: "Last Name")
+            lastNameEntityField.doFind = false
+            lastNameEntityField.isExactMatch = false
+            lastNameEntityField.doCreate = true
+            contactEntity.entityFieldsMaps.add(lastNameEntityField)
+
+            let emailEntityField = SCSPrechatEntityField(fieldName: "Email", label: "Email")
+            emailEntityField.doFind = true
+            emailEntityField.isExactMatch = true
+            emailEntityField.doCreate = true
+            contactEntity.entityFieldsMaps.add(emailEntityField)
+
+            let phoneEntityField = SCSPrechatEntityField(fieldName: "Phone", label: "Phone")
+            phoneEntityField.doFind = false
+            phoneEntityField.isExactMatch = false
+            phoneEntityField.doCreate = true
+            contactEntity.entityFieldsMaps.add(phoneEntityField)
+
+            let tmnIdEntityField = SCSPrechatEntityField(fieldName: "TMN_ID_CLT__c", label: "TMN_ID_CLT__c")
+            tmnIdEntityField.doFind = false
+            tmnIdEntityField.isExactMatch = false
+            tmnIdEntityField.doCreate = true
+            contactEntity.entityFieldsMaps.add(tmnIdEntityField)
+
+            // Create an entity mapping for a Case record type
+            let csatEntity = SCSPrechatEntity(entityName: "CSAT_Score__c")
+            csatEntity.saveToTranscript = "CSAT_Score__c"
+            csatEntity.showOnCreate = true
+            //csatEntity.linkToEntityName = "Case"
+            //csatEntity.linkToEntityField = "ContactId"   // Link this entity to Case.ContactId
+
+            // Add one field mappings to our Case entity
+
+            let csatUuid = UUID().uuidString
+            let uniqueFiled = SCSPrechatObject(label: "Unique_ID__c", value: csatUuid)
+            let uniqueEntityField = SCSPrechatEntityField(fieldName: "Unique_ID__c", label: "Unique_ID__c")
+            uniqueEntityField.doCreate = true
+            csatEntity.entityFieldsMaps.add(uniqueEntityField)
+            
+            config.prechatFields = [firstNameField, lastNameField, emailField, phoneFiled, tmnIdFiled, uniqueFiled] as [SCSPrechatObject]
+            // Update config object with the entity mappings
+            config.prechatEntities = [contactEntity, csatEntity]
             
             ServiceCloud.shared().chatCore.determineAvailability(with: config) { (error, available, waitingTime) in
                 

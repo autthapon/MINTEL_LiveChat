@@ -6,6 +6,8 @@
 //
 
 import Foundation
+import ServiceCore
+import ServiceChat
 
 public class LiveChatConfiguration {
     
@@ -19,8 +21,13 @@ public class LiveChatConfiguration {
     internal var salesforceButtonID:String!
     internal var surveyFormUrl:String?
     internal var announcementUrl:String?
+    internal var firstname:String!
+    internal var lastname:String!
+    internal var email:String!
+    internal var phone:String!
+    internal var tmnId:String!
     
-    public init(withUserName userName:String, withSalesforceLiveAgentPod salesforceLiveAgentPod:String, withSalesForceOrdId salesforceOrdId:String, withSalesforceDeployId salesforceDeployId:String, withSalesforceButtonId salesforceButtonId:String, withWebHookBaseUrl webhookBaseUrl:String, withXApiKey xapiKey:String, withUploadBaseUrl uploadBaseUrl:String, withSurveyFormUrl surveyFormUrl:String?, withAnnouncementUrl announcementUrl:String) {
+    public init(withUserName userName:String, withSalesforceLiveAgentPod salesforceLiveAgentPod:String, withSalesForceOrdId salesforceOrdId:String, withSalesforceDeployId salesforceDeployId:String, withSalesforceButtonId salesforceButtonId:String, withWebHookBaseUrl webhookBaseUrl:String, withXApiKey xapiKey:String, withUploadBaseUrl uploadBaseUrl:String, withSurveyFormUrl surveyFormUrl:String?, withAnnouncementUrl announcementUrl:String, withFirstName firstname:String, withLastName lastname:String, withEmail email:String, withPhone phone:String, withTmnId tmnId:String) {
         self.userName = userName
         self.salesforceLiveAgentPod = salesforceLiveAgentPod
         self.salesforceOrdID = salesforceOrdId
@@ -31,5 +38,10 @@ public class LiveChatConfiguration {
         self.uploadBaseUrl = uploadBaseUrl
         self.surveyFormUrl = surveyFormUrl
         self.announcementUrl = announcementUrl
+        self.firstname = firstname
+        self.lastname = lastname
+        self.phone = phone
+        self.email = email
+        self.tmnId = tmnId
     }
 }

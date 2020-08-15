@@ -8,6 +8,8 @@
 
 import UIKit
 import MINTEL_LiveChat
+import ServiceCore
+import ServiceChat
 
 class ViewController: UIViewController {
 
@@ -29,10 +31,15 @@ class ViewController: UIViewController {
         let xApiKey:String              = "381b0ac187994f82bdc05c09d1034afa"
         let surveryFormUrl:String       = "https://truemoney--c.ap12.visual.force.com/apex/MINTEL_ExternalChatSurvey?uid=sessionId"
         let announcementUrl:String       = "https://us-central1-test-tmn-bot.cloudfunctions.net/announcement?uid=sessionId"
-
+        let firstname = "Note"
+        let lastname = "Note"
+        let phone = "0818888888"
+        let email = "a@a.com"
+        let tmnId = "11241313"
+        
 //        let config = LiveChatConfiguration.init(withUserName: "Note", withSalesforceLiveAgentPod: liveagentPod, withSalesForceOrdId: ordID, withSalesforceDeployId: deployID, withSalesforceButtonId: buttonID)
         
-        let config = LiveChatConfiguration(withUserName: "Note", withSalesforceLiveAgentPod: liveagentPod, withSalesForceOrdId: ordID, withSalesforceDeployId: deployID, withSalesforceButtonId: buttonID, withWebHookBaseUrl: webhookUrl, withXApiKey: xApiKey, withUploadBaseUrl: uploadUrl, withSurveyFormUrl: surveryFormUrl, withAnnouncementUrl: announcementUrl)
+        let config = LiveChatConfiguration(withUserName: "Note", withSalesforceLiveAgentPod: liveagentPod, withSalesForceOrdId: ordID, withSalesforceDeployId: deployID, withSalesforceButtonId: buttonID, withWebHookBaseUrl: webhookUrl, withXApiKey: xApiKey, withUploadBaseUrl: uploadUrl, withSurveyFormUrl: surveryFormUrl, withAnnouncementUrl: announcementUrl, withFirstName: firstname, withLastName: lastname, withEmail: email, withPhone: phone, withTmnId: tmnId)
         
         appDelegate.chat.startChat(config: config)
     }
