@@ -275,10 +275,11 @@ class CustomTableViewCell: UITableViewCell {
     func renderImageCell(image:UIImage) {
         self.setupImageCell()
         
-        let imgView = UIImageView(image: image)
+        let img = image.MyResizeImage(targetSize: CGSize(width:200,height: 200))
+        let imgView = UIImageView(image: img)
         let screen = UIScreen.main.bounds
-        let xPosition = screen.width - 200.0 - 10.0
-        imgView.frame = CGRect(x: xPosition, y: 10, width: 200, height: 200)
+        let xPosition = screen.width - img.size.width - 10.0
+        imgView.frame = CGRect(x: xPosition, y: 10, width: img.size.width, height: img.size.height)
         imgView.layer.cornerRadius = 18
         imgView.backgroundColor = UIColor(MyHexString: "#EBEBEB")
         imgView.layer.masksToBounds = true
@@ -377,8 +378,8 @@ class CustomTableViewCell: UITableViewCell {
         self.bottomLabel.isHidden = true
         
         var yIndex = bgView.frame.origin.y
-        let width = UIScreen.main.bounds.size.width - (8.0 + (self.avatarView.image?.size.width ?? 0.0) + 10.0 + extraSpacing)
-        var height = title.MyHeight(withConstrainedWidth: width, font: UIFont.systemFont(ofSize: 16.0))
+        let width = UIScreen.main.bounds.size.width - (8.0 + (self.avatarView.image?.size.width ?? 0.0) + 10.0 + extraSpacing) 
+        var height = title.MyHeight(withConstrainedWidth: width + 36, font: UIFont.systemFont(ofSize: 16.0))
         height = max(height, 40.0)
         let lbl = PaddingLabel(withInsets: 8, 8, 18, 18)
         bgView.addSubview(lbl)
@@ -402,7 +403,7 @@ class CustomTableViewCell: UITableViewCell {
             let actions = item["action"] as! [String:Any]
             let labelText = actions["label"] as? String ?? ""
 
-            height = labelText.MyHeight(withConstrainedWidth: width, font: UIFont.systemFont(ofSize: 16.0))
+            height = labelText.MyHeight(withConstrainedWidth: width + 36, font: UIFont.systemFont(ofSize: 16.0))
             height = max(40.0, height)
             let lbl = PaddingLabel(withInsets: 8, 8, 18, 18)
             lbl.frame = CGRect(x: 0.0, y: yIndex, width: width, height: height + 16)
@@ -426,7 +427,7 @@ class CustomTableViewCell: UITableViewCell {
         var yIndex = CGFloat(0.0)
         let image = UIImage(named: "chatbot", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil)
         let width = UIScreen.main.bounds.size.width - (8.0 + (image?.size.width ?? 0.0) + 10.0 + extraSpacing)
-        var height = title.MyHeight(withConstrainedWidth: width, font: UIFont.systemFont(ofSize: 16.0))
+        var height = title.MyHeight(withConstrainedWidth: width + 36, font: UIFont.systemFont(ofSize: 16.0))
         height = max(height, 40.0)
         yIndex = yIndex + height + 16
 
@@ -435,7 +436,7 @@ class CustomTableViewCell: UITableViewCell {
             let actions = item["action"] as! [String:Any]
             let labelText = actions["label"] as? String ?? ""
 
-            height = labelText.MyHeight(withConstrainedWidth: width, font: UIFont.systemFont(ofSize: 16.0))
+            height = labelText.MyHeight(withConstrainedWidth: width + 36, font: UIFont.systemFont(ofSize: 16.0))
             height = max(40.0, height)
             yIndex = yIndex + height + 16
         }

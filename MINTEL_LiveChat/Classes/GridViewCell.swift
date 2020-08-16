@@ -36,6 +36,7 @@ class GridViewCell: UICollectionViewCell {
         
         self.contentView.addSubview(imageView)
         imageView.frame = CGRect(x: 0, y: 0, width: self.contentView.bounds.size.width, height: self.contentView.bounds.size.height)
+        imageView.contentMode = .scaleAspectFit
         self.contentView.addSubview(livePhotoBadgeImageView)
     }
     

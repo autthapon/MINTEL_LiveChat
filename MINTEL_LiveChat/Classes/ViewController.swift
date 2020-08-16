@@ -82,8 +82,9 @@ class ViewController: UIViewController {
         
         let flowLayout = UICollectionViewFlowLayout()
         let size = ceil(UIScreen.main.bounds.size.width / 3.0) - 2
-        flowLayout.itemSize = CGSize(width: size, height: size)
-        flowLayout.estimatedItemSize = CGSize(width: size, height: size)
+        let height = (16.0 * size) / 9.0
+        flowLayout.itemSize = CGSize(width: size, height: height)
+//        flowLayout.estimatedItemSize = .zero
         flowLayout.minimumInteritemSpacing = 0
         flowLayout.minimumLineSpacing = 1
         flowLayout.sectionInset = UIEdgeInsets(top: 2, left: 1, bottom: 1, right: 1)
@@ -129,8 +130,12 @@ class ViewController: UIViewController {
         
         if fetchResult == nil {
             let allPhotosOptions = PHFetchOptions()
+//            allPhotosOptions.predicate = NSPredicate(format: "mediaType = %d", PHAssetMediaType.image.rawValue)
             allPhotosOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
-            fetchResult = PHAsset.fetchAssets(with: allPhotosOptions)
+//            allPhotosOptions.includeAllBurstAssets = false
+//            allPhotosOptions.includeAssetSourceTypes = [.typeUserLibrary, .typeCloudShared]
+//            allPhotosOptions.includeHiddenAssets = false
+            fetchResult = PHAsset.fetchAssets(with: .image, options: allPhotosOptions)
         }
         
         self.tableView.reloadData()
@@ -175,10 +180,8 @@ class ViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        let scale = UIScreen.main.scale
-        let cellSize = (imagePanelView.collectionViewLayout as! UICollectionViewFlowLayout).itemSize
-        thumbnailSize = CGSize(width: cellSize.width * scale, height: cellSize.height * scale)
+        let size = ceil(UIScreen.main.bounds.size.width / 3.0) - 10
+        thumbnailSize = CGSize(width: size, height: size)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -610,7 +613,13 @@ extension ViewController : UINavigationControllerDelegate, UIImagePickerControll
             print("Image not found!")
             return
         }
-//        imageTake.image = selectedImage
+        
+        let fileName = "file.jpeg"
+        let data = selectedImage.jpegData(compressionQuality: 1.0)
+        MINTEL_LiveChat.items.append(MyMessage(image: selectedImage))
+        self.tableView.reloadData()
+        self.tableView.scrollToBottom()
+        self.upload(imageData: data, imageName: fileName, fileData: nil, fileName: nil, parameters: ["session_id": "1"])
     }
 }
 
@@ -655,37 +664,59 @@ extension ViewController : UIDocumentMenuDelegate, UIDocumentPickerDelegate {
 // Agent Mode
 
 
-extension ViewController : UICollectionViewDataSource, UICollectionViewDelegate {
+extension ViewController : UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return thumbnailSize
+    }
+    
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let asset = fetchResult.object(at: indexPath.item)
         
+        debugPrint(asset, asset.mediaSubtypes.rawValue, PHAssetMediaType.audio)
+            
         // Dequeue a GridViewCell.
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: GridViewCell.self), for: indexPath) as? GridViewCell
            else { fatalError("unexpected cell in collection view") }
 
         // Add a badge to the cell if the PHAsset represents a Live Photo.
-        if asset.mediaSubtypes.contains(.photoLive) {
-           cell.livePhotoBadgeImage = PHLivePhotoView.livePhotoBadgeImage(options: .overContent)
-        }
+//        if asset.mediaSubtypes.contains(.photoLive) {
+//           cell.livePhotoBadgeImage = PHLivePhotoView.livePhotoBadgeImage(options: .overContent)
+//        }
         
         // Request an image for the asset from the PHCachingImageManager.
         cell.representedAssetIdentifier = asset.localIdentifier
-        imageManager.requestImage(for: asset, targetSize: thumbnailSize, contentMode: .aspectFill, options: nil, resultHandler: { image, _ in
+        let options = PHImageRequestOptions()
+        options.deliveryMode = .highQualityFormat
+        options.resizeMode = .exact
+//        options.isSynchronous = true
+//        options.isNetworkAccessAllowed = true
+        let requestSize = CGSize(width: 500, height: 500)
+        imageManager.requestImage(for: asset, targetSize: requestSize, contentMode: .aspectFill, options: options, resultHandler: { image, _ in
            // The cell may have been recycled by the time this handler gets called;
            // set the cell's thumbnail image only if it's still showing the same asset.
            if cell.representedAssetIdentifier == asset.localIdentifier {
                cell.thumbnailImage = image
-           }
+           } else {
+            print("NONONO")
+            }
         })
 
         return cell
     }
-    
+ 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let asset = fetchResult.object(at: indexPath.item)
         print("Did Image")
-        imageManager.requestImage(for: asset, targetSize: thumbnailSize, contentMode: .aspectFill, options: nil) { (image, info) in
+        let options = PHImageRequestOptions()
+        options.deliveryMode = .highQualityFormat
+        options.resizeMode = .none
+        options.isSynchronous = false
+        options.isNetworkAccessAllowed = true
+        imageManager.requestImage(for: asset, targetSize: PHImageManagerMaximumSize , contentMode: .aspectFill, options: options) { (image, info) in
+            debugPrint(info)
+            debugPrint(image)
             let isDegraded = (info?[PHImageResultIsDegradedKey] as? Bool) ?? false
             if isDegraded {
                return
