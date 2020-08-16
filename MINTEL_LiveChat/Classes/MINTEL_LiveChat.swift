@@ -103,7 +103,7 @@ public class MINTEL_LiveChat: UIView {
             case .joined:
                 self.userImageView.isHidden = false
                 self.callCenterLabel.isHidden = false
-                self.callCenterLabel.text = "TODO"
+                self.callCenterLabel.text = "TMN Chat"
                 self.queueTitleLabel.isHidden = true
                 self.queueLabel.isHidden = true
                 break
@@ -127,11 +127,11 @@ public class MINTEL_LiveChat: UIView {
         self.loadFirstMessage()
         UIApplication.shared.keyWindow?.bringSubviewToFront(self)
         
-        if (!MINTEL_LiveChat.chatBotMode) {
-            self.startSaleForce()
-        } else {
-            self.tapAction(sender: UIButton())
-        }
+//        if (!MINTEL_LiveChat.chatBotMode) {
+//            self.startSaleForce()
+//        } else {
+////            self.tapAction(sender: UIButton())
+//        }
     }
     
     internal func reallyEndChat() {
@@ -280,7 +280,7 @@ public class MINTEL_LiveChat: UIView {
         
         self.callCenterLabel = UILabel(frame: CGRect(x: 0, y: self.userImageView.frame.origin.y + self.userImageView.frame.size.height, width: self.frame.size.width, height: 25))
         self.callCenterLabel.font = UIFont.systemFont(ofSize: 14)
-        self.callCenterLabel.text = "TODO"
+        self.callCenterLabel.text = "TMN Chat"
         self.callCenterLabel.textAlignment = .center
         self.addSubview(self.callCenterLabel)
         
