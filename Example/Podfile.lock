@@ -1,13 +1,7 @@
 PODS:
   - Alamofire (4.8.2)
-  - InputBarAccessoryView (4.3.2):
-    - InputBarAccessoryView/Core (= 4.3.2)
-  - InputBarAccessoryView/Core (4.3.2)
-  - MessageKit (3.1.0):
-    - InputBarAccessoryView (~> 4.3.0)
-  - MINTEL_LiveChat (1.0.2):
+  - MINTEL_LiveChat (1.0.8):
     - Alamofire (~> 4.8.2)
-    - MessageKit
 
 DEPENDENCIES:
   - MINTEL_LiveChat (from `../`)
@@ -15,8 +9,6 @@ DEPENDENCIES:
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
     - Alamofire
-    - InputBarAccessoryView
-    - MessageKit
 
 EXTERNAL SOURCES:
   MINTEL_LiveChat:
@@ -24,9 +16,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Alamofire: ae5c501addb7afdbb13687d7f2f722c78734c2d3
-  InputBarAccessoryView: 7985d418040a05fe894bd4b8328dd43ab35517c3
-  MessageKit: 3beb578737a5aa2bba25cc27c7b6d6faa09af5a7
-  MINTEL_LiveChat: b4716512a714618d4d3b14ddda7bd8407130e1c3
+  MINTEL_LiveChat: 44c9712c7de4dcbaf62b1546769c50b421997407
 
 PODFILE CHECKSUM: abfc20ed68adbd9cb040b046189bacb44876a0b4
 
