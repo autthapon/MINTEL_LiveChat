@@ -33,6 +33,7 @@ MINTEL_LiveChat is available under the MIT license. See the LICENSE file for mor
 1. I suggest you to new instance of MINTEL_LiveChat in Appdelegate to make sure that it has only one instance at a time. 
 2. When you want to startChat please call. startChat(config) method 
 3. config : 
+```ruby
     internal var webHookBaseUrl:String!  --> ChatBot Url 
     internal var uploadBaseUrl:String!  --> Upload Url
     internal var xApikey:String!  --> Chatbot API Key
@@ -48,3 +49,4 @@ MINTEL_LiveChat is available under the MIT license. See the LICENSE file for mor
     internal var email:String!  --> email of saleforce chat entity 
     internal var phone:String!  --> phone of saleforce chat entity 
     internal var tmnId:String!  --> tmnid of saleforce chat entity 
+```
