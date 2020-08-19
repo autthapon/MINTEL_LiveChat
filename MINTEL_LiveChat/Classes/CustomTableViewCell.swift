@@ -223,7 +223,10 @@ class CustomTableViewCell: UITableViewCell {
         textView.isScrollEnabled = false
         textView.isEditable = false
         textView.isSelectable = true
-        textView.isUserInteractionEnabled = false
+        textView.tintColor = UIColor.white
+        textView.textColor = UIColor.white
+        textView.dataDetectorTypes = [.link]
+//        textView.isUserInteractionEnabled = false
         textView.font = UIFont.systemFont(ofSize: 16)
         textView.text = "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum"
         textView.backgroundColor = UIColor.clear
@@ -251,8 +254,10 @@ class CustomTableViewCell: UITableViewCell {
         textView.isEditable = false
         textView.isSelectable = true
         textView.font = UIFont.systemFont(ofSize: 16)
+        textView.tintColor = UIColor.white
         textView.textColor = UIColor.white
         textView.text = "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum"
+        textView.dataDetectorTypes = [.link]
         textView.backgroundColor = UIColor.clear
         
         self.bgView.addSubview(bottomLabel)
