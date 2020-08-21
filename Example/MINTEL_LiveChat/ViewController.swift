@@ -30,7 +30,7 @@ class ViewController: UIViewController {
         let uploadUrl:String            = "https://us-central1-test-tmn-bot.cloudfunctions.net"
         let xApiKey:String              = "381b0ac187994f82bdc05c09d1034afa"
         let surveryFormUrl:String       = "https://truemoney--c.ap12.visual.force.com/apex/MINTEL_ExternalChatSurvey?uid=sessionId"
-        let announcementUrl:String       = "https://us-central1-test-tmn-bot.cloudfunctions.net/announcement?uid=sessionId"
+        let announcementUrl:String       = "https://us-central1-test-tmn-bot.cloudfunctions.net/announcementmulti?uid=sessionId"
         let firstname = "Note"
         let lastname = "Note"
         let phone = "0818888888"
@@ -39,7 +39,7 @@ class ViewController: UIViewController {
         
 //        let config = LiveChatConfiguration.init(withUserName: "Note", withSalesforceLiveAgentPod: liveagentPod, withSalesForceOrdId: ordID, withSalesforceDeployId: deployID, withSalesforceButtonId: buttonID)
         
-        let config = LiveChatConfiguration(withUserName: "Note", withSalesforceLiveAgentPod: liveagentPod, withSalesForceOrdId: ordID, withSalesforceDeployId: deployID, withSalesforceButtonId: buttonID, withWebHookBaseUrl: webhookUrl, withXApiKey: xApiKey, withUploadBaseUrl: uploadUrl, withSurveyFormUrl: surveryFormUrl, withAnnouncementUrl: announcementUrl, withFirstName: firstname, withLastName: lastname, withEmail: email, withPhone: phone, withTmnId: tmnId)
+        let config = LiveChatConfiguration(withUserName: "Note", withSalesforceLiveAgentPod: liveagentPod, withSalesForceOrdId: ordID, withSalesforceDeployId: deployID, withSalesforceButtonId: buttonID, withWebHookBaseUrl: webhookUrl, withXApiKey: xApiKey, withUploadBaseUrl: uploadUrl, withSurveyFormUrl: surveryFormUrl, withAnnouncementUrl: announcementUrl, withFirstName: firstname, withLastName: lastname, withEmail: email, withPhone: phone, withTmnId: tmnId, withSalesforceFirst: false)
         
         appDelegate.chat.startChat(config: config)
     }

@@ -84,7 +84,6 @@ class ViewController: UIViewController {
         let size = ceil(UIScreen.main.bounds.size.width / 3.0) - 2
         let height = (16.0 * size) / 9.0
         flowLayout.itemSize = CGSize(width: size, height: height)
-//        flowLayout.estimatedItemSize = .zero
         flowLayout.minimumInteritemSpacing = 0
         flowLayout.minimumLineSpacing = 1
         flowLayout.sectionInset = UIEdgeInsets(top: 2, left: 1, bottom: 1, right: 1)
@@ -305,6 +304,11 @@ extension ViewController: UITableViewDataSource {
                     cell.avatarView.image = UIImage(named: "agent", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil)
                 }
                 cell.textView.text = txt
+//                if (item.bot) {
+//                    cell.setupReceiversCell()
+//                } else {
+//                    cell.setupSendersCell()
+//                }
             case .menu(let title, let menus):
                 cell.setupMenuCell(title, menus)
                 let gesture = cell.tapGuesture ?? MyTapGuesture(target: self, action: #selector(didTap(_:)))
@@ -352,9 +356,12 @@ extension ViewController: UITableViewDataSource {
         var yIndex = CGFloat(0.0)
         let image = UIImage(named: "chatbot", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil)
         let width = UIScreen.main.bounds.size.width - (8.0 + (image?.size.width ?? 0.0) + 10.0 + extraSpacing)
-        var height = title.MyHeight(withConstrainedWidth: width, font: UIFont.systemFont(ofSize: 16.0))
-        height = max(height, 40.0)
-        yIndex = yIndex + height + 16
+        var height = CGFloat(0.0)
+        if (title.count > 0) {
+            height = title.MyHeight(withConstrainedWidth: width, font: UIFont.systemFont(ofSize: 16.0))
+            height = max(height, 40.0)
+            yIndex = yIndex + height + 16
+        }
 
         for i in 0..<menus.count {
             let item = menus[i]
@@ -374,7 +381,10 @@ extension ViewController: UITableViewDataSource {
         if (targetAction != nil) {
             let text = targetAction?["text"] as? String ?? ""
             if (text.count > 0) {
-                MINTEL_LiveChat.items.append(MyMessage(text: text, agent: false))
+                let display = targetAction?["display"] as? Bool ?? false
+                if (display) {
+                    MINTEL_LiveChat.items.append(MyMessage(text: text, agent: false))
+                }
                 self.tableView.reloadData()
                 self.tableView.scrollToBottom()
                 MINTEL_LiveChat.sendPost(text: text)
@@ -393,7 +403,7 @@ extension ViewController: UITableViewDelegate {
             return CustomTableViewCell.calcRowHeightSystemMessage(text: txt)
         case .systemMessageType2(let txt):
             return CustomTableViewCell.calcRowHeightSystemMessageType2(text: txt)
-        case .text( _):
+        case .text(let txt):
             return UITableView.automaticDimension
         case .menu(let title, let menus):
             return CustomTableViewCell.calcMenuCellHeight(title, menus) - 7.0
@@ -410,11 +420,13 @@ extension UITableView {
     func scrollToBottom(){
 
         DispatchQueue.main.async {
-            let indexPath = IndexPath(
-                row: self.numberOfRows(inSection:  self.numberOfSections-1) - 1,
-                section: self.numberOfSections - 1)
-            if self.hasRowAtIndexPath(indexPath: indexPath) {
-                self.scrollToRow(at: indexPath, at: .bottom, animated: true)
+            if (self.numberOfSections > 0) {
+                let indexPath = IndexPath(
+                    row: self.numberOfRows(inSection:  self.numberOfSections-1) - 1,
+                    section: self.numberOfSections - 1)
+                if self.hasRowAtIndexPath(indexPath: indexPath) {
+                    self.scrollToRow(at: indexPath, at: .bottom, animated: true)
+                }
             }
         }
     }
@@ -715,8 +727,6 @@ extension ViewController : UICollectionViewDataSource, UICollectionViewDelegate,
         options.isSynchronous = false
         options.isNetworkAccessAllowed = true
         imageManager.requestImage(for: asset, targetSize: PHImageManagerMaximumSize , contentMode: .aspectFill, options: options) { (image, info) in
-            debugPrint(info)
-            debugPrint(image)
             let isDegraded = (info?[PHImageResultIsDegradedKey] as? Bool) ?? false
             if isDegraded {
                return

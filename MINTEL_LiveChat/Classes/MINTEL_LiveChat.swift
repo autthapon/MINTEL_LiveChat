@@ -123,15 +123,15 @@ public class MINTEL_LiveChat: UIView {
         MINTEL_LiveChat.configuration = config
         MINTEL_LiveChat.userName = config.userName
         MINTEL_LiveChat.chatInProgress = true
-        self.isHidden = false
         self.loadFirstMessage()
+        self.isHidden = false
         UIApplication.shared.keyWindow?.bringSubviewToFront(self)
         
-//        if (!MINTEL_LiveChat.chatBotMode) {
-//            self.startSaleForce()
-//        } else {
-////            self.tapAction(sender: UIButton())
-//        }
+        if (MINTEL_LiveChat.configuration?.salesforceFirst ?? false) {
+            self.startSaleForce()
+        } else {
+            
+        }
     }
     
     internal func reallyEndChat() {
@@ -154,8 +154,7 @@ public class MINTEL_LiveChat: UIView {
         dateFormatter.dateFormat = "dd/MM/yyyy HH:mm"
         let date24 = dateFormatter.string(from: date)
         
-        MINTEL_LiveChat.items.append(MyMessage(systemMessageType1: String(format: "Chat ended %@", date24)))
-        
+        MINTEL_LiveChat.items.append(MyMessage(systemMessageType1: String(format: "จบการสนทนา %@", date24)))
         
         NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.reallyExitChat),
                 object: nil,
@@ -168,8 +167,10 @@ public class MINTEL_LiveChat: UIView {
         dateFormatter.dateFormat = "HH:mm"
         let date24 = dateFormatter.string(from: date)
         
-        MINTEL_LiveChat.items.append(MyMessage(systemMessageType1: String(format: "Chat Initiated %@", date24)))
-        self.getAnnouncementMessage()
+        MINTEL_LiveChat.items.append(MyMessage(systemMessageType1: String(format: "เริ่มการสนทนา %@", date24)))
+        if (!(MINTEL_LiveChat.configuration?.salesforceFirst ?? false)) {
+            self.getAnnouncementMessage()
+        }
     }
     
     public func sendToFront() {
@@ -575,22 +576,57 @@ extension MINTEL_LiveChat  {
              case .success(_):
                  if let json = response.value {
                      debugPrint(json)
-                     let dict = json as! [String: Any]
-                     let desc = dict["Description__c"] as? String ?? ""
-                     
-                     if desc.count > 0 {
-                         DispatchQueue.global(qos: .userInitiated).async {
-                            MINTEL_LiveChat.items.append(MyMessage(text: desc, agent: true))
-                            DispatchQueue.main.async {
-                                MINTEL_LiveChat.sendPost(text: "สวัสดี")
+                    if json is [String:Any] {
+                        let dict = json as! [String: Any]
+                        let desc = dict["Description__c"] as? String ?? ""
+                        
+                        if desc.count > 0 {
+                            DispatchQueue.global(qos: .userInitiated).async {
+                               MINTEL_LiveChat.items.append(MyMessage(text: desc, agent: true))
+                               DispatchQueue.main.async {
+                                   MINTEL_LiveChat.sendPost(text: "สวัสดี")
+                               }
+                               
+                               NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
+                                       object: nil,
+                                       userInfo:nil)
+                            }
+                        }
+                        
+                        
+                    } else if let items = json as? [[String:Any]] {
+                        if items.count > 0 {
+                            items.forEach { (item) in
+                                let desc = item["Description__c"] as? String ?? ""
+                                if desc.count > 0 {
+//                                    DispatchQueue.global(qos: .userInitiated).async {
+                                       MINTEL_LiveChat.items.append(MyMessage(text: desc, agent: true))
+//                                    }
+                                }
                             }
                             
-                            NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
-                                    object: nil,
-                                    userInfo:nil)
-                         }
-                     }
-                     
+                            // Display Menu
+//                            DispatchQueue.global(qos: .userInitiated).async {
+                            let menus:[[String:Any]] = [["action" : ["label" : "จบการสนทนา", "text" : "__00_app_endchat", "display" : false]], ["action" : [ "label" : "เริ่มต้นการสนทนา", "text" : "__00_home_greeting", "display" : false]]]
+                                MINTEL_LiveChat.items.append(MyMessage(text: "", agent: true, menu: menus))
+//                            }
+
+                           
+                           NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
+                                     object: nil,
+                                     userInfo:nil)
+                        } else {
+                            DispatchQueue.global(qos: .userInitiated).async {
+                              DispatchQueue.main.async {
+                                  MINTEL_LiveChat.sendPost(text: "__00_home__greeting")
+                              }
+                              
+                              NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
+                                      object: nil,
+                                      userInfo:nil)
+                           }
+                        }
+                    }
                  }
                  break
              case .failure(let error):
@@ -598,6 +634,18 @@ extension MINTEL_LiveChat  {
                  break
              }
         }
+    }
+    
+    fileprivate func convertStringToDictionary(text: String) -> [String:AnyObject]? {
+        if let data = text.data(using: .utf8) {
+            do {
+                let json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [String:AnyObject]
+                return json
+            } catch {
+                print("Something went wrong")
+            }
+        }
+        return nil
     }
     
     internal static func sendPost(text: String) {

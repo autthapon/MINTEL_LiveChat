@@ -57,6 +57,12 @@ class CustomTableViewCell: UITableViewCell {
         return v
     }()
     
+    var timeLabel: UILabel = {
+        let v = UILabel()
+        v.translatesAutoresizingMaskIntoConstraints = false
+        return v
+    }()
+    
     var statusLabel: UILabel = {
         let v = UILabel()
         v.translatesAutoresizingMaskIntoConstraints = false
@@ -77,11 +83,7 @@ class CustomTableViewCell: UITableViewCell {
         }
     }
     
-    
-    
     let innerSpacing: CGFloat = 4
-    
-    
     
     let secondaryPadding: CGFloat = 8
     
@@ -118,6 +120,7 @@ class CustomTableViewCell: UITableViewCell {
         self.bgView.isHidden = true
         self.bottomLabel.isHidden = true
         self.topLabel.isHidden = true
+        self.timeLabel.isHidden = true
     }
     
     fileprivate static func createSystemMessage(text: String) -> UILabel {
@@ -195,22 +198,23 @@ class CustomTableViewCell: UITableViewCell {
     }
     
     func setupReceiversMenuCell() {
+
         self.contentView.addSubview(self.avatarView)
         self.avatarView.image = UIImage(named: "chatbot", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil)
         self.avatarView.MyEdges([.left, .top], to: self.contentView, offset: UIEdgeInsets(top: padding, left: padding, bottom: -padding, right: -padding))
-        
+
         let offset = UIEdgeInsets(top: padding - 8.0, left: padding + (self.avatarView.image?.size.width ?? 0.0) + 10.0, bottom: -padding, right: -padding)
         self.contentView.addSubview(bgView)
         bgView.MyEdges([.left, .top, .bottom], to: self.contentView, offset: offset)
         bgView.backgroundColor = UIColor.clear
-        
+
         self.bgView.addSubview(topLabel)
         topLabel.MyEdges([.left, .top], to: self.bgView, offset: UIEdgeInsets(top: secondaryPadding, left: secondaryPadding, bottom: 0, right: 0))
         topLabel.font = UIFont.boldSystemFont(ofSize: 14)
         topLabel.textColor = UIColor.red
         topLabel.text = "Red"
         topLabel.isHidden = true
-        
+
         self.bgView.addSubview(textView)
         textviewTopConstraintToTopLabel = textView.topAnchor.constraint(equalTo: topLabel.bottomAnchor, constant: 0)
         textviewTopConstraintToTopLabel.isActive = false
@@ -226,7 +230,7 @@ class CustomTableViewCell: UITableViewCell {
         textView.tintColor = UIColor.white
         textView.textColor = UIColor.white
         textView.dataDetectorTypes = [.link]
-//        textView.isUserInteractionEnabled = false
+        textView.isUserInteractionEnabled = true
         textView.font = UIFont.systemFont(ofSize: 16)
         textView.text = "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum"
         textView.backgroundColor = UIColor.clear
@@ -238,36 +242,148 @@ class CustomTableViewCell: UITableViewCell {
         bottomLabel.font = UIFont.systemFont(ofSize: 10)
         bottomLabel.textColor = UIColor.lightGray
         bottomLabel.textAlignment = .right
+        
+        self.contentView.addSubview(self.timeLabel)
+        timeLabel.MyEdges([.left, .bottom], to: self.bgView, offset: UIEdgeInsets(top: innerSpacing, left: secondaryPadding, bottom: secondaryPadding, right: 0))
+        timeLabel.trailingAnchor.constraint(equalTo: textView.trailingAnchor, constant: -secondaryPadding).isActive = true
+        timeLabel.topAnchor.constraint(equalTo: textView.bottomAnchor, constant: 5).isActive = true
+        timeLabel.text = "HH:mm"
     }
     
-    func setupSendersCell() {
-        let offset = UIEdgeInsets(top: padding, left: padding, bottom: -padding, right: -padding)
+//    func setupReceiversCell(_ title : String) {
+//        self.setupSystemMessage()
+//        let avatarView = UIImageView(image: UIImage(named: "chatbot", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil))
+//        self.contentView.addSubview(avatarView)
+//        avatarView.frame = CGRect(x: padding, y: padding, width: avatarView.image?.size.width ?? 0.0, height: avatarView.image?.size.height ?? 0.0)
+//
+//        let textView = UITextView()
+//        textView.textContainerInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+//        self.contentView.addSubview(textView)
+//
+//        var yIndex = bgView.frame.origin.y
+//        let width = UIScreen.main.bounds.size.width - (8.0 + (avatarView.image?.size.width ?? 0.0) + 10.0 + extraSpacing)
+//        var height = title.MyHeight(withConstrainedWidth: width, font: UIFont.systemFont(ofSize: 16.0))
+//
+//        textView.frame = CGRect(x: avatarView.frame.origin.x + avatarView.frame.size.width + 5, y: avatarView.frame.origin.y, width: width, height: height)
+//        textView.font = UIFont.systemFont(ofSize: 16.0)
+//        textView.text = title
+//        textView.isScrollEnabled = false
+//        textView.isEditable = false
+//        textView.isSelectable = true
+//        textView.tintColor = UIColor.black
+//        textView.textColor = UIColor.black
+//        textView.dataDetectorTypes = [.link]
+//        textView.backgroundColor = UIColor(MyHexString: "#EBEBEB")
+//        textView.layer.cornerRadius = 18
+//
+//    }
+    
+//    internal static func calcReceiversCell(_ title:String) -> CGFloat {
+//        let img = UIImage(named: "chatbot", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil)
+//        var yIndex = CGFloat(0.0)
+//        let width = UIScreen.main.bounds.size.width - (8.0 + (img?.size.width ?? 0.0) + 10.0 + extraSpacing)
+//        var height = title.MyHeight(withConstrainedWidth: width + 36, font: UIFont.systemFont(ofSize: 16.0))
+//        height = height + 15 + 100
+//        return height
+//    }
+    
+    func setupReceiversCell() {
+
+        self.contentView.addSubview(self.avatarView)
+        self.avatarView.image = UIImage(named: "chatbot", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil)
+        self.avatarView.MyEdges([.left, .top], to: self.contentView, offset: UIEdgeInsets(top: padding, left: padding, bottom: -padding, right: -padding))
+
+        let offset = UIEdgeInsets(top: padding - 8.0, left: padding + (self.avatarView.image?.size.width ?? 0.0) + 10.0, bottom: -padding, right: -padding)
         self.contentView.addSubview(bgView)
-        bgView.MyEdges([.right, .top, .bottom], to: self.contentView, offset: offset)
+        bgView.MyEdges([.left, .top, .bottom], to: self.contentView, offset: offset)
         bgView.layer.cornerRadius = 18
-        bgView.backgroundColor = UIColor(MyHexString: "#FF8300")
-        
+//        bgView.backgroundColor = UIColor(MyHexString: "#EBEBEB")
+
+        self.bgView.addSubview(topLabel)
+        topLabel.MyEdges([.left, .top], to: self.bgView, offset: UIEdgeInsets(top: secondaryPadding, left: secondaryPadding, bottom: 0, right: 0))
+        topLabel.font = UIFont.boldSystemFont(ofSize: 14)
+        topLabel.textColor = UIColor.red
+        topLabel.text = "Red"
+        topLabel.isHidden = true
+
         self.bgView.addSubview(textView)
-        textView.MyEdges([.left, .right, .top], to: self.bgView, offset: .init(top: innerSpacing, left: innerSpacing, bottom: -innerSpacing, right: -innerSpacing))
-        bgView.leadingAnchor.constraint(greaterThanOrEqualTo: self.contentView.leadingAnchor, constant: extraSpacing).isActive = true
+        textviewTopConstraintToTopLabel = textView.topAnchor.constraint(equalTo: topLabel.bottomAnchor, constant: 0)
+        textviewTopConstraintToTopLabel.isActive = false
+        textviewTopConstraintToBg = textView.topAnchor.constraint(equalTo: bgView.topAnchor, constant: innerSpacing)
+        textviewTopConstraintToBg.isActive = true
+        textView.leadingAnchor.constraint(equalTo: bgView.leadingAnchor, constant: innerSpacing).isActive = true
+        textView.trailingAnchor.constraint(equalTo: bgView.trailingAnchor, constant: -innerSpacing).isActive = true
+        topLabel.trailingAnchor.constraint(lessThanOrEqualTo: textView.trailingAnchor, constant: 0).isActive = true
+        bgView.trailingAnchor.constraint(lessThanOrEqualTo: self.contentView.trailingAnchor, constant: -extraSpacing).isActive = true
         textView.isScrollEnabled = false
         textView.isEditable = false
         textView.isSelectable = true
-        textView.font = UIFont.systemFont(ofSize: 16)
-        textView.tintColor = UIColor.white
-        textView.textColor = UIColor.white
-        textView.text = "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum"
+        textView.tintColor = UIColor.black
+        textView.textColor = UIColor.black
+        textView.textContainerInset = UIEdgeInsets(top: secondaryPadding, left: secondaryPadding, bottom: secondaryPadding, right: secondaryPadding)
         textView.dataDetectorTypes = [.link]
-        textView.backgroundColor = UIColor.clear
-        
+        textView.backgroundColor = UIColor(MyHexString: "#EBEBEB")
+        textView.font = UIFont.systemFont(ofSize: 16)
+        textView.layer.cornerRadius = 18
+        textView.text = "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum"
+//        textView.backgroundColor = UIColor.clear
+
         self.bgView.addSubview(bottomLabel)
         bottomLabel.MyEdges([.left, .bottom], to: self.bgView, offset: UIEdgeInsets(top: innerSpacing, left: secondaryPadding, bottom: -secondaryPadding, right: 0))
         bottomLabel.trailingAnchor.constraint(equalTo: textView.trailingAnchor, constant: -secondaryPadding).isActive = true
-        bottomLabel.topAnchor.constraint(equalTo: textView.bottomAnchor, constant: -2).isActive = true
+        bottomLabel.topAnchor.constraint(equalTo: textView.bottomAnchor, constant: -5).isActive = true
         bottomLabel.font = UIFont.systemFont(ofSize: 10)
-        bottomLabel.textColor = UIColor.white
+        bottomLabel.textColor = UIColor.lightGray
         bottomLabel.textAlignment = .right
+
+        self.contentView.addSubview(self.timeLabel)
+        timeLabel.MyEdges([.left, .bottom], to: self.bgView, offset: UIEdgeInsets(top: innerSpacing, left: secondaryPadding, bottom: secondaryPadding, right: 0))
+        timeLabel.trailingAnchor.constraint(equalTo: textView.trailingAnchor, constant: -secondaryPadding).isActive = true
+        timeLabel.topAnchor.constraint(equalTo: textView.bottomAnchor, constant: 2).isActive = true
+        timeLabel.font = UIFont.systemFont(ofSize: 12)
+        timeLabel.text = "HH:mm"
     }
+    
+    func setupSendersCell() {
+        
+    }
+    
+//    func setupSendersCell() {
+//        let offset = UIEdgeInsets(top: padding, left: padding, bottom: -padding, right: -padding)
+//        self.contentView.addSubview(bgView)
+//        bgView.MyEdges([.right, .top, .bottom], to: self.contentView, offset: offset)
+//        bgView.layer.cornerRadius = 18
+//        bgView.backgroundColor = UIColor(MyHexString: "#FF8300")
+//
+//        self.bgView.addSubview(textView)
+//        textView.MyEdges([.left, .right, .top], to: self.bgView, offset: .init(top: innerSpacing, left: innerSpacing, bottom: -innerSpacing, right: -innerSpacing))
+//        bgView.leadingAnchor.constraint(greaterThanOrEqualTo: self.contentView.leadingAnchor, constant: extraSpacing).isActive = true
+//        textView.isScrollEnabled = false
+//        textView.isEditable = false
+//        textView.isSelectable = true
+//        textView.isUserInteractionEnabled = true
+//        textView.font = UIFont.systemFont(ofSize: 16)
+//        textView.tintColor = UIColor.white
+//        textView.textColor = UIColor.white
+//        textView.dataDetectorTypes = [.link]
+//        textView.text = "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum"
+//        textView.backgroundColor = UIColor.clear
+//
+//        self.bgView.addSubview(bottomLabel)
+//        bottomLabel.MyEdges([.left, .bottom], to: self.bgView, offset: UIEdgeInsets(top: innerSpacing, left: secondaryPadding, bottom: -secondaryPadding, right: 0))
+//        bottomLabel.trailingAnchor.constraint(equalTo: textView.trailingAnchor, constant: -secondaryPadding).isActive = true
+//        bottomLabel.topAnchor.constraint(equalTo: textView.bottomAnchor, constant: -2).isActive = true
+//        bottomLabel.font = UIFont.systemFont(ofSize: 10)
+//        bottomLabel.textColor = UIColor.white
+//        bottomLabel.textAlignment = .right
+//        bottomLabel.text = ""
+//
+//        let label = UILabel()
+//        self.contentView.addSubview(label)
+//        label.frame = CGRect(x: secondaryPadding, y: 10, width: 50, height: 10)
+//        label.text = "TET"
+//
+//    }
     
     func setupImageCell() {
         self.avatarView.isHidden = true
@@ -318,50 +434,6 @@ class CustomTableViewCell: UITableViewCell {
         return 200 + 15
     }
     
-    func setupReceiversCell() {
-        
-        self.contentView.addSubview(self.avatarView)
-        self.avatarView.image = UIImage(named: "chatbot", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil)
-        self.avatarView.MyEdges([.left, .top], to: self.contentView, offset: UIEdgeInsets(top: padding, left: padding, bottom: -padding, right: -padding))
-        
-        let offset = UIEdgeInsets(top: padding - 8.0, left: padding + (self.avatarView.image?.size.width ?? 0.0) + 10.0, bottom: -padding, right: -padding)
-        self.contentView.addSubview(bgView)
-        bgView.MyEdges([.left, .top, .bottom], to: self.contentView, offset: offset)
-        bgView.layer.cornerRadius = 18
-        bgView.backgroundColor = UIColor(MyHexString: "#EBEBEB")
-        
-        self.bgView.addSubview(topLabel)
-        topLabel.MyEdges([.left, .top], to: self.bgView, offset: UIEdgeInsets(top: secondaryPadding, left: secondaryPadding, bottom: 0, right: 0))
-        topLabel.font = UIFont.boldSystemFont(ofSize: 14)
-        topLabel.textColor = UIColor.red
-        topLabel.text = "Red"
-        topLabel.isHidden = true
-        
-        self.bgView.addSubview(textView)
-        textviewTopConstraintToTopLabel = textView.topAnchor.constraint(equalTo: topLabel.bottomAnchor, constant: 0)
-        textviewTopConstraintToTopLabel.isActive = false
-        textviewTopConstraintToBg = textView.topAnchor.constraint(equalTo: bgView.topAnchor, constant: innerSpacing)
-        textviewTopConstraintToBg.isActive = true
-        textView.leadingAnchor.constraint(equalTo: bgView.leadingAnchor, constant: innerSpacing).isActive = true
-        textView.trailingAnchor.constraint(equalTo: bgView.trailingAnchor, constant: -innerSpacing).isActive = true
-        topLabel.trailingAnchor.constraint(lessThanOrEqualTo: textView.trailingAnchor, constant: 0).isActive = true
-        bgView.trailingAnchor.constraint(lessThanOrEqualTo: self.contentView.trailingAnchor, constant: -extraSpacing).isActive = true
-        textView.isScrollEnabled = false
-        textView.isEditable = false
-        textView.isSelectable = true
-        textView.font = UIFont.systemFont(ofSize: 16)
-        textView.text = "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum"
-        textView.backgroundColor = UIColor.clear
-        
-        self.bgView.addSubview(bottomLabel)
-        bottomLabel.MyEdges([.left, .bottom], to: self.bgView, offset: UIEdgeInsets(top: innerSpacing, left: secondaryPadding, bottom: -secondaryPadding, right: 0))
-        bottomLabel.trailingAnchor.constraint(equalTo: textView.trailingAnchor, constant: -secondaryPadding).isActive = true
-        bottomLabel.topAnchor.constraint(equalTo: textView.bottomAnchor, constant: -2).isActive = true
-        bottomLabel.font = UIFont.systemFont(ofSize: 10)
-        bottomLabel.textColor = UIColor.lightGray
-        bottomLabel.textAlignment = .right
-    }
-    
     func setupMenuCell(_ title:String,_ menus:[[String:Any]]) {
         
         self.contentView.addSubview(self.avatarView)
@@ -381,28 +453,31 @@ class CustomTableViewCell: UITableViewCell {
         self.textView.isHidden = true
         self.topLabel.isHidden = true
         self.bottomLabel.isHidden = true
+        self.timeLabel.isHidden = true
         
         var yIndex = bgView.frame.origin.y
-        let width = UIScreen.main.bounds.size.width - (8.0 + (self.avatarView.image?.size.width ?? 0.0) + 10.0 + extraSpacing) 
-        var height = title.MyHeight(withConstrainedWidth: width + 36, font: UIFont.systemFont(ofSize: 16.0))
-        height = max(height, 40.0)
-        let lbl = PaddingLabel(withInsets: 8, 8, 18, 18)
-        bgView.addSubview(lbl)
-        lbl.frame = CGRect(x: 0.0, y: yIndex, width: width, height: height + 16)
-        lbl.text = title
-        lbl.font = UIFont.systemFont(ofSize: 16.0)
-        lbl.textAlignment = .center
-        lbl.backgroundColor = UIColor(MyHexString: "#EBEBEB")
-        lbl.layer.masksToBounds = true
-        lbl.layer.borderWidth = 0.5
-        lbl.numberOfLines = 10
-        lbl.layer.masksToBounds = true
-//        lbl.layer.cornerRadius = 18
-        lbl.textColor = UIColor(MyHexString: "#090909")
-        lbl.layer.borderColor = UIColor(MyHexString: "#EBEBEB").cgColor
-        lbl.tag = 9999
-        yIndex = yIndex + lbl.frame.size.height
-
+        let width = UIScreen.main.bounds.size.width - (8.0 + (self.avatarView.image?.size.width ?? 0.0) + 10.0 + extraSpacing)
+        var height = CGFloat(0.0)
+        if (title.count > 0) {
+            height = title.MyHeight(withConstrainedWidth: width + 36, font: UIFont.systemFont(ofSize: 16.0))
+            height = max(height, 40.0)
+            let lbl = PaddingLabel(withInsets: 8, 8, 18, 18)
+            bgView.addSubview(lbl)
+            lbl.frame = CGRect(x: 0.0, y: yIndex, width: width, height: height + 16)
+            lbl.text = title
+            lbl.font = UIFont.systemFont(ofSize: 16.0)
+            lbl.textAlignment = .center
+            lbl.backgroundColor = UIColor(MyHexString: "#EBEBEB")
+            lbl.layer.masksToBounds = true
+            lbl.layer.borderWidth = 0.5
+            lbl.numberOfLines = 10
+            lbl.layer.masksToBounds = true
+    //        lbl.layer.cornerRadius = 18
+            lbl.textColor = UIColor(MyHexString: "#090909")
+            lbl.layer.borderColor = UIColor(MyHexString: "#EBEBEB").cgColor
+            lbl.tag = 9999
+            yIndex = yIndex + lbl.frame.size.height
+        }
         for i in 0..<menus.count {
             let item = menus[i]
             let actions = item["action"] as! [String:Any]
@@ -426,15 +501,24 @@ class CustomTableViewCell: UITableViewCell {
             bgView.addSubview(lbl)
             yIndex = yIndex + lbl.frame.size.height
         }
+        
+        let time = UILabel()
+        self.contentView.addSubview(time)
+        time.frame = CGRect(x: padding + (self.avatarView.image?.size.width ?? 0.0) + 10.0, y: yIndex, width: width, height: 13)
+        time.font = UIFont.systemFont(ofSize: 12.0)
+        time.text = "HH:mm"
     }
     
     static func calcMenuCellHeight(_ title:String,_ menus:[[String:Any]]) -> CGFloat {
         var yIndex = CGFloat(0.0)
         let image = UIImage(named: "chatbot", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil)
         let width = UIScreen.main.bounds.size.width - (8.0 + (image?.size.width ?? 0.0) + 10.0 + extraSpacing)
-        var height = title.MyHeight(withConstrainedWidth: width + 36, font: UIFont.systemFont(ofSize: 16.0))
-        height = max(height, 40.0)
-        yIndex = yIndex + height + 16
+        var height = CGFloat(0.0)
+        if (title.count > 0) {
+            height = title.MyHeight(withConstrainedWidth: width + 36, font: UIFont.systemFont(ofSize: 16.0))
+            height = max(height, 40.0)
+            yIndex = yIndex + height + 16
+        }
 
         for i in 0..<menus.count {
             let item = menus[i]
