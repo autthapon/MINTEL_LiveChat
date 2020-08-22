@@ -61,7 +61,7 @@ class ViewController: UIViewController {
     var fetchResult: PHFetchResult<PHAsset>!
     var assetCollection: PHAssetCollection!
     @IBOutlet weak var viewConfirm:UIView!
-
+    
     fileprivate let imageManager = PHCachingImageManager()
     fileprivate var thumbnailSize: CGSize!
     fileprivate var previousPreheatRect = CGRect.zero
@@ -129,11 +129,11 @@ class ViewController: UIViewController {
         
         if fetchResult == nil {
             let allPhotosOptions = PHFetchOptions()
-//            allPhotosOptions.predicate = NSPredicate(format: "mediaType = %d", PHAssetMediaType.image.rawValue)
+            //            allPhotosOptions.predicate = NSPredicate(format: "mediaType = %d", PHAssetMediaType.image.rawValue)
             allPhotosOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
-//            allPhotosOptions.includeAllBurstAssets = false
-//            allPhotosOptions.includeAssetSourceTypes = [.typeUserLibrary, .typeCloudShared]
-//            allPhotosOptions.includeHiddenAssets = false
+            //            allPhotosOptions.includeAllBurstAssets = false
+            //            allPhotosOptions.includeAssetSourceTypes = [.typeUserLibrary, .typeCloudShared]
+            //            allPhotosOptions.includeHiddenAssets = false
             fetchResult = PHAsset.fetchAssets(with: .image, options: allPhotosOptions)
         }
         
@@ -147,19 +147,19 @@ class ViewController: UIViewController {
         
         
         NotificationCenter.default.addObserver(self,
-                selector: #selector(botTyped(_:)),
-                name: Notification.Name(MINTELNotifId.botTyped),
-                object: nil)
+                                               selector: #selector(botTyped(_:)),
+                                               name: Notification.Name(MINTELNotifId.botTyped),
+                                               object: nil)
         
         NotificationCenter.default.addObserver(self,
-                selector: #selector(toAgentModeFromNotification(_:)),
-                name: Notification.Name(MINTELNotifId.toAgentMode),
-                object: nil)
+                                               selector: #selector(toAgentModeFromNotification(_:)),
+                                               name: Notification.Name(MINTELNotifId.toAgentMode),
+                                               object: nil)
         
         NotificationCenter.default.addObserver(self,
-            selector: #selector(MINTEL_reallyEndChat(_:)),
-            name: Notification.Name(MINTELNotifId.reallyExitChat),
-            object: nil)
+                                               selector: #selector(MINTEL_reallyEndChat(_:)),
+                                               name: Notification.Name(MINTELNotifId.reallyExitChat),
+                                               object: nil)
     }
     
     @objc func botTyped(_ notification: Notification) {
@@ -291,31 +291,37 @@ extension ViewController: UITableViewDataSource {
         
         if let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifierId, for: indexPath) as? CustomTableViewCell {
             cell.selectionStyle = .none
-           
+            
             switch item.kind {
             case .systemMessageType1(let txt):
                 cell.renderSystemMessage(text: txt)
             case .systemMessageType2(let txt):
                 cell.renderSystemMessageType2(text: txt)
             case .text(let txt):
-                if (item.bot) {
-                    cell.avatarView.image = UIImage(named: "chatbot", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil)
+                //                if (item.bot) {
+                //                    cell.avatarView.image = UIImage(named: "chatbot", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil)
+                //                } else {
+                //                    cell.avatarView.image = UIImage(named: "agent", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil)
+                //                }
+                
+                if (agent) {
+                    cell.renderReceiverCell(txt, item: item)
                 } else {
-                    cell.avatarView.image = UIImage(named: "agent", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil)
+                    cell.renderSender(txt: txt, item: item)
                 }
-                cell.textView.text = txt
-//                if (item.bot) {
-//                    cell.setupReceiversCell()
-//                } else {
-//                    cell.setupSendersCell()
-//                }
+                
+                //                cell.textView.text = txt
+                //                let dateFormatter = DateFormatter()
+                //                dateFormatter.dateFormat = "HH:mm"
+                //                let dateString = dateFormatter.string(from: item.sentDate)
+            //                cell.timeLabel.text = dateString
             case .menu(let title, let menus):
-                cell.setupMenuCell(title, menus)
+                cell.setupMenuCell(title, menus, item)
                 let gesture = cell.tapGuesture ?? MyTapGuesture(target: self, action: #selector(didTap(_:)))
                 gesture.message = item
                 cell.addGestureRecognizer(gesture)
             case .image(let img):
-                cell.renderImageCell(image: img)
+                cell.renderImageCell(image: img, time: item.sentDate)
             case .agentJoin:
                 cell.renderAgentJoin()
             }
@@ -362,12 +368,12 @@ extension ViewController: UITableViewDataSource {
             height = max(height, 40.0)
             yIndex = yIndex + height + 16
         }
-
+        
         for i in 0..<menus.count {
             let item = menus[i]
             let actions = item["action"] as! [String:Any]
             let labelText = actions["label"] as? String ?? ""
-
+            
             height = labelText.MyHeight(withConstrainedWidth: width, font: UIFont.systemFont(ofSize: 16.0))
             height = max(40.0, height)
             
@@ -381,7 +387,7 @@ extension ViewController: UITableViewDataSource {
         if (targetAction != nil) {
             let text = targetAction?["text"] as? String ?? ""
             if (text.count > 0) {
-                let display = targetAction?["display"] as? Bool ?? false
+                let display = targetAction?["display"] as? Bool ?? true
                 if (display) {
                     MINTEL_LiveChat.items.append(MyMessage(text: text, agent: false))
                 }
@@ -397,16 +403,20 @@ extension ViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         
         let item = MINTEL_LiveChat.items[indexPath.section]
-
+        
         switch item.kind {
         case .systemMessageType1(let txt):
             return CustomTableViewCell.calcRowHeightSystemMessage(text: txt)
         case .systemMessageType2(let txt):
             return CustomTableViewCell.calcRowHeightSystemMessageType2(text: txt)
         case .text(let txt):
-            return UITableView.automaticDimension
+            if (item.bot) {
+                return CustomTableViewCell.calcReceiverCell(txt, item: item)
+            } else {
+                return CustomTableViewCell.calcSender(txt: txt, item: item)
+            }
         case .menu(let title, let menus):
-            return CustomTableViewCell.calcMenuCellHeight(title, menus) - 7.0
+            return CustomTableViewCell.calMenuCellHeight(title, menus, item)
         case .image(let image):
             return CustomTableViewCell.calcImageCellHeight(image)
         case .agentJoin:
@@ -416,9 +426,9 @@ extension ViewController: UITableViewDelegate {
 }
 
 extension UITableView {
-
+    
     func scrollToBottom(){
-
+        
         DispatchQueue.main.async {
             if (self.numberOfSections > 0) {
                 let indexPath = IndexPath(
@@ -430,17 +440,17 @@ extension UITableView {
             }
         }
     }
-
+    
     func scrollToTop() {
-
+        
         DispatchQueue.main.async {
             let indexPath = IndexPath(row: 0, section: 0)
             if self.hasRowAtIndexPath(indexPath: indexPath) {
                 self.scrollToRow(at: indexPath, at: .top, animated: false)
-           }
+            }
         }
     }
-
+    
     func hasRowAtIndexPath(indexPath: IndexPath) -> Bool {
         return indexPath.section < self.numberOfSections && indexPath.row < self.numberOfRows(inSection: indexPath.section)
     }
@@ -478,7 +488,7 @@ extension ViewController: InputTextViewDelegate {
     }
     
     func didPressSecondLeftButton(_ sender: UIButton, _ textView: UITextView) {
-         guard UIImagePickerController.isSourceTypeAvailable(.camera) else {
+        guard UIImagePickerController.isSourceTypeAvailable(.camera) else {
             checkCameraAccess()
             return
         }
@@ -504,11 +514,11 @@ extension ViewController: InputTextViewDelegate {
             }
         }
     }
-
+    
     func presentCameraSettings() {
         let alertController = UIAlertController(title: "Error",
-                                      message: "Camera access is denied",
-                                      preferredStyle: .alert)
+                                                message: "Camera access is denied",
+                                                preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: "Cancel", style: .default))
         alertController.addAction(UIAlertAction(title: "Settings", style: .cancel) { _ in
             if let url = URL(string: UIApplication.openSettingsURLString) {
@@ -517,14 +527,14 @@ extension ViewController: InputTextViewDelegate {
                 })
             }
         })
-
+        
         present(alertController, animated: true)
     }
     
     func presentPhotoSetting() {
         let alertController = UIAlertController(title: "Error",
-                                      message: "Photo Library access is denied",
-                                      preferredStyle: .alert)
+                                                message: "Photo Library access is denied",
+                                                preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: "Cancel", style: .default))
         alertController.addAction(UIAlertAction(title: "Settings", style: .cancel) { _ in
             if let url = URL(string: UIApplication.openSettingsURLString) {
@@ -533,7 +543,7 @@ extension ViewController: InputTextViewDelegate {
                 })
             }
         })
-
+        
         present(alertController, animated: true)
     }
     
@@ -556,24 +566,24 @@ extension ViewController: InputTextViewDelegate {
         importMenu.modalPresentationStyle = .formSheet
         importMenu.modalPresentationStyle = .fullScreen
         self.present(importMenu, animated: true, completion: nil)
-
         
-//        if FileManager.default.fileExists(atPath: url.path){
-//
-//            let filename = (url.absoluteString as NSString).lastPathComponent
-//            self.insertMessage(MockMessage(text: filename, user: ChatViewController.user, messageId: UUID().uuidString, date: Date()))
-//
-//            do {
-//                // Get the saved data
-//                let savedData = try Data(contentsOf: url)
-//                // Convert the data back into a string
-//                self.upload(imageData: nil, imageName: nil, fileData: savedData, fileName: filename, parameters: ["session_id": MINTEL_LiveChat.userId])
-//            } catch {
-//             // Catch any errors
-//             print("Unable to read the file")
-//            }
-//        }
-
+        
+        //        if FileManager.default.fileExists(atPath: url.path){
+        //
+        //            let filename = (url.absoluteString as NSString).lastPathComponent
+        //            self.insertMessage(MockMessage(text: filename, user: ChatViewController.user, messageId: UUID().uuidString, date: Date()))
+        //
+        //            do {
+        //                // Get the saved data
+        //                let savedData = try Data(contentsOf: url)
+        //                // Convert the data back into a string
+        //                self.upload(imageData: nil, imageName: nil, fileData: savedData, fileName: filename, parameters: ["session_id": MINTEL_LiveChat.userId])
+        //            } catch {
+        //             // Catch any errors
+        //             print("Unable to read the file")
+        //            }
+        //        }
+        
     }
     
     func showImagePanel() {
@@ -666,8 +676,8 @@ extension ViewController : UIDocumentMenuDelegate, UIDocumentPickerDelegate {
                 // Convert the data back into a string
                 self.upload(imageData: nil, imageName: nil, fileData: savedData, fileName: filename, parameters: ["session_id": "1"])
             } catch {
-             // Catch any errors
-             print("Unable to read the file")
+                // Catch any errors
+                print("Unable to read the file")
             }
         }
     }
@@ -687,37 +697,37 @@ extension ViewController : UICollectionViewDataSource, UICollectionViewDelegate,
         let asset = fetchResult.object(at: indexPath.item)
         
         debugPrint(asset, asset.mediaSubtypes.rawValue, PHAssetMediaType.audio)
-            
+        
         // Dequeue a GridViewCell.
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: GridViewCell.self), for: indexPath) as? GridViewCell
-           else { fatalError("unexpected cell in collection view") }
-
+            else { fatalError("unexpected cell in collection view") }
+        
         // Add a badge to the cell if the PHAsset represents a Live Photo.
-//        if asset.mediaSubtypes.contains(.photoLive) {
-//           cell.livePhotoBadgeImage = PHLivePhotoView.livePhotoBadgeImage(options: .overContent)
-//        }
+        //        if asset.mediaSubtypes.contains(.photoLive) {
+        //           cell.livePhotoBadgeImage = PHLivePhotoView.livePhotoBadgeImage(options: .overContent)
+        //        }
         
         // Request an image for the asset from the PHCachingImageManager.
         cell.representedAssetIdentifier = asset.localIdentifier
         let options = PHImageRequestOptions()
         options.deliveryMode = .highQualityFormat
         options.resizeMode = .exact
-//        options.isSynchronous = true
-//        options.isNetworkAccessAllowed = true
+        //        options.isSynchronous = true
+        //        options.isNetworkAccessAllowed = true
         let requestSize = CGSize(width: 500, height: 500)
         imageManager.requestImage(for: asset, targetSize: requestSize, contentMode: .aspectFill, options: options, resultHandler: { image, _ in
-           // The cell may have been recycled by the time this handler gets called;
-           // set the cell's thumbnail image only if it's still showing the same asset.
-           if cell.representedAssetIdentifier == asset.localIdentifier {
-               cell.thumbnailImage = image
-           } else {
-            print("NONONO")
+            // The cell may have been recycled by the time this handler gets called;
+            // set the cell's thumbnail image only if it's still showing the same asset.
+            if cell.representedAssetIdentifier == asset.localIdentifier {
+                cell.thumbnailImage = image
+            } else {
+                print("NONONO")
             }
         })
-
+        
         return cell
     }
- 
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let asset = fetchResult.object(at: indexPath.item)
         print("Did Image")
@@ -729,7 +739,7 @@ extension ViewController : UICollectionViewDataSource, UICollectionViewDelegate,
         imageManager.requestImage(for: asset, targetSize: PHImageManagerMaximumSize , contentMode: .aspectFill, options: options) { (image, info) in
             let isDegraded = (info?[PHImageResultIsDegradedKey] as? Bool) ?? false
             if isDegraded {
-               return
+                return
             }
             
             if (image != nil) {
@@ -753,65 +763,65 @@ extension ViewController : UICollectionViewDataSource, UICollectionViewDelegate,
     }
     
     fileprivate func resetCachedAssets() {
-       imageManager.stopCachingImagesForAllAssets()
-       previousPreheatRect = .zero
+        imageManager.stopCachingImagesForAllAssets()
+        previousPreheatRect = .zero
     }
     
     fileprivate func updateCachedAssets() {
-       // Update only if the view is visible.
-       guard isViewLoaded && view.window != nil else { return }
-
-       // The preheat window is twice the height of the visible rect.
+        // Update only if the view is visible.
+        guard isViewLoaded && view.window != nil else { return }
+        
+        // The preheat window is twice the height of the visible rect.
         let visibleRect = CGRect(origin: imagePanelView.contentOffset, size: imagePanelView.bounds.size)
-       let preheatRect = visibleRect.insetBy(dx: 0, dy: -0.5 * visibleRect.height)
-
-       // Update only if the visible area is significantly different from the last preheated area.
-       let delta = abs(preheatRect.midY - previousPreheatRect.midY)
-       guard delta > view.bounds.height / 3 else { return }
-
-       // Compute the assets to start caching and to stop caching.
-       let (addedRects, removedRects) = differencesBetweenRects(previousPreheatRect, preheatRect)
-       let addedAssets = addedRects
-        .flatMap { rect in self.imagePanelView.indexPathsForElements(in: rect) }
-           .map { indexPath in fetchResult.object(at: indexPath.item) }
-       let removedAssets = removedRects
-        .flatMap { rect in self.imagePanelView.indexPathsForElements(in: rect) }
-           .map { indexPath in fetchResult.object(at: indexPath.item) }
-
-       // Update the assets the PHCachingImageManager is caching.
-       imageManager.startCachingImages(for: addedAssets,
-           targetSize: thumbnailSize, contentMode: .aspectFill, options: nil)
-       imageManager.stopCachingImages(for: removedAssets,
-           targetSize: thumbnailSize, contentMode: .aspectFill, options: nil)
-
-       // Store the preheat rect to compare against in the future.
-       previousPreheatRect = preheatRect
+        let preheatRect = visibleRect.insetBy(dx: 0, dy: -0.5 * visibleRect.height)
+        
+        // Update only if the visible area is significantly different from the last preheated area.
+        let delta = abs(preheatRect.midY - previousPreheatRect.midY)
+        guard delta > view.bounds.height / 3 else { return }
+        
+        // Compute the assets to start caching and to stop caching.
+        let (addedRects, removedRects) = differencesBetweenRects(previousPreheatRect, preheatRect)
+        let addedAssets = addedRects
+            .flatMap { rect in self.imagePanelView.indexPathsForElements(in: rect) }
+            .map { indexPath in fetchResult.object(at: indexPath.item) }
+        let removedAssets = removedRects
+            .flatMap { rect in self.imagePanelView.indexPathsForElements(in: rect) }
+            .map { indexPath in fetchResult.object(at: indexPath.item) }
+        
+        // Update the assets the PHCachingImageManager is caching.
+        imageManager.startCachingImages(for: addedAssets,
+                                        targetSize: thumbnailSize, contentMode: .aspectFill, options: nil)
+        imageManager.stopCachingImages(for: removedAssets,
+                                       targetSize: thumbnailSize, contentMode: .aspectFill, options: nil)
+        
+        // Store the preheat rect to compare against in the future.
+        previousPreheatRect = preheatRect
     }
-
+    
     fileprivate func differencesBetweenRects(_ old: CGRect, _ new: CGRect) -> (added: [CGRect], removed: [CGRect]) {
-       if old.intersects(new) {
-           var added = [CGRect]()
-           if new.maxY > old.maxY {
-               added += [CGRect(x: new.origin.x, y: old.maxY,
-                                   width: new.width, height: new.maxY - old.maxY)]
-           }
-           if old.minY > new.minY {
-               added += [CGRect(x: new.origin.x, y: new.minY,
-                                   width: new.width, height: old.minY - new.minY)]
-           }
-           var removed = [CGRect]()
-           if new.maxY < old.maxY {
-               removed += [CGRect(x: new.origin.x, y: new.maxY,
-                                     width: new.width, height: old.maxY - new.maxY)]
-           }
-           if old.minY < new.minY {
-               removed += [CGRect(x: new.origin.x, y: old.minY,
-                                     width: new.width, height: new.minY - old.minY)]
-           }
-           return (added, removed)
-       } else {
-           return ([new], [old])
-       }
+        if old.intersects(new) {
+            var added = [CGRect]()
+            if new.maxY > old.maxY {
+                added += [CGRect(x: new.origin.x, y: old.maxY,
+                                 width: new.width, height: new.maxY - old.maxY)]
+            }
+            if old.minY > new.minY {
+                added += [CGRect(x: new.origin.x, y: new.minY,
+                                 width: new.width, height: old.minY - new.minY)]
+            }
+            var removed = [CGRect]()
+            if new.maxY < old.maxY {
+                removed += [CGRect(x: new.origin.x, y: new.maxY,
+                                   width: new.width, height: old.maxY - new.maxY)]
+            }
+            if old.minY < new.minY {
+                removed += [CGRect(x: new.origin.x, y: old.minY,
+                                   width: new.width, height: new.minY - old.minY)]
+            }
+            return (added, removed)
+        } else {
+            return ([new], [old])
+        }
     }
     
 }
@@ -825,10 +835,10 @@ private extension UICollectionView {
 
 extension ViewController: PHPhotoLibraryChangeObserver {
     func photoLibraryDidChange(_ changeInstance: PHChange) {
- 
+        
         guard let changes = changeInstance.changeDetails(for: fetchResult)
             else { return }
- 
+        
         // Change notifications may be made on a background queue. Re-dispatch to the
         // main queue before acting on the change as we'll be updating the UI.
         DispatchQueue.main.sync {
@@ -850,7 +860,7 @@ extension ViewController: PHPhotoLibraryChangeObserver {
                     }
                     changes.enumerateMoves { fromIndex, toIndex in
                         self.imagePanelView.moveItem(at: IndexPath(item: fromIndex, section: 0),
-                                                to: IndexPath(item: toIndex, section: 0))
+                                                     to: IndexPath(item: toIndex, section: 0))
                     }
                 })
             } else {

@@ -13,39 +13,39 @@ extension ViewController {
     
     internal func setupSaleForcesNotification() {
         NotificationCenter.default.addObserver(self,
-                selector: #selector(saleForcesDidUpdateQueuePosition(_:)),
-                name: Notification.Name(SalesForceNotifId.didUpdatePosition),
-                object: nil)
+                                               selector: #selector(saleForcesDidUpdateQueuePosition(_:)),
+                                               name: Notification.Name(SalesForceNotifId.didUpdatePosition),
+                                               object: nil)
         
         NotificationCenter.default.addObserver(self,
-                selector: #selector(saleForcesAgentJoined(_:)),
-                name: Notification.Name(SalesForceNotifId.agentJoined),
-                object: nil)
+                                               selector: #selector(saleForcesAgentJoined(_:)),
+                                               name: Notification.Name(SalesForceNotifId.agentJoined),
+                                               object: nil)
         
         NotificationCenter.default.addObserver(self,
-                selector: #selector(saleForcesDidReceivedMessage(_:)),
-                name: Notification.Name(SalesForceNotifId.didReceiveMessage),
-                object: nil)
+                                               selector: #selector(saleForcesDidReceivedMessage(_:)),
+                                               name: Notification.Name(SalesForceNotifId.didReceiveMessage),
+                                               object: nil)
         
         NotificationCenter.default.addObserver(self,
-                selector: #selector(saleForcesAgentLeft(_:)),
-                name: Notification.Name(SalesForceNotifId.agentLeftConference),
-                object: nil)
+                                               selector: #selector(saleForcesAgentLeft(_:)),
+                                               name: Notification.Name(SalesForceNotifId.agentLeftConference),
+                                               object: nil)
         
         NotificationCenter.default.addObserver(self,
-                selector: #selector(saleForcesDidEnd(_:)),
-                name: Notification.Name(SalesForceNotifId.didEnd),
-                object: nil)
+                                               selector: #selector(saleForcesDidEnd(_:)),
+                                               name: Notification.Name(SalesForceNotifId.didEnd),
+                                               object: nil)
         
         NotificationCenter.default.addObserver(self,
-                selector: #selector(saleForceUserTyping(_:)),
-                name: Notification.Name(MINTELNotifId.userIsTyping),
-                object: nil)
+                                               selector: #selector(saleForceUserTyping(_:)),
+                                               name: Notification.Name(MINTELNotifId.userIsTyping),
+                                               object: nil)
         
         NotificationCenter.default.addObserver(self,
-                selector: #selector(MINTEL_reallyEndChat(_:)),
-                name: Notification.Name(MINTELNotifId.reallyExitChat),
-                object: nil)
+                                               selector: #selector(MINTEL_reallyEndChat(_:)),
+                                               name: Notification.Name(MINTELNotifId.reallyExitChat),
+                                               object: nil)
         
         NotificationCenter.default.addObserver(self, selector: #selector(appWillTerminate), name: UIApplication.willTerminateNotification, object: nil)
     }
@@ -149,67 +149,67 @@ extension ViewController {
     }
     
     /*
-    func session(_ session: SCSChatSession!, didUpdateQueuePosition position: NSNumber!) {
-        if (self.queuePosition > position.intValue) {
-            self.queuePosition = position.intValue
-            self.items.append(MyMessage(systemMessageType1: String(format: "Queue Position:%d", self.queuePosition)))
-            self.tableView.reloadData()
-            self.tableView.scrollToBottom()
-        }
-    }
-    
-    func session(_ session: SCSChatSession!, agentJoined agentjoinedEvent: SCSAgentJoinEvent!) {
-        
-    }
-    
-    func session(_ session: SCSChatSession!, agentLeftConference agentLeftConferenceEvent: SCSAgentLeftConferenceEvent!) {
-        
-    }
-    
-    func session(_ session: SCSChatSession!, processedOutgoingMessage message: SCSUserTextEvent!) {
-        
-    }
-    
-    func session(_ session: SCSChatSession!, didUpdateOutgoingMessageDeliveryStatus message: SCSUserTextEvent!) {
-        
-    }
-    
-    func session(_ session: SCSChatSession!, didSelectMenuItem menuEvent: SCSChatMenuSelectionEvent!) {
-        
-    }
-    
-    func session(_ session: SCSChatSession!, didReceiveMessage message: SCSAgentTextEvent!) {
-        
-    }
-    
-    func session(_ session: SCSChatSession!, didReceiveChatBotMenu menuEvent: SCSChatBotMenuEvent!) {
-        
-    }
-    
-    func session(_ session: SCSChatSession!, didReceiveFileTransferRequest fileTransferEvent: SCSFileTransferEvent!) {
-        
-    }
-    
-    func transferToButtonInitiated(with session: SCSChatSession!) {
-        
-    }
-    
-    func transferToButtonCompleted(with session: SCSChatSession!) {
-        
-    }
-    
-    func transferToButtonFailed(with session: SCSChatSession!, error: Error!) {
-        
-    }
-    
-    func session(_ session: SCSChatSession!, didError error: Error!, fatal: Bool) {
-        
-    }
-    
-    func terminate() {
-        
-    }
- */
+     func session(_ session: SCSChatSession!, didUpdateQueuePosition position: NSNumber!) {
+     if (self.queuePosition > position.intValue) {
+     self.queuePosition = position.intValue
+     self.items.append(MyMessage(systemMessageType1: String(format: "Queue Position:%d", self.queuePosition)))
+     self.tableView.reloadData()
+     self.tableView.scrollToBottom()
+     }
+     }
+     
+     func session(_ session: SCSChatSession!, agentJoined agentjoinedEvent: SCSAgentJoinEvent!) {
+     
+     }
+     
+     func session(_ session: SCSChatSession!, agentLeftConference agentLeftConferenceEvent: SCSAgentLeftConferenceEvent!) {
+     
+     }
+     
+     func session(_ session: SCSChatSession!, processedOutgoingMessage message: SCSUserTextEvent!) {
+     
+     }
+     
+     func session(_ session: SCSChatSession!, didUpdateOutgoingMessageDeliveryStatus message: SCSUserTextEvent!) {
+     
+     }
+     
+     func session(_ session: SCSChatSession!, didSelectMenuItem menuEvent: SCSChatMenuSelectionEvent!) {
+     
+     }
+     
+     func session(_ session: SCSChatSession!, didReceiveMessage message: SCSAgentTextEvent!) {
+     
+     }
+     
+     func session(_ session: SCSChatSession!, didReceiveChatBotMenu menuEvent: SCSChatBotMenuEvent!) {
+     
+     }
+     
+     func session(_ session: SCSChatSession!, didReceiveFileTransferRequest fileTransferEvent: SCSFileTransferEvent!) {
+     
+     }
+     
+     func transferToButtonInitiated(with session: SCSChatSession!) {
+     
+     }
+     
+     func transferToButtonCompleted(with session: SCSChatSession!) {
+     
+     }
+     
+     func transferToButtonFailed(with session: SCSChatSession!, error: Error!) {
+     
+     }
+     
+     func session(_ session: SCSChatSession!, didError error: Error!, fatal: Bool) {
+     
+     }
+     
+     func terminate() {
+     
+     }
+     */
     
     func sendMessageToSaleForce(text: String) {
         ServiceCloud.shared().chatCore.session.sendMessage(text)
@@ -230,14 +230,14 @@ extension ViewController {
             var shouldIgnore = false
             var txtToSend = ""
             switch item.kind {
-                case .text(let txt):
-                    txtToSend = txt
-                    for i in 0...ignoreMessage.count - 1 {
-                        if (txt.starts(with: ignoreMessage[i])) {
-                            shouldIgnore = true
-                            break
-                        }
+            case .text(let txt):
+                txtToSend = txt
+                for i in 0...ignoreMessage.count - 1 {
+                    if (txt.starts(with: ignoreMessage[i])) {
+                        shouldIgnore = true
+                        break
                     }
+                }
                 break
             default:
                 break

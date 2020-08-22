@@ -170,27 +170,27 @@ class InputTextView: UIView {
         }
     }
     
-//    fileprivate func showSendButton() {
-//        self.rightStackView.removeArrangedSubview(firstRightButton)
-//        firstRightButton.removeFromSuperview()
-//        secondRightButton.setImage(UIImage(named: "send"), for: .normal)
-//        secondRightButton.tag = 121
-//        self.setRightStackViewWidth(InputTextView.buttonItemHeight)
-//        UIView.animate(withDuration: 0.2) {
-//            self.layoutIfNeeded()
-//        }
-//    }
+    //    fileprivate func showSendButton() {
+    //        self.rightStackView.removeArrangedSubview(firstRightButton)
+    //        firstRightButton.removeFromSuperview()
+    //        secondRightButton.setImage(UIImage(named: "send"), for: .normal)
+    //        secondRightButton.tag = 121
+    //        self.setRightStackViewWidth(InputTextView.buttonItemHeight)
+    //        UIView.animate(withDuration: 0.2) {
+    //            self.layoutIfNeeded()
+    //        }
+    //    }
     
-//    fileprivate func showCameraAndMicButton() {
-//        firstRightButton.setImage(UIImage(named: "camera"), for: .normal)
-//        rightStackView.insertArrangedSubview(firstRightButton, at: 0)
-//        secondRightButton.setImage(UIImage(named: "mic"), for: .normal)
-//        secondRightButton.tag = 120
-//        self.setRightStackViewWidth(InputTextView.buttonItemHeight * 2)
-//        UIView.animate(withDuration: 0.2) {
-//            self.layoutIfNeeded()
-//        }
-//    }
+    //    fileprivate func showCameraAndMicButton() {
+    //        firstRightButton.setImage(UIImage(named: "camera"), for: .normal)
+    //        rightStackView.insertArrangedSubview(firstRightButton, at: 0)
+    //        secondRightButton.setImage(UIImage(named: "mic"), for: .normal)
+    //        secondRightButton.tag = 120
+    //        self.setRightStackViewWidth(InputTextView.buttonItemHeight * 2)
+    //        UIView.animate(withDuration: 0.2) {
+    //            self.layoutIfNeeded()
+    //        }
+    //    }
     
     func setLeftStackViewWidth(_ width: CGFloat) {
         leftStackViewWidthConstraint.constant = width
@@ -252,12 +252,12 @@ extension InputTextView: UITextViewDelegate {
         
         if textView.text.isEmpty {
             NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.userIsNotTyping),
-                object: nil,
-                userInfo:nil)
+                                            object: nil,
+                                            userInfo:nil)
         } else {
             NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.userIsTyping),
-                object: nil,
-                userInfo:nil)
+                                            object: nil,
+                                            userInfo:nil)
         }
     }
     
@@ -267,13 +267,13 @@ extension InputTextView: UITextViewDelegate {
 extension InputTextView {
     internal func setupSaleForceEvent() {
         NotificationCenter.default.addObserver(self,
-                selector: #selector(MINTEL_reallyEndChat(_:)),
-                name: Notification.Name(MINTELNotifId.reallyExitChat),
-                object: nil)
+                                               selector: #selector(MINTEL_reallyEndChat(_:)),
+                                               name: Notification.Name(MINTELNotifId.reallyExitChat),
+                                               object: nil)
     }
     
     @objc func MINTEL_reallyEndChat(_ notification: Notification) {
-
+        
         DispatchQueue.main.async {
             self.textView.resignFirstResponder()
             self.hideLeftMenu()

@@ -14,7 +14,7 @@ let autoDockingDuration: Double = 0.2
 let doubleTapTimeInterval: Double = 0.36
 
 protocol ChatDelegate{
-      func terminate()
+    func terminate()
 }
 
 internal enum SaleforceAgentState {
@@ -52,7 +52,7 @@ public class MINTEL_LiveChat: UIView {
     
     private var longPressGestureRecognizer: UILongPressGestureRecognizer?
     private var tapGestureRecognizer:UITapGestureRecognizer?
- 
+    
     required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)!
         self.translatesAutoresizingMaskIntoConstraints = true
@@ -154,11 +154,11 @@ public class MINTEL_LiveChat: UIView {
         dateFormatter.dateFormat = "dd/MM/yyyy HH:mm"
         let date24 = dateFormatter.string(from: date)
         
-        MINTEL_LiveChat.items.append(MyMessage(systemMessageType1: String(format: "จบการสนทนา %@", date24)))
+        MINTEL_LiveChat.items.append(MyMessage(systemMessageType1: String(format: "Chat ended %@", date24)))
         
         NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.reallyExitChat),
-                object: nil,
-                userInfo:nil)
+                                        object: nil,
+                                        userInfo:nil)
     }
     
     internal func loadFirstMessage() {
@@ -183,12 +183,12 @@ public class MINTEL_LiveChat: UIView {
     }
     
     private func configureSaleForce() {
-
+        
         if let config = SCSChatConfiguration(liveAgentPod: MINTEL_LiveChat.configuration?.salesforceLiveAgentPod,
-                                                     orgId: MINTEL_LiveChat.configuration?.salesforceOrdID,
-                                                     deploymentId: MINTEL_LiveChat.configuration?.salesforceDeployID,
-                                                     buttonId: MINTEL_LiveChat.configuration?.salesforceButtonID) {
-
+                                             orgId: MINTEL_LiveChat.configuration?.salesforceOrdID,
+                                             deploymentId: MINTEL_LiveChat.configuration?.salesforceDeployID,
+                                             buttonId: MINTEL_LiveChat.configuration?.salesforceButtonID) {
+            
             config.visitorName = String(format:"%@ %@", MINTEL_LiveChat.configuration?.firstname ?? "", MINTEL_LiveChat.configuration?.lastname ?? "")
             config.queueStyle = .position // Fixed
             
@@ -211,34 +211,34 @@ public class MINTEL_LiveChat: UIView {
             lastNameEntityField.isExactMatch = false
             lastNameEntityField.doCreate = true
             contactEntity.entityFieldsMaps.add(lastNameEntityField)
-
+            
             let emailEntityField = SCSPrechatEntityField(fieldName: "Email", label: "Email")
             emailEntityField.doFind = true
             emailEntityField.isExactMatch = true
             emailEntityField.doCreate = true
             contactEntity.entityFieldsMaps.add(emailEntityField)
-
+            
             let phoneEntityField = SCSPrechatEntityField(fieldName: "Phone", label: "Phone")
             phoneEntityField.doFind = false
             phoneEntityField.isExactMatch = false
             phoneEntityField.doCreate = true
             contactEntity.entityFieldsMaps.add(phoneEntityField)
-
+            
             let tmnIdEntityField = SCSPrechatEntityField(fieldName: "TMN_ID_CLT__c", label: "TMN_ID_CLT__c")
             tmnIdEntityField.doFind = false
             tmnIdEntityField.isExactMatch = false
             tmnIdEntityField.doCreate = true
             contactEntity.entityFieldsMaps.add(tmnIdEntityField)
-
+            
             // Create an entity mapping for a Case record type
             let csatEntity = SCSPrechatEntity(entityName: "CSAT_Score__c")
             csatEntity.saveToTranscript = "CSAT_Score__c"
             csatEntity.showOnCreate = true
             //csatEntity.linkToEntityName = "Case"
             //csatEntity.linkToEntityField = "ContactId"   // Link this entity to Case.ContactId
-
+            
             // Add one field mappings to our Case entity
-
+            
             let csatUuid = UUID().uuidString
             let uniqueFiled = SCSPrechatObject(label: "Unique_ID__c", value: csatUuid)
             let uniqueEntityField = SCSPrechatEntityField(fieldName: "Unique_ID__c", label: "Unique_ID__c")
@@ -317,22 +317,22 @@ public class MINTEL_LiveChat: UIView {
         obj?.addSubview(self)
         
         self.layer.zPosition = 1
-//        UIApplication.shared.keyWindow?.addSubview(self)
+        //        UIApplication.shared.keyWindow?.addSubview(self)
         
-//        let keyWindow = UIApplication.shared.connectedScenes
-//            .filter({$0.activationState == .foregroundActive})
-//            .map({$0 as? UIWindowScene})
-//            .compactMap({$0})
-//            .first?.windows
-//            .filter({$0.isKeyWindow}).first
-//
-//        keyWindow.addSubview(self)
+        //        let keyWindow = UIApplication.shared.connectedScenes
+        //            .filter({$0.activationState == .foregroundActive})
+        //            .map({$0 as? UIWindowScene})
+        //            .compactMap({$0})
+        //            .first?.windows
+        //            .filter({$0.isKeyWindow}).first
+        //
+        //        keyWindow.addSubview(self)
         
-//        if let keyWindow = UIApplication.shared.keyWindow {
-//            keyWindow.addSubview(self)
-//        } else if (UIApplication.shared.windows.first != nil) {
-//            UIApplication.shared.windows.first?.addSubview(self)
-//        }
+        //        if let keyWindow = UIApplication.shared.keyWindow {
+        //            keyWindow.addSubview(self)
+        //        } else if (UIApplication.shared.windows.first != nil) {
+        //            UIApplication.shared.windows.first?.addSubview(self)
+        //        }
     }
     
     private func removeButtonFromKeyWindow() {
@@ -363,11 +363,11 @@ public class MINTEL_LiveChat: UIView {
         let loc:CGPoint = sender!.location(in: sender?.view)
         let buttonHeight = (self.frame.size.height * closeButtonHeight) / viewHeight
         if loc.y <= buttonHeight {
-//            if (self.chatDelegate != nil) {
-//                self.chatDelegate?.terminate()
-//            } else {
-                self.closeButtonHandle()
-//            }
+            //            if (self.chatDelegate != nil) {
+            //                self.chatDelegate?.terminate()
+            //            } else {
+            self.closeButtonHandle()
+            //            }
         } else {
             self.tapAction(sender: sender as AnyObject)
         }
@@ -390,25 +390,25 @@ public class MINTEL_LiveChat: UIView {
         DispatchQueue.main.async {
             if (!self.singleTapBeenCanceled && !self.dragging)  {
                 
-//                var isOpen = true
-//                if (ChatBox.chatBotMode) {
-//                    isOpen = true
-//                } else {
-//                    if (ChatBox.agentState == 5) {
-//                        isOpen = true
-//                    }
-//                }
+                //                var isOpen = true
+                //                if (ChatBox.chatBotMode) {
+                //                    isOpen = true
+                //                } else {
+                //                    if (ChatBox.agentState == 5) {
+                //                        isOpen = true
+                //                    }
+                //                }
                 
-//                if (isOpen) {
+                //                if (isOpen) {
                 
-                    self.layer.zPosition = 0
-                    let bundle = Bundle(for: type(of: self))
-                    let storyboard = UIStoryboard(name: "ChatBox", bundle: bundle)
-                    let vc = storyboard.instantiateInitialViewController()!
-                    let viewController = UIApplication.shared.windows.first!.rootViewController!
-                    viewController.modalPresentationStyle = .fullScreen
-                    viewController.present(vc, animated: true, completion: nil)
-//                }
+                self.layer.zPosition = 0
+                let bundle = Bundle(for: type(of: self))
+                let storyboard = UIStoryboard(name: "ChatBox", bundle: bundle)
+                let vc = storyboard.instantiateInitialViewController()!
+                let viewController = UIApplication.shared.windows.first!.rootViewController!
+                viewController.modalPresentationStyle = .fullScreen
+                viewController.present(vc, animated: true, completion: nil)
+                //                }
             }
         }
     }
@@ -516,7 +516,7 @@ public class MINTEL_LiveChat: UIView {
     
     private static var bundle:Bundle {
         let podBundle = Bundle(for: MINTEL_LiveChat.self)
-
+        
         let bundleURL = podBundle.url(forResource: "ChatBox", withExtension: "bundle")
         return Bundle(url: bundleURL!)!
     }
@@ -540,16 +540,16 @@ extension MINTEL_LiveChat : SCSChatSessionDelegate {
         }
         
         NotificationCenter.default.post(name: Notification.Name(SalesForceNotifId.didUpdatePosition),
-                object: nil,
-                userInfo:["session": session, "position": position.intValue])
+                                        object: nil,
+                                        userInfo:["session": session, "position": position.intValue])
     }
     
     public func session(_ session: SCSChatSession!, didEnd endEvent: SCSChatSessionEndEvent!) {
         debugPrint("Session End")
         MINTEL_LiveChat.agentState = .waiting
         NotificationCenter.default.post(name: Notification.Name(SalesForceNotifId.didEnd),
-                object: nil,
-                userInfo:["session": session, "event": endEvent])
+                                        object: nil,
+                                        userInfo:["session": session, "event": endEvent])
     }
     
     public func session(_ session: SCSChatSession!, didTransitionFrom previous: SCSChatSessionState, to current: SCSChatSessionState) {
@@ -566,73 +566,73 @@ extension MINTEL_LiveChat  {
         let params: Parameters = [:]
         let url = (MINTEL_LiveChat.configuration?.announcementUrl ?? "").replacingOccurrences(of: "sessionId", with: MINTEL_LiveChat.userId)
         let header:HTTPHeaders = [
-         "x-api-key": MINTEL_LiveChat.configuration?.xApikey ?? "" // "381b0ac187994f82bdc05c09d1034afa"
+            "x-api-key": MINTEL_LiveChat.configuration?.xApikey ?? "" // "381b0ac187994f82bdc05c09d1034afa"
         ]
-
+        
         Alamofire
-         .request(url, method: .post, parameters: params, encoding: JSONEncoding.init(), headers: header)
-         .responseJSON { (response) in
-             switch response.result {
-             case .success(_):
-                 if let json = response.value {
-                     debugPrint(json)
-                    if json is [String:Any] {
-                        let dict = json as! [String: Any]
-                        let desc = dict["Description__c"] as? String ?? ""
-                        
-                        if desc.count > 0 {
-                            DispatchQueue.global(qos: .userInitiated).async {
-                               MINTEL_LiveChat.items.append(MyMessage(text: desc, agent: true))
-                               DispatchQueue.main.async {
-                                   MINTEL_LiveChat.sendPost(text: "สวัสดี")
-                               }
-                               
-                               NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
-                                       object: nil,
-                                       userInfo:nil)
-                            }
-                        }
-                        
-                        
-                    } else if let items = json as? [[String:Any]] {
-                        if items.count > 0 {
-                            items.forEach { (item) in
-                                let desc = item["Description__c"] as? String ?? ""
-                                if desc.count > 0 {
-//                                    DispatchQueue.global(qos: .userInitiated).async {
-                                       MINTEL_LiveChat.items.append(MyMessage(text: desc, agent: true))
-//                                    }
+            .request(url, method: .post, parameters: params, encoding: JSONEncoding.init(), headers: header)
+            .responseJSON { (response) in
+                switch response.result {
+                case .success(_):
+                    if let json = response.value {
+                        debugPrint(json)
+                        if json is [String:Any] {
+                            let dict = json as! [String: Any]
+                            let desc = dict["Description__c"] as? String ?? ""
+                            
+                            if desc.count > 0 {
+                                DispatchQueue.global(qos: .userInitiated).async {
+                                    MINTEL_LiveChat.items.append(MyMessage(text: desc, agent: true))
+                                    DispatchQueue.main.async {
+                                        MINTEL_LiveChat.sendPost(text: "สวัสดี")
+                                    }
+                                    
+                                    NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
+                                                                    object: nil,
+                                                                    userInfo:nil)
                                 }
                             }
                             
-                            // Display Menu
-//                            DispatchQueue.global(qos: .userInitiated).async {
-                            let menus:[[String:Any]] = [["action" : ["label" : "จบการสนทนา", "text" : "__00_app_endchat", "display" : false]], ["action" : [ "label" : "เริ่มต้นการสนทนา", "text" : "__00_home_greeting", "display" : false]]]
+                            
+                        } else if let items = json as? [[String:Any]] {
+                            if items.count > 0 {
+                                items.forEach { (item) in
+                                    let desc = item["Description__c"] as? String ?? ""
+                                    if desc.count > 0 {
+                                        //                                    DispatchQueue.global(qos: .userInitiated).async {
+                                        MINTEL_LiveChat.items.append(MyMessage(text: desc, agent: true))
+                                        //                                    }
+                                    }
+                                }
+                                
+                                // Display Menu
+                                //                            DispatchQueue.global(qos: .userInitiated).async {
+                                let menus:[[String:Any]] = [["action" : ["label" : "จบการสนทนา", "text" : "__00_app_endchat", "display" : false]], ["action" : [ "label" : "เริ่มต้นการสนทนา", "text" : "__00_home_greeting", "display" : false]]]
                                 MINTEL_LiveChat.items.append(MyMessage(text: "", agent: true, menu: menus))
-//                            }
-
-                           
-                           NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
-                                     object: nil,
-                                     userInfo:nil)
-                        } else {
-                            DispatchQueue.global(qos: .userInitiated).async {
-                              DispatchQueue.main.async {
-                                  MINTEL_LiveChat.sendPost(text: "__00_home__greeting")
-                              }
-                              
-                              NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
-                                      object: nil,
-                                      userInfo:nil)
-                           }
+                                //                            }
+                                
+                                
+                                NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
+                                                                object: nil,
+                                                                userInfo:nil)
+                            } else {
+                                DispatchQueue.global(qos: .userInitiated).async {
+                                    DispatchQueue.main.async {
+                                        MINTEL_LiveChat.sendPost(text: "__00_home__greeting")
+                                    }
+                                    
+                                    NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
+                                                                    object: nil,
+                                                                    userInfo:nil)
+                                }
+                            }
                         }
                     }
-                 }
-                 break
-             case .failure(let error):
-                debugPrint(error)
-                 break
-             }
+                    break
+                case .failure(let error):
+                    debugPrint(error)
+                    break
+                }
         }
     }
     
@@ -649,73 +649,79 @@ extension MINTEL_LiveChat  {
     }
     
     internal static func sendPost(text: String) {
-     
+        
         let params : Parameters = ["session_id": MINTEL_LiveChat.userId,"text": text]
         let url = String(format: "%@/webhook", MINTEL_LiveChat.configuration?.webHookBaseUrl ?? "")
         let header:HTTPHeaders = [
-         "x-api-key": MINTEL_LiveChat.configuration?.xApikey ?? "" // "381b0ac187994f82bdc05c09d1034afa"
+            "x-api-key": MINTEL_LiveChat.configuration?.xApikey ?? "" // "381b0ac187994f82bdc05c09d1034afa"
         ]
-
+        
         Alamofire
-         .request(url, method: .post, parameters: params, encoding: JSONEncoding.init(), headers: header)
-         .responseJSON { (response) in
-             switch response.result {
-                 case .success(_):
-                     var goToAgentMode = false
-                     if let json = response.value {
-                         debugPrint(json)
-                         let dict = json as! [String: Any]
-                         let error = dict["error"] as? [String: Any] ?? nil
-                         if (error == nil) {
-                             let intent = dict["intent"] as? String ?? ""
-                             if (intent == "08_wait_for_call") {
-                                 goToAgentMode = true
-                             }
-                             
-                             let messages = dict["messages"] as! [[String: Any]]
-                             messages.forEach { body in
-                                 let type = body["type"] as? String ?? ""
-                                 let quickReplyTitle = body["text"] as? String ?? ""
-                                 let quickReply = body["quickReply"] as? [String: Any] ?? nil
-                                 if (type == "text") {
-                                     if (quickReply != nil) {
-                                         let items = quickReply!["items"] as? [[String:Any]] ?? []
-                                         MINTEL_LiveChat.items.append(MyMessage(text: quickReplyTitle, agent: true, menu: items))
-                                     } else {
-                                         MINTEL_LiveChat.items.append(MyMessage(text: quickReplyTitle, agent: true))
-                                     }
-                                 }
-                             }
+            .request(url, method: .post, parameters: params, encoding: JSONEncoding.init(), headers: header)
+            .responseJSON { (response) in
+                switch response.result {
+                case .success(_):
+                    var goToAgentMode = false
+                    if let json = response.value {
+                        debugPrint(json)
+                        let dict = json as! [String: Any]
+                        let error = dict["error"] as? [String: Any] ?? nil
+                        if (error == nil) {
+                            let intent = dict["intent"] as? String ?? ""
+                            if (intent == "08_wait_for_call") {
+                                goToAgentMode = true
+                            }
+                            
+                            let messages = dict["messages"] as! [[String: Any]]
+                            for i in 0..<messages.count {
+                                let body = messages[i]
+                                let type = body["type"] as? String ?? ""
+                                let intent = body["intent"] as? String ?? ""
+                                if "06_rate" == intent {
+                                    MINTEL_LiveChat.instance.reallyEndChat()
+                                    return
+                                }
+                                let quickReplyTitle = body["text"] as? String ?? ""
+                                let quickReply = body["quickReply"] as? [String: Any] ?? nil
+                                if (type == "text") {
+                                    if (quickReply != nil) {
+                                        let items = quickReply!["items"] as? [[String:Any]] ?? []
+                                        MINTEL_LiveChat.items.append(MyMessage(text: quickReplyTitle, agent: true, menu: items))
+                                    } else {
+                                        MINTEL_LiveChat.items.append(MyMessage(text: quickReplyTitle, agent: true))
+                                    }
+                                }
+                            }
                             
                             NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
-                                object: nil,
-                                userInfo:nil)
-                         }
-                     }
-                     
-                     
-                     if (goToAgentMode) {
-                            NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.toAgentMode),
-                                 object: nil,
-                                 userInfo:nil)
-                     }
-                     
-                     break
-                 case .failure(let error):
-                     print(error)
-                     break
-             }
-         }
-     }
+                                                            object: nil,
+                                                            userInfo:nil)
+                        }
+                    }
+                    
+                    
+                    if (goToAgentMode) {
+                        NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.toAgentMode),
+                                                        object: nil,
+                                                        userInfo:nil)
+                    }
+                    
+                    break
+                case .failure(let error):
+                    print(error)
+                    break
+                }
+        }
+    }
 }
 
 extension MINTEL_LiveChat : SCSChatEventDelegate {
     
     public func session(_ session: SCSChatSession!, agentJoined agentjoinedEvent: SCSAgentJoinEvent!) {
-
+        
         NotificationCenter.default.post(name: Notification.Name(SalesForceNotifId.agentJoined),
-                    object: nil,
-                    userInfo:["session": session, "event": agentjoinedEvent])
+                                        object: nil,
+                                        userInfo:["session": session, "event": agentjoinedEvent])
     }
     
     public func session(_ session: SCSChatSession!, agentLeftConference agentLeftConferenceEvent: SCSAgentLeftConferenceEvent!) {
@@ -723,8 +729,8 @@ extension MINTEL_LiveChat : SCSChatEventDelegate {
         debugPrint("Agent Left")
         
         NotificationCenter.default.post(name: Notification.Name(SalesForceNotifId.agentLeftConference),
-                object: nil,
-                userInfo:["session": session, "event": agentLeftConferenceEvent])
+                                        object: nil,
+                                        userInfo:["session": session, "event": agentLeftConferenceEvent])
     }
     
     public func session(_ session: SCSChatSession!, processedOutgoingMessage message: SCSUserTextEvent!) {
@@ -743,8 +749,8 @@ extension MINTEL_LiveChat : SCSChatEventDelegate {
         debugPrint("didReceiveMessage : ", message)
         
         NotificationCenter.default.post(name: Notification.Name(SalesForceNotifId.didReceiveMessage),
-                object: nil,
-                userInfo:["session": session, "message": message])
+                                        object: nil,
+                                        userInfo:["session": session, "message": message])
     }
     
     public func session(_ session: SCSChatSession!, didReceiveChatBotMenu menuEvent: SCSChatBotMenuEvent!) {
@@ -766,5 +772,5 @@ extension MINTEL_LiveChat : SCSChatEventDelegate {
     public func transferToButtonFailed(with session: SCSChatSession!, error: Error!) {
         debugPrint("transferToButtonFailed : ", session)
     }
-
+    
 }

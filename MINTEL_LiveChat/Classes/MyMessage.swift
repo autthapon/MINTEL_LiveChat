@@ -17,7 +17,7 @@ public enum MyMessageKind {
 }
 
 class MyMessage {
-
+    
     var messageId: String
     var sentDate: Date
     var kind: MyMessageKind
@@ -35,7 +35,7 @@ class MyMessage {
     convenience init(agentJoin: Bool) {
         self.init(kind: .agentJoin, agent: true, bot: true)
     }
-
+    
     convenience init(text: String, agent: Bool) {
         self.init(kind: .text(text), agent: agent, bot: true)
     }

@@ -6,14 +6,14 @@
 //
 
 import UIKit
- 
+
 class GridViewCell: UICollectionViewCell {
- 
+    
     var imageView: UIImageView = UIImageView()
     var livePhotoBadgeImageView: UIImageView = UIImageView()
- 
+    
     var representedAssetIdentifier: String!
- 
+    
     var thumbnailImage: UIImage! {
         didSet {
             imageView.image = thumbnailImage
@@ -24,7 +24,7 @@ class GridViewCell: UICollectionViewCell {
             livePhotoBadgeImageView.image = livePhotoBadgeImage
         }
     }
- 
+    
     override func prepareForReuse() {
         super.prepareForReuse()
         imageView.image = nil

@@ -78,12 +78,12 @@ internal extension UIColor {
 
 
 internal extension UIView {
-
+    
     func MyRoundCorners(_ corners: UIRectCorner, radius: CGFloat) {
-         let path = UIBezierPath(roundedRect: self.bounds, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
-         let mask = CAShapeLayer()
-         mask.path = path.cgPath
-         self.layer.mask = mask
+        let path = UIBezierPath(roundedRect: self.bounds, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
+        let mask = CAShapeLayer()
+        mask.path = path.cgPath
+        self.layer.mask = mask
     }
     
     func MyEdges(_ edges: UIRectEdge, to view: UIView, offset: UIEdgeInsets) {
@@ -127,21 +127,21 @@ internal extension String {
     func MyHeight(withConstrainedWidth width: CGFloat, font: UIFont) -> CGFloat {
         let constraintRect = CGSize(width: width, height: .greatestFiniteMagnitude)
         let boundingBox = self.boundingRect(with: constraintRect, options: [.usesLineFragmentOrigin, .usesFontLeading], attributes: [NSAttributedString.Key.font: font], context: nil)
-
+        
         return ceil(boundingBox.height)
     }
     
-//    var MyHtmlToAttributedString: NSAttributedString? {
-//        guard let data = data(using: .utf8) else { return nil }
-//        do {
-//            return try NSAttributedString(data: data, options: [.documentType: NSAttributedString.DocumentType.html, .characterEncoding:String.Encoding.utf8.rawValue], documentAttributes: nil)
-//        } catch {
-//            return nil
-//        }
-//    }
-//    var MyHtmlToString: String {
-//        return MyHtmlToAttributedString?.string ?? ""
-//    }
+    //    var MyHtmlToAttributedString: NSAttributedString? {
+    //        guard let data = data(using: .utf8) else { return nil }
+    //        do {
+    //            return try NSAttributedString(data: data, options: [.documentType: NSAttributedString.DocumentType.html, .characterEncoding:String.Encoding.utf8.rawValue], documentAttributes: nil)
+    //        } catch {
+    //            return nil
+    //        }
+    //    }
+    //    var MyHtmlToString: String {
+    //        return MyHtmlToAttributedString?.string ?? ""
+    //    }
 }
 
 
@@ -152,12 +152,14 @@ extension UIImage {
         let heightRatio = targetSize.height / size.height
         let newSize = widthRatio > heightRatio ?  CGSize(width: size.width * heightRatio, height: size.height * heightRatio) : CGSize(width: size.width * widthRatio,  height: size.height * widthRatio)
         let rect = CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height)
-
+        
         UIGraphicsBeginImageContextWithOptions(newSize, false, 1.0)
         self.draw(in: rect)
         let newImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
-
+        
         return newImage!
     }
 }
+
+

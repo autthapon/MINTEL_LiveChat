@@ -12,8 +12,6 @@ fileprivate let urlUpload = "https://asia-east2-tmn-chatbot-integration.cloudfun
 
 extension ViewController {
     
-    
-    
     internal func upload(imageData: Data?, imageName:String?, fileData: Data?, fileName:String?, parameters: [String : Any]) {
         
         let url = String(format: "%@/uploadFile", MINTEL_LiveChat.configuration?.uploadBaseUrl ?? "") // "https://us-central1-test-tmn-bot.cloudfunctions.net/uploadFile"
@@ -66,10 +64,10 @@ extension ViewController {
     }
     
     private func mimeType(for data: Data) -> String {
-
+        
         var b: UInt8 = 0
         data.copyBytes(to: &b, count: 1)
-
+        
         switch b {
         case 0xFF:
             return "image/jpeg"
