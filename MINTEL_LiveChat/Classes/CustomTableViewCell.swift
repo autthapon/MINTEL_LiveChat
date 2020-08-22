@@ -286,7 +286,7 @@ class CustomTableViewCell: UITableViewCell {
         let textView = UITextView()
         self.contentView.addSubview(textView)
         textView.font = UIFont.systemFont(ofSize: 16)
-        
+        textView.isHidden = false
         textView.text = txt
         textView.backgroundColor = UIColor(MyHexString: "#EBEBEB")
         textView.layer.cornerRadius = 18.0
@@ -307,40 +307,65 @@ class CustomTableViewCell: UITableViewCell {
                 let session = URLSession.shared
                 let task = session.dataTask(with: request as URLRequest, completionHandler: { data, response, error in
                     guard error == nil else {
+                        DispatchQueue.main.async {
+                            textView.isHidden = false
+                        }
                         return
                     }
                     if let httpResponse = response as? HTTPURLResponse, let contentType = httpResponse.allHeaderFields["Content-Type"] as? String {
                         if contentType.contains("image") {
                             DispatchQueue.main.async {
                                 textView.isHidden = true
-                                let imgView = UIImageView()
-                                self.contentView.addSubview(imgView)
-                                imgView.frame = CGRect(x: avartar.frame.origin.x + avartarWidth + 5, y: 0, width: 200, height: 200)
-                                imgView.startAnimating()
+//                                let imgView = UIImageView()
+//                                self.contentView.addSubview(imgView)
+//                                imgView.frame = CGRect(x: avartar.frame.origin.x + avartarWidth + 5, y: 0, width: 200, height: 200)
+//                                imgView.startAnimating()
                                 URLSession.shared.dataTask(with: url) { (data, response, error) in
                                     if error != nil {
 //                                        print("Failed fetching image:", error)
+                                        DispatchQueue.main.async {
+                                            textView.isHidden = false
+                                        }
                                         return
                                     }
 
                                     guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
 //                                        print("Not a proper HTTPURLResponse or statusCode")
+                                        DispatchQueue.main.async {
+                                            textView.isHidden = false
+                                        }
                                         return
                                     }
 
                                     DispatchQueue.main.async {
-                                        imgView.stopAnimating()
+//                                        imgView.stopAnimating()
                                         let imaaa = UIImage(data: data!)
-                                        imgView.image = imaaa
+//                                        imgView.image = imaaa
                                         MINTEL_LiveChat.items[index] = MyMessage(image: imaaa!, agent: !MINTEL_LiveChat.chatBotMode, bot: true)
                                         tableView.reloadData()
                                     }
                                 }.resume()
                             }
+                        } else {
+                            DispatchQueue.main.async {
+                                textView.isHidden = false
+                            }
+                        }
+                    } else {
+                        DispatchQueue.main.async {
+                            textView.isHidden = false
                         }
                     }
                 })
                 task.resume()
+            } else {
+                DispatchQueue.main.async {
+                    textView.isHidden = false
+                }
+            }
+        } else {
+            DispatchQueue.main.async {
+                textView.isHidden = false
             }
         }
         
@@ -582,10 +607,10 @@ class CustomTableViewCell: UITableViewCell {
         
         if (item.bot || item.agent) {
             var imageName:String = ""
-            if (item.bot) {
-                imageName = "chatbot"
-            } else {
+            if (item.agent) {
                 imageName = "agent"
+            } else {
+                imageName = "chatbot"
             }
             
             let avartar = UIImageView()

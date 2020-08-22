@@ -36,7 +36,7 @@ class ViewController: UIViewController {
         let phone = "0818888888"
         let email = "a@a.com"
         let tmnId = "11241313"
-        let saleforceFirst = false
+        let saleforceFirst = true
         
 //        let config = LiveChatConfiguration.init(withUserName: "Note", withSalesforceLiveAgentPod: liveagentPod, withSalesForceOrdId: ordID, withSalesforceDeployId: deployID, withSalesforceButtonId: buttonID)
         

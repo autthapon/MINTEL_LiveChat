@@ -49,4 +49,5 @@ MINTEL_LiveChat is available under the MIT license. See the LICENSE file for mor
     internal var email:String!  --> email of saleforce chat entity 
     internal var phone:String!  --> phone of saleforce chat entity 
     internal var tmnId:String!  --> tmnid of saleforce chat entity 
+    internal var salesforceFirst:Bool = false --> if you want go to saleforce immediately (default is chatbot)
 ```
