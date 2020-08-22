@@ -67,4 +67,8 @@ class MyMessage {
     convenience init(image: UIImage) {
         self.init(kind: .image(image), agent: false, bot: false)
     }
+    
+    convenience init(image: UIImage, agent: Bool, bot : Bool) {
+        self.init(kind: .image(image), agent: agent, bot: bot)
+    }
 }

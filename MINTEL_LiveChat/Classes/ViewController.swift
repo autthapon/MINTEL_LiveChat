@@ -305,7 +305,7 @@ extension ViewController: UITableViewDataSource {
                 //                }
                 
                 if (agent) {
-                    cell.renderReceiverCell(txt, item: item)
+                    cell.renderReceiverCell(txt, item: item, index: indexPath.section, tableView: tableView)
                 } else {
                     cell.renderSender(txt: txt, item: item)
                 }
@@ -321,7 +321,7 @@ extension ViewController: UITableViewDataSource {
                 gesture.message = item
                 cell.addGestureRecognizer(gesture)
             case .image(let img):
-                cell.renderImageCell(image: img, time: item.sentDate)
+                cell.renderImageCell(image: img, time: item.sentDate, item: item)
             case .agentJoin:
                 cell.renderAgentJoin()
             }

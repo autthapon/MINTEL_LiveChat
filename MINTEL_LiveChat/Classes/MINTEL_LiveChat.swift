@@ -128,7 +128,9 @@ public class MINTEL_LiveChat: UIView {
         UIApplication.shared.keyWindow?.bringSubviewToFront(self)
         
         if (MINTEL_LiveChat.configuration?.salesforceFirst ?? false) {
-            self.startSaleForce()
+            MINTEL_LiveChat.items.append(MyMessage(systemMessageType2: "Routing you to a Live Agent"))
+            MINTEL_LiveChat.chatBotMode = false
+            MINTEL_LiveChat.instance.startSaleForce()
         } else {
             
         }
