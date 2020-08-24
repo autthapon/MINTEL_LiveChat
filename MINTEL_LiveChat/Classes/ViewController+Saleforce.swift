@@ -93,6 +93,8 @@ extension ViewController {
         
         if (self.queuePosition > position && position > 0) {
             self.queuePosition = position
+            
+            MINTEL_LiveChat.items.removeLast()
             MINTEL_LiveChat.items.append(MyMessage(systemMessageType1: String(format: "Queue Position:%d", self.queuePosition)))
             DispatchQueue.main.async {
                 self.tableView.reloadData()
@@ -103,14 +105,17 @@ extension ViewController {
     
     @objc func saleForcesAgentJoined(_ notification: Notification) {
         let _:SCSChatSession = notification.userInfo?["session"] as! SCSChatSession
-        let _:SCSAgentJoinEvent = notification.userInfo?["event"] as! SCSAgentJoinEvent
-        MINTEL_LiveChat.items.append(MyMessage(agentJoin: true))
+        let agentJoinEvent:SCSAgentJoinEvent = notification.userInfo?["event"] as! SCSAgentJoinEvent
+        
+        let agentName = agentJoinEvent.sender?.name ?? "agent"
+        MINTEL_LiveChat.items.append(MyMessage(agentJoin: true, agentName: agentName))
         MINTEL_LiveChat.agentState = .joined
         DispatchQueue.main.async {
             self.tableView.reloadData()
             self.tableView.scrollToBottom()
         }
         
+        self.inputTextView.MINTEL_enable()
         self.sendChatbotMessage()
     }
     
@@ -216,12 +221,14 @@ extension ViewController {
     }
     
     func switchToAgentMode() {
+        self.disableUserInteraction()
         MINTEL_LiveChat.items.append(MyMessage(systemMessageType2: "Routing you to a Live Agent"))
         self.tableView.reloadData()
         self.tableView.scrollToBottom()
         MINTEL_LiveChat.chatBotMode = false
         MINTEL_LiveChat.instance.startSaleForce()
     }
+    
     
     fileprivate func sendChatbotMessage() {
         let ignoreMessage = ["Connecting", "agent", "Your place", "TrueMoney Care สวัสดีครับ"]

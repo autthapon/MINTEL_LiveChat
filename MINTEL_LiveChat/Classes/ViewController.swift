@@ -173,6 +173,14 @@ class ViewController: UIViewController {
         self.switchToAgentMode()
     }
     
+    internal func disableUserInteraction() {
+        self.inputTextView.MINTEL_reallyEndChat(Notification(name: Notification.Name(rawValue: "TEST")))
+    }
+    
+    internal func enableUserInteraction() {
+        
+    }
+    
     deinit {
         PHPhotoLibrary.shared().unregisterChangeObserver(self)
     }
@@ -322,8 +330,8 @@ extension ViewController: UITableViewDataSource {
                 cell.addGestureRecognizer(gesture)
             case .image(let img):
                 cell.renderImageCell(image: img, time: item.sentDate, item: item)
-            case .agentJoin:
-                cell.renderAgentJoin()
+            case .agentJoin(let agentName):
+                cell.renderAgentJoin(agentName)
             }
             return cell
         }

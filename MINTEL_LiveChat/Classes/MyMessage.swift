@@ -13,7 +13,7 @@ public enum MyMessageKind {
     case image(UIImage)
     case systemMessageType1(String)
     case systemMessageType2(String)
-    case agentJoin
+    case agentJoin(String)
 }
 
 class MyMessage {
@@ -32,8 +32,8 @@ class MyMessage {
         self.sentDate = Date()
     }
     
-    convenience init(agentJoin: Bool) {
-        self.init(kind: .agentJoin, agent: true, bot: true)
+    convenience init(agentJoin: Bool, agentName: String) {
+        self.init(kind: .agentJoin(agentName), agent: true, bot: true)
     }
     
     convenience init(text: String, agent: Bool) {

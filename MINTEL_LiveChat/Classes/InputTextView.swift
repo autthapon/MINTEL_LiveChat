@@ -272,6 +272,16 @@ extension InputTextView {
                                                object: nil)
     }
     
+    internal func MINTEL_enable() {
+        DispatchQueue.main.async {
+            self.hideLeftMenu()
+            self.leftStackView.isUserInteractionEnabled = true
+            self.rightStackView.isUserInteractionEnabled = true
+            self.textView.isUserInteractionEnabled = true
+            self.textView.isEditable = true
+        }
+    }
+    
     @objc func MINTEL_reallyEndChat(_ notification: Notification) {
         
         DispatchQueue.main.async {

@@ -132,7 +132,7 @@ public class MINTEL_LiveChat: UIView {
             MINTEL_LiveChat.chatBotMode = false
             MINTEL_LiveChat.instance.startSaleForce()
         } else {
-            
+            self.tapAction(sender: NSObject())
         }
     }
     
@@ -157,10 +157,15 @@ public class MINTEL_LiveChat: UIView {
         let date24 = dateFormatter.string(from: date)
         
         MINTEL_LiveChat.items.append(MyMessage(systemMessageType1: String(format: "Chat ended %@", date24)))
-        
         NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.reallyExitChat),
                                         object: nil,
                                         userInfo:nil)
+        
+        // Open Survey Url
+        guard let url = URL(string: MINTEL_LiveChat.configuration?.surveyFormUrl ?? "") else { return }
+        if (UIApplication.shared.canOpenURL(url)) {
+            UIApplication.shared.open(url)
+        }
     }
     
     internal func loadFirstMessage() {
@@ -720,6 +725,9 @@ extension MINTEL_LiveChat  {
 extension MINTEL_LiveChat : SCSChatEventDelegate {
     
     public func session(_ session: SCSChatSession!, agentJoined agentjoinedEvent: SCSAgentJoinEvent!) {
+        
+//        debugPrint(session)
+//        debugPrint(agentjoinedEvent.sender?.name ?? "")
         
         NotificationCenter.default.post(name: Notification.Name(SalesForceNotifId.agentJoined),
                                         object: nil,
