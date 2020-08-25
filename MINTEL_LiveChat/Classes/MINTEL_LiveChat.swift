@@ -20,6 +20,7 @@ protocol ChatDelegate{
 }
 
 internal enum SaleforceAgentState {
+    case start
     case waiting
     case joined
     case end
@@ -32,7 +33,7 @@ public class MINTEL_LiveChat: UIView {
     internal static var userName = ""
     internal static var chatStarted = false
     internal static var instance:MINTEL_LiveChat!
-    internal static var agentState:SaleforceAgentState = .waiting
+    internal static var agentState:SaleforceAgentState = .start
     internal static var chatBotMode = true
     internal static var items = [MyMessage]()
     
@@ -90,6 +91,12 @@ public class MINTEL_LiveChat: UIView {
             self.queueLabel.isHidden = true
         } else {
             switch MINTEL_LiveChat.agentState {
+            case .start:
+                self.userImageView.isHidden = true
+                self.callCenterLabel.isHidden = true
+                self.queueTitleLabel.isHidden = false
+                self.queueLabel.isHidden = false
+                break
             case .waiting:
                 self.userImageView.isHidden = true
                 self.callCenterLabel.isHidden = true
@@ -130,7 +137,7 @@ public class MINTEL_LiveChat: UIView {
         UIApplication.shared.keyWindow?.bringSubviewToFront(self)
         
         if (MINTEL_LiveChat.configuration?.salesforceFirst ?? false) {
-            MINTEL_LiveChat.items.append(MyMessage(systemMessageType2: "Routing you to a Live Agent"))
+            MINTEL_LiveChat.items.append(MyMessage(systemMessageType2: "กรุณารอสักครู่"))
             MINTEL_LiveChat.chatBotMode = false
             MINTEL_LiveChat.instance.startSaleForce()
         } else {
@@ -163,8 +170,20 @@ public class MINTEL_LiveChat: UIView {
                                         object: nil,
                                         userInfo:nil)
         
+        self.openSurvey(bot: MINTEL_LiveChat.chatBotMode)
+    }
+    
+    fileprivate func openSurvey(bot:Bool) {
+        
+        var surveyUrl:String = ""
+        if (bot) {
+            surveyUrl = MINTEL_LiveChat.configuration?.surveyChatbotUrl ?? ""
+        } else {
+            surveyUrl = MINTEL_LiveChat.configuration?.surveyFormUrl ?? ""
+        }
+        
         // Open Survey Url
-        guard let url = URL(string: MINTEL_LiveChat.configuration?.surveyFormUrl ?? "") else { return }
+        guard let url = URL(string: surveyUrl) else { return }
         if (UIApplication.shared.canOpenURL(url)) {
             var vc:UIViewController? = nil
             
@@ -584,7 +603,7 @@ extension MINTEL_LiveChat : SCSChatSessionDelegate {
             
             if (position.intValue <= self.queueLabel.tag && position.intValue > 0) {
                 
-                MINTEL_LiveChat.items.append(MyMessage(systemMessageType1: String(format: "Queue Position:%d", position.intValue)))
+                MINTEL_LiveChat.items.append(MyMessage(systemMessageType1: String(format: "คิวของคุณคือลำดับที่ %d", position.intValue)))
             }
             
             NotificationCenter.default.post(name: Notification.Name(SalesForceNotifId.didUpdatePosition),
@@ -659,7 +678,7 @@ extension MINTEL_LiveChat  {
                                 
                                 // Display Menu
                                 //                            DispatchQueue.global(qos: .userInitiated).async {
-                                let menus:[[String:Any]] = [["action" : ["label" : "จบการสนทนา", "text" : "__00_app_endchat", "display" : false]], ["action" : [ "label" : "เริ่มต้นการสนทนา", "text" : "__00_home_greeting", "display" : false]]]
+                                let menus:[[String:Any]] = [["action" : ["label" : "จบการสนทนา", "text" : "__00_app_endchat", "display" : false]], ["action" : [ "label" : "เริ่มการสนทนา", "text" : "__00_home_greeting", "display" : false]]]
                                 MINTEL_LiveChat.items.append(MyMessage(text: "", agent: true, menu: menus))
                                 //                            }
                                 

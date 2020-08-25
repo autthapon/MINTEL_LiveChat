@@ -23,6 +23,7 @@ class MyMessage {
     var kind: MyMessageKind
     var agent:Bool
     var bot:Bool
+    var disableMenu:Bool = false
     
     private init(kind: MyMessageKind, agent: Bool, bot:Bool) {
         self.kind = kind

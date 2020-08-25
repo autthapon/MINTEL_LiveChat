@@ -52,6 +52,7 @@ extension ViewController {
     
     @objc func appWillTerminate() {
         switch MINTEL_LiveChat.agentState {
+        case .start: break
         case .waiting: break
         case .end: break
         case .joined:
@@ -66,6 +67,7 @@ extension ViewController {
     
     @objc func saleForceUserTyping(_ notification: Notification) {
         switch MINTEL_LiveChat.agentState {
+        case .start: break
         case .waiting: break
         case .end: break
         case .joined:
@@ -77,6 +79,7 @@ extension ViewController {
     
     @objc func saleForceUserNotTyping(_ notification: Notification) {
         switch MINTEL_LiveChat.agentState {
+        case .start: break
         case .waiting: break
         case .end: break
         case .joined:
@@ -211,7 +214,7 @@ extension ViewController {
     
     func switchToAgentMode() {
         self.disableUserInteraction()
-        MINTEL_LiveChat.items.append(MyMessage(systemMessageType2: "Routing you to a Live Agent"))
+        MINTEL_LiveChat.items.append(MyMessage(systemMessageType2: "กรุณารอสักครู่"))
         self.tableView.reloadData()
         self.tableView.scrollToBottom()
         MINTEL_LiveChat.chatBotMode = false

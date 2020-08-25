@@ -20,6 +20,7 @@ public class LiveChatConfiguration {
     internal var salesforceOrdID:String!
     internal var salesforceDeployID:String!
     internal var salesforceButtonID:String!
+    internal var surveyChatbotUrl:String?
     internal var surveyFormUrl:String?
     internal var announcementUrl:String?
     internal var firstname:String!
@@ -28,7 +29,7 @@ public class LiveChatConfiguration {
     internal var phone:String!
     internal var tmnId:String!
     
-    public init(withUserName userName:String, withSalesforceLiveAgentPod salesforceLiveAgentPod:String, withSalesForceOrdId salesforceOrdId:String, withSalesforceDeployId salesforceDeployId:String, withSalesforceButtonId salesforceButtonId:String, withWebHookBaseUrl webhookBaseUrl:String, withXApiKey xapiKey:String, withUploadBaseUrl uploadBaseUrl:String, withSurveyFormUrl surveyFormUrl:String?, withAnnouncementUrl announcementUrl:String, withFirstName firstname:String, withLastName lastname:String, withEmail email:String, withPhone phone:String, withTmnId tmnId:String, withSalesforceFirst salesforceFirst:Bool = false) {
+    public init(withUserName userName:String, withSalesforceLiveAgentPod salesforceLiveAgentPod:String, withSalesForceOrdId salesforceOrdId:String, withSalesforceDeployId salesforceDeployId:String, withSalesforceButtonId salesforceButtonId:String, withWebHookBaseUrl webhookBaseUrl:String, withXApiKey xapiKey:String, withUploadBaseUrl uploadBaseUrl:String, withSurveyChatbotUrl surveyChatbotUrl:String?, withSurveyFormUrl surveyFormUrl:String?, withAnnouncementUrl announcementUrl:String, withFirstName firstname:String, withLastName lastname:String, withEmail email:String, withPhone phone:String, withTmnId tmnId:String, withSalesforceFirst salesforceFirst:Bool = false) {
         self.userName = userName
         self.salesforceLiveAgentPod = salesforceLiveAgentPod
         self.salesforceOrdID = salesforceOrdId
@@ -37,6 +38,7 @@ public class LiveChatConfiguration {
         self.webHookBaseUrl = webhookBaseUrl
         self.xApikey = xapiKey
         self.uploadBaseUrl = uploadBaseUrl
+        self.surveyChatbotUrl = surveyChatbotUrl
         self.surveyFormUrl = surveyFormUrl
         self.announcementUrl = announcementUrl
         self.firstname = firstname

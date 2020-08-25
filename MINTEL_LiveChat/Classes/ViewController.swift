@@ -141,6 +141,11 @@ class ViewController: UIViewController {
         self.tableView.scrollToBottom()
         self.setupNotification()
         self.setupSaleForcesNotification()
+        
+        // Check Waiting agent state
+        if (MINTEL_LiveChat.agentState == .waiting) {
+            self.disableUserInteraction()
+        }
     }
     
     fileprivate func setupNotification() {
@@ -341,13 +346,16 @@ extension ViewController: UITableViewDataSource {
     @objc func didTap(_ sender: MyTapGuesture? = nil) {
         print("Tab")
         let message = sender?.message
+        if (message?.disableMenu ?? false) {
+            return
+        }
         switch message?.kind {
         case .text( _):
             return
         case .menu(let title, let menus):
             if sender?.state == .ended {
                 let touchLocation: CGPoint = (sender?.location(in: sender?.view))!
-                findMenuOnTap(menus: menus, title: title, yPosition: touchLocation.y)
+                findMenuOnTap(menus: menus, title: title, yPosition: touchLocation.y, message: message)
             }
             
         default:
@@ -355,7 +363,7 @@ extension ViewController: UITableViewDataSource {
         }
     }
     
-    fileprivate func findMenuOnTap(menus:[[String: Any]], title:String, yPosition:CGFloat) {
+    fileprivate func findMenuOnTap(menus:[[String: Any]], title:String, yPosition:CGFloat, message: MyMessage?) {
         print("yPosition", yPosition)
         
         if (!MINTEL_LiveChat.chatBotMode) {
@@ -401,6 +409,7 @@ extension ViewController: UITableViewDataSource {
                 }
                 self.tableView.reloadData()
                 self.tableView.scrollToBottom()
+                message?.disableMenu = true
                 MINTEL_LiveChat.sendPost(text: text)
             }
         }
