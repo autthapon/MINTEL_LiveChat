@@ -86,46 +86,31 @@ extension ViewController {
     }
     
     @objc func saleForcesDidUpdateQueuePosition(_ notification: Notification) {
-        let _:SCSChatSession = notification.userInfo?["session"] as! SCSChatSession
-        let position:Int = notification.userInfo?["position"] as! Int
+//        let _:SCSChatSession = notification.userInfo?["session"] as! SCSChatSession
+//        let position:Int = notification.userInfo?["position"] as! Int
         
-        MINTEL_LiveChat.agentState = .waiting
-        
-        if (self.queuePosition > position && position > 0) {
-            
-            if (self.queuePosition < 99999) {
-                MINTEL_LiveChat.items.removeLast()
-            }
-            self.queuePosition = position
-                
-            MINTEL_LiveChat.items.append(MyMessage(systemMessageType1: String(format: "Queue Position:%d", self.queuePosition)))
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-                self.tableView.scrollToBottom()
-            }
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+            self.tableView.scrollToBottom()
         }
     }
     
     @objc func saleForcesAgentJoined(_ notification: Notification) {
-        let _:SCSChatSession = notification.userInfo?["session"] as! SCSChatSession
-        let agentJoinEvent:SCSAgentJoinEvent = notification.userInfo?["event"] as! SCSAgentJoinEvent
+//        let _:SCSChatSession = notification.userInfo?["session"] as! SCSChatSession
+//        let agentJoinEvent:SCSAgentJoinEvent = notification.userInfo?["event"] as! SCSAgentJoinEvent
         
-        let agentName = agentJoinEvent.sender?.name ?? "agent"
-        MINTEL_LiveChat.items.append(MyMessage(agentJoin: true, agentName: agentName))
-        MINTEL_LiveChat.agentState = .joined
         DispatchQueue.main.async {
             self.tableView.reloadData()
             self.tableView.scrollToBottom()
         }
         
         self.inputTextView.MINTEL_enable()
-        self.sendChatbotMessage()
+        
     }
     
     @objc func saleForcesDidReceivedMessage(_ notification: Notification) {
-        let _:SCSChatSession = notification.userInfo?["session"] as! SCSChatSession
-        let textEvent:SCSAgentTextEvent = notification.userInfo?["message"] as! SCSAgentTextEvent
-        MINTEL_LiveChat.items.append(MyMessage(text: textEvent.text, agent: true, bot: false))
+//        let _:SCSChatSession = notification.userInfo?["session"] as! SCSChatSession
+//        let textEvent:SCSAgentTextEvent = notification.userInfo?["message"] as! SCSAgentTextEvent
         DispatchQueue.main.async {
             self.tableView.reloadData()
             self.tableView.scrollToBottom()
@@ -155,6 +140,7 @@ extension ViewController {
         
         self.viewConfirm.removeFromSuperview()
     }
+    
     
     /*
      func session(_ session: SCSChatSession!, didUpdateQueuePosition position: NSNumber!) {
@@ -233,41 +219,6 @@ extension ViewController {
     }
     
     
-    fileprivate func sendChatbotMessage() {
-        let ignoreMessage = ["Connecting", "agent", "Your place", "TrueMoney Care สวัสดีครับ"]
-        
-        var allMsg = ""
-        MINTEL_LiveChat.items.forEach { (item) in
-            var shouldIgnore = false
-            var txtToSend = ""
-            switch item.kind {
-            case .text(let txt):
-                txtToSend = txt
-                for i in 0...ignoreMessage.count - 1 {
-                    if (txt.starts(with: ignoreMessage[i])) {
-                        shouldIgnore = true
-                        break
-                    }
-                }
-                break
-            default:
-                break
-            }
-            
-            if (!shouldIgnore && txtToSend.count > 0) {
-                if (item.bot || item.agent) {
-                    allMsg = String(format: "%@\nbot: %@", allMsg, txtToSend)
-                } else {
-                    allMsg = String(format: "%@\ncustomer: %@", allMsg, txtToSend)
-                }
-                
-//
-            }
-        }
-        
-        if (allMsg.count > 0) {
-            ServiceCloud.shared().chatCore.session.sendMessage(allMsg)
-        }
-    }
+    
     
 }

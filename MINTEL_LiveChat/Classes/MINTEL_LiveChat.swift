@@ -9,6 +9,8 @@ import UIKit
 import ServiceCore
 import ServiceChat
 import Alamofire
+import SafariServices
+
 
 let autoDockingDuration: Double = 0.2
 let doubleTapTimeInterval: Double = 0.36
@@ -164,8 +166,36 @@ public class MINTEL_LiveChat: UIView {
         // Open Survey Url
         guard let url = URL(string: MINTEL_LiveChat.configuration?.surveyFormUrl ?? "") else { return }
         if (UIApplication.shared.canOpenURL(url)) {
-            UIApplication.shared.open(url)
+            var vc:UIViewController? = nil
+            
+            if #available(iOS 11.0, *) {
+                let config = SFSafariViewController.Configuration()
+                config.entersReaderIfAvailable = false
+                vc = SFSafariViewController(url: url, configuration: config)
+            } else {
+                vc = SFSafariViewController(url: url)
+            }
+            
+            let currentViewController = self.topViewController()
+            if let cu = currentViewController {
+                cu.present(vc!, animated: true, completion: nil)
+            }
         }
+    }
+    
+    fileprivate func topViewController(_ viewController: UIViewController? = UIApplication.shared.keyWindow?.rootViewController) -> UIViewController? {
+        if let nav = viewController as? UINavigationController {
+            return topViewController(nav.visibleViewController)
+        }
+        if let tab = viewController as? UITabBarController {
+            if let selected = tab.selectedViewController {
+                return topViewController(selected)
+            }
+        }
+        if let presented = viewController?.presentedViewController {
+            return topViewController(presented)
+        }
+        return viewController
     }
     
     internal func loadFirstMessage() {
@@ -536,7 +566,11 @@ extension MINTEL_LiveChat : SCSChatSessionDelegate {
     
     public func session(_ session: SCSChatSession!, didUpdateQueuePosition position: NSNumber!, estimatedWaitTime waitTime: NSNumber!) {
         debugPrint("Queue : ", position)
+        
         DispatchQueue.main.async {
+            if (self.queueLabel.tag < Int.max && position.intValue > 0) {
+                MINTEL_LiveChat.items.removeLast()
+            }
             if (self.queueLabel.tag == Int.max) {
                 self.queueLabel.tag = position.intValue
                 self.queueLabel.text = ""
@@ -544,11 +578,22 @@ extension MINTEL_LiveChat : SCSChatSessionDelegate {
                 self.queueLabel.tag = position.intValue
                 self.queueLabel.text = String(format: "#%d", self.queueLabel.tag)
             }
+            
+            
+            MINTEL_LiveChat.agentState = .waiting
+            
+            if (position.intValue <= self.queueLabel.tag && position.intValue > 0) {
+                
+                MINTEL_LiveChat.items.append(MyMessage(systemMessageType1: String(format: "Queue Position:%d", position.intValue)))
+            }
+            
+            NotificationCenter.default.post(name: Notification.Name(SalesForceNotifId.didUpdatePosition),
+                                            object: nil,
+                                            userInfo:["session": session, "position": position.intValue])
         }
         
-        NotificationCenter.default.post(name: Notification.Name(SalesForceNotifId.didUpdatePosition),
-                                        object: nil,
-                                        userInfo:["session": session, "position": position.intValue])
+        
+        
     }
     
     public func session(_ session: SCSChatSession!, didEnd endEvent: SCSChatSessionEndEvent!) {
@@ -725,9 +770,11 @@ extension MINTEL_LiveChat  {
 extension MINTEL_LiveChat : SCSChatEventDelegate {
     
     public func session(_ session: SCSChatSession!, agentJoined agentjoinedEvent: SCSAgentJoinEvent!) {
+        let agentName = agentjoinedEvent.sender?.name ?? "agent"
+        MINTEL_LiveChat.items.append(MyMessage(agentJoin: true, agentName: agentName))
+        MINTEL_LiveChat.agentState = .joined
         
-//        debugPrint(session)
-//        debugPrint(agentjoinedEvent.sender?.name ?? "")
+        self.sendChatbotMessage()
         
         NotificationCenter.default.post(name: Notification.Name(SalesForceNotifId.agentJoined),
                                         object: nil,
@@ -757,7 +804,7 @@ extension MINTEL_LiveChat : SCSChatEventDelegate {
     
     public func session(_ session: SCSChatSession!, didReceiveMessage message: SCSAgentTextEvent!) {
         debugPrint("didReceiveMessage : ", message)
-        
+        MINTEL_LiveChat.items.append(MyMessage(text: message.text, agent: true, bot: false))
         NotificationCenter.default.post(name: Notification.Name(SalesForceNotifId.didReceiveMessage),
                                         object: nil,
                                         userInfo:["session": session, "message": message])
@@ -781,6 +828,41 @@ extension MINTEL_LiveChat : SCSChatEventDelegate {
     
     public func transferToButtonFailed(with session: SCSChatSession!, error: Error!) {
         debugPrint("transferToButtonFailed : ", session)
+    }
+    
+    fileprivate func sendChatbotMessage() {
+        let ignoreMessage = ["Connecting", "agent", "Your place", "TrueMoney Care สวัสดีครับ"]
+        
+        var allMsg = ""
+        MINTEL_LiveChat.items.forEach { (item) in
+            var shouldIgnore = false
+            var txtToSend = ""
+            switch item.kind {
+            case .text(let txt):
+                txtToSend = txt
+                for i in 0...ignoreMessage.count - 1 {
+                    if (txt.starts(with: ignoreMessage[i])) {
+                        shouldIgnore = true
+                        break
+                    }
+                }
+                break
+            default:
+                break
+            }
+            
+            if (!shouldIgnore && txtToSend.count > 0) {
+                if (item.bot || item.agent) {
+                    allMsg = String(format: "%@\nbot: %@", allMsg, txtToSend)
+                } else {
+                    allMsg = String(format: "%@\ncustomer: %@", allMsg, txtToSend)
+                }
+            }
+        }
+        
+        if (allMsg.count > 0) {
+            ServiceCloud.shared().chatCore.session.sendMessage(allMsg)
+        }
     }
     
 }
