@@ -92,9 +92,12 @@ extension ViewController {
         MINTEL_LiveChat.agentState = .waiting
         
         if (self.queuePosition > position && position > 0) {
-            self.queuePosition = position
             
-            MINTEL_LiveChat.items.removeLast()
+            if (self.queuePosition < 99999) {
+                MINTEL_LiveChat.items.removeLast()
+            }
+            self.queuePosition = position
+                
             MINTEL_LiveChat.items.append(MyMessage(systemMessageType1: String(format: "Queue Position:%d", self.queuePosition)))
             DispatchQueue.main.async {
                 self.tableView.reloadData()
@@ -233,6 +236,7 @@ extension ViewController {
     fileprivate func sendChatbotMessage() {
         let ignoreMessage = ["Connecting", "agent", "Your place", "TrueMoney Care สวัสดีครับ"]
         
+        var allMsg = ""
         MINTEL_LiveChat.items.forEach { (item) in
             var shouldIgnore = false
             var txtToSend = ""
@@ -251,8 +255,18 @@ extension ViewController {
             }
             
             if (!shouldIgnore && txtToSend.count > 0) {
-                ServiceCloud.shared().chatCore.session.sendMessage(txtToSend)
+                if (item.bot || item.agent) {
+                    allMsg = String(format: "%@\nbot: %@", allMsg, txtToSend)
+                } else {
+                    allMsg = String(format: "%@\ncustomer: %@", allMsg, txtToSend)
+                }
+                
+//
             }
+        }
+        
+        if (allMsg.count > 0) {
+            ServiceCloud.shared().chatCore.session.sendMessage(allMsg)
         }
     }
     

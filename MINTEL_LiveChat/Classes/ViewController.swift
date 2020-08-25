@@ -397,7 +397,7 @@ extension ViewController: UITableViewDataSource {
             if (text.count > 0) {
                 let display = targetAction?["display"] as? Bool ?? true
                 if (display) {
-                    MINTEL_LiveChat.items.append(MyMessage(text: text, agent: false))
+                    MINTEL_LiveChat.items.append(MyMessage(text: text, agent: false, bot: false))
                 }
                 self.tableView.reloadData()
                 self.tableView.scrollToBottom()
