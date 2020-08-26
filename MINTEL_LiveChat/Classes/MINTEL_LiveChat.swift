@@ -147,6 +147,10 @@ public class MINTEL_LiveChat: UIView {
     
     internal func reallyEndChat() {
         
+        if (!MINTEL_LiveChat.chatInProgress) {
+            return
+        }
+        
         MINTEL_LiveChat.chatInProgress = false
         
         // Check saleforce
@@ -156,6 +160,11 @@ public class MINTEL_LiveChat: UIView {
             break
         default:
             break
+        }
+        
+        if (MINTEL_LiveChat.agentState != .start) {
+            ServiceCloud.shared().chatCore.stopSession()
+            MINTEL_LiveChat.chatBotMode = true
         }
         
         MINTEL_LiveChat.agentState = .end
@@ -435,10 +444,6 @@ public class MINTEL_LiveChat: UIView {
         MINTEL_LiveChat.chatStarted = false
         UIApplication.shared.keyWindow?.sendSubviewToBack(self)
         MINTEL_LiveChat.items.removeAll()
-        if (!MINTEL_LiveChat.chatBotMode) {
-            ServiceCloud.shared().chatCore.stopSession()
-            MINTEL_LiveChat.chatBotMode = true
-        }
     }
     
     // MARK: Actions
@@ -872,9 +877,18 @@ extension MINTEL_LiveChat : SCSChatEventDelegate {
             
             if (!shouldIgnore && txtToSend.count > 0) {
                 if (item.bot || item.agent) {
-                    allMsg = String(format: "%@\nbot: %@", allMsg, txtToSend)
+                    allMsg = String(format: "%@\nทรูมันนี่: %@", allMsg, txtToSend)
                 } else {
-                    allMsg = String(format: "%@\ncustomer: %@", allMsg, txtToSend)
+                    
+                    var name = ""
+                    if (MINTEL_LiveChat.configuration?.phone.count ?? 0 > 0) {
+                        name = "Customer";
+                    } else {
+                        name = "Visitor"
+                    }
+                     
+                    
+                    allMsg = String(format: "%@\n%@: %@", allMsg, name, txtToSend)
                 }
             }
         }
