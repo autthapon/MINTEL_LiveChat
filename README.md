@@ -42,6 +42,7 @@ MINTEL_LiveChat is available under the MIT license. See the LICENSE file for mor
     internal var salesforceOrdID:String! --> sale force ord id config
     internal var salesforceDeployID:String! --> sale force deploy id 
     internal var salesforceButtonID:String! --> sale force button id 
+    internal var surveyChatbotUrl:String? --> survey chat bot url (optional)
     internal var surveyFormUrl:String? --> survey form url (optional)
     internal var announcementUrl:String? --> chatbot announcement url 
     internal var firstname:String! --> firstname of saleforce chat entity 
