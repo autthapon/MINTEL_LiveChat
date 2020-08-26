@@ -61,6 +61,8 @@ class ViewController: UIViewController {
     var fetchResult: PHFetchResult<PHAsset>!
     var assetCollection: PHAssetCollection!
     @IBOutlet weak var viewConfirm:UIView!
+    @IBOutlet weak var btnConfirmExit:UIButton!
+    @IBOutlet weak var btnConfirmBack:UIButton!
     var btnClose:UIBarButtonItem!
     
     fileprivate let imageManager = PHCachingImageManager()
@@ -103,6 +105,13 @@ class ViewController: UIViewController {
         if (MINTEL_LiveChat.chatInProgress) {
             self.viewConfirm.frame = CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: self.view.frame.size.height)
             self.view.addSubview(self.viewConfirm)
+            
+            self.btnConfirmBack.layer.borderColor = UIColor(MyHexString: "#F08833").cgColor
+            self.btnConfirmBack.layer.borderWidth = 1
+            self.btnConfirmBack.setTitleColor(UIColor(MyHexString: "#F08833"), for: .normal)
+            self.btnConfirmBack.backgroundColor = UIColor.white
+//            self.btnConfirmBack.frame = CGRect(x: self.btnConfirmBack.frame.origin.x, y: UIScreen.main.bounds.size.height - self.btnConfirmBack.frame.size.height - 20, width: self.btnConfirmBack.frame.size.width, height: self.btnConfirmBack.frame.size.height)
+            
             self.navigationItem.rightBarButtonItem = nil
             self.navigationItem.titleView = UIImageView(image: UIImage(named: "true_bar_title", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil))
         } else {

@@ -52,6 +52,8 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="btnConfirmBack" destination="syu-79-8J7" id="MAv-hX-LuM"/>
+                        <outlet property="btnConfirmExit" destination="3U7-6Y-a8o" id="fBe-4A-MMb"/>
                         <outlet property="viewConfirm" destination="PJI-ud-K4a" id="N98-ch-cBF"/>
                     </connections>
                 </viewController>
