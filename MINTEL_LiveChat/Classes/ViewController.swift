@@ -194,6 +194,10 @@ class ViewController: UIViewController {
         super.viewWillAppear(animated)
         let size = ceil(UIScreen.main.bounds.size.width / 3.0) - 10
         thumbnailSize = CGSize(width: size, height: size)
+        
+        if (MINTEL_LiveChat.agentState == .waiting || MINTEL_LiveChat.agentState == .end) {
+            self.disableUserInteraction()
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {

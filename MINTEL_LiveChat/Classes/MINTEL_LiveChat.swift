@@ -132,6 +132,7 @@ public class MINTEL_LiveChat: UIView {
         MINTEL_LiveChat.configuration = config
         MINTEL_LiveChat.userName = config.userName
         MINTEL_LiveChat.chatInProgress = true
+        MINTEL_LiveChat.agentState = .start
         self.loadFirstMessage()
         self.isHidden = false
         UIApplication.shared.keyWindow?.bringSubviewToFront(self)
