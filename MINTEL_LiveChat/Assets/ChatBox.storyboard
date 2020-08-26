@@ -66,12 +66,6 @@
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="หลังจากจบแชทแล้วคุณยังสามารถบันทึกเนื้อหาที่คุยได้" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EHM-S5-lVu">
-                            <rect key="frame" x="21" y="311" width="373" height="20.5"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                            <nil key="textColor"/>
-                            <nil key="highlightedColor"/>
-                        </label>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3U7-6Y-a8o">
                             <rect key="frame" x="20" y="426" width="374" height="56"/>
                             <color key="backgroundColor" red="0.94117647059999998" green="0.53333333329999999" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
@@ -109,9 +103,6 @@
                         <constraint firstItem="7gp-uv-azP" firstAttribute="centerY" secondItem="PJI-ud-K4a" secondAttribute="centerY" constant="-150" id="Eu8-Pi-G1D"/>
                         <constraint firstItem="3U7-6Y-a8o" firstAttribute="leading" secondItem="YbY-Gz-QCh" secondAttribute="leading" constant="20" id="JMO-fh-bYD"/>
                         <constraint firstItem="syu-79-8J7" firstAttribute="leading" secondItem="YbY-Gz-QCh" secondAttribute="leading" constant="20" id="P4T-Pw-bUi"/>
-                        <constraint firstItem="EHM-S5-lVu" firstAttribute="leading" secondItem="YbY-Gz-QCh" secondAttribute="leading" constant="21" id="iXL-L3-One"/>
-                        <constraint firstItem="EHM-S5-lVu" firstAttribute="top" secondItem="7gp-uv-azP" secondAttribute="bottom" constant="42.5" id="kVv-0r-ftW"/>
-                        <constraint firstItem="YbY-Gz-QCh" firstAttribute="trailing" secondItem="EHM-S5-lVu" secondAttribute="trailing" constant="20" id="rcC-Lh-XsW"/>
                         <constraint firstItem="YbY-Gz-QCh" firstAttribute="trailing" secondItem="3U7-6Y-a8o" secondAttribute="trailing" constant="20" id="sS5-Uf-Cfy"/>
                         <constraint firstItem="3U7-6Y-a8o" firstAttribute="centerY" secondItem="PJI-ud-K4a" secondAttribute="centerY" constant="50" id="tE1-xI-FJe"/>
                         <constraint firstItem="syu-79-8J7" firstAttribute="top" secondItem="3U7-6Y-a8o" secondAttribute="bottom" constant="25" id="zjM-6O-fsk"/>

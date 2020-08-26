@@ -61,6 +61,7 @@ class ViewController: UIViewController {
     var fetchResult: PHFetchResult<PHAsset>!
     var assetCollection: PHAssetCollection!
     @IBOutlet weak var viewConfirm:UIView!
+    var btnClose:UIBarButtonItem!
     
     fileprivate let imageManager = PHCachingImageManager()
     fileprivate var thumbnailSize: CGSize!
@@ -102,6 +103,8 @@ class ViewController: UIViewController {
         if (MINTEL_LiveChat.chatInProgress) {
             self.viewConfirm.frame = CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: self.view.frame.size.height)
             self.view.addSubview(self.viewConfirm)
+            self.navigationItem.rightBarButtonItem = nil
+            self.navigationItem.titleView = UIImageView(image: UIImage(named: "true_bar_title", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil))
         } else {
             self.dismiss(animated: true, completion: nil)
             MINTEL_LiveChat.instance.closeButtonHandle()
@@ -110,6 +113,10 @@ class ViewController: UIViewController {
     
     @IBAction func hideConfirmExit() {
         self.viewConfirm.removeFromSuperview()
+        self.btnClose = UIBarButtonItem(image: UIImage(named: "close", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil), style: .plain, target: self, action: #selector(self.closeChat))
+        self.navigationItem.rightBarButtonItem = self.btnClose
+        self.navigationItem.title = "TMN Chatbot"
+        self.navigationItem.titleView = nil
     }
     
     @IBAction func confirmExitChat() {
