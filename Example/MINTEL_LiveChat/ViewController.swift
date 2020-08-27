@@ -39,8 +39,6 @@ class ViewController: UIViewController {
         let tmnId = "11241313"
         let saleforceFirst = false
         
-//        let config = LiveChatConfiguration.init(withUserName: "Note", withSalesforceLiveAgentPod: liveagentPod, withSalesForceOrdId: ordID, withSalesforceDeployId: deployID, withSalesforceButtonId: buttonID)
-        
         let config = LiveChatConfiguration(withUserName: "Note", withSalesforceLiveAgentPod: liveagentPod, withSalesForceOrdId: ordID, withSalesforceDeployId: deployID, withSalesforceButtonId: buttonID, withWebHookBaseUrl: webhookUrl, withXApiKey: xApiKey, withUploadBaseUrl: uploadUrl, withSurveyChatbotUrl: surveyChatbotUrl, withSurveyFormUrl: surveryFormUrl, withAnnouncementUrl: announcementUrl, withFirstName: firstname, withLastName: lastname, withEmail: email, withPhone: phone, withTmnId: tmnId, withSalesforceFirst: saleforceFirst)
         
         appDelegate.chat.startChat(config: config)

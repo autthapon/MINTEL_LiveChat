@@ -10,7 +10,7 @@ import ServiceCore
 import ServiceChat
 import Alamofire
 import SafariServices
-
+import UserNotifications
 
 let autoDockingDuration: Double = 0.2
 let doubleTapTimeInterval: Double = 0.36
@@ -31,12 +31,15 @@ public class MINTEL_LiveChat: UIView {
     internal static var configuration:LiveChatConfiguration? = nil
     internal static var userId = UUID().uuidString
     internal static var userName = ""
+    internal static var chatPanelOpened = false
     internal static var chatStarted = false
     internal static var instance:MINTEL_LiveChat!
+    internal static var agentName:String = ""
     internal static var agentState:SaleforceAgentState = .start
     internal static var chatBotMode = true
     internal static var items = [MyMessage]()
     
+    private var notification:MINTEL_Notifications = MINTEL_Notifications()
     private var draggable: Bool = true
     private var dragging: Bool = false
     private var autoDocking: Bool = true
@@ -120,8 +123,24 @@ public class MINTEL_LiveChat: UIView {
         }
     }
     
+    fileprivate func checkNotificationPermission() {
+        
+        
+        let notificationCenter = UNUserNotificationCenter.current()
+        let options: UNAuthorizationOptions = [.alert, .sound, .badge]
+        notificationCenter.requestAuthorization(options: options) {
+            (didAllow, error) in
+            if !didAllow {
+                print("User has declined notifications")
+            }
+        }
+        
+        
+    }
+    
     public func startChat(config:LiveChatConfiguration) {
         
+        notification.userRequest()
         if (MINTEL_LiveChat.chatStarted) {
             return
         }
@@ -314,6 +333,7 @@ public class MINTEL_LiveChat: UIView {
             config.prechatFields = [firstNameField, lastNameField, emailField, phoneFiled, tmnIdFiled, uniqueFiled] as [SCSPrechatObject]
             // Update config object with the entity mappings
             config.prechatEntities = [contactEntity, csatEntity]
+//            config.allowBackgroundNotifications = false
             
             ServiceCloud.shared().chatCore.determineAvailability(with: config) { (error, available, waitingTime) in
                 
@@ -451,18 +471,6 @@ public class MINTEL_LiveChat: UIView {
     @objc func tapAction(sender: AnyObject) {
         DispatchQueue.main.async {
             if (!self.singleTapBeenCanceled && !self.dragging)  {
-                
-                //                var isOpen = true
-                //                if (ChatBox.chatBotMode) {
-                //                    isOpen = true
-                //                } else {
-                //                    if (ChatBox.agentState == 5) {
-                //                        isOpen = true
-                //                    }
-                //                }
-                
-                //                if (isOpen) {
-                
                 self.layer.zPosition = 0
                 let bundle = Bundle(for: type(of: self))
                 let storyboard = UIStoryboard(name: "ChatBox", bundle: bundle)
@@ -470,7 +478,6 @@ public class MINTEL_LiveChat: UIView {
                 let viewController = UIApplication.shared.windows.first!.rootViewController!
                 viewController.modalPresentationStyle = .fullScreen
                 viewController.present(vc, animated: true, completion: nil)
-                //                }
             }
         }
     }
@@ -796,6 +803,7 @@ extension MINTEL_LiveChat : SCSChatEventDelegate {
     
     public func session(_ session: SCSChatSession!, agentJoined agentjoinedEvent: SCSAgentJoinEvent!) {
         let agentName = agentjoinedEvent.sender?.name ?? "agent"
+        MINTEL_LiveChat.agentName = agentName
         MINTEL_LiveChat.items.append(MyMessage(agentJoin: true, agentName: agentName))
         MINTEL_LiveChat.agentState = .joined
         
@@ -833,6 +841,14 @@ extension MINTEL_LiveChat : SCSChatEventDelegate {
         NotificationCenter.default.post(name: Notification.Name(SalesForceNotifId.didReceiveMessage),
                                         object: nil,
                                         userInfo:["session": session, "message": message])
+        
+//        notification.scheduleNotification(message: String(format: "%@:%@", MINTEL_LiveChat.agentName, message.text))
+    }
+    
+    fileprivate func checkAndSendNotification(message: String) {
+        if (!MINTEL_LiveChat.chatPanelOpened) {
+            
+        }
     }
     
     public func session(_ session: SCSChatSession!, didReceiveChatBotMenu menuEvent: SCSChatBotMenuEvent!) {

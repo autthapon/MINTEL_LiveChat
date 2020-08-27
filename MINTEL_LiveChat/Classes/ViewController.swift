@@ -219,6 +219,13 @@ class ViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         updateCachedAssets()
+        
+        MINTEL_LiveChat.chatPanelOpened  = true
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        MINTEL_LiveChat.chatPanelOpened = false
     }
     
     func setupViews() {
