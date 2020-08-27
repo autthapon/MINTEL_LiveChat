@@ -255,6 +255,7 @@ public class MINTEL_LiveChat: UIView {
         MINTEL_LiveChat.items.append(MyMessage(systemMessageType1: String(format: "เริ่มการสนทนา %@", date24)))
         if (!(MINTEL_LiveChat.configuration?.salesforceFirst ?? false)) {
             self.getAnnouncementMessage()
+            MINTEL_LiveChat.sendOnNewSession()
         }
     }
     
@@ -730,6 +731,39 @@ extension MINTEL_LiveChat  {
             }
         }
         return nil
+    }
+    
+    fileprivate static func sendOnNewSession() {
+        let params : Parameters = [
+                "session_id": MINTEL_LiveChat.userId,
+                "first_name": MINTEL_LiveChat.configuration?.firstname ?? "",
+                "last_name" : MINTEL_LiveChat.configuration?.lastname ?? "",
+                "phone" : MINTEL_LiveChat.configuration?.phone ?? "",
+                "email" : MINTEL_LiveChat.configuration?.email ?? "",
+                "tmnid" : MINTEL_LiveChat.configuration?.tmnId ?? ""
+        ]
+        let url = String(format: "%@/onNewSessionMobile", MINTEL_LiveChat.configuration?.webHookBaseUrl ?? "")
+        let header:HTTPHeaders = [
+            "x-api-key": MINTEL_LiveChat.configuration?.xApikey ?? "" // "381b0ac187994f82bdc05c09d1034afa"
+        ]
+        
+        Alamofire
+            .request(url, method: .post, parameters: params, encoding: JSONEncoding.init(), headers: header)
+            .responseString(completionHandler: { response in
+                debugPrint(response)
+            })
+//            .responseJSON { (response) in
+//                switch response.result {
+//                case .success(_):
+//                    if let json = response.value {
+//                        debugPrint(json)
+//                    }
+//                    break
+//                case .failure(let error):
+//                    debugPrint(error)
+//                    break
+//                }
+//        }
     }
     
     internal static func sendPost(text: String) {

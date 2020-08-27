@@ -32,6 +32,8 @@ class ViewController: UIViewController {
         let surveyChatbotUrl:String       = "https://www.google.co.th"
         let surveryFormUrl:String       = "https://truemoney--c.ap12.visual.force.com/apex/MINTEL_ExternalChatSurvey?uid=sessionId"
         let announcementUrl:String       = "https://us-central1-test-tmn-bot.cloudfunctions.net/announcementmulti?uid=sessionId"
+        // https://asia-east2-acm-clt-chatbots.cloudfunctions.net/onNewSessionMobile
+
         let firstname = "Note"
         let lastname = "Note"
         let phone = "0818888888"
