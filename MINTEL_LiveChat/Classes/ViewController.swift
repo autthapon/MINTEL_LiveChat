@@ -430,14 +430,22 @@ extension ViewController: UITableViewDataSource {
         if (targetAction != nil) {
             let text = targetAction?["text"] as? String ?? ""
             if (text.count > 0) {
-                let display = targetAction?["display"] as? Bool ?? true
-                if (display) {
-                    MINTEL_LiveChat.items.append(MyMessage(text: text, agent: false, bot: false))
-                }
-                self.tableView.reloadData()
-                self.tableView.scrollToBottom()
+                
                 message?.disableMenu = true
-                MINTEL_LiveChat.sendPost(text: text)
+                if ("__00_app_endchat" == text) {
+                    
+                    self.closeChat()
+                    
+                } else {
+                
+                    let display = targetAction?["display"] as? Bool ?? true
+                    if (display) {
+                        MINTEL_LiveChat.items.append(MyMessage(text: text, agent: false, bot: false))
+                    }
+                    self.tableView.reloadData()
+                    self.tableView.scrollToBottom()
+                    MINTEL_LiveChat.sendPost(text: text)
+                }
             }
         }
     }

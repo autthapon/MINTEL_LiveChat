@@ -166,7 +166,8 @@ public class MINTEL_LiveChat: UIView {
     }
     
     public func stopChat() {
-        self.reallyEndChat()
+        self.closeButtonHandle()
+        
     }
     
     internal func reallyEndChat() {
@@ -466,7 +467,7 @@ public class MINTEL_LiveChat: UIView {
     
     @objc func closeButtonHandle() {
         self.isHidden = true
-        MINTEL_LiveChat.agentState = .waiting
+        MINTEL_LiveChat.agentState = .start
         MINTEL_LiveChat.chatStarted = false
         UIApplication.shared.keyWindow?.sendSubviewToBack(self)
         MINTEL_LiveChat.items.removeAll()
