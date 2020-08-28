@@ -29,7 +29,7 @@ class ViewController: UIViewController {
         let webhookUrl:String           = "https://asia-east2-acm-clt-chatbots.cloudfunctions.net/"
         let uploadUrl:String            = "https://us-central1-test-tmn-bot.cloudfunctions.net"
         let xApiKey:String              = "381b0ac187994f82bdc05c09d1034afa"
-        let surveyChatbotUrl:String       = "https://www.google.co.th"
+        let surveyChatbotUrl:String       = "https://www.google.co.th?uid=sessionId"
         let surveryFormUrl:String       = "https://truemoney--c.ap12.visual.force.com/apex/MINTEL_ExternalChatSurvey?uid=sessionId"
         let announcementUrl:String       = "https://us-central1-test-tmn-bot.cloudfunctions.net/announcementmulti?uid=sessionId"
         // https://asia-east2-acm-clt-chatbots.cloudfunctions.net/onNewSessionMobile

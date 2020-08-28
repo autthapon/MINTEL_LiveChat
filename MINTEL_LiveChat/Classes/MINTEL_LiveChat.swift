@@ -216,6 +216,9 @@ public class MINTEL_LiveChat: UIView {
             surveyUrl = MINTEL_LiveChat.configuration?.surveyFormUrl ?? ""
         }
         
+        surveyUrl = surveyUrl.replacingOccurrences(of: "sessionId", with: MINTEL_LiveChat.userId)
+        
+        
         // Open Survey Url
         guard let url = URL(string: surveyUrl) else { return }
         if (UIApplication.shared.canOpenURL(url)) {
@@ -655,6 +658,8 @@ extension MINTEL_LiveChat  {
     internal func getAnnouncementMessage() {
         let params: Parameters = [:]
         let url = (MINTEL_LiveChat.configuration?.announcementUrl ?? "").replacingOccurrences(of: "sessionId", with: MINTEL_LiveChat.userId)
+        
+        
         let header:HTTPHeaders = [
             "x-api-key": MINTEL_LiveChat.configuration?.xApikey ?? "" // "381b0ac187994f82bdc05c09d1034afa"
         ]
