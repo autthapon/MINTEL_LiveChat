@@ -45,6 +45,11 @@ class ViewController: UIViewController {
         
         appDelegate.chat.startChat(config: config)
     }
+    
+    @objc @IBAction func stopChat() {
+        let appDelegate = (UIApplication.shared.delegate as! AppDelegate)
+        appDelegate.chat.stopChat()
+    }
 
 
     override func didReceiveMemoryWarning() {

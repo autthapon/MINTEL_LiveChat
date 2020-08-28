@@ -52,6 +52,14 @@
                                     <action selector="startChatWithSender:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="9g0-kE-ugl"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JEV-zw-OlO">
+                                <rect key="frame" x="290" y="117" width="69" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Stop Chat"/>
+                                <connections>
+                                    <action selector="stopChat" destination="vXZ-lx-hvc" eventType="touchUpInside" id="Fwp-48-RNr"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>

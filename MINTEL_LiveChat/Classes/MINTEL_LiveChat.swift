@@ -165,6 +165,10 @@ public class MINTEL_LiveChat: UIView {
         }
     }
     
+    public func stopChat() {
+        self.reallyEndChat()
+    }
+    
     internal func reallyEndChat() {
         
         if (!MINTEL_LiveChat.chatInProgress) {
