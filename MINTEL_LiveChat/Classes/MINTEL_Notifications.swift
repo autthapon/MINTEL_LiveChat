@@ -10,11 +10,11 @@ import Foundation
 import Foundation
 import UserNotifications
 
-class MINTEL_Notifications: NSObject, UNUserNotificationCenterDelegate {
+public class MINTEL_Notifications: NSObject, UNUserNotificationCenterDelegate {
     
     let notificationCenter = UNUserNotificationCenter.current()
     
-    func userRequest() {
+    public func userRequest() {
         
         let options: UNAuthorizationOptions = [.alert, .sound, .badge]
         
@@ -33,7 +33,7 @@ class MINTEL_Notifications: NSObject, UNUserNotificationCenterDelegate {
 //                print("No")
 //            }
 //        }
-        
+//
 //        let content = UNMutableNotificationContent()
 //        content.title = "Notification Tutorial"
 //        content.subtitle = "from ioscreator.com"
@@ -48,7 +48,7 @@ class MINTEL_Notifications: NSObject, UNUserNotificationCenterDelegate {
         let content = UNMutableNotificationContent()
 //        let userActions = "MINTEL_LiveChat"
         
-        content.title = "MINTEL_LiveChat"
+        content.title = "ทรูมันนี่"
         content.body = message
         content.sound = UNNotificationSound.default
         content.badge = 0
@@ -64,21 +64,33 @@ class MINTEL_Notifications: NSObject, UNUserNotificationCenterDelegate {
         }
     }
     
-    func userNotificationCenter(_ center: UNUserNotificationCenter,
-                                willPresent notification: UNNotification,
-                                withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+    public func userNotificationCenter(_ center: UNUserNotificationCenter, openSettingsFor notification: UNNotification?) {
         
+    }
+    
+    public func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+        completionHandler()
+    }
+    
+    public func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         completionHandler([.alert,.sound])
     }
     
-    func userNotificationCenter(_ center: UNUserNotificationCenter,
-                                didReceive response: UNNotificationResponse,
-                                withCompletionHandler completionHandler: @escaping () -> Void) {
-        
-        if response.notification.request.identifier == "MINTEL_LiveChat Local Notification" {
-            print("Handling notifications with the Local Notification Identifier")
-        }
-        
+//    func userNotificationCenter(_ center: UNUserNotificationCenter,
+//                                willPresent notification: UNNotification,
+//                                withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+//
+//        completionHandler([.alert,.sound])
+//    }
+//
+//    func userNotificationCenter(_ center: UNUserNotificationCenter,
+//                                didReceive response: UNNotificationResponse,
+//                                withCompletionHandler completionHandler: @escaping () -> Void) {
+//
+//        if response.notification.request.identifier == "MINTEL_LiveChat Local Notification" {
+//            print("Handling notifications with the Local Notification Identifier")
+//        }
+//
 //        switch response.actionIdentifier {
 //        case UNNotificationDismissActionIdentifier:
 //            print("Dismiss Action")
@@ -86,14 +98,14 @@ class MINTEL_Notifications: NSObject, UNUserNotificationCenterDelegate {
 //            print("Default")
 //        case "Snooze":
 //            print("Snooze")
-//            scheduleNotification(notificationType: "sdfd")
+////            scheduleNotification(notificationType: "sdfd")
 //        case "Delete":
 //            print("Delete")
 //        default:
 //            print("Unknown action")
 //        }
-        completionHandler()
-    }
+//        completionHandler()
+//    }
 }
 
 

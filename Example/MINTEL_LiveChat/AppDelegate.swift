@@ -18,6 +18,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         self.chat = MINTEL_LiveChat.init( frame: CGRect(x: 0, y: 300, width: 80, height: 120))
+        let notif = MINTEL_Notifications()
+        notif.userRequest()
+        UNUserNotificationCenter.current().delegate = notif
+        
         // Override point for customization after application launch.
         return true
     }
@@ -45,24 +49,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 }
 
-//extension AppDelegate: UNUserNotificationCenterDelegate {
-//    func userNotificationCenter(_ center: UNUserNotificationCenter,
-//                                willPresent notification: UNNotification,
-//                                withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-//
-//        completionHandler([.alert, .sound])
-//    }
-//
-//    func userNotificationCenter(_ center: UNUserNotificationCenter,
-//                                didReceive response: UNNotificationResponse,
-//                                withCompletionHandler completionHandler: @escaping () -> Void) {
-//
-//        if response.notification.request.identifier == "Local Notification" {
-//            print("Handling notifications with the Local Notification Identifier")
-//        }
-//
-//        completionHandler()
-//    }
-//}
-//
-//
+extension AppDelegate: UNUserNotificationCenterDelegate {
+    func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                willPresent notification: UNNotification,
+                                withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+
+        completionHandler([.alert, .sound])
+    }
+
+    func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                didReceive response: UNNotificationResponse,
+                                withCompletionHandler completionHandler: @escaping () -> Void) {
+
+        if response.notification.request.identifier == "Local Notification" {
+            print("Handling notifications with the Local Notification Identifier")
+        }
+
+        completionHandler()
+    }
+}
+
+
