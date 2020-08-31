@@ -110,7 +110,9 @@ class ViewController: UIViewController {
             self.btnConfirmBack.layer.borderWidth = 1
             self.btnConfirmBack.setTitleColor(UIColor(MyHexString: "#F08833"), for: .normal)
             self.btnConfirmBack.backgroundColor = UIColor.white
-//            self.btnConfirmBack.frame = CGRect(x: self.btnConfirmBack.frame.origin.x, y: UIScreen.main.bounds.size.height - self.btnConfirmBack.frame.size.height - 20, width: self.btnConfirmBack.frame.size.width, height: self.btnConfirmBack.frame.size.height)
+
+            self.btnClose = UIBarButtonItem(image: UIImage(named: "close", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil), style: .plain, target: self, action: #selector(self.closeChat))
+            self.navigationItem.rightBarButtonItem = self.btnClose
             
             self.navigationItem.rightBarButtonItem = nil
             self.navigationItem.titleView = UIImageView(image: UIImage(named: "true_bar_title", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil))
@@ -124,17 +126,30 @@ class ViewController: UIViewController {
         self.viewConfirm.removeFromSuperview()
         self.btnClose = UIBarButtonItem(image: UIImage(named: "close", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil), style: .plain, target: self, action: #selector(self.closeChat))
         self.navigationItem.rightBarButtonItem = self.btnClose
-        self.navigationItem.title = "TMN Chatbot"
-        self.navigationItem.titleView = nil
+        
+        self.navigationItem.rightBarButtonItem = nil
+        self.navigationItem.titleView = UIImageView(image: UIImage(named: "true_bar_title", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil))
+        
+        
+        
+        self.btnClose = UIBarButtonItem(image: UIImage(named: "close", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil), style: .plain, target: self, action: #selector(self.closeChat))
+        self.navigationItem.rightBarButtonItem = self.btnClose
     }
     
     @IBAction func confirmExitChat() {
+        self.btnClose = UIBarButtonItem(image: UIImage(named: "close", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil), style: .plain, target: self, action: #selector(self.closeChat))
+        self.navigationItem.rightBarButtonItem = self.btnClose
+        
         MINTEL_LiveChat.instance.reallyEndChat()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationItem.title = "TMN Chatbot"
+
+        self.btnClose = UIBarButtonItem(image: UIImage(named: "close", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil), style: .plain, target: self, action: #selector(self.closeChat))
+        self.navigationItem.rightBarButtonItem = self.btnClose
+        
+        self.navigationItem.titleView = UIImageView(image: UIImage(named: "true_bar_title", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil))
         self.view.backgroundColor = UIColor.white
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name:UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name:UIResponder.keyboardWillHideNotification, object: nil)
