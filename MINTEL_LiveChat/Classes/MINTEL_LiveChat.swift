@@ -771,43 +771,35 @@ extension MINTEL_LiveChat  {
             .responseString(completionHandler: { response in
                 debugPrint(response)
             })
-//            .responseJSON { (response) in
-//                switch response.result {
-//                case .success(_):
-//                    if let json = response.value {
-//                        debugPrint(json)
-//                    }
-//                    break
-//                case .failure(let error):
-//                    debugPrint(error)
-//                    break
-//                }
-//        }
     }
     
     internal static func checkTime() {
         // Timer 2 minutes
-//        if (MINTEL_LiveChat.first2MinutesTimer != nil) {
-//            MINTEL_LiveChat.first2MinutesTimer?.invalidate()
-//            MINTEL_LiveChat.first2MinutesTimer = nil
-//        }
-//        if (MINTEL_LiveChat.lastAMinuteTimer != nil) {
-//            MINTEL_LiveChat.lastAMinuteTimer?.invalidate()
-//            MINTEL_LiveChat.lastAMinuteTimer = nil
-//        }
-//        MINTEL_LiveChat.first2MinutesTimer = Timer.scheduledTimer(withTimeInterval: 2 * 60, repeats: false) { (timer) in
-//            // Send Notification
-//            let notif = MINTEL_Notifications()
-//            notif.scheduleNotification(message: "ขณะนี้ท่านมีรายการสนทนากับศูนย์บริการทรูมันนี่อยู่")
-//            print("First notif fired.")
-//
-//            MINTEL_LiveChat.lastAMinuteTimer = Timer.scheduledTimer(withTimeInterval: 60, repeats: false, block: { (timer2) in
-//                self.items.append(MyMessage(text: "หากคุณลูกค้าไม่อยู่ในการสนทนา ผมขอจบการสนทนาเพื่อดูแลลูกค้าท่านอื่นต่อครับ หากต้องการข้อมูลสอบถามข้อมูลเพิ่มเติม สามารถติดต่อเข้ามาใหม่ได้ตลอด 24 ชั่วโมง ขอบคุณที่ใช้บริการทรูมันนี่ สวัสดีครับ", agent: false, bot: true))
-//                notif.scheduleNotification(message: "ขอบคุณสำหรับการสนทนา หากมีข้อสงสัยเพิ่มเติมสามารถเริ่มต้นแชทอีกครั้งเพื่อสอบถามข้อมูล")
-//                MINTEL_LiveChat.instance.reallyEndChat()
-//                print("Second notif fired.")
-//            })
-//        }
+        self.stopTimer()
+        MINTEL_LiveChat.first2MinutesTimer = Timer.scheduledTimer(withTimeInterval: 2 * 60, repeats: false) { (timer) in
+            // Send Notification
+            let notif = MINTEL_Notifications()
+            notif.scheduleNotification(message: "ขณะนี้ท่านมีรายการสนทนากับศูนย์บริการทรูมันนี่อยู่")
+            print("First notif fired.")
+
+            MINTEL_LiveChat.lastAMinuteTimer = Timer.scheduledTimer(withTimeInterval: 60, repeats: false, block: { (timer2) in
+                self.items.append(MyMessage(text: "หากคุณลูกค้าไม่อยู่ในการสนทนา ผมขอจบการสนทนาเพื่อดูแลลูกค้าท่านอื่นต่อครับ หากต้องการข้อมูลสอบถามข้อมูลเพิ่มเติม สามารถติดต่อเข้ามาใหม่ได้ตลอด 24 ชั่วโมง ขอบคุณที่ใช้บริการทรูมันนี่ สวัสดีครับ", agent: false, bot: true))
+                notif.scheduleNotification(message: "ขอบคุณสำหรับการสนทนา หากมีข้อสงสัยเพิ่มเติมสามารถเริ่มต้นแชทอีกครั้งเพื่อสอบถามข้อมูล")
+                MINTEL_LiveChat.instance.reallyEndChat()
+                print("Second notif fired.")
+            })
+        }
+    }
+    
+    internal static func stopTimer() {
+        if (MINTEL_LiveChat.first2MinutesTimer != nil) {
+            MINTEL_LiveChat.first2MinutesTimer?.invalidate()
+            MINTEL_LiveChat.first2MinutesTimer = nil
+        }
+        if (MINTEL_LiveChat.lastAMinuteTimer != nil) {
+            MINTEL_LiveChat.lastAMinuteTimer?.invalidate()
+            MINTEL_LiveChat.lastAMinuteTimer = nil
+        }
     }
     
     internal static func sendPost(text: String) {
@@ -927,6 +919,8 @@ extension MINTEL_LiveChat : SCSChatEventDelegate {
         NotificationCenter.default.post(name: Notification.Name(SalesForceNotifId.didReceiveMessage),
                                         object: nil,
                                         userInfo:["session": session, "message": message])
+        
+        MINTEL_LiveChat.checkTime()
         
 //        notification.scheduleNotification(message: String(format: "%@:%@", MINTEL_LiveChat.agentName, message.text))
     }

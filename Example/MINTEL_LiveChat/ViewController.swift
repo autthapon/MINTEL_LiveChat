@@ -26,7 +26,8 @@ class ViewController: UIViewController {
         let ordID:String                = "00D2w000006wosb";
         let deployID:String             = "5722w0000009B6e";
         let buttonID:String             = "5732w0000009E15";
-        let webhookUrl:String           = "https://asia-east2-acm-clt-chatbots.cloudfunctions.net/"
+        let webhookUrl:String           = "https://asia-east2-tmn-chatbot-integration.cloudfunctions.net"
+//      let webhookUrl:String           = "https://asia-east2-acm-clt-chatbots.cloudfunctions.net"
         let uploadUrl:String            = "https://us-central1-test-tmn-bot.cloudfunctions.net"
         let xApiKey:String              = "381b0ac187994f82bdc05c09d1034afa"
         let surveyChatbotUrl:String       = "https://www.google.co.th?uid=sessionId"
@@ -39,7 +40,7 @@ class ViewController: UIViewController {
         let phone = "0818888888"
         let email = "a@a.com"
         let tmnId = "11241313"
-        let saleforceFirst = true
+        let saleforceFirst = false
         
         let config = LiveChatConfiguration(withUserName: "Note", withSalesforceLiveAgentPod: liveagentPod, withSalesForceOrdId: ordID, withSalesforceDeployId: deployID, withSalesforceButtonId: buttonID, withWebHookBaseUrl: webhookUrl, withXApiKey: xApiKey, withUploadBaseUrl: uploadUrl, withSurveyChatbotUrl: surveyChatbotUrl, withSurveyFormUrl: surveryFormUrl, withAnnouncementUrl: announcementUrl, withFirstName: firstname, withLastName: lastname, withEmail: email, withPhone: phone, withTmnId: tmnId, withSalesforceFirst: saleforceFirst)
         
