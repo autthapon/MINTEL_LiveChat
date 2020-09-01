@@ -629,7 +629,7 @@ extension MINTEL_LiveChat : SCSChatSessionDelegate {
         debugPrint("Queue : ", position)
         
         DispatchQueue.main.async {
-            if (self.queueLabel.tag < Int.max && position.intValue > 0) {
+            if (self.queueLabel.tag < Int.max && position.intValue >= 0) {
                 MINTEL_LiveChat.items.removeLast()
             }
             if (self.queueLabel.tag == Int.max) {
