@@ -140,7 +140,7 @@ class ViewController: UIViewController {
         self.btnClose = UIBarButtonItem(image: UIImage(named: "close", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil), style: .plain, target: self, action: #selector(self.closeChat))
         self.navigationItem.rightBarButtonItem = self.btnClose
         
-        MINTEL_LiveChat.instance.reallyEndChat()
+        MINTEL_LiveChat.instance.stopChat()
     }
     
     override func viewDidLoad() {

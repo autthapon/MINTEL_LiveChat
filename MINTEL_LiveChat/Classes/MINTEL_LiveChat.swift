@@ -170,7 +170,7 @@ public class MINTEL_LiveChat: UIView {
     }
     
     public func stopChat() {
-        self.closeButtonHandle()
+//        self.closeButtonHandle()
         self.reallyEndChat()
     }
     
@@ -180,6 +180,18 @@ public class MINTEL_LiveChat: UIView {
             return
         }
         
+        if #available(iOS 9.0, *) {
+            Alamofire.SessionManager.default.session.getAllTasks { (tasks) in
+                tasks.forEach{ $0.cancel() }
+            }
+        } else {
+            Alamofire.SessionManager.default.session.getTasksWithCompletionHandler { (sessionDataTask, uploadData, downloadData) in
+                sessionDataTask.forEach { $0.cancel() }
+                uploadData.forEach { $0.cancel() }
+                downloadData.forEach { $0.cancel() }
+            }
+        }
+
         MINTEL_LiveChat.chatInProgress = false
         MINTEL_LiveChat.userId = UUID().uuidString
 
@@ -200,6 +212,7 @@ public class MINTEL_LiveChat: UIView {
                                         userInfo:nil)
         
         self.openSurvey(bot: MINTEL_LiveChat.chatBotMode)
+        self.closeButtonHandle()
     }
     
     fileprivate func openSurvey(bot:Bool) {
@@ -229,7 +242,11 @@ public class MINTEL_LiveChat: UIView {
             
             let currentViewController = self.topViewController()
             if let cu = currentViewController {
-                cu.present(vc!, animated: true, completion: nil)
+                cu.dismiss(animated: false, completion: nil)
+                cu.present(vc!, animated: true, completion: {
+//                    cu.parent?.dismiss(animated: true, completion: nil)
+                })
+//                cu.present(vc!, animated: true, completion: nil)
             }
         }
     }
