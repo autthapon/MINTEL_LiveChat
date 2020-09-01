@@ -89,7 +89,9 @@ public class MINTEL_LiveChat: UIView {
     }
     
     public func reLayoutView() {
-        self.layer.zPosition = 1
+        if (!MINTEL_LiveChat.chatPanelOpened) {
+            self.layer.zPosition = 1
+        }
         if (MINTEL_LiveChat.chatBotMode) {
             self.userImageView.isHidden = false
             self.callCenterLabel.isHidden = false
@@ -630,7 +632,7 @@ extension MINTEL_LiveChat : SCSChatSessionDelegate {
         
         DispatchQueue.main.async {
             
-            self.reLayoutView()
+            
             if (self.queueLabel.tag < Int.max && position.intValue >= 0) {
                 MINTEL_LiveChat.items.removeLast()
             }
@@ -643,6 +645,7 @@ extension MINTEL_LiveChat : SCSChatSessionDelegate {
             }
             
             MINTEL_LiveChat.agentState = .waiting
+            self.reLayoutView()
             
             if (position.intValue <= self.queueLabel.tag && position.intValue >= 0) {
                 

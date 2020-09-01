@@ -533,7 +533,7 @@ extension ViewController: InputTextViewDelegate {
     func didPressSendButton(_ text: String, _ sender: UIButton, _ textView: UITextView) {
         print(text)
         if (text.trimmingCharacters(in: .whitespacesAndNewlines).count > 0) {
-            MINTEL_LiveChat.items.append(MyMessage(text: text, agent: false))
+            MINTEL_LiveChat.items.append(MyMessage(text: text, agent: false, bot: false))
             self.tableView.reloadData()
             self.tableView.scrollToBottom()
             textView.text = ""
