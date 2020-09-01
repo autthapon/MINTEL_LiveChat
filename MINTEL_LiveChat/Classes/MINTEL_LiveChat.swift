@@ -230,23 +230,28 @@ public class MINTEL_LiveChat: UIView {
         // Open Survey Url
         guard let url = URL(string: surveyUrl) else { return }
         if (UIApplication.shared.canOpenURL(url)) {
-            var vc:UIViewController? = nil
             
-            if #available(iOS 11.0, *) {
-                let config = SFSafariViewController.Configuration()
-                config.entersReaderIfAvailable = false
-                vc = SFSafariViewController(url: url, configuration: config)
-            } else {
-                vc = SFSafariViewController(url: url)
-            }
             
             let currentViewController = self.topViewController()
+        
             if let cu = currentViewController {
-                cu.dismiss(animated: false, completion: nil)
-                cu.present(vc!, animated: true, completion: {
-//                    cu.parent?.dismiss(animated: true, completion: nil)
-                })
-//                cu.present(vc!, animated: true, completion: nil)
+                
+                cu.dismiss(animated: false) {
+                    
+                    let appViewController = self.topViewController()
+                    if let appCu = appViewController {
+                        var vc:UIViewController? = nil
+                        if #available(iOS 11.0, *) {
+                            let config = SFSafariViewController.Configuration()
+                            config.entersReaderIfAvailable = false
+                            vc = SFSafariViewController(url: url, configuration: config)
+                        } else {
+                            vc = SFSafariViewController(url: url)
+                        }
+                        
+                        appCu.present(vc!, animated: true, completion: nil)
+                    }
+                }
             }
         }
     }
