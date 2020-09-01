@@ -327,6 +327,7 @@ extension ViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let item = MINTEL_LiveChat.items[indexPath.section]
         let agent = item.agent
+        let bot = item.bot
         
         var cellIdentifierId:String
         switch item.kind {
@@ -335,7 +336,7 @@ extension ViewController: UITableViewDataSource {
         case .systemMessageType2( _):
             cellIdentifierId = CellIds.systemMessageType2CellId
         case .text( _):
-            cellIdentifierId = agent ? CellIds.receiverCellId : CellIds.senderCellId
+            cellIdentifierId = agent || bot ? CellIds.receiverCellId : CellIds.senderCellId
         case .menu( _, _):
             cellIdentifierId = CellIds.receiverMenuCellid
         case .image( _):
@@ -359,7 +360,7 @@ extension ViewController: UITableViewDataSource {
                 //                    cell.avatarView.image = UIImage(named: "agent", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil)
                 //                }
                 
-                if (agent) {
+                if (agent || bot) {
                     cell.renderReceiverCell(txt, item: item, index: indexPath.section, tableView: tableView)
                 } else {
                     cell.renderSender(txt: txt, item: item)
