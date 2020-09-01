@@ -159,7 +159,7 @@ public class MINTEL_LiveChat: UIView {
         self.isHidden = false
         UIApplication.shared.keyWindow?.bringSubviewToFront(self)
         
-        if (MINTEL_LiveChat.configuration?.salesforceFirst ?? false) {
+        if (MINTEL_LiveChat.configuration?.disableBotMode ?? false) {
             MINTEL_LiveChat.items.append(MyMessage(systemMessageType2: "กรุณารอสักครู่"))
             MINTEL_LiveChat.chatBotMode = false
             MINTEL_LiveChat.instance.startSaleForce()
@@ -278,7 +278,7 @@ public class MINTEL_LiveChat: UIView {
         let date24 = dateFormatter.string(from: date)
         
         MINTEL_LiveChat.items.append(MyMessage(systemMessageType1: String(format: "เริ่มการสนทนา %@", date24)))
-        if (!(MINTEL_LiveChat.configuration?.salesforceFirst ?? false)) {
+        if (!(MINTEL_LiveChat.configuration?.disableBotMode ?? false)) {
             self.getAnnouncementMessage()
             MINTEL_LiveChat.sendOnNewSession()
         }
