@@ -991,11 +991,10 @@ extension MINTEL_LiveChat : SCSChatEventDelegate {
                     
                     var name = ""
                     if (MINTEL_LiveChat.configuration?.phone.count ?? 0 > 0) {
-                        name = "Customer";
+                        name = MINTEL_LiveChat.configuration?.firstname ?? "Customer"
                     } else {
                         name = "Visitor"
                     }
-                     
                     
                     allMsg = String(format: "%@\n%@: %@", allMsg, name, txtToSend)
                 }
