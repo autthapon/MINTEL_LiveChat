@@ -163,6 +163,7 @@ public class MINTEL_LiveChat: UIView {
             MINTEL_LiveChat.items.append(MyMessage(systemMessageType2: "กรุณารอสักครู่"))
             MINTEL_LiveChat.chatBotMode = false
             MINTEL_LiveChat.instance.startSaleForce()
+            MINTEL_LiveChat.stopTimer()
         } else {
             self.tapAction(sender: NSObject())
         }
@@ -920,7 +921,7 @@ extension MINTEL_LiveChat : SCSChatEventDelegate {
                                         object: nil,
                                         userInfo:["session": session, "message": message])
         
-        MINTEL_LiveChat.checkTime()
+//        MINTEL_LiveChat.checkTime()
         
 //        notification.scheduleNotification(message: String(format: "%@:%@", MINTEL_LiveChat.agentName, message.text))
     }
