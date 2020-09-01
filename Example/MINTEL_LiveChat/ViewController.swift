@@ -26,10 +26,10 @@ class ViewController: UIViewController {
         let ordID:String                = "00D2w000006wosb";
         let deployID:String             = "5722w0000009B6e";
         let buttonID:String             = "5732w0000009E15";
-        let webhookUrl:String           = "https://asia-east2-tmn-chatbot-integration.cloudfunctions.net"
-//      let webhookUrl:String           = "https://asia-east2-acm-clt-chatbots.cloudfunctions.net"
+//        let webhookUrl:String           = "https://asia-east2-tmn-chatbot-integration.cloudfunctions.net"
+      let webhookUrl:String           = "https://asia-east2-acm-clt-chatbots.cloudfunctions.net"
         let uploadUrl:String            = "https://us-central1-test-tmn-bot.cloudfunctions.net"
-        let xApiKey:String              = "381b0ac187994f82bdc05c09d1034afa"
+        let xApiKey:String              = "edf1ca88a09546f8a0667c81c93d1f31"
         let surveyChatbotUrl:String       = "https://www.google.co.th?uid=sessionId"
         let surveryFormUrl:String       = "https://truemoney--c.ap12.visual.force.com/apex/MINTEL_ExternalChatSurvey?uid=sessionId"
         let announcementUrl:String       = "https://us-central1-test-tmn-bot.cloudfunctions.net/announcementmulti?uid=sessionId"

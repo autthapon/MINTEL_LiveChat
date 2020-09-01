@@ -715,7 +715,7 @@ extension MINTEL_LiveChat  {
                                     let desc = item["Description__c"] as? String ?? ""
                                     if desc.count > 0 {
                                         //                                    DispatchQueue.global(qos: .userInitiated).async {
-                                        MINTEL_LiveChat.items.append(MyMessage(text: desc, agent: true))
+                                        MINTEL_LiveChat.items.append(MyMessage(text: desc, agent: false, bot: true))
                                         //                                    }
                                     }
                                 }
@@ -723,7 +723,7 @@ extension MINTEL_LiveChat  {
                                 // Display Menu
                                 //                            DispatchQueue.global(qos: .userInitiated).async {
                                 let menus:[[String:Any]] = [["action" : ["label" : "จบการสนทนา", "text" : "__00_app_endchat", "display" : false]], ["action" : [ "label" : "เริ่มการสนทนา", "text" : "__00_home_greeting", "display" : false]]]
-                                MINTEL_LiveChat.items.append(MyMessage(text: "", agent: true, menu: menus))
+                                MINTEL_LiveChat.items.append(MyMessage(text: "", agent: false, bot: true, menu: menus))
                                 //                            }
                                 
                                 
@@ -818,7 +818,7 @@ extension MINTEL_LiveChat  {
         let params : Parameters = ["session_id": MINTEL_LiveChat.userId,"text": text]
         let url = String(format: "%@/webhook", MINTEL_LiveChat.configuration?.webHookBaseUrl ?? "")
         let header:HTTPHeaders = [
-            "x-api-key": MINTEL_LiveChat.configuration?.xApikey ?? "" // "381b0ac187994f82bdc05c09d1034afa"
+            "x-api-key": MINTEL_LiveChat.configuration?.xApikey ?? "" // "edf1ca88a09546f8a0667c81c93d1f31"
         ]
         
         Alamofire
