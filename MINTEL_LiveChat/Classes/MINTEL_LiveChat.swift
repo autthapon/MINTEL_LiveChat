@@ -629,21 +629,22 @@ extension MINTEL_LiveChat : SCSChatSessionDelegate {
         debugPrint("Queue : ", position)
         
         DispatchQueue.main.async {
+            
+            self.reLayoutView()
             if (self.queueLabel.tag < Int.max && position.intValue >= 0) {
                 MINTEL_LiveChat.items.removeLast()
             }
             if (self.queueLabel.tag == Int.max) {
                 self.queueLabel.tag = position.intValue
-                self.queueLabel.text = ""
+                self.queueLabel.text = String(format : "#%d", self.queueLabel.tag)
             } else if (position.intValue <= self.queueLabel.tag) {
                 self.queueLabel.tag = position.intValue
                 self.queueLabel.text = String(format: "#%d", self.queueLabel.tag)
             }
             
-            
             MINTEL_LiveChat.agentState = .waiting
             
-            if (position.intValue <= self.queueLabel.tag && position.intValue > 0) {
+            if (position.intValue <= self.queueLabel.tag && position.intValue >= 0) {
                 
                 MINTEL_LiveChat.items.append(MyMessage(systemMessageType1: String(format: "คิวของคุณคือลำดับที่ %d", position.intValue)))
             }
