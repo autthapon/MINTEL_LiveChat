@@ -33,6 +33,8 @@ public class MINTEL_LiveChat: UIView {
     internal static var userName = ""
     internal static var chatPanelOpened = false
     internal static var chatStarted = false
+    internal static var chatCanTyped = false
+    internal static var chatUserTypedIn = false
     internal static var instance:MINTEL_LiveChat!
     internal static var agentName:String = ""
     internal static var agentState:SaleforceAgentState = .start
@@ -157,6 +159,8 @@ public class MINTEL_LiveChat: UIView {
         MINTEL_LiveChat.configuration = config
         MINTEL_LiveChat.userName = config.userName
         MINTEL_LiveChat.chatInProgress = true
+        MINTEL_LiveChat.chatCanTyped = false
+        MINTEL_LiveChat.chatUserTypedIn = false
         MINTEL_LiveChat.agentState = .start
         self.loadFirstMessage()
         self.isHidden = false
@@ -214,8 +218,39 @@ public class MINTEL_LiveChat: UIView {
                                         object: nil,
                                         userInfo:nil)
         
-        self.openSurvey(bot: MINTEL_LiveChat.chatBotMode)
+        if (MINTEL_LiveChat.chatUserTypedIn) {
+            self.openSurvey(bot: MINTEL_LiveChat.chatBotMode)
+        } else {
+            let currentViewController = self.topViewController()
+                if let cu = currentViewController {
+                    cu.dismiss(animated: false) {
+                }
+            }
+        }
         self.closeButtonHandle()
+    }
+    
+    fileprivate func checkAgentMode() {
+        let url = String(format: "%@/botconfig", MINTEL_LiveChat.configuration?.webHookBaseUrl ?? "")
+        let header:HTTPHeaders = [
+            "x-api-key": MINTEL_LiveChat.configuration?.xApikey ?? "" // "381b0ac187994f82bdc05c09d1034afa"
+        ]
+        
+        Alamofire
+            .request(url, method: .get, parameters: nil, encoding: JSONEncoding.init(), headers: header)
+            .responseJSON(completionHandler: { response in
+//                debugPrint(response)
+                if let json = response.value {
+                    let dict = json as! [String:Any]
+                    let disableBotMode = dict["disableBotMode"] as? Bool ?? false
+                    if (disableBotMode) {
+                        MINTEL_LiveChat.stopTimer()
+                        MINTEL_LiveChat.items.append(MyMessage(systemMessageType2: "กรุณารอสักครู่"))
+                        MINTEL_LiveChat.chatBotMode = false
+                        MINTEL_LiveChat.instance.startSaleForce()
+                    }
+                }
+            })
     }
     
     fileprivate func openSurvey(bot:Bool) {
@@ -233,7 +268,6 @@ public class MINTEL_LiveChat: UIView {
         // Open Survey Url
         guard let url = URL(string: surveyUrl) else { return }
         if (UIApplication.shared.canOpenURL(url)) {
-            
             
             let currentViewController = self.topViewController()
         
@@ -287,7 +321,6 @@ public class MINTEL_LiveChat: UIView {
         }
         
         MINTEL_LiveChat.sendPost(text: "สวัสดี", menu: true)
-        
         MINTEL_LiveChat.checkTime()
     }
     
@@ -406,7 +439,7 @@ public class MINTEL_LiveChat: UIView {
         
         let titleHeight = (self.frame.size.height * 60) / 200
         self.queueTitleLabel = UILabel(frame: CGRect(x: 0, y: self.closeButton.frame.origin.y + self.closeButton.frame.size.height + 8, width: self.frame.size.width, height: titleHeight))
-        self.queueTitleLabel.text = "Your place in line"
+        self.queueTitleLabel.text = "คิวของคุณคือลำดับที่"
         self.queueTitleLabel.numberOfLines = 2
         self.queueTitleLabel.textAlignment = .center
         self.queueTitleLabel.font = UIFont.systemFont(ofSize: 14)
@@ -696,53 +729,35 @@ extension MINTEL_LiveChat  {
             .responseJSON { (response) in
                 switch response.result {
                 case .success(_):
+                    
+//                    self.checkAgentMode()
+                    
                     if let json = response.value {
                         debugPrint(json)
                         if json is [String:Any] {
-//                            let dict = json as! [String: Any]
-//                            let desc = dict["Description__c"] as? String ?? ""
-//
-//                            if desc.count > 0 {
-//                                DispatchQueue.global(qos: .userInitiated).async {
-//                                    MINTEL_LiveChat.items.append(MyMessage(text: desc, agent: true))
-//                                    DispatchQueue.main.async {
-//                                        MINTEL_LiveChat.sendPost(text: "สวัสดี", menu: true)
-//                                    }
-//
-//                                    NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
-//                                                                    object: nil,
-//                                                                    userInfo:nil)
-//                                }
-//                            }
-                            
-                            
                         } else if let items = json as? [[String:Any]] {
+                            
                             if items.count > 0 {
                                 items.forEach { (item) in
                                     let desc = item["Description__c"] as? String ?? ""
                                     if desc.count > 0 {
-                                        //                                    DispatchQueue.global(qos: .userInitiated).async {
                                         MINTEL_LiveChat.items.append(MyMessage(text: desc, agent: false, bot: true))
-                                        //                                    }
                                     }
                                 }
                                 
-                                // Display Menu
-                                //                            DispatchQueue.global(qos: .userInitiated).async {
                                 let menus:[[String:Any]] = [["action" : ["label" : "จบการสนทนา", "text" : "__00_app_endchat", "display" : false]], ["action" : [ "label" : "เริ่มการสนทนา", "text" : "__00_home_greeting", "display" : false]]]
                                 MINTEL_LiveChat.items.append(MyMessage(text: "", agent: false, bot: true, menu: menus))
-                                //                            }
-                                
-                                
                                 NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
                                                                 object: nil,
                                                                 userInfo:nil)
                             } else {
+
+                                MINTEL_LiveChat.chatCanTyped = true
                                 DispatchQueue.global(qos: .userInitiated).async {
                                     DispatchQueue.main.async {
                                         MINTEL_LiveChat.sendPost(text: "__00_home__greeting", menu: false)
                                     }
-                                    
+
                                     NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
                                                                     object: nil,
                                                                     userInfo:nil)
@@ -821,6 +836,13 @@ extension MINTEL_LiveChat  {
     }
     
     internal static func sendPost(text: String, menu: Bool) {
+        
+        if ("__00_home_greeting" == text) {
+            MINTEL_LiveChat.chatCanTyped = true
+            NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
+                                            object: nil,
+                                            userInfo:nil)
+        }
         
         let params : Parameters = ["session_id": MINTEL_LiveChat.userId,"text": text]
         let url = String(format: "%@/webhook", MINTEL_LiveChat.configuration?.webHookBaseUrl ?? "")

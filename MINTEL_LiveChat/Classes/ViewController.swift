@@ -242,8 +242,12 @@ class ViewController: UIViewController {
     
     @objc func botTyped(_ notification: Notification) {
         DispatchQueue.main.async {
+            self.enableUserInteraction()
             self.tableView.reloadData()
             self.tableView.scrollToBottom(animated: true)
+            if (MINTEL_LiveChat.chatCanTyped) {
+                self.inputTextView.MINTEL_enable()
+            }
         }
     }
     
@@ -277,6 +281,9 @@ class ViewController: UIViewController {
         super.viewDidAppear(animated)
         updateCachedAssets()
         
+        if (!MINTEL_LiveChat.chatCanTyped) {
+            self.disableUserInteraction()
+        }
         MINTEL_LiveChat.chatPanelOpened  = true
     }
     
@@ -523,7 +530,7 @@ extension ViewController: UITableViewDataSource {
         if (targetAction != nil) {
             let text = targetAction?["text"] as? String ?? ""
             if (text.count > 0) {
-                
+                MINTEL_LiveChat.chatUserTypedIn = true
                 message?.disableMenu = true
                 if ("__00_app_endchat" == text) {
                     
@@ -636,6 +643,7 @@ extension ViewController: InputTextViewDelegate {
     func didPressSendButton(_ text: String, _ sender: UIButton, _ textView: UITextView) {
         print(text)
         if (text.trimmingCharacters(in: .whitespacesAndNewlines).count > 0) {
+            MINTEL_LiveChat.chatUserTypedIn = true
             MINTEL_LiveChat.items.append(MyMessage(text: text, agent: false, bot: false))
             self.tableView.reloadData()
             self.tableView.scrollToBottom(animated: true)
@@ -650,7 +658,6 @@ extension ViewController: InputTextViewDelegate {
     }
     
     func didPressFirstLeftButton(_ sender: UIButton, _ textView: UITextView) {
-        
         
         if (!chatMenuPanel) {
             sender.setImage(UIImage(named: "close", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil), for: .normal)

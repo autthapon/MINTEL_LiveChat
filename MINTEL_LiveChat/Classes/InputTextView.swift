@@ -279,6 +279,7 @@ extension InputTextView {
         }
     }
     
+    
     @objc func MINTEL_reallyEndChat(_ notification: Notification) {
         
         DispatchQueue.main.async {
