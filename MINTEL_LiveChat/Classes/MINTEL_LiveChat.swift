@@ -828,7 +828,12 @@ extension MINTEL_LiveChat  {
             "x-api-key": MINTEL_LiveChat.configuration?.xApikey ?? "" // "edf1ca88a09546f8a0667c81c93d1f31"
         ]
         
-        Alamofire
+        let configuration = URLSessionConfiguration.default
+        configuration.timeoutIntervalForRequest = 10
+        configuration.timeoutIntervalForResource = 10
+        let alamoFire = Alamofire.SessionManager(configuration: configuration) // not in this line
+        
+        alamoFire
             .request(url, method: .post, parameters: params, encoding: JSONEncoding.init(), headers: header)
             .responseJSON { (response) in
                 
