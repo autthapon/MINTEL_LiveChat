@@ -94,7 +94,7 @@ extension ViewController {
         
         DispatchQueue.main.async {
             self.tableView.reloadData()
-            self.tableView.scrollToBottom()
+            self.tableView.scrollToBottom(animated: true)
         }
     }
     
@@ -104,7 +104,7 @@ extension ViewController {
         
         DispatchQueue.main.async {
             self.tableView.reloadData()
-            self.tableView.scrollToBottom()
+            self.tableView.scrollToBottom(animated: true)
         }
         
         self.inputTextView.MINTEL_enable()
@@ -116,7 +116,7 @@ extension ViewController {
 //        let textEvent:SCSAgentTextEvent = notification.userInfo?["message"] as! SCSAgentTextEvent
         DispatchQueue.main.async {
             self.tableView.reloadData()
-            self.tableView.scrollToBottom()
+            self.tableView.scrollToBottom(animated: true)
         }
     }
     
@@ -136,7 +136,7 @@ extension ViewController {
         
         DispatchQueue.main.async {
             self.tableView.reloadData()
-            self.tableView.scrollToBottom()
+            self.tableView.scrollToBottom(animated: true)
             self.hideImagePanel()
             self.inputTextView.resignFirstResponder()
         }
@@ -217,7 +217,7 @@ extension ViewController {
         self.disableUserInteraction()
         MINTEL_LiveChat.items.append(MyMessage(systemMessageType2: "กรุณารอสักครู่"))
         self.tableView.reloadData()
-        self.tableView.scrollToBottom()
+        self.tableView.scrollToBottom(animated: true)
         MINTEL_LiveChat.chatBotMode = false
         MINTEL_LiveChat.instance.startSaleForce()
     }

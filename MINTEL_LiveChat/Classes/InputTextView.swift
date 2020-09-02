@@ -21,6 +21,10 @@ import ServiceChat
 
 class InputTextView: UIView {
     
+    
+    fileprivate let plusImage = UIImage(named: "plus", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil)
+    fileprivate let closeImage = UIImage(named: "close", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil)
+    
     weak var delegate: InputTextViewDelegate?
     
     static let textViewHeight: CGFloat = 34
@@ -115,6 +119,8 @@ class InputTextView: UIView {
     }
     
     fileprivate func setupLeftBarItems() {
+        
+        
         firstLeftButton.setImage(UIImage(named: "expand", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil), for: .normal)
         firstLeftButton.addTarget(self, action: #selector(firstLeftButtonTapped(_:)), for: .touchUpInside)
         firstLeftButton.tag = 100
@@ -130,6 +136,8 @@ class InputTextView: UIView {
         UIView.animate(withDuration: 0.2) {
             self.layoutIfNeeded()
         }
+        
+        
     }
     
     fileprivate func setupTwoRightButtons() {
@@ -144,53 +152,32 @@ class InputTextView: UIView {
     }
     
     fileprivate func showMoreLeftButton() {
-        
-        firstLeftButton.setImage(UIImage(named: "close", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil), for: .normal)
-        firstLeftButton.tag = 105
-        
-        secondLeftButton.setImage(UIImage(named: "camera", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil), for: .normal)
-        secondLeftButton.addTarget(self, action: #selector(secondButtonLeftTapped(_:)), for: .touchUpInside)
-        secondLeftButton.tag = 101
-        leftStackView.addArrangedSubview(secondLeftButton)
-        
-        thridLeftButton.setImage(UIImage(named: "image", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil), for: .normal)
-        thridLeftButton.addTarget(self, action: #selector(thirdButtonLeftTapped(_:)), for: .touchUpInside)
-        thridLeftButton.tag = 102
-        leftStackView.addArrangedSubview(thridLeftButton)
-        
-        fourthLeftButton.setImage(UIImage(named: "file", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil), for: .normal)
-        fourthLeftButton.addTarget(self, action: #selector(fourthButtonLeftTapped(_:)), for: .touchUpInside)
-        fourthLeftButton.tag = 104
-        leftStackView.addArrangedSubview(fourthLeftButton)
-        
-        
-        self.setLeftStackViewWidth(48 * 3)
-        UIView.animate(withDuration: 0.1) {
-            self.layoutIfNeeded()
+        DispatchQueue.main.async {
+            self.firstLeftButton.setImage(self.plusImage, for: .normal)
+            self.firstLeftButton.tag = 105
+            
+            self.secondLeftButton.setImage(UIImage(named: "camera", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil), for: .normal)
+            self.secondLeftButton.addTarget(self, action: #selector(self.secondButtonLeftTapped(_:)), for: .touchUpInside)
+            self.secondLeftButton.tag = 101
+            self.leftStackView.addArrangedSubview(self.secondLeftButton)
+            
+            self.thridLeftButton.setImage(UIImage(named: "image", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil), for: .normal)
+            self.thridLeftButton.addTarget(self, action: #selector(self.thirdButtonLeftTapped(_:)), for: .touchUpInside)
+            self.thridLeftButton.tag = 102
+            self.leftStackView.addArrangedSubview(self.thridLeftButton)
+            
+            self.fourthLeftButton.setImage(UIImage(named: "file", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil), for: .normal)
+            self.fourthLeftButton.addTarget(self, action: #selector(self.fourthButtonLeftTapped(_:)), for: .touchUpInside)
+            self.fourthLeftButton.tag = 104
+            self.leftStackView.addArrangedSubview(self.fourthLeftButton)
+            
+            
+            self.setLeftStackViewWidth(48 * 3)
+            UIView.animate(withDuration: 0.1) {
+                self.layoutIfNeeded()
+            }
         }
     }
-    
-    //    fileprivate func showSendButton() {
-    //        self.rightStackView.removeArrangedSubview(firstRightButton)
-    //        firstRightButton.removeFromSuperview()
-    //        secondRightButton.setImage(UIImage(named: "send"), for: .normal)
-    //        secondRightButton.tag = 121
-    //        self.setRightStackViewWidth(InputTextView.buttonItemHeight)
-    //        UIView.animate(withDuration: 0.2) {
-    //            self.layoutIfNeeded()
-    //        }
-    //    }
-    
-    //    fileprivate func showCameraAndMicButton() {
-    //        firstRightButton.setImage(UIImage(named: "camera"), for: .normal)
-    //        rightStackView.insertArrangedSubview(firstRightButton, at: 0)
-    //        secondRightButton.setImage(UIImage(named: "mic"), for: .normal)
-    //        secondRightButton.tag = 120
-    //        self.setRightStackViewWidth(InputTextView.buttonItemHeight * 2)
-    //        UIView.animate(withDuration: 0.2) {
-    //            self.layoutIfNeeded()
-    //        }
-    //    }
     
     func setLeftStackViewWidth(_ width: CGFloat) {
         leftStackViewWidthConstraint.constant = width
@@ -203,8 +190,17 @@ class InputTextView: UIView {
     @objc func firstLeftButtonTapped(_ sender: UIButton) {
         if (self.leftStackViewWidthConstraint.constant == 36) {
             self.showMoreLeftButton()
-        } else {
+            return
+        }
+        thridLeftButton.setImage(UIImage(named: "image", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil), for: .normal)
+        
+        if ((firstLeftButton.image(for: .normal)) == closeImage) {
             self.setupLeftBarItems()
+            self.textView.resignFirstResponder()
+            NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.hideBottomMenu),
+                    object: nil,
+                    userInfo:nil)
+            return
         }
         delegate?.didPressFirstLeftButton?(sender, textView)
     }
@@ -214,6 +210,7 @@ class InputTextView: UIView {
     }
     
     @objc func thirdButtonLeftTapped(_ sender: UIButton) {
+        firstLeftButton.setImage(plusImage, for: .normal)
         delegate?.didPressThirdLeftButton?(sender, textView)
     }
     

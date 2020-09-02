@@ -26,8 +26,10 @@ internal class MINTELNotifId {
     static let userIsTyping = "MINTEL_userIsTyping"
     static let userIsNotTyping = "MINTEL_userIsNotTyping"
     static let botTyped = "MINTEL_botTyped"
+    static let chatMenuAvailable = "MINTEL_chatMenuAvailable"
     static let toAgentMode = "MINTEL_toAgentMode"
     static let reallyExitChat = "MINTEL_reallyExitChat"
+    static let hideBottomMenu = "MINTEL_HideBottomMenu"
 }
 
 internal class SalesForceNotifId {
@@ -44,6 +46,7 @@ class ViewController: UIViewController {
     var queuePosition : Int = 99999
     
     var imagePanel:Bool = false
+    var chatMenuPanel:Bool = false
     
     var bottomHeight: CGFloat {
         let window = UIApplication.shared.keyWindow
@@ -71,6 +74,12 @@ class ViewController: UIViewController {
     
     var tableView: UITableView = {
         let v = UITableView()
+        v.translatesAutoresizingMaskIntoConstraints = false
+        return v
+    }()
+    
+    var menuTableView: UITableView = {
+       let v = UITableView()
         v.translatesAutoresizingMaskIntoConstraints = false
         return v
     }()
@@ -169,7 +178,7 @@ class ViewController: UIViewController {
         }
         
         self.tableView.reloadData()
-        self.tableView.scrollToBottom()
+        self.tableView.scrollToBottom(animated: true)
         self.setupNotification()
         self.setupSaleForcesNotification()
         
@@ -196,12 +205,45 @@ class ViewController: UIViewController {
                                                selector: #selector(MINTEL_reallyEndChat(_:)),
                                                name: Notification.Name(MINTELNotifId.reallyExitChat),
                                                object: nil)
+        
+        NotificationCenter.default.addObserver(self,
+                                                selector: #selector(MINTEL_hideBottomMenu(_:)),
+                                                name: Notification.Name(MINTELNotifId.hideBottomMenu),
+                                                object: nil)
+        
+        NotificationCenter.default.addObserver(self,
+                                                    selector: #selector(MINTEL_chatMenuAvailable(_:)),
+                                                    name: Notification.Name(MINTELNotifId.chatMenuAvailable),
+                                                    object: nil)
+        
+    }
+    
+    @objc func MINTEL_chatMenuAvailable(_ notification: Notification) {
+        DispatchQueue.main.async {
+            self.menuTableView.reloadData()
+        }
+    }
+    
+    @objc func MINTEL_hideBottomMenu(_ notification: Notification) {
+        DispatchQueue.main.async {
+            self.imagePanel = false
+            self.chatMenuPanel = false
+            self.inputTextView.hideLeftMenu()
+            let keyboardFrame = CGSize(width: 0.0, height: 0.0)
+            self.inputTextViewBottomConstraint.constant = 0
+            let oldOffset = self.tableView.contentOffset
+            self.menuTableView.frame = CGRect(x: 0, y: UIScreen.main.bounds.size.height, width: UIScreen.main.bounds.size.width, height: 180.0)
+            self.view.layoutIfNeeded()
+            self.tableView.setContentOffset(CGPoint(x: oldOffset.x, y: oldOffset.y - keyboardFrame.height + self.bottomHeight), animated: false)
+            self.inputTextView.becomeFirstResponder()
+            self.tableView.scrollToBottom(animated: false)
+        }
     }
     
     @objc func botTyped(_ notification: Notification) {
         DispatchQueue.main.async {
             self.tableView.reloadData()
-            self.tableView.scrollToBottom()
+            self.tableView.scrollToBottom(animated: true)
         }
     }
     
@@ -278,6 +320,15 @@ class ViewController: UIViewController {
         imagePanelView.delegate = self
         imagePanelView.dataSource = self
         imagePanelView.register(GridViewCell.self, forCellWithReuseIdentifier: String(describing: GridViewCell.self))
+        
+        // Setup Menu TableView
+        self.menuTableView = UITableView()
+        self.view.addSubview(self.menuTableView)
+        self.menuTableView.delegate = self
+        self.menuTableView.dataSource = self
+//        self.menuTableView.backgroundColor = UIColor.red
+        self.menuTableView.frame = CGRect(x: 0, y: UIScreen.main.bounds.size.height, width: UIScreen.main.bounds.size.width, height: 180.0)
+        self.view.layoutIfNeeded()
     }
     
     @objc func keyboardWillShow(notification:NSNotification){
@@ -317,73 +368,99 @@ class ViewController: UIViewController {
 extension ViewController: UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return MINTEL_LiveChat.items.count
+        if (tableView == self.menuTableView) {
+            return 1
+        } else {
+            return MINTEL_LiveChat.items.count
+        }
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        if (tableView == self.menuTableView) {
+            return MINTEL_LiveChat.chatMenus.count
+        } else {
+            return 1
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let item = MINTEL_LiveChat.items[indexPath.section]
-        let agent = item.agent
-        let bot = item.bot
         
-        var cellIdentifierId:String
-        switch item.kind {
-        case .systemMessageType1( _):
-            cellIdentifierId = CellIds.systemMessageCellId
-        case .systemMessageType2( _):
-            cellIdentifierId = CellIds.systemMessageType2CellId
-        case .text( _):
-            cellIdentifierId = agent || bot ? CellIds.receiverCellId : CellIds.senderCellId
-        case .menu( _, _):
-            cellIdentifierId = CellIds.receiverMenuCellid
-        case .image( _):
-            cellIdentifierId = CellIds.imageMessageCellId
-        case .agentJoin:
-            cellIdentifierId = CellIds.agentJoinCellId
-        }
-        
-        if let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifierId, for: indexPath) as? CustomTableViewCell {
-            cell.selectionStyle = .none
+        if (tableView == self.menuTableView) {
             
-            switch item.kind {
-            case .systemMessageType1(let txt):
-                cell.renderSystemMessage(text: txt)
-            case .systemMessageType2(let txt):
-                cell.renderSystemMessageType2(text: txt)
-            case .text(let txt):
-                //                if (item.bot) {
-                //                    cell.avatarView.image = UIImage(named: "chatbot", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil)
-                //                } else {
-                //                    cell.avatarView.image = UIImage(named: "agent", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil)
-                //                }
-                
-                if (agent || bot) {
-                    cell.renderReceiverCell(txt, item: item, index: indexPath.section, tableView: tableView)
-                } else {
-                    cell.renderSender(txt: txt, item: item)
-                }
-                
-                //                cell.textView.text = txt
-                //                let dateFormatter = DateFormatter()
-                //                dateFormatter.dateFormat = "HH:mm"
-                //                let dateString = dateFormatter.string(from: item.sentDate)
-            //                cell.timeLabel.text = dateString
-            case .menu(let title, let menus):
-                cell.setupMenuCell(title, menus, item)
-                let gesture = cell.tapGuesture ?? MyTapGuesture(target: self, action: #selector(didTap(_:)))
-                gesture.message = item
-                cell.addGestureRecognizer(gesture)
-            case .image(let img):
-                cell.renderImageCell(image: img, time: item.sentDate, item: item)
-            case .agentJoin(let agentName):
-                cell.renderAgentJoin(agentName)
-            }
+            let menu = MINTEL_LiveChat.chatMenus[indexPath.row]
+            let actions = menu["action"] as! [String:Any]
+            let label = actions["label"] as! String
+            
+            let cell = UITableViewCell(style: .default, reuseIdentifier: "TEST")
+            cell.textLabel?.text = label
+            cell.textLabel?.font = UIFont.systemFont(ofSize: 14)
+            cell.textLabel?.numberOfLines = 0
+            cell.textLabel?.lineBreakMode = .byWordWrapping
+            cell.accessoryType = .disclosureIndicator
             return cell
+            
+        } else {
+        
+            let item = MINTEL_LiveChat.items[indexPath.section]
+            let agent = item.agent
+            let bot = item.bot
+            
+            var cellIdentifierId:String
+            switch item.kind {
+            case .systemMessageType1( _):
+                cellIdentifierId = CellIds.systemMessageCellId
+            case .systemMessageType2( _):
+                cellIdentifierId = CellIds.systemMessageType2CellId
+            case .text( _):
+                cellIdentifierId = agent || bot ? CellIds.receiverCellId : CellIds.senderCellId
+            case .menu( _, _):
+                cellIdentifierId = CellIds.receiverMenuCellid
+            case .image( _):
+                cellIdentifierId = CellIds.imageMessageCellId
+            case .agentJoin:
+                cellIdentifierId = CellIds.agentJoinCellId
+            }
+            
+            if let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifierId, for: indexPath) as? CustomTableViewCell {
+                cell.selectionStyle = .none
+                
+                switch item.kind {
+                case .systemMessageType1(let txt):
+                    cell.renderSystemMessage(text: txt)
+                case .systemMessageType2(let txt):
+                    cell.renderSystemMessageType2(text: txt)
+                case .text(let txt):
+                    //                if (item.bot) {
+                    //                    cell.avatarView.image = UIImage(named: "chatbot", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil)
+                    //                } else {
+                    //                    cell.avatarView.image = UIImage(named: "agent", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil)
+                    //                }
+                    
+                    if (agent || bot) {
+                        cell.renderReceiverCell(txt, item: item, index: indexPath.section, tableView: tableView)
+                    } else {
+                        cell.renderSender(txt: txt, item: item)
+                    }
+                    
+                    //                cell.textView.text = txt
+                    //                let dateFormatter = DateFormatter()
+                    //                dateFormatter.dateFormat = "HH:mm"
+                    //                let dateString = dateFormatter.string(from: item.sentDate)
+                //                cell.timeLabel.text = dateString
+                case .menu(let title, let menus):
+                    cell.setupMenuCell(title, menus, item)
+                    let gesture = cell.tapGuesture ?? MyTapGuesture(target: self, action: #selector(didTap(_:)))
+                    gesture.message = item
+                    cell.addGestureRecognizer(gesture)
+                case .image(let img):
+                    cell.renderImageCell(image: img, time: item.sentDate, item: item)
+                case .agentJoin(let agentName):
+                    cell.renderAgentJoin(agentName)
+                }
+                return cell
+            }
+            return UITableViewCell()
         }
-        return UITableViewCell()
     }
     
     @objc func didTap(_ sender: MyTapGuesture? = nil) {
@@ -459,8 +536,8 @@ extension ViewController: UITableViewDataSource {
                         MINTEL_LiveChat.items.append(MyMessage(text: text, agent: false, bot: false))
                     }
                     self.tableView.reloadData()
-                    self.tableView.scrollToBottom()
-                    MINTEL_LiveChat.sendPost(text: text)
+                    self.tableView.scrollToBottom(animated: true)
+                    MINTEL_LiveChat.sendPost(text: text, menu: false)
                 }
             }
         }
@@ -468,34 +545,55 @@ extension ViewController: UITableViewDataSource {
 }
 
 extension ViewController: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if (tableView == self.menuTableView) {
+            let menu = MINTEL_LiveChat.chatMenus[indexPath.row]
+            let actions = menu["action"] as! [String:Any]
+            let text = actions["text"] as! String
+            let display = actions["display"] as? Bool ?? true
+            if (display) {
+                MINTEL_LiveChat.items.append(MyMessage(text: text, agent: false, bot: false))
+            }
+            self.tableView.reloadData()
+            self.tableView.scrollToBottom(animated: true)
+            MINTEL_LiveChat.sendPost(text: text, menu: false)
+        }
+    }
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         
-        let item = MINTEL_LiveChat.items[indexPath.section]
+        if (tableView == self.menuTableView) {
+            return UITableView.automaticDimension
+        } else {
         
-        switch item.kind {
-        case .systemMessageType1(let txt):
-            return CustomTableViewCell.calcRowHeightSystemMessage(text: txt)
-        case .systemMessageType2(let txt):
-            return CustomTableViewCell.calcRowHeightSystemMessageType2(text: txt)
-        case .text(let txt):
-            if (item.bot) {
-                return CustomTableViewCell.calcReceiverCell(txt, item: item)
-            } else {
-                return CustomTableViewCell.calcSender(txt: txt, item: item)
+            let item = MINTEL_LiveChat.items[indexPath.section]
+            
+            switch item.kind {
+            case .systemMessageType1(let txt):
+                return CustomTableViewCell.calcRowHeightSystemMessage(text: txt)
+            case .systemMessageType2(let txt):
+                return CustomTableViewCell.calcRowHeightSystemMessageType2(text: txt)
+            case .text(let txt):
+                if (item.bot) {
+                    return CustomTableViewCell.calcReceiverCell(txt, item: item)
+                } else {
+                    return CustomTableViewCell.calcSender(txt: txt, item: item)
+                }
+            case .menu(let title, let menus):
+                return CustomTableViewCell.calMenuCellHeight(title, menus, item)
+            case .image(let image):
+                return CustomTableViewCell.calcImageCellHeight(image)
+            case .agentJoin:
+                return CustomTableViewCell.calcAgentJoinCellHeight()
             }
-        case .menu(let title, let menus):
-            return CustomTableViewCell.calMenuCellHeight(title, menus, item)
-        case .image(let image):
-            return CustomTableViewCell.calcImageCellHeight(image)
-        case .agentJoin:
-            return CustomTableViewCell.calcAgentJoinCellHeight()
         }
     }
 }
 
 extension UITableView {
     
-    func scrollToBottom(){
+    func scrollToBottom(animated: Bool){
         
         DispatchQueue.main.async {
             if (self.numberOfSections > 0) {
@@ -503,7 +601,7 @@ extension UITableView {
                     row: self.numberOfRows(inSection:  self.numberOfSections-1) - 1,
                     section: self.numberOfSections - 1)
                 if self.hasRowAtIndexPath(indexPath: indexPath) {
-                    self.scrollToRow(at: indexPath, at: .bottom, animated: true)
+                    self.scrollToRow(at: indexPath, at: .bottom, animated: animated)
                 }
             }
         }
@@ -535,11 +633,11 @@ extension ViewController: InputTextViewDelegate {
         if (text.trimmingCharacters(in: .whitespacesAndNewlines).count > 0) {
             MINTEL_LiveChat.items.append(MyMessage(text: text, agent: false, bot: false))
             self.tableView.reloadData()
-            self.tableView.scrollToBottom()
+            self.tableView.scrollToBottom(animated: true)
             textView.text = ""
             
             if (MINTEL_LiveChat.chatBotMode) {
-                MINTEL_LiveChat.sendPost(text: text)
+                MINTEL_LiveChat.sendPost(text: text, menu: false)
             } else {
                 self.sendMessageToSaleForce(text: text)
             }
@@ -547,7 +645,12 @@ extension ViewController: InputTextViewDelegate {
     }
     
     func didPressFirstLeftButton(_ sender: UIButton, _ textView: UITextView) {
-        if (imagePanel) {
+        
+        
+        if (!chatMenuPanel) {
+            sender.setImage(UIImage(named: "close", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil), for: .normal)
+            self.showChatMenuPanel()
+        } else if (imagePanel) {
             sender.setImage(UIImage(named: "image", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil), for: .normal)
             inputTextView.hideLeftMenu()
             textView.becomeFirstResponder()
@@ -619,6 +722,7 @@ extension ViewController: InputTextViewDelegate {
         if (imagePanel) {
             sender.setImage(UIImage(named: "image", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil), for: .normal)
             self.hideImagePanel()
+            self.tableView.scrollToBottom(animated: false)
         } else {
             sender.setImage(UIImage(named: "image_active", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil), for: .normal)
             self.showImagePanel()
@@ -654,15 +758,51 @@ extension ViewController: InputTextViewDelegate {
         
     }
     
-    func showImagePanel() {
+    func showChatMenuPanel() {
+        
         self.inputTextView.textView.resignFirstResponder()
+        self.chatMenuPanel = true
+        self.imagePanel = false
+        self.menuTableView.isHidden = false
+        self.imagePanelView.isHidden = true
+        
+        let keyboardFrame = CGSize(width: 0, height: imagePanelHeight)
+        self.inputTextViewBottomConstraint.constant = -180.0
+        let oldOffset = self.tableView.contentOffset
+        self.menuTableView.frame = CGRect(x: 0, y: UIScreen.main.bounds.size.height - imagePanelHeight, width: UIScreen.main.bounds.size.width, height: 180.0)
+        self.view.layoutIfNeeded()
+        self.tableView.setContentOffset(CGPoint(x: oldOffset.x, y: oldOffset.y + keyboardFrame.height - self.bottomHeight), animated: false)
+        self.tableView.scrollToBottom(animated: false)
+    }
+    
+    func hideChatMenuPanel() {
+        self.imagePanel = false
+        self.chatMenuPanel = false
+        self.inputTextView.hideLeftMenu()
+        let keyboardFrame = CGSize(width: 0.0, height: 0.0)
+        self.inputTextViewBottomConstraint.constant = 0
+        let oldOffset = self.tableView.contentOffset
+        self.menuTableView.frame = CGRect(x: 0, y: UIScreen.main.bounds.size.height, width: UIScreen.main.bounds.size.width, height: 180.0)
+        self.view.layoutIfNeeded()
+        self.tableView.setContentOffset(CGPoint(x: oldOffset.x, y: oldOffset.y - keyboardFrame.height + self.bottomHeight), animated: false)
+        self.inputTextView.becomeFirstResponder()
+    }
+    
+    func showImagePanel() {
+        
+        self.inputTextView.textView.resignFirstResponder()
+        self.chatMenuPanel = false
         self.imagePanel = true
+        self.imagePanelView.isHidden = false
+        self.menuTableView.isHidden = true
+        
         let keyboardFrame = CGSize(width: 0, height: imagePanelHeight)
         self.inputTextViewBottomConstraint.constant = -180.0
         let oldOffset = self.tableView.contentOffset
         self.imagePanelView.frame = CGRect(x: 0, y: UIScreen.main.bounds.size.height - imagePanelHeight, width: UIScreen.main.bounds.size.width, height: 180.0)
         self.view.layoutIfNeeded()
         self.tableView.setContentOffset(CGPoint(x: oldOffset.x, y: oldOffset.y + keyboardFrame.height - self.bottomHeight), animated: false)
+        self.tableView.scrollToBottom(animated: false)
     }
     
     func hideImagePanel() {
@@ -708,7 +848,7 @@ extension ViewController : UINavigationControllerDelegate, UIImagePickerControll
         let data = selectedImage.jpegData(compressionQuality: 1.0)
         MINTEL_LiveChat.items.append(MyMessage(image: selectedImage))
         self.tableView.reloadData()
-        self.tableView.scrollToBottom()
+        self.tableView.scrollToBottom(animated: true)
         self.upload(imageData: data, imageName: fileName, fileData: nil, fileName: nil, parameters: ["session_id": "1"])
     }
 }
@@ -737,7 +877,7 @@ extension ViewController : UIDocumentMenuDelegate, UIDocumentPickerDelegate {
             let filename = (url.absoluteString as NSString).lastPathComponent
             MINTEL_LiveChat.items.append(MyMessage(text: filename, agent: false))
             self.tableView.reloadData()
-            self.tableView.scrollToBottom()
+            self.tableView.scrollToBottom(animated: true)
             do {
                 // Get the saved data
                 let savedData = try Data(contentsOf: url)
@@ -798,7 +938,6 @@ extension ViewController : UICollectionViewDataSource, UICollectionViewDelegate,
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let asset = fetchResult.object(at: indexPath.item)
-        print("Did Image")
         let options = PHImageRequestOptions()
         options.deliveryMode = .highQualityFormat
         options.resizeMode = .none
@@ -816,13 +955,16 @@ extension ViewController : UICollectionViewDataSource, UICollectionViewDelegate,
                 let data = image!.jpegData(compressionQuality: 1.0)
                 MINTEL_LiveChat.items.append(MyMessage(image: image!))
                 self.tableView.reloadData()
-                self.tableView.scrollToBottom()
+                self.tableView.scrollToBottom(animated: true)
                 self.upload(imageData: data, imageName: fileName, fileData: nil, fileName: nil, parameters: ["session_id": "1"])
             }
         }
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        if (fetchResult == nil) {
+            return 0
+        }
         return fetchResult.count
     }
     

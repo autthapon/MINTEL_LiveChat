@@ -50,7 +50,7 @@ extension ViewController {
                         let url = dict["url"] as? String ?? ""
                         if url.count > 0 {
                             if (MINTEL_LiveChat.chatBotMode) {
-                                MINTEL_LiveChat.sendPost(text: url)
+                                MINTEL_LiveChat.sendPost(text: url, menu:false)
                             } else {
                                 self.sendMessageToSaleForce(text: url)
                             }

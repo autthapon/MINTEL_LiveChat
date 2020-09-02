@@ -37,6 +37,7 @@ public class MINTEL_LiveChat: UIView {
     internal static var agentName:String = ""
     internal static var agentState:SaleforceAgentState = .start
     internal static var chatBotMode = true
+    internal static var chatMenus:[[String:Any]] = []
     internal static var items = [MyMessage]()
     
     
@@ -284,6 +285,8 @@ public class MINTEL_LiveChat: UIView {
             self.getAnnouncementMessage()
             MINTEL_LiveChat.sendOnNewSession()
         }
+        
+        MINTEL_LiveChat.sendPost(text: "สวัสดี", menu: true)
         
         MINTEL_LiveChat.checkTime()
     }
@@ -696,21 +699,21 @@ extension MINTEL_LiveChat  {
                     if let json = response.value {
                         debugPrint(json)
                         if json is [String:Any] {
-                            let dict = json as! [String: Any]
-                            let desc = dict["Description__c"] as? String ?? ""
-                            
-                            if desc.count > 0 {
-                                DispatchQueue.global(qos: .userInitiated).async {
-                                    MINTEL_LiveChat.items.append(MyMessage(text: desc, agent: true))
-                                    DispatchQueue.main.async {
-                                        MINTEL_LiveChat.sendPost(text: "สวัสดี")
-                                    }
-                                    
-                                    NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
-                                                                    object: nil,
-                                                                    userInfo:nil)
-                                }
-                            }
+//                            let dict = json as! [String: Any]
+//                            let desc = dict["Description__c"] as? String ?? ""
+//
+//                            if desc.count > 0 {
+//                                DispatchQueue.global(qos: .userInitiated).async {
+//                                    MINTEL_LiveChat.items.append(MyMessage(text: desc, agent: true))
+//                                    DispatchQueue.main.async {
+//                                        MINTEL_LiveChat.sendPost(text: "สวัสดี", menu: true)
+//                                    }
+//
+//                                    NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
+//                                                                    object: nil,
+//                                                                    userInfo:nil)
+//                                }
+//                            }
                             
                             
                         } else if let items = json as? [[String:Any]] {
@@ -737,7 +740,7 @@ extension MINTEL_LiveChat  {
                             } else {
                                 DispatchQueue.global(qos: .userInitiated).async {
                                     DispatchQueue.main.async {
-                                        MINTEL_LiveChat.sendPost(text: "__00_home__greeting")
+                                        MINTEL_LiveChat.sendPost(text: "__00_home__greeting", menu: false)
                                     }
                                     
                                     NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
@@ -817,7 +820,7 @@ extension MINTEL_LiveChat  {
         }
     }
     
-    internal static func sendPost(text: String) {
+    internal static func sendPost(text: String, menu: Bool) {
         
         let params : Parameters = ["session_id": MINTEL_LiveChat.userId,"text": text]
         let url = String(format: "%@/webhook", MINTEL_LiveChat.configuration?.webHookBaseUrl ?? "")
@@ -845,7 +848,7 @@ extension MINTEL_LiveChat  {
                             }
                             
                             if dict["message"] is String {
-                                debugPrint(dict["message"])
+//                                debugPrint(dict["message"])
                             } else {
                             
                                 let messages = dict["messages"] as! [[String: Any]]
@@ -859,12 +862,26 @@ extension MINTEL_LiveChat  {
                                     }
                                     let quickReplyTitle = body["text"] as? String ?? ""
                                     let quickReply = body["quickReply"] as? [String: Any] ?? nil
-                                    if (type == "text") {
-                                        if (quickReply != nil) {
-                                            let items = quickReply!["items"] as? [[String:Any]] ?? []
-                                            MINTEL_LiveChat.items.append(MyMessage(text: quickReplyTitle, agent: true, menu: items))
-                                        } else {
-                                            MINTEL_LiveChat.items.append(MyMessage(text: quickReplyTitle, agent: true))
+                                    if (menu) {
+                                        if (type == "text") {
+                                            if (quickReply != nil) {
+                                                let items = quickReply!["items"] as? [[String:Any]] ?? []
+                                                MINTEL_LiveChat.chatMenus = items
+                                                NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.chatMenuAvailable),
+                                                                                                                    object: nil,
+                                                                                                                    userInfo:nil)
+                                                debugPrint(items)
+                                                print("Menus Session")
+                                            }
+                                        }
+                                    } else {
+                                        if (type == "text") {
+                                            if (quickReply != nil) {
+                                                let items = quickReply!["items"] as? [[String:Any]] ?? []
+                                                MINTEL_LiveChat.items.append(MyMessage(text: quickReplyTitle, agent: true, menu: items))
+                                            } else {
+                                                MINTEL_LiveChat.items.append(MyMessage(text: quickReplyTitle, agent: true, bot: true))
+                                            }
                                         }
                                     }
                                 }
