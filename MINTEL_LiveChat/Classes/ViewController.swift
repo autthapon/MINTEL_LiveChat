@@ -548,6 +548,7 @@ extension ViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if (tableView == self.menuTableView) {
+            self.menuTableView.deselectRow(at: indexPath, animated: false)
             let menu = MINTEL_LiveChat.chatMenus[indexPath.row]
             let actions = menu["action"] as! [String:Any]
             let text = actions["text"] as! String
@@ -558,6 +559,10 @@ extension ViewController: UITableViewDelegate {
             self.tableView.reloadData()
             self.tableView.scrollToBottom(animated: true)
             MINTEL_LiveChat.sendPost(text: text, menu: false)
+            
+            self.inputTextView.hideLeftMenu()
+            self.inputTextView.resignFirstResponder()
+            self.MINTEL_hideBottomMenu(Notification(name: Notification.Name(rawValue: "TEST")))
         }
     }
     
