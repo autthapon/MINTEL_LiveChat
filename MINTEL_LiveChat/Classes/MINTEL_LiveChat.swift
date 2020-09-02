@@ -791,19 +791,19 @@ extension MINTEL_LiveChat  {
     internal static func checkTime() {
         // Timer 2 minutes
         self.stopTimer()
-//        MINTEL_LiveChat.first2MinutesTimer = Timer.scheduledTimer(withTimeInterval: 2 * 60, repeats: false) { (timer) in
-//            // Send Notification
-//            let notif = MINTEL_Notifications()
-//            notif.scheduleNotification(message: "ขณะนี้ท่านมีรายการสนทนากับศูนย์บริการทรูมันนี่อยู่")
-//            print("First notif fired.")
-//
-//            MINTEL_LiveChat.lastAMinuteTimer = Timer.scheduledTimer(withTimeInterval: 60, repeats: false, block: { (timer2) in
-//                self.items.append(MyMessage(text: "หากคุณลูกค้าไม่อยู่ในการสนทนา ผมขอจบการสนทนาเพื่อดูแลลูกค้าท่านอื่นต่อครับ หากต้องการข้อมูลสอบถามข้อมูลเพิ่มเติม สามารถติดต่อเข้ามาใหม่ได้ตลอด 24 ชั่วโมง ขอบคุณที่ใช้บริการทรูมันนี่ สวัสดีครับ", agent: false, bot: true))
-//                notif.scheduleNotification(message: "ขอบคุณสำหรับการสนทนา หากมีข้อสงสัยเพิ่มเติมสามารถเริ่มต้นแชทอีกครั้งเพื่อสอบถามข้อมูล")
-//                MINTEL_LiveChat.instance.reallyEndChat()
-//                print("Second notif fired.")
-//            })
-//        }
+        MINTEL_LiveChat.first2MinutesTimer = Timer.scheduledTimer(withTimeInterval: 2 * 60, repeats: false) { (timer) in
+            // Send Notification
+            let notif = MINTEL_Notifications()
+            notif.scheduleNotification(message: "ขณะนี้ท่านมีรายการสนทนากับศูนย์บริการทรูมันนี่อยู่")
+            print("First notif fired.")
+
+            MINTEL_LiveChat.lastAMinuteTimer = Timer.scheduledTimer(withTimeInterval: 60, repeats: false, block: { (timer2) in
+                self.items.append(MyMessage(text: "หากคุณลูกค้าไม่อยู่ในการสนทนา ผมขอจบการสนทนาเพื่อดูแลลูกค้าท่านอื่นต่อครับ หากต้องการข้อมูลสอบถามข้อมูลเพิ่มเติม สามารถติดต่อเข้ามาใหม่ได้ตลอด 24 ชั่วโมง ขอบคุณที่ใช้บริการทรูมันนี่ สวัสดีครับ", agent: false, bot: true))
+                notif.scheduleNotification(message: "ขอบคุณสำหรับการสนทนา หากมีข้อสงสัยเพิ่มเติมสามารถเริ่มต้นแชทอีกครั้งเพื่อสอบถามข้อมูล")
+                MINTEL_LiveChat.instance.reallyEndChat()
+                print("Second notif fired.")
+            })
+        }
     }
     
     internal static func stopTimer() {
