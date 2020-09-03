@@ -724,7 +724,11 @@ extension MINTEL_LiveChat  {
             "x-api-key": MINTEL_LiveChat.configuration?.xApikey ?? "" // "381b0ac187994f82bdc05c09d1034afa"
         ]
         
-        Alamofire
+        let manager = Alamofire.SessionManager.default
+        manager.session.configuration.timeoutIntervalForRequest = 10
+        manager.session.configuration.timeoutIntervalForResource = 10
+        
+        manager
             .request(url, method: .post, parameters: params, encoding: JSONEncoding.init(), headers: header)
             .responseJSON { (response) in
                 switch response.result {
@@ -794,12 +798,21 @@ extension MINTEL_LiveChat  {
                 "email" : MINTEL_LiveChat.configuration?.email ?? "",
                 "tmnid" : MINTEL_LiveChat.configuration?.tmnId ?? ""
         ]
-        let url = String(format: "%@onNewSessionMobile", MINTEL_LiveChat.configuration?.webHookBaseUrl ?? "")
+        let url = String(format: "%@/onNewSessionMobile", MINTEL_LiveChat.configuration?.webHookBaseUrl ?? "")
         let header:HTTPHeaders = [
             "x-api-key": MINTEL_LiveChat.configuration?.xApikey ?? "" // "381b0ac187994f82bdc05c09d1034afa"
         ]
         
-        Alamofire
+        let manager = Alamofire.SessionManager.default
+        manager.session.configuration.timeoutIntervalForRequest = 10
+        manager.session.configuration.timeoutIntervalForResource = 10
+        
+//        let configuration = URLSessionConfiguration.default
+//        configuration.timeoutIntervalForRequest = 1
+//        configuration.timeoutIntervalForResource = 1
+//        let alamoFireManager = Alamofire.SessionManager(configuration: configuration)
+        
+        manager
             .request(url, method: .post, parameters: params, encoding: JSONEncoding.init(), headers: header)
             .responseString(completionHandler: { response in
                 debugPrint(response)
