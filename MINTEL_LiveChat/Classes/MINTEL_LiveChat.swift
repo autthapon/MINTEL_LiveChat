@@ -998,7 +998,7 @@ extension MINTEL_LiveChat  {
                     }
             }
         } catch {
-            // return request(originalRequest, failedWith: error)
+            debugPrint("Error In Catch")
         }
     }
     
