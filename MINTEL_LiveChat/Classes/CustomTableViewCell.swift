@@ -341,7 +341,7 @@ class CustomTableViewCell: UITableViewCell {
 //                                        imgView.stopAnimating()
                                         let imaaa = UIImage(data: data!)
 //                                        imgView.image = imaaa
-                                        MINTEL_LiveChat.items[index] = MyMessage(image: imaaa!, agent: !MINTEL_LiveChat.chatBotMode, bot: true)
+                                        MINTEL_LiveChat.items[index] = MyMessage(image: imaaa!, imageUrl: txt, agent: !MINTEL_LiveChat.chatBotMode, bot: true)
                                         tableView.reloadData()
                                     }
                                 }.resume()

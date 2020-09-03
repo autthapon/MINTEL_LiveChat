@@ -10,7 +10,7 @@ import Foundation
 public enum MyMessageKind {
     case text(String)
     case menu(String, [[String:Any]])
-    case image(UIImage)
+    case image(UIImage, String)
     case systemMessageType1(String)
     case systemMessageType2(String)
     case agentJoin(String)
@@ -65,11 +65,11 @@ class MyMessage {
         self.init(kind: .menu(text, menu), agent: agent, bot: bot)
     }
     
-    convenience init(image: UIImage) {
-        self.init(kind: .image(image), agent: false, bot: false)
+    convenience init(image: UIImage, imageUrl:String) {
+        self.init(kind: .image(image, imageUrl), agent: false, bot: false)
     }
     
-    convenience init(image: UIImage, agent: Bool, bot : Bool) {
-        self.init(kind: .image(image), agent: agent, bot: bot)
+    convenience init(image: UIImage, imageUrl:String, agent: Bool, bot : Bool) {
+        self.init(kind: .image(image, imageUrl), agent: agent, bot: bot)
     }
 }

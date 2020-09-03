@@ -97,7 +97,7 @@ class ViewController: UIViewController {
         let height = (16.0 * size) / 9.0
         flowLayout.itemSize = CGSize(width: size, height: height)
         flowLayout.minimumInteritemSpacing = 0
-        flowLayout.minimumLineSpacing = 1
+        flowLayout.minimumLineSpacing = 3
         flowLayout.sectionInset = UIEdgeInsets(top: 2, left: 1, bottom: 1, right: 1)
         let v = UICollectionView(frame: CGRect.zero, collectionViewLayout: flowLayout)
         v.translatesAutoresizingMaskIntoConstraints = false
@@ -176,7 +176,7 @@ class ViewController: UIViewController {
             //            allPhotosOptions.includeHiddenAssets = false
             fetchResult = PHAsset.fetchAssets(with: .image, options: allPhotosOptions)
         }
-        
+        self.imagePanelView.reloadData()
         self.tableView.reloadData()
         self.tableView.scrollToBottom(animated: true)
         self.setupNotification()
@@ -269,7 +269,7 @@ class ViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        let size = ceil(UIScreen.main.bounds.size.width / 3.0) - 10
+        let size = ceil(UIScreen.main.bounds.size.width / 3.0) - 3.0
         thumbnailSize = CGSize(width: size, height: size)
         
         if (MINTEL_LiveChat.agentState == .waiting || MINTEL_LiveChat.agentState == .end) {
@@ -437,30 +437,22 @@ extension ViewController: UITableViewDataSource {
                 case .systemMessageType2(let txt):
                     cell.renderSystemMessageType2(text: txt)
                 case .text(let txt):
-                    //                if (item.bot) {
-                    //                    cell.avatarView.image = UIImage(named: "chatbot", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil)
-                    //                } else {
-                    //                    cell.avatarView.image = UIImage(named: "agent", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil)
-                    //                }
                     
                     if (agent || bot) {
                         cell.renderReceiverCell(txt, item: item, index: indexPath.section, tableView: tableView)
                     } else {
                         cell.renderSender(txt: txt, item: item)
                     }
-                    
-                    //                cell.textView.text = txt
-                    //                let dateFormatter = DateFormatter()
-                    //                dateFormatter.dateFormat = "HH:mm"
-                    //                let dateString = dateFormatter.string(from: item.sentDate)
-                //                cell.timeLabel.text = dateString
                 case .menu(let title, let menus):
                     cell.setupMenuCell(title, menus, item)
                     let gesture = cell.tapGuesture ?? MyTapGuesture(target: self, action: #selector(didTap(_:)))
                     gesture.message = item
                     cell.addGestureRecognizer(gesture)
-                case .image(let img):
+                case .image(let img, _):
                     cell.renderImageCell(image: img, time: item.sentDate, item: item)
+                    let gesture = cell.tapGuesture ?? MyTapGuesture(target: self, action: #selector(didTap(_:)))
+                    gesture.message = item
+                    cell.addGestureRecognizer(gesture)
                 case .agentJoin(let agentName):
                     cell.renderAgentJoin(agentName)
                 }
@@ -484,7 +476,9 @@ extension ViewController: UITableViewDataSource {
                 let touchLocation: CGPoint = (sender?.location(in: sender?.view))!
                 findMenuOnTap(menus: menus, title: title, yPosition: touchLocation.y, message: message)
             }
-            
+        case .image(let image, let imageUrl):
+            let temp:[String:Any] = ["image" : image, "imageUrl" : imageUrl]
+            self.performSegue(withIdentifier: "previewImage", sender: temp)
         default:
             return
         }
@@ -594,7 +588,7 @@ extension ViewController: UITableViewDelegate {
                 }
             case .menu(let title, let menus):
                 return CustomTableViewCell.calMenuCellHeight(title, menus, item)
-            case .image(let image):
+            case .image(let image, _ ):
                 return CustomTableViewCell.calcImageCellHeight(image)
             case .agentJoin:
                 return CustomTableViewCell.calcAgentJoinCellHeight()
@@ -631,6 +625,17 @@ extension UITableView {
     
     func hasRowAtIndexPath(indexPath: IndexPath) -> Bool {
         return indexPath.section < self.numberOfSections && indexPath.row < self.numberOfRows(inSection: indexPath.section)
+    }
+}
+
+extension ViewController {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if (segue.identifier == "previewImage") {
+            let temp = sender as! [String:Any]
+            let destination = segue.destination as! ImagePreviewController
+            destination.imageUrl = temp["imageUrl"] as? String
+            destination.image = temp["image"] as? UIImage
+        }
     }
 }
 
@@ -858,7 +863,7 @@ extension ViewController : UINavigationControllerDelegate, UIImagePickerControll
         
         let fileName = "file.jpeg"
         let data = selectedImage.jpegData(compressionQuality: 1.0)
-        MINTEL_LiveChat.items.append(MyMessage(image: selectedImage))
+        MINTEL_LiveChat.items.append(MyMessage(image: selectedImage, imageUrl: ""))
         self.tableView.reloadData()
         self.tableView.scrollToBottom(animated: true)
         self.upload(imageData: data, imageName: fileName, fileData: nil, fileName: nil, parameters: ["session_id": "1"])
@@ -965,7 +970,7 @@ extension ViewController : UICollectionViewDataSource, UICollectionViewDelegate,
                 
                 let fileName = "file.jpeg"
                 let data = image!.jpegData(compressionQuality: 1.0)
-                MINTEL_LiveChat.items.append(MyMessage(image: image!))
+                MINTEL_LiveChat.items.append(MyMessage(image: image!, imageUrl: ""))
                 self.tableView.reloadData()
                 self.tableView.scrollToBottom(animated: true)
                 self.upload(imageData: data, imageName: fileName, fileData: nil, fileName: nil, parameters: ["session_id": "1"])
