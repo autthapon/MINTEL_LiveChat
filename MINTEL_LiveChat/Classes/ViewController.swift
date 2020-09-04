@@ -763,10 +763,10 @@ extension ViewController: InputTextViewDelegate {
         importMenu.delegate = self
         importMenu.modalPresentationStyle = .formSheet
         importMenu.modalPresentationStyle = .fullScreen
+        if #available(iOS 11.0, *) {
+            importMenu.allowsMultipleSelection = true;
+        }
         self.present(importMenu, animated: true) {
-            if #available(iOS 11.0, *) {
-                importMenu.allowsMultipleSelection = true;
-            }
         }
         
         
@@ -895,7 +895,9 @@ extension ViewController : UIDocumentMenuDelegate, UIDocumentPickerDelegate {
     
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
         if urls.count > 0 {
-            self.documentPicker(url: urls[0])
+            urls.forEach { url in
+                self.documentPicker(url: url)
+            }
         }
     }
     
