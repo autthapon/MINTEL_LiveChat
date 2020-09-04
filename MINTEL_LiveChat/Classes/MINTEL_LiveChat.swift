@@ -674,7 +674,7 @@ extension MINTEL_LiveChat : SCSChatSessionDelegate {
         DispatchQueue.main.async {
             
             
-            if (self.queueLabel.tag < Int.max && position.intValue >= 0) {
+            if (self.queueLabel.tag < Int.max && position.intValue > 0) {
                 MINTEL_LiveChat.items.removeLast()
             }
             if (self.queueLabel.tag == Int.max) {
@@ -688,7 +688,7 @@ extension MINTEL_LiveChat : SCSChatSessionDelegate {
             MINTEL_LiveChat.agentState = .waiting
             self.reLayoutView()
             
-            if (position.intValue <= self.queueLabel.tag && position.intValue >= 0) {
+            if (position.intValue <= self.queueLabel.tag && position.intValue > 0) {
                 
                 MINTEL_LiveChat.items.append(MyMessage(systemMessageType1: String(format: "คิวของคุณคือลำดับที่ %d", position.intValue)))
             }
@@ -705,6 +705,7 @@ extension MINTEL_LiveChat : SCSChatSessionDelegate {
     public func session(_ session: SCSChatSession!, didEnd endEvent: SCSChatSessionEndEvent!) {
         debugPrint("Session End")
         MINTEL_LiveChat.agentState = .waiting
+        MINTEL_LiveChat.items.append(MyMessage(systemMessageType1: "จบการสนทนา"))
         NotificationCenter.default.post(name: Notification.Name(SalesForceNotifId.didEnd),
                                         object: nil,
                                         userInfo:["session": session, "event": endEvent])
@@ -1019,6 +1020,10 @@ extension MINTEL_LiveChat  {
 extension MINTEL_LiveChat : SCSChatEventDelegate {
     
     public func session(_ session: SCSChatSession!, agentJoined agentjoinedEvent: SCSAgentJoinEvent!) {
+        
+        MINTEL_LiveChat.items.removeLast()
+        MINTEL_LiveChat.items.append(MyMessage(systemMessageType1: String(format: "คิวของคุณคือลำดับที่ 0")))
+        
         let agentName = agentjoinedEvent.sender?.name ?? "agent"
         MINTEL_LiveChat.agentName = agentName
         MINTEL_LiveChat.items.append(MyMessage(agentJoin: true, agentName: agentName))

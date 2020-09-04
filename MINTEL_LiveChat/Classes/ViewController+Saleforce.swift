@@ -123,13 +123,28 @@ extension ViewController {
     @objc func saleForcesAgentLeft(_ notification: Notification) {
         let _:SCSChatSession = notification.userInfo?["session"] as! SCSChatSession
         let _:SCSAgentLeftConferenceEvent = notification.userInfo?["event"] as! SCSAgentLeftConferenceEvent
-        MINTEL_LiveChat.instance.reallyEndChat()
+        
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+            self.tableView.scrollToBottom(animated: true)
+        }
+        
+        self.disableUserInteraction()
+        
+//        MINTEL_LiveChat.instance.reallyEndChat()
     }
     
     @objc func saleForcesDidEnd(_ notification: Notification) {
         let _:SCSChatSession = notification.userInfo?["session"] as! SCSChatSession
         let _:SCSChatSessionEndEvent = notification.userInfo?["event"] as! SCSChatSessionEndEvent
-        MINTEL_LiveChat.instance.reallyEndChat()
+        
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+            self.tableView.scrollToBottom(animated: true)
+        }
+        
+        self.disableUserInteraction()
+//        MINTEL_LiveChat.instance.reallyEndChat()
     }
     
     fileprivate func reallyEndChat() {
