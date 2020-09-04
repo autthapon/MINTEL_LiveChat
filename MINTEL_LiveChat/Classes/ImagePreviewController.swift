@@ -14,6 +14,7 @@ class ImagePreviewController : UIViewController {
     @IBOutlet var scrollView:UIScrollView!
     @IBOutlet var imageView:UIImageView!
     @IBOutlet var btnCloses:UIButton!
+    @IBOutlet var btnDownload:UIButton!
     
     var imageUrl:String? = nil
     var image:UIImage? = nil
@@ -24,6 +25,9 @@ class ImagePreviewController : UIViewController {
         
         let closeImage = UIImage(named: "close_big", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
         self.btnCloses.setImage(closeImage, for: .normal)
+        
+        let downloadImage = UIImage(named: "download", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
+        self.btnDownload.setImage(downloadImage, for: .normal)
         
         if self.imageUrl != nil && self.imageUrl?.count ?? 0 > 0 {
             self.previewImageFromUrl(txt: self.imageUrl!)
@@ -65,6 +69,24 @@ class ImagePreviewController : UIViewController {
     
     @objc @IBAction func closePage(_ sender:UIButton) {
         self.dismiss(animated: true, completion: nil)
+    }
+    
+    @objc @IBAction func downloadImage(_ sender:UIButton) {
+        guard let image = imageView.image else { return }
+        UIImageWriteToSavedPhotosAlbum(image, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)
+    }
+    
+    @objc func image(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
+        if let error = error {
+            // we got back an error!
+            let ac = UIAlertController(title: "เกิดข้อผิดพลาด", message: error.localizedDescription, preferredStyle: .alert)
+            ac.addAction(UIAlertAction(title: "ปิด", style: .default))
+            present(ac, animated: true)
+        } else {
+            let ac = UIAlertController(title: "บันทึกข้อมูลเรียบร้อย", message: "ทำการบันทึกรูปภาพเรียบร้อยแล้ว", preferredStyle: .alert)
+            ac.addAction(UIAlertAction(title: "ปิด", style: .default))
+            present(ac, animated: true)
+        }
     }
 }
 

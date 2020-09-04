@@ -422,7 +422,7 @@ extension ViewController: UITableViewDataSource {
                 cellIdentifierId = agent || bot ? CellIds.receiverCellId : CellIds.senderCellId
             case .menu( _, _):
                 cellIdentifierId = CellIds.receiverMenuCellid
-            case .image( _):
+            case .image( _, _):
                 cellIdentifierId = CellIds.imageMessageCellId
             case .agentJoin:
                 cellIdentifierId = CellIds.agentJoinCellId
@@ -430,6 +430,7 @@ extension ViewController: UITableViewDataSource {
             
             if let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifierId, for: indexPath) as? CustomTableViewCell {
                 cell.selectionStyle = .none
+                cell.viewController = self
                 
                 switch item.kind {
                 case .systemMessageType1(let txt):
@@ -449,7 +450,7 @@ extension ViewController: UITableViewDataSource {
                     gesture.message = item
                     cell.addGestureRecognizer(gesture)
                 case .image(let img, _):
-                    cell.renderImageCell(image: img, time: item.sentDate, item: item)
+                    cell.renderImageCell(image: img, time: item.sentDate, item: item, index: indexPath.section)
                     let gesture = cell.tapGuesture ?? MyTapGuesture(target: self, action: #selector(didTap(_:)))
                     gesture.message = item
                     cell.addGestureRecognizer(gesture)

@@ -33,62 +33,6 @@ class CustomTableViewCell: UITableViewCell {
     var tapGuesture:MyTapGuesture?
     var menuLabel:[UILabel] = []
     
-    //    var avatarView: UIImageView = {
-    //        let v = UIImageView()
-    //        v.translatesAutoresizingMaskIntoConstraints = false
-    //        return v
-    //    }()
-    //
-    //    var bgView: UIView = {
-    //        let v = UIView()
-    //        v.translatesAutoresizingMaskIntoConstraints = false
-    //        return v
-    //    }()
-    
-    //    var topLabel: UILabel = {
-    //        let v = UILabel()
-    //        v.translatesAutoresizingMaskIntoConstraints = false
-    //        return v
-    //    }()
-    //
-    //    var bottomLabel: UILabel = {
-    //        let v = UILabel()
-    //        v.translatesAutoresizingMaskIntoConstraints = false
-    //        return v
-    //    }()
-    //
-    //    var timeLabel: UILabel = {
-    //        let v = UILabel()
-    //        v.translatesAutoresizingMaskIntoConstraints = false
-    //        return v
-    //    }()
-    
-    //    var statusLabel: UILabel = {
-    //        let v = UILabel()
-    //        v.translatesAutoresizingMaskIntoConstraints = false
-    //        return v
-    //    }()
-    //
-    //    var imgView: UIImageView = {
-    //        let v = UIImageView()
-    //        v.translatesAutoresizingMaskIntoConstraints = false
-    //        return v
-    //    }()
-    
-    //    var textView: UITextView = {
-    //        let v = UITextView()
-    //        v.translatesAutoresizingMaskIntoConstraints = false
-    //        return v
-    //    }()
-    
-    //    var showTopLabel = true {
-    //        didSet {
-    //            textviewTopConstraintToBg.isActive = !showTopLabel
-    //            textviewTopConstraintToTopLabel.isActive = showTopLabel
-    ////            topLabel.isHidden = !showTopLabel
-    //        }
-    //    }
-    
     let innerSpacing: CGFloat = 4
     
     let secondaryPadding: CGFloat = 8
@@ -96,6 +40,8 @@ class CustomTableViewCell: UITableViewCell {
     var textviewTopConstraintToBg: NSLayoutConstraint!
     
     var textviewTopConstraintToTopLabel: NSLayoutConstraint!
+    
+    var viewController:UIViewController?
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -316,13 +262,8 @@ class CustomTableViewCell: UITableViewCell {
                         if contentType.contains("image") {
                             DispatchQueue.main.async {
                                 textView.isHidden = true
-//                                let imgView = UIImageView()
-//                                self.contentView.addSubview(imgView)
-//                                imgView.frame = CGRect(x: avartar.frame.origin.x + avartarWidth + 5, y: 0, width: 200, height: 200)
-//                                imgView.startAnimating()
                                 URLSession.shared.dataTask(with: url) { (data, response, error) in
                                     if error != nil {
-//                                        print("Failed fetching image:", error)
                                         DispatchQueue.main.async {
                                             textView.isHidden = false
                                         }
@@ -330,7 +271,6 @@ class CustomTableViewCell: UITableViewCell {
                                     }
 
                                     guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
-//                                        print("Not a proper HTTPURLResponse or statusCode")
                                         DispatchQueue.main.async {
                                             textView.isHidden = false
                                         }
@@ -338,9 +278,7 @@ class CustomTableViewCell: UITableViewCell {
                                     }
 
                                     DispatchQueue.main.async {
-//                                        imgView.stopAnimating()
                                         let imaaa = UIImage(data: data!)
-//                                        imgView.image = imaaa
                                         MINTEL_LiveChat.items[index] = MyMessage(image: imaaa!, imageUrl: txt, agent: !MINTEL_LiveChat.chatBotMode, bot: true)
                                         tableView.reloadData()
                                     }
@@ -594,7 +532,7 @@ class CustomTableViewCell: UITableViewCell {
         //        self.topLabel.isHidden = true
     }
     
-    func renderImageCell(image:UIImage, time: Date, item: MyMessage) {
+    func renderImageCell(image:UIImage, time: Date, item: MyMessage, index: Int) {
         
         self.contentView.subviews.forEach { (view) in
             view.removeFromSuperview()
@@ -631,6 +569,15 @@ class CustomTableViewCell: UITableViewCell {
             let dateString = dateFormatter.string(from: time)
             timelbl.text = dateString
             
+            let btnDownload = UIButton()
+            self.contentView.addSubview(btnDownload)
+            var downloadImage = UIImage(named: "download", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil)
+            downloadImage = downloadImage?.MyResizeImage(targetSize: CGSize(width:20,height: 20))
+            btnDownload.setImage(downloadImage, for: .normal)
+            btnDownload.tag = index
+            btnDownload.frame = CGRect(x: imgView.frame.origin.x + imgView.frame.size.width + CGFloat(5.0), y: imgView.frame.origin.y + imgView.frame.size.height - CGFloat(35), width: 30, height: 30)
+            btnDownload.addTarget(self, action: #selector(download(_:)), for: .touchUpInside)
+            
         } else {
             let xPosition = screen.width - img.size.width - 10.0
             imgView.frame = CGRect(x: xPosition, y: 10, width: img.size.width, height: img.size.height)
@@ -648,9 +595,41 @@ class CustomTableViewCell: UITableViewCell {
             dateFormatter.dateFormat = "HH:mm"
             let dateString = dateFormatter.string(from: time)
             timelbl.text = dateString
+            
+            let btnDownload = UIButton()
+            self.contentView.addSubview(btnDownload)
+            var downloadImage = UIImage(named: "download", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil)
+            downloadImage = downloadImage?.MyResizeImage(targetSize: CGSize(width:20,height: 20))
+            btnDownload.tag = index
+            btnDownload.setImage(downloadImage, for: .normal)
+            btnDownload.frame = CGRect(x: imgView.frame.origin.x - CGFloat(35.0), y: imgView.frame.origin.y + imgView.frame.size.height - CGFloat(35), width: 30, height: 30)
+            btnDownload.addTarget(self, action: #selector(download(_:)), for: .touchUpInside)
         }
+    }
+    
+    @objc func download(_ sender:UIButton) {
+        let index = sender.tag
+        let message = MINTEL_LiveChat.items[index]
         
-        
+        switch message.kind {
+        case .image(let img, _):
+            UIImageWriteToSavedPhotosAlbum(img, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)
+        default:
+            return
+        }
+    }
+    
+    @objc func image(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
+        if let error = error {
+            // we got back an error!
+            let ac = UIAlertController(title: "เกิดข้อผิดพลาด", message: error.localizedDescription, preferredStyle: .alert)
+            ac.addAction(UIAlertAction(title: "ปิด", style: .default))
+            self.viewController?.present(ac, animated: true)
+        } else {
+            let ac = UIAlertController(title: "บันทึกข้อมูลเรียบร้อย", message: "ทำการบันทึกรูปภาพเรียบร้อยแล้ว", preferredStyle: .alert)
+            ac.addAction(UIAlertAction(title: "ปิด", style: .default))
+            self.viewController?.present(ac, animated: true)
+        }
     }
     
     func renderAgentJoin(_ agentName:String) {
