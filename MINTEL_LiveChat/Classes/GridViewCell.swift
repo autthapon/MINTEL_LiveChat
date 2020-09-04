@@ -11,6 +11,7 @@ class GridViewCell: UICollectionViewCell {
     
     var imageView: UIImageView = UIImageView()
     var livePhotoBadgeImageView: UIImageView = UIImageView()
+    var checkbox:Checkbox = Checkbox()
     
     var representedAssetIdentifier: String!
     
@@ -38,6 +39,15 @@ class GridViewCell: UICollectionViewCell {
         imageView.frame = CGRect(x: 0, y: 0, width: self.contentView.bounds.size.width, height: self.contentView.bounds.size.height)
         imageView.contentMode = .scaleAspectFit
         self.contentView.addSubview(livePhotoBadgeImageView)
+        
+        self.contentView.addSubview(checkbox)
+        checkbox.frame = CGRect(x: self.contentView.bounds.size.width - 30, y: 5, width: 25, height: 25)
+        checkbox.borderStyle = .circle
+        checkbox.checkmarkStyle = .tick
+        checkbox.checkedBorderColor = UIColor(MyHexString: "#FF8300")
+        checkbox.checkboxFillColor = UIColor(MyHexString: "#FF8300")
+        checkbox.borderLineWidth = 0
+        checkbox.checkmarkColor = UIColor.white
     }
     
     required init?(coder: NSCoder) {

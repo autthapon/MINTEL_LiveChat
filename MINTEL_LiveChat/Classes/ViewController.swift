@@ -72,6 +72,7 @@ class ViewController: UIViewController {
     fileprivate let imageManager = PHCachingImageManager()
     fileprivate var thumbnailSize: CGSize!
     fileprivate var previousPreheatRect = CGRect.zero
+    fileprivate var imageSelected:[Int] = []
     
     var tableView: UITableView = {
         let v = UITableView()
@@ -243,7 +244,6 @@ class ViewController: UIViewController {
     
     @objc func botTyped(_ notification: Notification) {
         DispatchQueue.main.async {
-            self.enableUserInteraction()
             self.tableView.reloadData()
             self.tableView.scrollToBottom(animated: true)
             if (MINTEL_LiveChat.chatCanTyped) {
@@ -256,12 +256,10 @@ class ViewController: UIViewController {
         self.switchToAgentMode()
     }
     
-    internal func disableUserInteraction() {
-        self.inputTextView.MINTEL_reallyEndChat(Notification(name: Notification.Name(rawValue: "TEST")))
-    }
-    
-    internal func enableUserInteraction() {
-        
+    internal func disableUserInteraction(_ sendEnable:Bool = false) {
+        let userInfo:[String: Any] = ["sendEnable" : sendEnable]
+        let notif = Notification(name: Notification.Name(rawValue: "TEST"), userInfo: userInfo)
+        self.inputTextView.MINTEL_reallyEndChat(notif)
     }
     
     deinit {
@@ -546,6 +544,9 @@ extension ViewController: UITableViewDataSource {
                     self.tableView.reloadData()
                     self.tableView.scrollToBottom(animated: true)
                     MINTEL_LiveChat.sendPost(text: text, menu: false)
+                    if (self.imagePanel) {
+                        self.hideImagePanel()
+                    }
                 }
             }
         }
@@ -668,6 +669,20 @@ extension ViewController: InputTextViewDelegate {
             } else {
                 self.sendMessageToSaleForce(text: text)
             }
+        } else if (self.imagePanel) {
+            if (self.imageSelected.count > 0) {
+                // Send Image
+                self.imageSelected.forEach { (index) in
+                    self.sendImageToWebhook(index: index)
+                }
+                
+                self.imageSelected.removeAll()
+                self.imagePanelView.reloadData()
+                if (imagePanel) {
+                    self.hideImagePanel()
+                    self.checkImageSelectedForDisableInput()
+                }
+            }
         }
     }
     
@@ -692,7 +707,7 @@ extension ViewController: InputTextViewDelegate {
         selectImageFrom(.camera)
     }
     
-    func checkCameraAccess() {
+    internal func checkCameraAccess() {
         switch AVCaptureDevice.authorizationStatus(for: .video) {
         case .denied:
             print("Denied, request permission from settings")
@@ -837,6 +852,7 @@ extension ViewController: InputTextViewDelegate {
     
     func hideImagePanel() {
         self.imagePanel = false
+        self.imageSelected.removeAll()
         self.inputTextView.hideLeftMenu()
         let keyboardFrame = CGSize(width: 0.0, height: 0.0)
         self.inputTextViewBottomConstraint.constant = 0
@@ -845,6 +861,7 @@ extension ViewController: InputTextViewDelegate {
         self.view.layoutIfNeeded()
         self.tableView.setContentOffset(CGPoint(x: oldOffset.x, y: oldOffset.y - keyboardFrame.height + self.bottomHeight), animated: false)
         self.inputTextView.becomeFirstResponder()
+        self.imagePanelView.reloadData()
     }
 }
 
@@ -932,6 +949,24 @@ extension ViewController : UICollectionViewDataSource, UICollectionViewDelegate,
         return thumbnailSize
     }
     
+    @objc fileprivate func didSelectImage(_ sender: Checkbox) {
+        if (sender.isChecked) {
+            self.imageSelected.append(sender.tag)
+        } else {
+            self.imageSelected = self.imageSelected.filter { $0 != sender.tag }
+        }
+        self.imageSelected = self.imageSelected.sorted()
+        debugPrint(self.imageSelected)
+        self.checkImageSelectedForDisableInput()
+    }
+    
+    fileprivate func checkImageSelectedForDisableInput() {
+        if (self.imageSelected.count > 0) {
+            self.inputTextView.MINTEL_inputTextForImageSelectedState(enable: false)
+        } else {
+            self.inputTextView.MINTEL_inputTextForImageSelectedState(enable: true)
+        }
+    }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let asset = fetchResult.object(at: indexPath.item)
@@ -949,6 +984,9 @@ extension ViewController : UICollectionViewDataSource, UICollectionViewDelegate,
         
         // Request an image for the asset from the PHCachingImageManager.
         cell.representedAssetIdentifier = asset.localIdentifier
+        cell.checkbox.tag = indexPath.item
+        cell.checkbox.addTarget(self, action: #selector(self.didSelectImage(_:)), for: .valueChanged)
+        cell.checkbox.isChecked = self.imageSelected.contains(indexPath.item)
         let options = PHImageRequestOptions()
         options.deliveryMode = .highQualityFormat
         options.resizeMode = .exact
@@ -969,20 +1007,27 @@ extension ViewController : UICollectionViewDataSource, UICollectionViewDelegate,
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let asset = fetchResult.object(at: indexPath.item)
+        self.sendImageToWebhook(index: indexPath.item)
+        if (imagePanel) {
+            self.hideImagePanel()
+            self.checkImageSelectedForDisableInput()
+        }
+    }
+    
+    fileprivate func sendImageToWebhook(index: Int) {
+        let asset = fetchResult.object(at: index)
         let options = PHImageRequestOptions()
         options.deliveryMode = .highQualityFormat
         options.resizeMode = .none
-        options.isSynchronous = false
+        options.isSynchronous = true
         options.isNetworkAccessAllowed = true
         imageManager.requestImage(for: asset, targetSize: PHImageManagerMaximumSize , contentMode: .aspectFill, options: options) { (image, info) in
             let isDegraded = (info?[PHImageResultIsDegradedKey] as? Bool) ?? false
             if isDegraded {
                 return
             }
-            
+    
             if (image != nil) {
-                
                 let fileName = "file.jpeg"
                 let data = image!.jpegData(compressionQuality: 1.0)
                 MINTEL_LiveChat.items.append(MyMessage(image: image!, imageUrl: ""))

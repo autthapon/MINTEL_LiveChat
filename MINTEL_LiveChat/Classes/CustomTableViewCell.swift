@@ -573,7 +573,8 @@ class CustomTableViewCell: UITableViewCell {
     }
     
     static func calcImageCellHeight(_ image:UIImage) -> CGFloat {
-        return 200 + 30
+        let img = image.MyResizeImage(targetSize: CGSize(width:200,height: 200))
+        return img.size.height + 13 + 20
     }
     
     func setupMenuCell(_ title:String,_ menus:[[String:Any]], _ item : MyMessage) {

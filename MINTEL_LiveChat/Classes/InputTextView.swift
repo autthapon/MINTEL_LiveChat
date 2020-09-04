@@ -279,14 +279,26 @@ extension InputTextView {
         }
     }
     
+    internal func MINTEL_inputTextForImageSelectedState(enable:Bool) {
+        DispatchQueue.main.async {
+            self.textView.isUserInteractionEnabled = enable
+        }
+    }
     
     @objc func MINTEL_reallyEndChat(_ notification: Notification) {
         
         DispatchQueue.main.async {
+            
+//            notification.userInfo
+            var sendEnable:Bool = false
+            if (notification.userInfo != nil) {
+                sendEnable = notification.userInfo?["sendEnable"] as? Bool ?? false
+            }
+            
             self.textView.resignFirstResponder()
             self.hideLeftMenu()
             self.leftStackView.isUserInteractionEnabled = false
-            self.rightStackView.isUserInteractionEnabled = false
+            self.rightStackView.isUserInteractionEnabled = sendEnable
             self.textView.isUserInteractionEnabled = false
             self.textView.isEditable = false
         }

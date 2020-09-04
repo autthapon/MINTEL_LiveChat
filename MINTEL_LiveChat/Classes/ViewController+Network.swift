@@ -14,6 +14,8 @@ extension ViewController {
     
     internal func upload(imageData: Data?, imageName:String?, fileData: Data?, fileName:String?, parameters: [String : Any]) {
         
+        MINTEL_LiveChat.chatUserTypedIn = true
+        
         let url = String(format: "%@/uploadFile", MINTEL_LiveChat.configuration?.uploadBaseUrl ?? "") // "https://us-central1-test-tmn-bot.cloudfunctions.net/uploadFile"
         
         let headers: HTTPHeaders = [
@@ -35,6 +37,9 @@ extension ViewController {
             }
             
         }, usingThreshold: UInt64.init(), to: url, method: .post, headers: headers) { (result) in
+            
+            MINTEL_LiveChat.checkTime()
+            
             switch result{
             case .success(let upload, _, _):
                 upload.responseJSON { response in
@@ -50,7 +55,7 @@ extension ViewController {
                         let url = dict["url"] as? String ?? ""
                         if url.count > 0 {
                             if (MINTEL_LiveChat.chatBotMode) {
-                                MINTEL_LiveChat.sendPost(text: url, menu:false)
+//                                MINTEL_LiveChat.sendPost(text: url, menu:false)
                             } else {
                                 self.sendMessageToSaleForce(text: url)
                             }
