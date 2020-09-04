@@ -9,6 +9,7 @@ import Foundation
 
 public enum MyMessageKind {
     case text(String)
+    case file(String, URL)
     case menu(String, [[String:Any]])
     case image(UIImage, String)
     case systemMessageType1(String)
@@ -39,6 +40,10 @@ class MyMessage {
     
     convenience init(text: String, agent: Bool) {
         self.init(kind: .text(text), agent: agent, bot: true)
+    }
+    
+    convenience init(fileName: String, fileURL: URL) {
+        self.init(kind: .file(fileName, fileURL), agent: false, bot: false)
     }
     
     convenience init(systemMessageType1: String) {

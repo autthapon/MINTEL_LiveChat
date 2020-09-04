@@ -20,6 +20,7 @@ internal class CellIds {
     static let systemMessageType2CellId = "systemMessageType2CellId"
     static let imageMessageCellId = "imageCellId"
     static let agentJoinCellId = "agentJoinCellId"
+    static let fileCellid = "fileCellid"
 }
 
 internal class MINTELNotifId {
@@ -305,6 +306,7 @@ class ViewController: UIViewController {
         tableView.register(CustomTableViewCell.self, forCellReuseIdentifier: CellIds.systemMessageType2CellId)
         tableView.register(CustomTableViewCell.self, forCellReuseIdentifier: CellIds.imageMessageCellId)
         tableView.register(CustomTableViewCell.self, forCellReuseIdentifier: CellIds.agentJoinCellId)
+        tableView.register(CustomTableViewCell.self, forCellReuseIdentifier: CellIds.fileCellid)
         tableView.separatorStyle = .none
         tableView.keyboardDismissMode = .onDrag
         
@@ -420,6 +422,8 @@ extension ViewController: UITableViewDataSource {
                 cellIdentifierId = CellIds.systemMessageType2CellId
             case .text( _):
                 cellIdentifierId = agent || bot ? CellIds.receiverCellId : CellIds.senderCellId
+            case .file(_, _):
+                cellIdentifierId = CellIds.fileCellid
             case .menu( _, _):
                 cellIdentifierId = CellIds.receiverMenuCellid
             case .image( _, _):
@@ -444,6 +448,8 @@ extension ViewController: UITableViewDataSource {
                     } else {
                         cell.renderSender(txt: txt, item: item)
                     }
+                case .file(let name, _):
+                    cell.renderFileSend(txt: name, item: item, index: indexPath.section)
                 case .menu(let title, let menus):
                     cell.setupMenuCell(title, menus, item)
                     let gesture = cell.tapGuesture ?? MyTapGuesture(target: self, action: #selector(didTap(_:)))
@@ -587,6 +593,8 @@ extension ViewController: UITableViewDelegate {
                 } else {
                     return CustomTableViewCell.calcSender(txt: txt, item: item)
                 }
+            case .file(let fileName, _):
+                return CustomTableViewCell.calcSender(txt: fileName, item: item)
             case .menu(let title, let menus):
                 return CustomTableViewCell.calMenuCellHeight(title, menus, item)
             case .image(let image, _ ):
@@ -755,7 +763,11 @@ extension ViewController: InputTextViewDelegate {
         importMenu.delegate = self
         importMenu.modalPresentationStyle = .formSheet
         importMenu.modalPresentationStyle = .fullScreen
-        self.present(importMenu, animated: true, completion: nil)
+        self.present(importMenu, animated: true) {
+            if #available(iOS 11.0, *) {
+                importMenu.allowsMultipleSelection = true;
+            }
+        }
         
         
         //        if FileManager.default.fileExists(atPath: url.path){
@@ -893,7 +905,7 @@ extension ViewController : UIDocumentMenuDelegate, UIDocumentPickerDelegate {
         if FileManager.default.fileExists(atPath: url.path){
             
             let filename = (url.absoluteString as NSString).lastPathComponent
-            MINTEL_LiveChat.items.append(MyMessage(text: filename, agent: false))
+            MINTEL_LiveChat.items.append(MyMessage(fileName: filename, fileURL: url))
             self.tableView.reloadData()
             self.tableView.scrollToBottom(animated: true)
             do {

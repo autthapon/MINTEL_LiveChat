@@ -66,14 +66,6 @@ class CustomTableViewCell: UITableViewCell {
         }
     }
     
-    func setupSystemMessage() {
-        //        self.avatarView.isHidden = true
-        //        self.textView.isHidden = true
-        //        self.bgView.isHidden = true
-        //        self.bottomLabel.isHidden = true
-        //        self.topLabel.isHidden = true
-        //        self.timeLabel.isHidden = true
-    }
     
     fileprivate static func createSystemMessage(text: String) -> UILabel {
         let lbl = PaddingLabel(withInsets: 0.5, 0.5, 3, 3)
@@ -98,8 +90,7 @@ class CustomTableViewCell: UITableViewCell {
     }
     
     func renderSystemMessage(text: String) {
-        self.setupSystemMessage()
-        
+     
         let lbl = CustomTableViewCell.createSystemMessage(text: text)
         let screen = UIScreen.main.bounds
         let xPosition = (screen.width - (lbl.frame.size.width + 25)) / 2.0
@@ -113,7 +104,6 @@ class CustomTableViewCell: UITableViewCell {
     }
     
     func renderSystemMessageType2(text: String) {
-        self.setupSystemMessage()
         
         let lbl = CustomTableViewCell.createSystemMessageType2(text: text)
         let screen = UIScreen.main.bounds
@@ -148,67 +138,7 @@ class CustomTableViewCell: UITableViewCell {
         let lbl = createSystemMessage(text: text)
         return lbl.frame.size.height + 25
     }
-    //
-    //    func setupReceiversMenuCell() {
-    //
-    //        self.contentView.addSubview(self.avatarView)
-    //        self.avatarView.image = UIImage(named: "chatbot", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil)
-    //        self.avatarView.MyEdges([.left, .top], to: self.contentView, offset: UIEdgeInsets(top: padding, left: padding, bottom: -padding, right: -padding))
-    //
-    //        let offset = UIEdgeInsets(top: padding - 8.0, left: padding + (self.avatarView.image?.size.width ?? 0.0) + 10.0, bottom: -padding, right: -padding)
-    //        self.contentView.addSubview(bgView)
-    //        bgView.MyEdges([.left, .top, .bottom], to: self.contentView, offset: offset)
-    //        bgView.backgroundColor = UIColor.clear
-    //
-    //        self.bgView.addSubview(topLabel)
-    //        topLabel.MyEdges([.left, .top], to: self.bgView, offset: UIEdgeInsets(top: secondaryPadding, left: secondaryPadding, bottom: 0, right: 0))
-    //        topLabel.font = UIFont.boldSystemFont(ofSize: 14)
-    //        topLabel.textColor = UIColor.red
-    //        topLabel.text = "Red"
-    //        topLabel.isHidden = true
-    //
-    ////        imgView.image = UIImage(named: "chatbot", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil)
-    ////        self.bgView.addSubview(imgView)
-    ////        imgView.topAnchor.constraint(equalTo: topLabel.bottomAnchor, constant: 0).isActive = true
-    ////        imgView.topAnchor.constraint(equalTo: bgView.topAnchor, constant: innerSpacing).isActive = true
-    ////        imgView.leadingAnchor.constraint(equalTo: bgView.leadingAnchor, constant: innerSpacing).isActive = true
-    ////        imgView.trailingAnchor.constraint(equalTo: bgView.trailingAnchor, constant: -innerSpacing).isActive = true
-    //
-    //        self.bgView.addSubview(textView)
-    //        textviewTopConstraintToTopLabel = textView.topAnchor.constraint(equalTo: topLabel.bottomAnchor, constant: 0)
-    //        textviewTopConstraintToTopLabel.isActive = false
-    //        textviewTopConstraintToBg = textView.topAnchor.constraint(equalTo: bgView.topAnchor, constant: innerSpacing)
-    //        textviewTopConstraintToBg.isActive = true
-    //        textView.leadingAnchor.constraint(equalTo: bgView.leadingAnchor, constant: innerSpacing).isActive = true
-    //        textView.trailingAnchor.constraint(equalTo: bgView.trailingAnchor, constant: -innerSpacing).isActive = true
-    //        topLabel.trailingAnchor.constraint(lessThanOrEqualTo: textView.trailingAnchor, constant: 0).isActive = true
-    //        bgView.trailingAnchor.constraint(lessThanOrEqualTo: self.contentView.trailingAnchor, constant: -extraSpacing).isActive = true
-    //        textView.isScrollEnabled = false
-    //        textView.isEditable = false
-    //        textView.isSelectable = true
-    //        textView.tintColor = UIColor.white
-    //        textView.textColor = UIColor.white
-    //        textView.dataDetectorTypes = [.link]
-    //        textView.isUserInteractionEnabled = true
-    //        textView.font = UIFont.systemFont(ofSize: 16)
-    //        textView.text = "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum"
-    //        textView.backgroundColor = UIColor.clear
-    //
-    //        self.bgView.addSubview(bottomLabel)
-    //        bottomLabel.MyEdges([.left, .bottom], to: self.bgView, offset: UIEdgeInsets(top: innerSpacing, left: secondaryPadding, bottom: 10, right: 0))
-    //        bottomLabel.trailingAnchor.constraint(equalTo: textView.trailingAnchor, constant: -secondaryPadding).isActive = true
-    //        bottomLabel.topAnchor.constraint(equalTo: textView.bottomAnchor, constant: -2).isActive = true
-    //        bottomLabel.font = UIFont.systemFont(ofSize: 10)
-    //        bottomLabel.textColor = UIColor.lightGray
-    //        bottomLabel.textAlignment = .right
-    //
-    //        self.contentView.addSubview(self.timeLabel)
-    //        timeLabel.MyEdges([.left, .bottom], to: self.bgView, offset: UIEdgeInsets(top: innerSpacing, left: secondaryPadding, bottom: secondaryPadding, right: 0))
-    //        timeLabel.trailingAnchor.constraint(equalTo: textView.trailingAnchor, constant: -secondaryPadding).isActive = true
-    //        timeLabel.topAnchor.constraint(equalTo: textView.bottomAnchor, constant: 5).isActive = true
-    //        timeLabel.text = "HH:mm"
-    //    }
-    //
+    
     func renderReceiverCell(_ txt:String, item: MyMessage, index: Int, tableView: UITableView) {
         
         self.contentView.subviews.forEach { (view) in
@@ -393,6 +323,54 @@ class CustomTableViewCell: UITableViewCell {
         timelbl.frame = CGRect(x: UIScreen.main.bounds.width - 100 - padding, y: textView.frame.origin.y + textView.frame.size.height + 5, width: 100, height: 20)
     }
     
+    func renderFileSend(txt: String, item :MyMessage, index:Int) {
+        
+        self.contentView.subviews.forEach { (view) in
+            view.removeFromSuperview()
+        }
+        
+        let avartarImage = UIImage(named: "chatbot", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil)
+        let avartarWidth = avartarImage?.size.width ?? 0.0
+        
+        let textView = UITextView()
+        textView.font = UIFont.systemFont(ofSize: 16)
+        
+        textView.text = txt
+        self.contentView.addSubview(textView)
+        textView.backgroundColor = UIColor(MyHexString: "#FF8300")
+        textView.layer.cornerRadius = 18.0
+        textView.textContainerInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        textView.frame = CGRect(x: UIScreen.main.bounds.width - avartarWidth - padding - 20, y : 0, width: UIScreen.main.bounds.width - avartarWidth - padding - 10, height: 100)
+        textView.dataDetectorTypes = [.link]
+        textView.isSelectable = true
+        textView.isScrollEnabled = false
+        textView.isEditable = false
+        textView.tintColor = UIColor.white
+        textView.textColor = UIColor.white
+        textView.sizeToFit()
+        textView.frame = CGRect(x: UIScreen.main.bounds.width - textView.contentSize.width - padding , y: 0, width: textView.contentSize.width, height: textView.contentSize.height)
+        
+        let timelbl = UILabel()
+        timelbl.font = UIFont.systemFont(ofSize: 12)
+        self.contentView.addSubview(timelbl)
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "HH:mm"
+        let dateString = dateFormatter.string(from: item.sentDate)
+        timelbl.backgroundColor = UIColor.clear
+        timelbl.text = dateString
+        timelbl.textAlignment = .right
+        timelbl.frame = CGRect(x: UIScreen.main.bounds.width - 100 - padding, y: textView.frame.origin.y + textView.frame.size.height + 5, width: 100, height: 20)
+        
+        let btnDownload = UIButton()
+        self.contentView.addSubview(btnDownload)
+        var downloadImage = UIImage(named: "download", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil)
+        downloadImage = downloadImage?.MyResizeImage(targetSize: CGSize(width:20,height: 20))
+        btnDownload.setImage(downloadImage, for: .normal)
+        btnDownload.tag = index
+        btnDownload.frame = CGRect(x: textView.frame.origin.x - CGFloat(35.0), y: textView.frame.origin.y + textView.frame.size.height - CGFloat(35), width: 30, height: 30)
+        btnDownload.addTarget(self, action: #selector(download(_:)), for: .touchUpInside)
+    }
+    
     static func calcSender(txt: String, item :MyMessage) -> CGFloat {
         
         let avartarImage = UIImage(named: "chatbot", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil)
@@ -426,110 +404,6 @@ class CustomTableViewCell: UITableViewCell {
         timelbl.frame = CGRect(x: UIScreen.main.bounds.width - 100 - padding, y: textView.frame.origin.y + textView.frame.size.height + 5, width: 100, height: 20)
         
         return timelbl.frame.origin.y + timelbl.frame.size.height
-    }
-    
-    //    func setupReceiversCell() {
-    //
-    //        self.contentView.addSubview(self.avatarView)
-    //        self.avatarView.image = UIImage(named: "chatbot", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil)
-    //        self.avatarView.MyEdges([.left, .top], to: self.contentView, offset: UIEdgeInsets(top: padding, left: padding, bottom: -padding, right: -padding))
-    //
-    //        let offset = UIEdgeInsets(top: padding - 8.0, left: padding + (self.avatarView.image?.size.width ?? 0.0) + 10.0, bottom: -20.0, right: -padding)
-    //        self.contentView.addSubview(bgView)
-    //        bgView.MyEdges([.left, .top, .bottom], to: self.contentView, offset: offset)
-    //        bgView.layer.cornerRadius = 18
-    ////        bgView.backgroundColor = UIColor(MyHexString: "#EBEBEB")
-    //
-    //        self.bgView.addSubview(topLabel)
-    //        topLabel.MyEdges([.left, .top], to: self.bgView, offset: UIEdgeInsets(top: secondaryPadding, left: secondaryPadding, bottom: 0, right: 0))
-    //        topLabel.font = UIFont.boldSystemFont(ofSize: 14)
-    //        topLabel.textColor = UIColor.red
-    //        topLabel.text = "Red"
-    //        topLabel.isHidden = true
-    //
-    //        self.bgView.addSubview(textView)
-    //        textviewTopConstraintToTopLabel = textView.topAnchor.constraint(equalTo: topLabel.bottomAnchor, constant: 0)
-    //        textviewTopConstraintToTopLabel.isActive = false
-    //        textviewTopConstraintToBg = textView.topAnchor.constraint(equalTo: bgView.topAnchor, constant: innerSpacing)
-    //        textviewTopConstraintToBg.isActive = true
-    //        textView.leadingAnchor.constraint(equalTo: bgView.leadingAnchor, constant: innerSpacing).isActive = true
-    //        textView.trailingAnchor.constraint(equalTo: bgView.trailingAnchor, constant: -innerSpacing).isActive = true
-    //        topLabel.trailingAnchor.constraint(lessThanOrEqualTo: textView.trailingAnchor, constant: 0).isActive = true
-    //        bgView.trailingAnchor.constraint(lessThanOrEqualTo: self.contentView.trailingAnchor, constant: -extraSpacing).isActive = true
-    //        textView.isScrollEnabled = false
-    //        textView.isEditable = false
-    //        textView.isSelectable = true
-    //        textView.tintColor = UIColor.black
-    //        textView.textColor = UIColor.black
-    //        textView.textContainerInset = UIEdgeInsets(top: secondaryPadding, left: secondaryPadding, bottom: secondaryPadding, right: secondaryPadding)
-    //        textView.dataDetectorTypes = [.link]
-    //        textView.backgroundColor = UIColor(MyHexString: "#EBEBEB")
-    //        textView.font = UIFont.systemFont(ofSize: 16)
-    //        textView.layer.cornerRadius = 18
-    //        textView.text = "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum"
-    ////        textView.backgroundColor = UIColor.clear
-    //
-    //        self.bgView.addSubview(bottomLabel)
-    //        bottomLabel.MyEdges([.left, .bottom], to: self.bgView, offset: UIEdgeInsets(top: innerSpacing, left: secondaryPadding, bottom: -secondaryPadding, right: 0))
-    //        bottomLabel.trailingAnchor.constraint(equalTo: textView.trailingAnchor, constant: -secondaryPadding).isActive = true
-    //        bottomLabel.topAnchor.constraint(equalTo: textView.bottomAnchor, constant: -5).isActive = true
-    //        bottomLabel.font = UIFont.systemFont(ofSize: 10)
-    //        bottomLabel.textColor = UIColor.lightGray
-    //        bottomLabel.textAlignment = .right
-    //
-    //        self.contentView.addSubview(self.timeLabel)
-    //        timeLabel.MyEdges([.left, .bottom], to: self.bgView, offset: UIEdgeInsets(top: innerSpacing, left: secondaryPadding, bottom: secondaryPadding, right: 0))
-    //        timeLabel.trailingAnchor.constraint(equalTo: textView.trailingAnchor, constant: -secondaryPadding).isActive = true
-    //        timeLabel.topAnchor.constraint(equalTo: textView.bottomAnchor, constant: 2).isActive = true
-    //        timeLabel.font = UIFont.systemFont(ofSize: 12)
-    //        timeLabel.text = "HH:mm"
-    //    }
-    
-    //    func setupSendersCell() {
-    //
-    //        let offset = UIEdgeInsets(top: padding, left: padding, bottom: -padding, right: -padding)
-    //        self.contentView.addSubview(bgView)
-    //        bgView.MyEdges([.right, .top, .bottom], to: self.contentView, offset: offset)
-    //
-    //        self.bgView.addSubview(textView)
-    //        textView.MyEdges([.left, .right, .top], to: self.bgView, offset: .init(top: innerSpacing, left: innerSpacing, bottom: -innerSpacing, right: -innerSpacing))
-    //        bgView.leadingAnchor.constraint(greaterThanOrEqualTo: self.contentView.leadingAnchor, constant: extraSpacing).isActive = true
-    //        textView.isScrollEnabled = false
-    //        textView.isEditable = false
-    //        textView.isSelectable = true
-    //        textView.isUserInteractionEnabled = true
-    //        textView.font = UIFont.systemFont(ofSize: 16)
-    //        textView.tintColor = UIColor.white
-    //        textView.textColor = UIColor.white
-    //        textView.dataDetectorTypes = [.link]
-    //        textView.layer.cornerRadius = 18
-    //        textView.backgroundColor = UIColor(MyHexString: "#FF8300")
-    //        textView.text = "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum"
-    //
-    //        self.bgView.addSubview(bottomLabel)
-    //        bottomLabel.MyEdges([.left, .bottom], to: self.bgView, offset: UIEdgeInsets(top: innerSpacing, left: secondaryPadding, bottom: -secondaryPadding, right: 0))
-    //        bottomLabel.trailingAnchor.constraint(equalTo: textView.trailingAnchor, constant: -secondaryPadding).isActive = true
-    //        bottomLabel.topAnchor.constraint(equalTo: textView.bottomAnchor, constant: -2).isActive = true
-    //        bottomLabel.font = UIFont.systemFont(ofSize: 10)
-    //        bottomLabel.textColor = UIColor.white
-    //        bottomLabel.textAlignment = .right
-    //        bottomLabel.text = ""
-    //
-    //        self.contentView.addSubview(self.timeLabel)
-    //        timeLabel.MyEdges([.right, .bottom], to: self.bgView, offset: UIEdgeInsets(top: innerSpacing, left: 0, bottom: secondaryPadding, right: -secondaryPadding))
-    //        timeLabel.leadingAnchor.constraint(equalTo: textView.leadingAnchor, constant: secondaryPadding).isActive = true
-    //        timeLabel.topAnchor.constraint(equalTo: textView.bottomAnchor, constant: 2).isActive = true
-    //        timeLabel.font = UIFont.systemFont(ofSize: 12)
-    //        timeLabel.textAlignment = .right
-    //        timeLabel.text = "HH:mm"
-    //    }
-    
-    func setupImageCell() {
-        //        self.avatarView.isHidden = true
-        //        self.textView.isHidden = true
-        //        self.bgView.isHidden = true
-        //        self.bottomLabel.isHidden = true
-        //        self.topLabel.isHidden = true
     }
     
     func renderImageCell(image:UIImage, time: Date, item: MyMessage, index: Int) {
@@ -614,9 +488,55 @@ class CustomTableViewCell: UITableViewCell {
         switch message.kind {
         case .image(let img, _):
             UIImageWriteToSavedPhotosAlbum(img, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)
+        case .file(let fileName, let fileUrl):
+            debugPrint(fileUrl, fileName)
+            self.downloadFileAndSave(fileUrl: fileUrl)
         default:
             return
         }
+    }
+
+    fileprivate func downloadFileAndSave(fileUrl: URL) {
+
+        //Create directory if not present
+        let paths = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.libraryDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)
+        let documentDirectory = paths.first! as NSString
+        let dirPathString = documentDirectory.appendingPathComponent("TrueMoney")
+        
+        do {
+            try FileManager.default.createDirectory(atPath: dirPathString, withIntermediateDirectories: true, attributes:nil)
+            print("directory created at \(dirPathString)")
+        } catch let error as NSError {
+            print("error while creating dir : \(error.localizedDescription)");
+        }
+        
+//        if let audioUrl = URL(string: audioFile) {
+            // create your document folder url
+            let documentsUrl =  FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask).first! as URL
+            let documentsFolderUrl = documentsUrl.appendingPathComponent("TrueMoney")
+            // your destination file url
+            debugPrint(fileUrl.pathExtension)
+            let destinationUrl = documentsFolderUrl.appendingPathComponent(String(format: "%@.%@", UUID().uuidString, fileUrl.pathExtension))
+            
+            print(destinationUrl)
+            // check if it exists before downloading it
+            if FileManager().fileExists(atPath: destinationUrl.path) {
+                print("The file already exists at path")
+            } else {
+                //  if the file doesn't exist
+                //  just download the data from your url
+                DispatchQueue.global(qos: DispatchQoS.QoSClass.background).async(execute: {
+                    if let myAudioDataFromUrl = try? Data(contentsOf: fileUrl){
+                        // after downloading your data you need to save it to your destination url
+                        if (try? myAudioDataFromUrl.write(to: destinationUrl, options: [.atomic])) != nil {
+                            print("file saved")
+                        } else {
+                            print("error saving file")
+                        }
+                    }
+                })
+            }
+//        }
     }
     
     @objc func image(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
@@ -633,8 +553,7 @@ class CustomTableViewCell: UITableViewCell {
     }
     
     func renderAgentJoin(_ agentName:String) {
-        self.setupSystemMessage()
-        
+       
         let screen = UIScreen.main.bounds
         let imgView = UIImageView(image: UIImage(named: "agent", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil))
         self.contentView.addSubview(imgView)
