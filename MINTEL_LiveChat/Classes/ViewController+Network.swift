@@ -40,10 +40,12 @@ extension ViewController {
             
             MINTEL_LiveChat.checkTime()
             
+            
             switch result{
             case .success(let upload, _, _):
                 upload.responseJSON { response in
                     print("Succesfully uploaded")
+                    self.uploadDataFiles = self.uploadDataFiles - 1;
                     if let err = response.error{
                         debugPrint(err)
                         return
@@ -54,16 +56,37 @@ extension ViewController {
                         let dict = json as! [String: Any]
                         let url = dict["url"] as? String ?? ""
                         if url.count > 0 {
-                            if (MINTEL_LiveChat.chatBotMode) {
-//                                MINTEL_LiveChat.sendPost(text: url, menu:false)
-                            } else {
-                                self.sendMessageToSaleForce(text: url)
-                            }
+                            self.uploadDataText.append(url)
+//                            if (MINTEL_LiveChat.chatBotMode) {
+//
+////                                MINTEL_LiveChat.sendPost(text: url, menu:false)
+//                            } else {
+//                                self.sendMessageToSaleForce(text: url)
+//                            }
+                        }
+                    }
+                    
+                    
+                    if (self.uploadDataFiles == 0) {
+                        let text = self.uploadDataText.joined(separator: "\n")
+                        if (MINTEL_LiveChat.chatBotMode) {
+                            MINTEL_LiveChat.sendPost(text: text, menu:false)
+                        } else {
+                            self.sendMessageToSaleForce(text: text)
                         }
                     }
                 }
             case .failure(let error):
                 print("Error in upload: \(error.localizedDescription)")
+                
+                if (self.uploadDataFiles == 0) {
+                    let text = self.uploadDataText.joined(separator: "\n")
+                    if (MINTEL_LiveChat.chatBotMode) {
+                        MINTEL_LiveChat.sendPost(text: text, menu:false)
+                    } else {
+                        self.sendMessageToSaleForce(text: text)
+                    }
+                }
             }
         }
     }

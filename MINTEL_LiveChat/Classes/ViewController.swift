@@ -73,6 +73,8 @@ class ViewController: UIViewController {
     fileprivate var thumbnailSize: CGSize!
     fileprivate var previousPreheatRect = CGRect.zero
     fileprivate var imageSelected:[Int] = []
+    internal var uploadDataFiles:Int = 0
+    internal var uploadDataText:[String] = [];
     
     var tableView: UITableView = {
         let v = UITableView()
@@ -672,6 +674,7 @@ extension ViewController: InputTextViewDelegate {
         } else if (self.imagePanel) {
             if (self.imageSelected.count > 0) {
                 // Send Image
+                self.uploadDataFiles = self.imageSelected.count
                 self.imageSelected.forEach { (index) in
                     self.sendImageToWebhook(index: index)
                 }
@@ -907,11 +910,13 @@ extension ViewController : UIDocumentMenuDelegate, UIDocumentPickerDelegate {
     
     
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentAt url: URL) {
+        self.uploadDataFiles = 1;
         self.documentPicker(url: url)
     }
     
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
         if urls.count > 0 {
+            self.uploadDataFiles = urls.count;
             urls.forEach { url in
                 self.documentPicker(url: url)
             }
