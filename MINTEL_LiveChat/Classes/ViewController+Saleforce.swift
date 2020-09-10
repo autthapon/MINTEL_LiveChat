@@ -50,6 +50,16 @@ extension ViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(appWillTerminate), name: UIApplication.willTerminateNotification, object: nil)
     }
     
+    internal func removeSalesforceNotification() {
+        NotificationCenter.default.removeObserver(self, name: Notification.Name(SalesForceNotifId.didUpdatePosition), object: nil)
+        NotificationCenter.default.removeObserver(self, name: Notification.Name(SalesForceNotifId.agentJoined), object: nil)
+        NotificationCenter.default.removeObserver(self, name: Notification.Name(SalesForceNotifId.didReceiveMessage), object: nil)
+        NotificationCenter.default.removeObserver(self, name: Notification.Name(SalesForceNotifId.agentLeftConference), object: nil)
+        NotificationCenter.default.removeObserver(self, name: Notification.Name(SalesForceNotifId.didEnd), object: nil)
+        NotificationCenter.default.removeObserver(self, name: Notification.Name(MINTELNotifId.userIsTyping), object: nil)
+        NotificationCenter.default.removeObserver(self, name: Notification.Name(MINTELNotifId.reallyExitChat), object: nil)
+    }
+    
     @objc func appWillTerminate() {
         switch MINTEL_LiveChat.agentState {
         case .start: break
@@ -228,6 +238,9 @@ extension ViewController {
     }
     
     func switchToAgentMode() {
+        
+        debugPrint("Switch To Agent Mode =====")
+        
         MINTEL_LiveChat.stopTimer()
         self.disableUserInteraction()
         
@@ -245,11 +258,15 @@ extension ViewController {
             return false
         }
         
-        MINTEL_LiveChat.items.append(MyMessage(systemMessageType2: "กรุณารอสักครู่"))
-        self.tableView.reloadData()
-        self.tableView.scrollToBottom(animated: true)
-        MINTEL_LiveChat.chatBotMode = false
-        MINTEL_LiveChat.instance.startSaleForce()
+        DispatchQueue.main.async {
+        
+            MINTEL_LiveChat.items.append(MyMessage(systemMessageType2: "กรุณารอสักครู่"))
+            self.tableView.reloadData()
+            self.disableUserInteraction()
+            self.tableView.scrollToBottom(animated: true)
+            MINTEL_LiveChat.chatBotMode = false
+            MINTEL_LiveChat.instance.startSaleForce()
+        }
     }
     
     

@@ -224,6 +224,15 @@ class ViewController: UIViewController {
         
     }
     
+    internal func removeNotification() {
+        NotificationCenter.default.removeObserver(self, name: Notification.Name(MINTELNotifId.botTyped), object: nil)
+        NotificationCenter.default.removeObserver(self, name: Notification.Name(MINTELNotifId.toAgentMode), object: nil)
+        NotificationCenter.default.removeObserver(self, name: Notification.Name(MINTELNotifId.reallyExitChat), object: nil)
+        NotificationCenter.default.removeObserver(self, name: Notification.Name(MINTELNotifId.hideBottomMenu), object: nil)
+        NotificationCenter.default.removeObserver(self, name: Notification.Name(MINTELNotifId.chatMenuAvailable), object: nil)
+    }
+    
+    
     @objc func MINTEL_chatMenuAvailable(_ notification: Notification) {
         DispatchQueue.main.async {
             self.menuTableView.reloadData()
@@ -288,11 +297,15 @@ class ViewController: UIViewController {
             self.disableUserInteraction()
         }
         MINTEL_LiveChat.chatPanelOpened  = true
+        
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         MINTEL_LiveChat.chatPanelOpened = false
+        
+        self.removeNotification()
+        self.removeSalesforceNotification()
     }
     
     func setupViews() {
