@@ -31,6 +31,7 @@ internal class MINTELNotifId {
     static let toAgentMode = "MINTEL_toAgentMode"
     static let reallyExitChat = "MINTEL_reallyExitChat"
     static let hideBottomMenu = "MINTEL_HideBottomMenu"
+    static let updateUnreadMessageCount = "MINTEL_updateUnreadMessageCount"
 }
 
 internal class SalesForceNotifId {
@@ -111,6 +112,7 @@ class ViewController: UIViewController {
     var inputTextViewBottomConstraint: NSLayoutConstraint!
     
     @IBAction func collapseChat() {
+        MINTEL_LiveChat.unreadMessage = 0
         self.dismiss(animated: true, completion: nil)
     }
     

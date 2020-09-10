@@ -43,8 +43,8 @@ public class MINTEL_LiveChat: UIView {
     internal static var agentState:SaleforceAgentState = .start
     internal static var chatBotMode = true
     internal static var chatMenus:[[String:Any]] = []
+    internal static var unreadMessage:Int = 0
     internal static var items = [MyMessage]()
-    
     
     fileprivate static var first2MinutesTimer:Timer? = nil
     fileprivate static var lastAMinuteTimer:Timer? = nil
@@ -64,6 +64,7 @@ public class MINTEL_LiveChat: UIView {
     private var queueTitleLabel:UILabel!
     private var queueLabel:UILabel!
     private var callCenterLabel:UILabel!
+    private var badgeLabel:UILabel!
     
     private var longPressGestureRecognizer: UILongPressGestureRecognizer?
     private var tapGestureRecognizer:UITapGestureRecognizer?
@@ -145,8 +146,6 @@ public class MINTEL_LiveChat: UIView {
                 print("User has declined notifications")
             }
         }
-        
-        
     }
     
     public func startChat(config:LiveChatConfiguration) {
@@ -165,6 +164,7 @@ public class MINTEL_LiveChat: UIView {
         MINTEL_LiveChat.chatInProgress = true
         MINTEL_LiveChat.chatCanTyped = false
         MINTEL_LiveChat.chatUserTypedIn = false
+        MINTEL_LiveChat.unreadMessage = 0
         MINTEL_LiveChat.agentState = .start
         retryTimeoutTimes = 0
         self.loadFirstMessage()
@@ -178,6 +178,24 @@ public class MINTEL_LiveChat: UIView {
             MINTEL_LiveChat.stopTimer()
         } else {
             self.tapAction(sender: NSObject())
+        }
+    }
+    
+    fileprivate func setupNotification() {
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(updateBadge(_:)),
+                                               name: Notification.Name(MINTELNotifId.updateUnreadMessageCount),
+                                               object: nil)
+    }
+    
+    @objc fileprivate func updateBadge(_ notification: Notification) {
+        DispatchQueue.main.async {
+            if (MINTEL_LiveChat.unreadMessage == 0) {
+                self.badgeLabel.isHidden = true
+            } else {
+                self.badgeLabel.text = String(format: "%d", MINTEL_LiveChat.unreadMessage)
+                self.badgeLabel.isHidden = false
+            }
         }
     }
     
@@ -461,6 +479,17 @@ public class MINTEL_LiveChat: UIView {
         self.queueLabel.tag = 0
         self.queueLabel.isHidden = true
         self.addSubview(self.queueLabel)
+        
+        self.badgeLabel = UILabel(frame: CGRect(x: 40, y: 50, width: 30, height: 20))
+        self.badgeLabel.text = ""
+        self.badgeLabel.textAlignment = .center
+        self.badgeLabel.font = UIFont.systemFont(ofSize: 10)
+        self.badgeLabel.isHidden = true
+        self.badgeLabel.layer.cornerRadius = 10
+        self.badgeLabel.layer.masksToBounds = true
+        self.badgeLabel.textColor = UIColor.white
+        self.badgeLabel.backgroundColor = UIColor(MyHexString: "#0000FF")
+        self.addSubview(self.badgeLabel)
         
         self.backgroundColor = UIColor(MyHexString: "#F1F1F1")
         self.layer.cornerRadius = CGFloat(cornerRadius)
@@ -1072,10 +1101,16 @@ extension MINTEL_LiveChat : SCSChatEventDelegate {
         NotificationCenter.default.post(name: Notification.Name(SalesForceNotifId.didReceiveMessage),
                                         object: nil,
                                         userInfo:["session": session, "message": message])
+        NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.updateUnreadMessageCount),
+                                        object: nil,
+                                        userInfo:["session": session, "message": message])
         
-//        MINTEL_LiveChat.checkTime()
-        
-//        notification.scheduleNotification(message: String(format: "%@:%@", MINTEL_LiveChat.agentName, message.text))
+        MINTEL_LiveChat.stopTimer()
+        if (!MINTEL_LiveChat.chatPanelOpened) {
+            MINTEL_LiveChat.unreadMessage = MINTEL_LiveChat.unreadMessage + 1
+        } else {
+             MINTEL_LiveChat.unreadMessage = 0
+        }
     }
     
     fileprivate func checkAndSendNotification(message: String) {
