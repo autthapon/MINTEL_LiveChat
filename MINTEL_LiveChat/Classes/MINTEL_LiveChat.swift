@@ -208,7 +208,6 @@ public class MINTEL_LiveChat: UIView {
         MINTEL_LiveChat.userId = UUID().uuidString
 
         ServiceCloud.shared().chatCore.stopSession()
- 
         ServiceCloud.shared().chatCore.remove(delegate: self)
         ServiceCloud.shared().chatCore.removeEvent(delegate: self)
         MINTEL_LiveChat.agentState = .end
@@ -406,14 +405,17 @@ public class MINTEL_LiveChat: UIView {
             config.prechatEntities = [contactEntity, csatEntity]
 //            config.allowBackgroundNotifications = false
             
-            ServiceCloud.shared().chatCore.determineAvailability(with: config) { (error, available, waitingTime) in
+            ServiceCloud.shared().chatCore.remove(delegate: self)
+            ServiceCloud.shared().chatCore.removeEvent(delegate: self)
+            
+//            ServiceCloud.shared().chatCore.determineAvailability(with: config) { (error, available, waitingTime) in
                 
                 ServiceCloud.shared().chatCore.add(delegate: self)
                 ServiceCloud.shared().chatCore.addEvent(delegate: self)
                 ServiceCloud.shared().chatCore.startSession(with: config) { (error, chat) in
-                    
+                    debugPrint(error)
                 }
-            }
+//            }
         }
     }
     
@@ -898,6 +900,12 @@ extension MINTEL_LiveChat  {
         
         debugPrint("=== Send Post " , text)
         if ("__00_home_greeting" == text) {
+            
+            if MINTEL_LiveChat.configuration?.phone.count == 0 {
+                MINTEL_LiveChat.items.append(MyMessage(text: "สวัสดีครับ", agent: false, bot: true))
+            } else {
+                MINTEL_LiveChat.items.append(MyMessage(text: String(format: "สวัสดีครับคุณ %@", MINTEL_LiveChat.configuration?.firstname ?? ""), agent: false, bot: true))
+            }
             MINTEL_LiveChat.chatCanTyped = true
             NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
                                             object: nil,
@@ -1011,6 +1019,7 @@ extension MINTEL_LiveChat  {
             object: nil,
             userInfo:nil)
         } else {
+            
             MINTEL_LiveChat.items.append(MyMessage(text: "กรุณารอสักครู่", agent: false, bot: true))
             MINTEL_LiveChat.sendPost(text: text, menu: menu)
         }

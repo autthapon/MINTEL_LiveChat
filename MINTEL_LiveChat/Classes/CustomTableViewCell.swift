@@ -90,6 +90,10 @@ class CustomTableViewCell: UITableViewCell {
     }
     
     func renderSystemMessage(text: String) {
+        
+        self.contentView.subviews.forEach { (view) in
+            view.removeFromSuperview()
+        }
      
         let lbl = CustomTableViewCell.createSystemMessage(text: text)
         let screen = UIScreen.main.bounds
@@ -104,6 +108,10 @@ class CustomTableViewCell: UITableViewCell {
     }
     
     func renderSystemMessageType2(text: String) {
+        
+        self.contentView.subviews.forEach { (view) in
+            view.removeFromSuperview()
+        }
         
         let lbl = CustomTableViewCell.createSystemMessageType2(text: text)
         let screen = UIScreen.main.bounds
@@ -554,13 +562,17 @@ class CustomTableViewCell: UITableViewCell {
     
     func renderAgentJoin(_ agentName:String) {
        
+        self.contentView.subviews.forEach { (view) in
+            view.removeFromSuperview()
+        }
+        
         let screen = UIScreen.main.bounds
         let imgView = UIImageView(image: UIImage(named: "agent", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil))
         self.contentView.addSubview(imgView)
         var xPosition = (screen.width - imgView.image!.size.width) / 2.0
         imgView.frame = CGRect(x: xPosition, y: 10, width: imgView.image!.size.width, height: imgView.image!.size.height)
         
-        let lbl = CustomTableViewCell.createSystemMessage(text: String(format: "%@ joined", agentName))
+        let lbl = CustomTableViewCell.createSystemMessage(text: String(format: "ท่านกำลังสนทนากับ %@", agentName))
         self.contentView.addSubview(lbl)
         xPosition = (screen.width - (lbl.frame.size.width + 25)) / 2.0
         lbl.frame = CGRect(x: xPosition, y: 10 + imgView.image!.size.height + 2, width: lbl.frame.size.width + 25, height: lbl.frame.size.height + 20)
