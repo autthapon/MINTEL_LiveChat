@@ -230,6 +230,21 @@ extension ViewController {
     func switchToAgentMode() {
         MINTEL_LiveChat.stopTimer()
         self.disableUserInteraction()
+        
+        // REmove previous กรุณารอสักครู่
+        MINTEL_LiveChat.items.removeAll { (item) -> Bool in
+            switch(item.kind) {
+            case .systemMessageType2(let msg):
+                if (msg == "กรุณารอสักครู่") {
+                    return true
+                }
+            default:
+                return false
+            }
+            
+            return false
+        }
+        
         MINTEL_LiveChat.items.append(MyMessage(systemMessageType2: "กรุณารอสักครู่"))
         self.tableView.reloadData()
         self.tableView.scrollToBottom(animated: true)

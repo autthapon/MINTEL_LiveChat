@@ -172,6 +172,22 @@ public class MINTEL_LiveChat: UIView {
         UIApplication.shared.keyWindow?.bringSubviewToFront(self)
         
         if (MINTEL_LiveChat.configuration?.disableBotMode ?? false) {
+            
+            // REmove previous กรุณารอสักครู่
+            MINTEL_LiveChat.items.removeAll { (item) -> Bool in
+                switch(item.kind) {
+                case .systemMessageType2(let msg):
+                    if (msg == "กรุณารอสักครู่") {
+                        return true
+                    }
+                default:
+                    return false
+                }
+                
+                return false
+            }
+            
+            
             MINTEL_LiveChat.items.append(MyMessage(systemMessageType2: "กรุณารอสักครู่"))
             MINTEL_LiveChat.chatBotMode = false
             MINTEL_LiveChat.instance.startSaleForce()
@@ -267,6 +283,21 @@ public class MINTEL_LiveChat: UIView {
                     let disableBotMode = dict["disableBotMode"] as? Bool ?? false
                     if (disableBotMode) {
                         MINTEL_LiveChat.stopTimer()
+                        
+                        // REmove previous กรุณารอสักครู่
+                        MINTEL_LiveChat.items.removeAll { (item) -> Bool in
+                            switch(item.kind) {
+                            case .systemMessageType2(let msg):
+                                if (msg == "กรุณารอสักครู่") {
+                                    return true
+                                }
+                            default:
+                                return false
+                            }
+                            
+                            return false
+                        }
+                        
                         MINTEL_LiveChat.items.append(MyMessage(systemMessageType2: "กรุณารอสักครู่"))
                         MINTEL_LiveChat.chatBotMode = false
                         MINTEL_LiveChat.instance.startSaleForce()

@@ -533,7 +533,7 @@ extension ViewController: UITableViewDataSource {
         if (targetAction != nil) {
             let text = targetAction?["text"] as? String ?? ""
             if (text.count > 0) {
-                MINTEL_LiveChat.chatUserTypedIn = true
+                
                 message?.disableMenu = true
                 if ("__00_app_endchat" == text) {
                     
@@ -541,6 +541,7 @@ extension ViewController: UITableViewDataSource {
                     
                 } else {
                 
+                    MINTEL_LiveChat.chatUserTypedIn = true
                     let display = targetAction?["display"] as? Bool ?? true
                     if (display) {
                         MINTEL_LiveChat.items.append(MyMessage(text: text, agent: false, bot: false))
