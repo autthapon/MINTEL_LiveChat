@@ -113,7 +113,13 @@ class ViewController: UIViewController {
     
     @IBAction func collapseChat() {
         MINTEL_LiveChat.unreadMessage = 0
+        
+        NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.updateUnreadMessageCount),
+        object: nil,
+        userInfo:nil)
+        
         self.dismiss(animated: true, completion: nil)
+        
     }
     
     @IBAction func closeChat() {

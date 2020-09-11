@@ -204,6 +204,10 @@ public class MINTEL_LiveChat: UIView {
                                                object: nil)
     }
     
+    fileprivate func removeNotification() {
+        NotificationCenter.default.removeObserver(self, name: Notification.Name(MINTELNotifId.updateUnreadMessageCount), object: nil)
+    }
+    
     @objc fileprivate func updateBadge(_ notification: Notification) {
         DispatchQueue.main.async {
             if (MINTEL_LiveChat.unreadMessage == 0) {
@@ -221,6 +225,8 @@ public class MINTEL_LiveChat: UIView {
     }
     
     internal func reallyEndChat() {
+        
+        self.removeNotification()
         
         if (!MINTEL_LiveChat.chatInProgress) {
             return
@@ -265,6 +271,7 @@ public class MINTEL_LiveChat: UIView {
                 }
             }
         }
+        
         self.closeButtonHandle()
     }
     
@@ -383,6 +390,7 @@ public class MINTEL_LiveChat: UIView {
     
     internal func startSaleForce() {
         
+        self.setupNotification()
         self.configureSaleForce()
     }
     
@@ -1132,9 +1140,7 @@ extension MINTEL_LiveChat : SCSChatEventDelegate {
         NotificationCenter.default.post(name: Notification.Name(SalesForceNotifId.didReceiveMessage),
                                         object: nil,
                                         userInfo:["session": session, "message": message])
-        NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.updateUnreadMessageCount),
-                                        object: nil,
-                                        userInfo:["session": session, "message": message])
+        
         
         MINTEL_LiveChat.stopTimer()
         if (!MINTEL_LiveChat.chatPanelOpened) {
@@ -1142,6 +1148,10 @@ extension MINTEL_LiveChat : SCSChatEventDelegate {
         } else {
              MINTEL_LiveChat.unreadMessage = 0
         }
+        
+        NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.updateUnreadMessageCount),
+        object: nil,
+        userInfo:["session": session, "message": message])
     }
     
     fileprivate func checkAndSendNotification(message: String) {
