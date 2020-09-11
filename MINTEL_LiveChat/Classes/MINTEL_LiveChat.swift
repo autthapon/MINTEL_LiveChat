@@ -199,6 +199,8 @@ public class MINTEL_LiveChat: UIView {
         } else {
             self.tapAction(sender: NSObject(), survey: false)
         }
+        
+         self.reLayoutView()
     }
     
     fileprivate func setupNotification() {
@@ -637,7 +639,7 @@ public class MINTEL_LiveChat: UIView {
     }
     
     @objc func closeButtonHandle() {
-        self.isHidden = true
+        
        
         MINTEL_LiveChat.surveyMode = false
         MINTEL_LiveChat.agentState = .start
@@ -645,7 +647,7 @@ public class MINTEL_LiveChat: UIView {
         UIApplication.shared.keyWindow?.sendSubviewToBack(self)
         MINTEL_LiveChat.items.removeAll()
         DispatchQueue.main.async {
-            self.reLayoutView()
+            self.isHidden = true
         }
     }
     
