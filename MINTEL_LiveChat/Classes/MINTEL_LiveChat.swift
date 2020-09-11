@@ -96,41 +96,44 @@ public class MINTEL_LiveChat: UIView {
     }
     
     public func reLayoutView() {
-        if (!MINTEL_LiveChat.chatPanelOpened) {
-            self.layer.zPosition = 1
-        }
-        if (MINTEL_LiveChat.chatBotMode) {
-            self.userImageView.isHidden = false
-            self.callCenterLabel.isHidden = false
-            self.queueTitleLabel.isHidden = true
-            self.queueLabel.isHidden = true
-        } else {
-            switch MINTEL_LiveChat.agentState {
-            case .start:
-                self.userImageView.isHidden = true
-                self.callCenterLabel.isHidden = true
-                self.queueTitleLabel.isHidden = false
-                self.queueLabel.isHidden = false
-                break
-            case .waiting:
-                self.userImageView.isHidden = true
-                self.callCenterLabel.isHidden = true
-                self.queueTitleLabel.isHidden = false
-                self.queueLabel.isHidden = false
-                break
-            case .end:
-                self.userImageView.isHidden = true
-                self.callCenterLabel.isHidden = true
-                self.queueTitleLabel.isHidden = false
-                self.queueLabel.isHidden = false
-                break
-            case .joined:
+        DispatchQueue.main.async {
+            if (!MINTEL_LiveChat.chatPanelOpened) {
+                self.layer.zPosition = 1
+                self.isHidden = false
+            }
+            if (MINTEL_LiveChat.chatBotMode) {
                 self.userImageView.isHidden = false
                 self.callCenterLabel.isHidden = false
-                self.callCenterLabel.text = "TMN Chat"
                 self.queueTitleLabel.isHidden = true
                 self.queueLabel.isHidden = true
-                break
+            } else {
+                switch MINTEL_LiveChat.agentState {
+                case .start:
+                    self.userImageView.isHidden = true
+                    self.callCenterLabel.isHidden = true
+                    self.queueTitleLabel.isHidden = false
+                    self.queueLabel.isHidden = false
+                    break
+                case .waiting:
+                    self.userImageView.isHidden = true
+                    self.callCenterLabel.isHidden = true
+                    self.queueTitleLabel.isHidden = false
+                    self.queueLabel.isHidden = false
+                    break
+                case .end:
+                    self.userImageView.isHidden = true
+                    self.callCenterLabel.isHidden = true
+                    self.queueTitleLabel.isHidden = false
+                    self.queueLabel.isHidden = false
+                    break
+                case .joined:
+                    self.userImageView.isHidden = false
+                    self.callCenterLabel.isHidden = false
+                    self.callCenterLabel.text = "TMN Chat"
+                    self.queueTitleLabel.isHidden = true
+                    self.queueLabel.isHidden = true
+                    break
+                }
             }
         }
     }
@@ -613,13 +616,15 @@ public class MINTEL_LiveChat: UIView {
     @objc func tapAction(sender: AnyObject) {
         DispatchQueue.main.async {
             if (!self.singleTapBeenCanceled && !self.dragging)  {
-                self.layer.zPosition = 0
+                
                 let bundle = Bundle(for: type(of: self))
                 let storyboard = UIStoryboard(name: "ChatBox", bundle: bundle)
                 let vc = storyboard.instantiateInitialViewController()!
                 let viewController = UIApplication.shared.windows.first!.rootViewController!
                 viewController.modalPresentationStyle = .fullScreen
-                viewController.present(vc, animated: true, completion: nil)
+                viewController.present(vc, animated: true) {
+                    self.isHidden = true
+                }
             }
         }
     }
@@ -1106,6 +1111,7 @@ extension MINTEL_LiveChat : SCSChatEventDelegate {
         MINTEL_LiveChat.items.append(MyMessage(agentJoin: true, agentName: agentName))
         MINTEL_LiveChat.agentState = .joined
         
+        self.reLayoutView()
         self.sendChatbotMessage()
         
         NotificationCenter.default.post(name: Notification.Name(SalesForceNotifId.agentJoined),

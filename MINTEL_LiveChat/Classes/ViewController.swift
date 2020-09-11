@@ -118,6 +118,7 @@ class ViewController: UIViewController {
         object: nil,
         userInfo:nil)
         
+        MINTEL_LiveChat.instance.isHidden = false
         self.dismiss(animated: true, completion: nil)
         
     }
