@@ -38,6 +38,7 @@ public class MINTEL_LiveChat: UIView {
     internal static var chatStarted = false
     internal static var chatCanTyped = false
     internal static var chatUserTypedIn = false
+    internal static var surveyMode = false
     internal static var instance:MINTEL_LiveChat!
     internal static var agentName:String = ""
     internal static var agentState:SaleforceAgentState = .start
@@ -275,7 +276,9 @@ public class MINTEL_LiveChat: UIView {
             }
         }
         
-        self.closeButtonHandle()
+         MINTEL_LiveChat.agentState = .start
+         MINTEL_LiveChat.chatStarted = false
+         MINTEL_LiveChat.items.removeAll()
     }
     
     fileprivate func checkAgentMode() {
@@ -327,34 +330,63 @@ public class MINTEL_LiveChat: UIView {
         
         surveyUrl = surveyUrl.replacingOccurrences(of: "sessionId", with: MINTEL_LiveChat.userId)
         
-        
         // Open Survey Url
         guard let url = URL(string: surveyUrl) else { return }
-//        self.tapAction(sender: UIButton(), survey: true)
         if (UIApplication.shared.canOpenURL(url)) {
-
             let currentViewController = self.topViewController()
-
             if let cu = currentViewController {
-
                 cu.dismiss(animated: false) {
-
                     let appViewController = self.topViewController()
+                    
                     if let appCu = appViewController {
-                        var vc:UIViewController? = nil
-                        if #available(iOS 11.0, *) {
-                            let config = SFSafariViewController.Configuration()
-                            config.entersReaderIfAvailable = false
-                            vc = SFSafariViewController(url: url, configuration: config)
-                        } else {
-                            vc = SFSafariViewController(url: url)
-                        }
-
-                        appCu.present(vc!, animated: true, completion: nil)
+                        let bundle = Bundle(for: type(of: self))
+                        let storyboard = UIStoryboard(name: "ChatBox", bundle: bundle)
+                        let vc = storyboard.instantiateViewController(withIdentifier: "survey") as! MINTEL_SurveyController
+                        
+                        let navigationController = UINavigationController(rootViewController: vc)
+                        navigationController.modalPresentationStyle = .fullScreen
+                        
+                        MINTEL_LiveChat.surveyMode = true
+                        self.isHidden = true
+//                        
+//                        let btnClose = UIBarButtonItem(image: UIImage(named: "close", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil), style: .plain, target: self, action: nil)
+//                        navigationController.navigationItem.rightBarButtonItem = btnClose
+//                        
+////                        navigationController.navigationItem.rightBarButtonItem = nil
+//                        navigationController.navigationItem.titleView = UIImageView(image: UIImage(named: "true_bar_title", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil))
+                        
+                        vc.url = url
+                        appCu.present(navigationController, animated: true, completion: nil)
                     }
                 }
             }
         }
+        
+//        self.tapAction(sender: UIButton(), survey: true)
+//        if (UIApplication.shared.canOpenURL(url)) {
+//
+//            let currentViewController = self.topViewController()
+//
+//            if let cu = currentViewController {
+//
+//                cu.dismiss(animated: false) {
+//
+//                    let appViewController = self.topViewController()
+//                    if let appCu = appViewController {
+//                        var vc:UIViewController? = nil
+//                        if #available(iOS 11.0, *) {
+//                            let config = SFSafariViewController.Configuration()
+//                            config.entersReaderIfAvailable = false
+//                            vc = SFSafariViewController(url: url, configuration: config)
+//                        } else {
+//                            vc = SFSafariViewController(url: url)
+//                        }
+//
+//                        appCu.present(vc!, animated: true, completion: nil)
+//                    }
+//                }
+//            }
+//        }
     }
     
     fileprivate func topViewController(_ viewController: UIViewController? = UIApplication.shared.keyWindow?.rootViewController) -> UIViewController? {
@@ -607,6 +639,7 @@ public class MINTEL_LiveChat: UIView {
     @objc func closeButtonHandle() {
         self.isHidden = true
        
+        MINTEL_LiveChat.surveyMode = false
         MINTEL_LiveChat.agentState = .start
         MINTEL_LiveChat.chatStarted = false
         UIApplication.shared.keyWindow?.sendSubviewToBack(self)
@@ -618,13 +651,17 @@ public class MINTEL_LiveChat: UIView {
         DispatchQueue.main.async {
             if (!self.singleTapBeenCanceled && !self.dragging)  {
                 
-                let bundle = Bundle(for: type(of: self))
-                let storyboard = UIStoryboard(name: "ChatBox", bundle: bundle)
-                let vc = storyboard.instantiateInitialViewController()!
-                let viewController = UIApplication.shared.windows.first!.rootViewController!
-                viewController.modalPresentationStyle = .fullScreen
-                viewController.present(vc, animated: true) {
-                    self.isHidden = true
+                if (MINTEL_LiveChat.surveyMode) {
+                    self.openSurvey(bot: MINTEL_LiveChat.chatBotMode)
+                } else {
+                    let bundle = Bundle(for: type(of: self))
+                    let storyboard = UIStoryboard(name: "ChatBox", bundle: bundle)
+                    let vc = storyboard.instantiateInitialViewController()!
+                    let viewController = UIApplication.shared.windows.first!.rootViewController!
+                    viewController.modalPresentationStyle = .fullScreen
+                    viewController.present(vc, animated: true) {
+                        self.isHidden = true
+                    }
                 }
             }
         }

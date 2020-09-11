@@ -56,7 +56,6 @@
                         <outlet property="btnConfirmExit" destination="3U7-6Y-a8o" id="fBe-4A-MMb"/>
                         <outlet property="viewConfirm" destination="PJI-ud-K4a" id="N98-ch-cBF"/>
                         <segue destination="aKJ-kC-w6c" kind="presentation" identifier="previewImage" modalPresentationStyle="fullScreen" id="7HH-HS-rYl"/>
-                        <segue destination="QgB-xc-x3v" kind="show" identifier="survey" id="bjl-CH-pl0"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Vmh-LI-G4m" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -119,9 +118,9 @@
         <!--Survey Controller-->
         <scene sceneID="fHU-2T-Nq9">
             <objects>
-                <viewController id="QgB-xc-x3v" customClass="MINTEL_SurveyController" customModule="MINTEL_LiveChat" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="survey" id="QgB-xc-x3v" customClass="MINTEL_SurveyController" customModule="MINTEL_LiveChat" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="fMV-dO-Gx7">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="808"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <viewLayoutGuide key="safeArea" id="EOH-Qf-z9k"/>
