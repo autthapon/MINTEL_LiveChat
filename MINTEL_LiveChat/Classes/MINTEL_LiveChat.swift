@@ -508,7 +508,7 @@ public class MINTEL_LiveChat: UIView {
                 ServiceCloud.shared().chatCore.add(delegate: self)
                 ServiceCloud.shared().chatCore.addEvent(delegate: self)
                 ServiceCloud.shared().chatCore.startSession(with: config) { (error, chat) in
-                    debugPrint(error)
+//                    debugPrint(error ?? nil)
                 }
 //            }
         }
