@@ -196,7 +196,7 @@ public class MINTEL_LiveChat: UIView {
             MINTEL_LiveChat.instance.startSaleForce()
             MINTEL_LiveChat.stopTimer()
         } else {
-            self.tapAction(sender: NSObject())
+            self.tapAction(sender: NSObject(), survey: false)
         }
     }
     
@@ -330,14 +330,15 @@ public class MINTEL_LiveChat: UIView {
         
         // Open Survey Url
         guard let url = URL(string: surveyUrl) else { return }
+//        self.tapAction(sender: UIButton(), survey: true)
         if (UIApplication.shared.canOpenURL(url)) {
-            
+
             let currentViewController = self.topViewController()
-        
+
             if let cu = currentViewController {
-                
+
                 cu.dismiss(animated: false) {
-                    
+
                     let appViewController = self.topViewController()
                     if let appCu = appViewController {
                         var vc:UIViewController? = nil
@@ -348,7 +349,7 @@ public class MINTEL_LiveChat: UIView {
                         } else {
                             vc = SFSafariViewController(url: url)
                         }
-                        
+
                         appCu.present(vc!, animated: true, completion: nil)
                     }
                 }
@@ -599,7 +600,7 @@ public class MINTEL_LiveChat: UIView {
             self.closeButtonHandle()
             //            }
         } else {
-            self.tapAction(sender: sender as AnyObject)
+            self.tapAction(sender: sender as AnyObject, survey: false)
         }
     }
     
@@ -613,7 +614,7 @@ public class MINTEL_LiveChat: UIView {
     }
     
     // MARK: Actions
-    @objc func tapAction(sender: AnyObject) {
+    @objc func tapAction(sender: AnyObject, survey: Bool) {
         DispatchQueue.main.async {
             if (!self.singleTapBeenCanceled && !self.dragging)  {
                 
@@ -779,11 +780,13 @@ extension MINTEL_LiveChat : SCSChatSessionDelegate {
     
     public func session(_ session: SCSChatSession!, didEnd endEvent: SCSChatSessionEndEvent!) {
         debugPrint("Session End")
-        MINTEL_LiveChat.agentState = .waiting
-        MINTEL_LiveChat.items.append(MyMessage(systemMessageType1: "จบการสนทนา"))
-        NotificationCenter.default.post(name: Notification.Name(SalesForceNotifId.didEnd),
-                                        object: nil,
-                                        userInfo:["session": session, "event": endEvent])
+        DispatchQueue.main.async {
+            MINTEL_LiveChat.agentState = .waiting
+            MINTEL_LiveChat.items.append(MyMessage(systemMessageType1: "จบการสนทนา"))
+            NotificationCenter.default.post(name: Notification.Name(SalesForceNotifId.didEnd),
+                                            object: nil,
+                                            userInfo:["session": session, "event": endEvent])
+        }
     }
     
     public func session(_ session: SCSChatSession!, didTransitionFrom previous: SCSChatSessionState, to current: SCSChatSessionState) {

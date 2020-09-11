@@ -150,10 +150,11 @@ extension ViewController {
         
         DispatchQueue.main.async {
             self.tableView.reloadData()
-            self.tableView.scrollToBottom(animated: true)
+            self.tableView.scrollToBottom(animated: false)
+            self.disableUserInteraction()
         }
         
-        self.disableUserInteraction()
+       
 //        MINTEL_LiveChat.instance.reallyEndChat()
     }
     

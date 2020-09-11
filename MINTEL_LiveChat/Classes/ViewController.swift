@@ -514,7 +514,12 @@ extension ViewController: UITableViewDataSource {
     }
     
     fileprivate func findMenuOnTap(menus:[[String: Any]], title:String, yPosition:CGFloat, message: MyMessage?) {
-        print("yPosition", yPosition)
+//        print("yPosition", yPosition)
+        
+        // Hide InputBar
+        self.inputTextView.resignFirstResponder()
+        self.hideImagePanel()
+        self.hideChatMenuPanel()
         
         if (!MINTEL_LiveChat.chatBotMode) {
             return
