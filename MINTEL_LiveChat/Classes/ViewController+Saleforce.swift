@@ -164,7 +164,7 @@ extension ViewController {
             self.tableView.reloadData()
             self.tableView.scrollToBottom(animated: true)
             self.hideImagePanel()
-            self.inputTextView.resignFirstResponder()
+            self.inputTextView.textView.resignFirstResponder()
         }
         
         self.viewConfirm.removeFromSuperview()

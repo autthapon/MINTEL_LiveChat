@@ -539,7 +539,7 @@ public class MINTEL_LiveChat: UIView {
         
         let titleHeight = (self.frame.size.height * 60) / 200
         self.queueTitleLabel = UILabel(frame: CGRect(x: 0, y: self.closeButton.frame.origin.y + self.closeButton.frame.size.height + 8, width: self.frame.size.width, height: titleHeight))
-        self.queueTitleLabel.text = "คิวของคุณคือลำดับที่"
+        self.queueTitleLabel.text = " คิวของคุณคือลำดับที่  "
         self.queueTitleLabel.numberOfLines = 2
         self.queueTitleLabel.textAlignment = .center
         self.queueTitleLabel.font = UIFont.systemFont(ofSize: 14)
@@ -644,6 +644,9 @@ public class MINTEL_LiveChat: UIView {
         MINTEL_LiveChat.chatStarted = false
         UIApplication.shared.keyWindow?.sendSubviewToBack(self)
         MINTEL_LiveChat.items.removeAll()
+        DispatchQueue.main.async {
+            self.reLayoutView()
+        }
     }
     
     // MARK: Actions
@@ -792,10 +795,10 @@ extension MINTEL_LiveChat : SCSChatSessionDelegate {
             }
             if (self.queueLabel.tag == Int.max) {
                 self.queueLabel.tag = position.intValue
-                self.queueLabel.text = String(format : "#%d", self.queueLabel.tag)
+                self.queueLabel.text = String(format : "%d", self.queueLabel.tag)
             } else if (position.intValue <= self.queueLabel.tag) {
                 self.queueLabel.tag = position.intValue
-                self.queueLabel.text = String(format: "#%d", self.queueLabel.tag)
+                self.queueLabel.text = String(format: "%d", self.queueLabel.tag)
             }
             
             MINTEL_LiveChat.agentState = .waiting

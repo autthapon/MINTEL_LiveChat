@@ -125,6 +125,7 @@ class ViewController: UIViewController {
     
     @IBAction func closeChat() {
         if (MINTEL_LiveChat.chatInProgress) {
+            self.inputTextView.textView.resignFirstResponder()
             self.viewConfirm.frame = CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: self.view.frame.size.height)
             self.view.addSubview(self.viewConfirm)
             
@@ -138,6 +139,7 @@ class ViewController: UIViewController {
             
             self.navigationItem.rightBarButtonItem = nil
             self.navigationItem.titleView = UIImageView(image: UIImage(named: "true_bar_title", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil))
+            
         } else {
             self.dismiss(animated: true, completion: nil)
             MINTEL_LiveChat.instance.closeButtonHandle()
@@ -517,7 +519,7 @@ extension ViewController: UITableViewDataSource {
 //        print("yPosition", yPosition)
         
         // Hide InputBar
-        self.inputTextView.resignFirstResponder()
+        self.inputTextView.textView.resignFirstResponder()
         self.hideImagePanel()
         self.hideChatMenuPanel()
         
@@ -600,7 +602,7 @@ extension ViewController: UITableViewDelegate {
             MINTEL_LiveChat.sendPost(text: text, menu: false)
             
             self.inputTextView.hideLeftMenu()
-            self.inputTextView.resignFirstResponder()
+            self.inputTextView.textView.resignFirstResponder()
             self.MINTEL_hideBottomMenu(Notification(name: Notification.Name(rawValue: "TEST")))
         }
     }
