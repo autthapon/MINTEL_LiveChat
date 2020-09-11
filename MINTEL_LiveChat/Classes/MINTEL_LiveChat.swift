@@ -824,7 +824,7 @@ extension MINTEL_LiveChat  {
                                     }
                                 }
                                 
-                                let menus:[[String:Any]] = [["action" : ["label" : "จบการสนทนา", "text" : "__00_app_endchat", "display" : false]], ["action" : [ "label" : "เริ่มการสนทนา", "text" : "__00_home_greeting", "display" : false]]]
+                                let menus:[[String:Any]] = [["action" : ["label" : "จบการสนทนา", "text" : "__00_app_endchat", "display" : false]], ["action" : [ "label" : "เริ่มสนทนา", "text" : "__00_home_greeting", "display" : false]]]
                                 MINTEL_LiveChat.items.append(MyMessage(text: "", agent: false, bot: true, menu: menus))
                                 NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
                                                                 object: nil,
