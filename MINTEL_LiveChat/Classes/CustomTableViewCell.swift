@@ -217,7 +217,7 @@ class CustomTableViewCell: UITableViewCell {
 
                                     DispatchQueue.main.async {
                                         let imaaa = UIImage(data: data!)
-                                        MINTEL_LiveChat.items[index] = MyMessage(image: imaaa!, imageUrl: txt, agent: !MINTEL_LiveChat.chatBotMode, bot: true)
+                                        MessageList.setItemAt(index: index, item: MyMessage(image: imaaa!, imageUrl: txt, agent: !MINTEL_LiveChat.chatBotMode, bot: true))
                                         tableView.reloadData()
                                     }
                                 }.resume()
@@ -491,7 +491,7 @@ class CustomTableViewCell: UITableViewCell {
     
     @objc func download(_ sender:UIButton) {
         let index = sender.tag
-        let message = MINTEL_LiveChat.items[index]
+        let message = MessageList.at(index: index)
         
         switch message.kind {
         case .image(let img, _):
@@ -558,6 +558,50 @@ class CustomTableViewCell: UITableViewCell {
             ac.addAction(UIAlertAction(title: "ปิด", style: .default))
             self.viewController?.present(ac, animated: true)
         }
+    }
+    
+    func renderTyping(item: MyMessage) {
+        
+        let indicator = self.contentView.viewWithTag(1000) as? TypingIndicator
+        if (indicator != nil) {
+            indicator?.stopAnimating()
+        }
+        
+        self.contentView.subviews.forEach { (view) in
+            view.removeFromSuperview()
+        }
+        
+        var imageName:String = ""
+        if (item.agent) {
+            imageName = "agent"
+        } else {
+            imageName = "chatbot"
+        }
+        
+        let avartar = UIImageView()
+        let avartarImage = UIImage(named: imageName, in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil)
+        let avartarWidth = avartarImage?.size.width ?? 0.0
+        avartar.image = avartarImage
+        self.contentView.addSubview(avartar)
+        avartar.frame = CGRect(x: padding, y: 0, width: avartarWidth, height: avartar.image?.size.height ?? 0)
+        
+        let mainView = UIView()
+        mainView.backgroundColor = UIColor(MyHexString: "#EEEEEE")
+        self.contentView.addSubview(mainView)
+        mainView.frame = CGRect(x: avartar.frame.origin.x + avartarWidth + 10, y: 2, width: 65, height: 35)
+        mainView.layer.cornerRadius = 17
+        mainView.layer.borderWidth = 0
+        mainView.layer.masksToBounds = true
+        
+        let view = TypingIndicator()
+        view.tag = 1000
+        mainView.addSubview(view)
+        view.frame = CGRect(x: 5, y: 8, width: 55, height: 20)
+        view.startAnimating()
+//        view.layer.cornerRadius = 18.0
+//        view.layer.borderWidth = 0.5
+//        view.layer.borderColor = UIColor(MyHexString: "#EBEBEB").cgColor
+//        view.layer.masksToBounds = true
     }
     
     func renderAgentJoin(_ agentName:String) {

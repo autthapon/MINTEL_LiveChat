@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum MyMessageKind {
+public enum MyMessageKind : Equatable {
     case text(String)
     case file(String, URL)
     case menu(String, [[String:Any]])
@@ -15,6 +15,19 @@ public enum MyMessageKind {
     case systemMessageType1(String)
     case systemMessageType2(String)
     case agentJoin(String)
+    case typing
+}
+
+public func ==(lhs: MyMessageKind, rhs: MyMessageKind) -> Bool {
+    switch (lhs, rhs) {
+    case (.systemMessageType1(_), .systemMessageType1(_)):
+        return true
+    case (.systemMessageType2(_), .systemMessageType2(_)):
+        return true
+    case (.typing, .typing):
+        return true
+    default: return false
+    }
 }
 
 class MyMessage {
@@ -32,6 +45,10 @@ class MyMessage {
         self.bot = bot
         self.messageId = UUID().uuidString
         self.sentDate = Date()
+    }
+    
+    convenience init(typing: Bool, agent: Bool) {
+        self.init(kind: .typing, agent: agent, bot: true)
     }
     
     convenience init(agentJoin: Bool, agentName: String) {

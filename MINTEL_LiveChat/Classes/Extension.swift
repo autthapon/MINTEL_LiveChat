@@ -7,6 +7,19 @@
 
 internal extension UIColor {
     
+    private static func colorFromAssetBundle(named: String) -> UIColor {
+        
+        if #available(iOS 11.0, *) {
+            guard let color = UIColor(named: named, in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil) else {
+                fatalError("Not Find Color Set")
+            }
+            return color
+        } else {
+            return UIColor.gray
+        }
+
+    }
+    
     convenience init(MyHexString: String, alpha: CGFloat = 1.0) {
         let hexString: String = MyHexString.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
         let scanner = Scanner(string: hexString)
@@ -24,6 +37,8 @@ internal extension UIColor {
         let blue  = CGFloat(b) / 255.0
         self.init(red:red, green:green, blue:blue, alpha:alpha)
     }
+    
+    static var typingIndicatorDot: UIColor { colorFromAssetBundle(named: "typingIndicatorDot") }
 }
 
 //extension UILabel {

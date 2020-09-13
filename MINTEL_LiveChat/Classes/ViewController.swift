@@ -21,6 +21,7 @@ internal class CellIds {
     static let imageMessageCellId = "imageCellId"
     static let agentJoinCellId = "agentJoinCellId"
     static let fileCellid = "fileCellid"
+    static let typingCellId = "typingCellId"
 }
 
 internal class MINTELNotifId {
@@ -335,6 +336,7 @@ class ViewController: UIViewController {
         tableView.register(CustomTableViewCell.self, forCellReuseIdentifier: CellIds.imageMessageCellId)
         tableView.register(CustomTableViewCell.self, forCellReuseIdentifier: CellIds.agentJoinCellId)
         tableView.register(CustomTableViewCell.self, forCellReuseIdentifier: CellIds.fileCellid)
+        tableView.register(CustomTableViewCell.self, forCellReuseIdentifier: CellIds.typingCellId)
         tableView.separatorStyle = .none
         tableView.keyboardDismissMode = .onDrag
         
@@ -408,7 +410,7 @@ extension ViewController: UITableViewDataSource {
         if (tableView == self.menuTableView) {
             return 1
         } else {
-            return MINTEL_LiveChat.items.count
+            return MessageList.count()
         }
     }
     
@@ -437,8 +439,7 @@ extension ViewController: UITableViewDataSource {
             return cell
             
         } else {
-        
-            let item = MINTEL_LiveChat.items[indexPath.section]
+            let item = MessageList.at(index: indexPath.section)
             let agent = item.agent
             let bot = item.bot
             
@@ -458,6 +459,8 @@ extension ViewController: UITableViewDataSource {
                 cellIdentifierId = CellIds.imageMessageCellId
             case .agentJoin:
                 cellIdentifierId = CellIds.agentJoinCellId
+            case .typing:
+                cellIdentifierId = CellIds.typingCellId
             }
             
             if let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifierId, for: indexPath) as? CustomTableViewCell {
@@ -490,6 +493,8 @@ extension ViewController: UITableViewDataSource {
                     cell.addGestureRecognizer(gesture)
                 case .agentJoin(let agentName):
                     cell.renderAgentJoin(agentName)
+                case .typing:
+                    cell.renderTyping(item: item)
                 }
                 return cell
             }
@@ -575,7 +580,7 @@ extension ViewController: UITableViewDataSource {
                     MINTEL_LiveChat.chatUserTypedIn = true
                     let display = targetAction?["display"] as? Bool ?? true
                     if (display) {
-                        MINTEL_LiveChat.items.append(MyMessage(text: text, agent: false, bot: false))
+                        MessageList.add(item: MyMessage(text: text, agent: false, bot: false))
                     }
                     self.tableView.reloadData()
                     self.tableView.scrollToBottom(animated: true)
@@ -599,7 +604,7 @@ extension ViewController: UITableViewDelegate {
             let text = actions["text"] as! String
             let display = actions["display"] as? Bool ?? true
             if (display) {
-                MINTEL_LiveChat.items.append(MyMessage(text: text, agent: false, bot: false))
+                MessageList.add(item: MyMessage(text: text, agent: false, bot: false))
             }
             self.tableView.reloadData()
             self.tableView.scrollToBottom(animated: true)
@@ -617,7 +622,7 @@ extension ViewController: UITableViewDelegate {
             return UITableView.automaticDimension
         } else {
         
-            let item = MINTEL_LiveChat.items[indexPath.section]
+            let item = MessageList.at(index: indexPath.section)
             
             switch item.kind {
             case .systemMessageType1(let txt):
@@ -638,6 +643,8 @@ extension ViewController: UITableViewDelegate {
                 return CustomTableViewCell.calcImageCellHeight(image)
             case .agentJoin:
                 return CustomTableViewCell.calcAgentJoinCellHeight()
+            case .typing:
+                return 40
             }
         }
     }
@@ -695,7 +702,7 @@ extension ViewController: InputTextViewDelegate {
         print(text)
         if (text.trimmingCharacters(in: .whitespacesAndNewlines).count > 0) {
             MINTEL_LiveChat.chatUserTypedIn = true
-            MINTEL_LiveChat.items.append(MyMessage(text: text, agent: false, bot: false))
+            MessageList.add(item: MyMessage(text: text, agent: false, bot: false))
             self.tableView.reloadData()
             self.tableView.scrollToBottom(animated: true)
             textView.text = ""
@@ -930,7 +937,7 @@ extension ViewController : UINavigationControllerDelegate, UIImagePickerControll
         
         let fileName = "file.jpeg"
         let data = selectedImage.jpegData(compressionQuality: 1.0)
-        MINTEL_LiveChat.items.append(MyMessage(image: selectedImage, imageUrl: ""))
+        MessageList.add(item: MyMessage(image: selectedImage, imageUrl: ""))
         self.tableView.reloadData()
         self.tableView.scrollToBottom(animated: true)
         self.upload(imageData: data, imageName: fileName, fileData: nil, fileName: nil, parameters: ["session_id": "1"])
@@ -963,7 +970,7 @@ extension ViewController : UIDocumentMenuDelegate, UIDocumentPickerDelegate {
         if FileManager.default.fileExists(atPath: url.path){
             
             let filename = (url.absoluteString as NSString).lastPathComponent
-            MINTEL_LiveChat.items.append(MyMessage(fileName: filename, fileURL: url))
+            MessageList.add(item: MyMessage(fileName: filename, fileURL: url))
             self.tableView.reloadData()
             self.tableView.scrollToBottom(animated: true)
             do {
@@ -1069,7 +1076,7 @@ extension ViewController : UICollectionViewDataSource, UICollectionViewDelegate,
             if (image != nil) {
                 let fileName = "file.jpeg"
                 let data = image!.jpegData(compressionQuality: 1.0)
-                MINTEL_LiveChat.items.append(MyMessage(image: image!, imageUrl: ""))
+                MessageList.add(item: MyMessage(image: image!, imageUrl: ""))
                 self.tableView.reloadData()
                 self.tableView.scrollToBottom(animated: true)
                 self.upload(imageData: data, imageName: fileName, fileData: nil, fileName: nil, parameters: ["session_id": "1"])
