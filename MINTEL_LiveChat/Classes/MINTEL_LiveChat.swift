@@ -58,6 +58,7 @@ public class MINTEL_LiveChat: UIView {
     private let viewHeight = CGFloat(200)
     private let closeButtonHeight = CGFloat(65)
     internal static var chatInProgress = false
+    internal static var openConfirmExitPage = false
     
     private var beginLocation: CGPoint?
     private var closeButton:UIButton!
@@ -160,7 +161,7 @@ public class MINTEL_LiveChat: UIView {
         }
         
         self.layer.zPosition = 1
-        MINTEL_LiveChat.chatStarted = true
+        MINTEL_LiveChat.openConfirmExitPage = false
         MINTEL_LiveChat.userId = UUID().uuidString
         MINTEL_LiveChat.configuration = config
         MINTEL_LiveChat.userName = config.userName
@@ -640,7 +641,33 @@ public class MINTEL_LiveChat: UIView {
     
     @objc func closeButtonHandle() {
         
+        if (MINTEL_LiveChat.surveyMode) {
+            self.exitApp()
+        } else {
+            if (!MINTEL_LiveChat.chatStarted) {
+                self.exitApp()
+            } else {
+                if (MINTEL_LiveChat.chatInProgress) {
+                    MINTEL_LiveChat.openConfirmExitPage = true
+                    self.tapAction(sender: UIButton(), survey: false)
+                } else {
+                    self.exitApp()
+                }
+            }
+        }
+        
        
+//        MINTEL_LiveChat.surveyMode = false
+//        MINTEL_LiveChat.agentState = .start
+//        MINTEL_LiveChat.chatStarted = false
+//        UIApplication.shared.keyWindow?.sendSubviewToBack(self)
+//        MINTEL_LiveChat.items.removeAll()
+//        DispatchQueue.main.async {
+//            self.isHidden = true
+//        }
+    }
+    
+    fileprivate func exitApp() {
         MINTEL_LiveChat.surveyMode = false
         MINTEL_LiveChat.agentState = .start
         MINTEL_LiveChat.chatStarted = false
@@ -798,7 +825,7 @@ extension MINTEL_LiveChat : SCSChatSessionDelegate {
             if (self.queueLabel.tag == Int.max) {
                 self.queueLabel.tag = position.intValue
                 self.queueLabel.text = String(format : "%d", self.queueLabel.tag)
-            } else if (position.intValue <= self.queueLabel.tag) {
+            } else if (position.intValue <= self.queueLabel.tag && position.intValue > 0) {
                 self.queueLabel.tag = position.intValue
                 self.queueLabel.text = String(format: "%d", self.queueLabel.tag)
             }
@@ -1024,6 +1051,7 @@ extension MINTEL_LiveChat  {
             } else {
                 MINTEL_LiveChat.items.append(MyMessage(text: String(format: "สวัสดีครับคุณ %@", MINTEL_LiveChat.configuration?.firstname ?? ""), agent: false, bot: true))
             }
+            MINTEL_LiveChat.chatStarted = true
             MINTEL_LiveChat.chatCanTyped = true
             NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
                                             object: nil,

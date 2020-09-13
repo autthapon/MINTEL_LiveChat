@@ -307,6 +307,10 @@ class ViewController: UIViewController {
         }
         MINTEL_LiveChat.chatPanelOpened  = true
         
+        if (MINTEL_LiveChat.openConfirmExitPage) {
+            MINTEL_LiveChat.openConfirmExitPage = false
+            self.closeChat()
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
