@@ -509,6 +509,11 @@ public class MINTEL_LiveChat: UIView {
                 ServiceCloud.shared().chatCore.add(delegate: self)
                 ServiceCloud.shared().chatCore.addEvent(delegate: self)
                 ServiceCloud.shared().chatCore.startSession(with: config) { (error, chat) in
+                    
+                    MINTEL_LiveChat.chatStarted = true
+                    MINTEL_LiveChat.chatInProgress = true
+                    MINTEL_LiveChat.chatBotMode = false
+                    MINTEL_LiveChat.chatCanTyped = true
 //                    debugPrint(error ?? nil)
                 }
 //            }
