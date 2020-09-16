@@ -1032,6 +1032,8 @@ extension MINTEL_LiveChat  {
         debugPrint("=== Send Post " , text)
         if ("__00_home_greeting" == text) {
             
+            MINTEL_LiveChat.instance.checkAgentMode()
+            
             if MINTEL_LiveChat.configuration?.phone.count == 0 {
                 MessageList.add(item: MyMessage(text: "สวัสดีครับ", agent: false, bot: true))
             } else {
@@ -1165,7 +1167,7 @@ extension MINTEL_LiveChat : SCSChatEventDelegate {
     
     public func session(_ session: SCSChatSession!, agentJoined agentjoinedEvent: SCSAgentJoinEvent!) {
         
-        MessageList.add(item: MyMessage(systemMessageType1: String(format: "คิวของคุณคือลำดับที่ 0")), remove: true)
+        MessageList.remove(item: MyMessage(systemMessageType1: String(format: "คิวของคุณคือลำดับที่ 0")), remove: true)
         
         let agentName = agentjoinedEvent.sender?.name ?? "agent"
         MINTEL_LiveChat.agentName = agentName

@@ -20,7 +20,7 @@ class MessageList {
         MessageList.sort()
     }
     
-    static internal func add(item: MyMessage, remove: Bool) {
+    static internal func remove(item: MyMessage, remove: Bool) {
         MessageList.items.removeAll { (it) -> Bool in
             
             switch(it.kind) {
@@ -45,6 +45,12 @@ class MessageList {
             }
             
             return false
+        }
+    }
+    
+    static internal func add(item: MyMessage, remove: Bool) {
+        if (remove) {
+            MessageList.remove(item: item, remove: remove)
         }
         MessageList.add(item: item)
     }
