@@ -57,12 +57,11 @@ extension ViewController {
                         let url = dict["url"] as? String ?? ""
                         if url.count > 0 {
                             self.uploadDataText.append(url)
-//                            if (MINTEL_LiveChat.chatBotMode) {
-//
-////                                MINTEL_LiveChat.sendPost(text: url, menu:false)
-//                            } else {
-//                                self.sendMessageToSaleForce(text: url)
-//                            }
+                            if (MINTEL_LiveChat.chatBotMode) {
+//                                MINTEL_LiveChat.sendPost(text: url, menu:false)
+                            } else {
+                                self.sendMessageToSaleForce(text: url)
+                            }
                         }
                     }
                     
