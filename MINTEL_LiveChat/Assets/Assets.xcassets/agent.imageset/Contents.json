@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "agent_image_1x.png",
+      "filename" : "Group 10.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "agent_image_2x.png",
+      "filename" : "Group 10@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "agent_image.png",
+      "filename" : "Group 10@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
