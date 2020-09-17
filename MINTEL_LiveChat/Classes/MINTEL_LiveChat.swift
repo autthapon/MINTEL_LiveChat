@@ -296,24 +296,26 @@ public class MINTEL_LiveChat: UIView {
     
     fileprivate func openSurvey(bot:Bool) {
         
-        var surveyUrl:String = ""
-        if (bot) {
-            surveyUrl = MINTEL_LiveChat.configuration?.surveyChatbotUrl ?? ""
-        } else {
-            surveyUrl = MINTEL_LiveChat.configuration?.surveyFormUrl ?? ""
-        }
-        
-        surveyUrl = surveyUrl.replacingOccurrences(of: "sessionId", with: MINTEL_LiveChat.userId)
-        
-        // Open Survey Url
-        guard let url = URL(string: surveyUrl) else { return }
-        if (UIApplication.shared.canOpenURL(url)) {
-            let currentViewController = self.topViewController()
-            if let cu = currentViewController {
-                cu.dismiss(animated: false) {
-                    let appViewController = self.topViewController()
-                    
-                    if let appCu = appViewController {
+        DispatchQueue.main.async {
+            self.isHidden = false
+            
+            var surveyUrl:String = ""
+            if (bot) {
+                surveyUrl = MINTEL_LiveChat.configuration?.surveyChatbotUrl ?? ""
+            } else {
+                surveyUrl = MINTEL_LiveChat.configuration?.surveyFormUrl ?? ""
+            }
+            
+            surveyUrl = surveyUrl.replacingOccurrences(of: "sessionId", with: MINTEL_LiveChat.userId)
+            
+            // Open Survey Url
+            guard let url = URL(string: surveyUrl) else { return }
+            if (UIApplication.shared.canOpenURL(url)) {
+                let currentViewController = self.topViewController()
+                if let cu = currentViewController {
+                    cu.dismiss(animated: false) {
+                        let appViewController = UIApplication.shared.windows.first!.rootViewController!
+                        
                         let bundle = Bundle(for: type(of: self))
                         let storyboard = UIStoryboard(name: "ChatBox", bundle: bundle)
                         let vc = storyboard.instantiateViewController(withIdentifier: "survey") as! MINTEL_SurveyController
@@ -322,46 +324,16 @@ public class MINTEL_LiveChat: UIView {
                         navigationController.modalPresentationStyle = .fullScreen
                         
                         MINTEL_LiveChat.surveyMode = true
-                        self.isHidden = true
-//                        
-//                        let btnClose = UIBarButtonItem(image: UIImage(named: "close", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil), style: .plain, target: self, action: nil)
-//                        navigationController.navigationItem.rightBarButtonItem = btnClose
-//                        
-////                        navigationController.navigationItem.rightBarButtonItem = nil
-//                        navigationController.navigationItem.titleView = UIImageView(image: UIImage(named: "true_bar_title", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil))
-                        
+//                        self.isHidden = true
+//
                         vc.url = url
-                        appCu.present(navigationController, animated: true, completion: nil)
+                        appViewController.present(navigationController, animated: true) {
+//                            self.isHidden = true
+                        }
                     }
                 }
             }
         }
-        
-//        self.tapAction(sender: UIButton(), survey: true)
-//        if (UIApplication.shared.canOpenURL(url)) {
-//
-//            let currentViewController = self.topViewController()
-//
-//            if let cu = currentViewController {
-//
-//                cu.dismiss(animated: false) {
-//
-//                    let appViewController = self.topViewController()
-//                    if let appCu = appViewController {
-//                        var vc:UIViewController? = nil
-//                        if #available(iOS 11.0, *) {
-//                            let config = SFSafariViewController.Configuration()
-//                            config.entersReaderIfAvailable = false
-//                            vc = SFSafariViewController(url: url, configuration: config)
-//                        } else {
-//                            vc = SFSafariViewController(url: url)
-//                        }
-//
-//                        appCu.present(vc!, animated: true, completion: nil)
-//                    }
-//                }
-//            }
-//        }
     }
     
     fileprivate func topViewController(_ viewController: UIViewController? = UIApplication.shared.keyWindow?.rootViewController) -> UIViewController? {

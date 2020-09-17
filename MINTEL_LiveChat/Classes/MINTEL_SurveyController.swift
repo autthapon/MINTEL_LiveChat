@@ -41,6 +41,21 @@ class MINTEL_SurveyController : UIViewController, WKUIDelegate {
         
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        DispatchQueue.main.async {
+            MINTEL_LiveChat.instance.isHidden = true
+        }
+        super.viewDidAppear(animated)
+    }
+    
+//    override func viewDidDisappear(_ animated: Bool) {
+//        DispatchQueue.main.async {
+//            MINTEL_LiveChat.instance.isHidden = false
+//        }
+//        
+//        super.viewDidDisappear(animated)
+//    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
