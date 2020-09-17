@@ -153,6 +153,15 @@ public class MINTEL_LiveChat: UIView {
         }
     }
     
+    public func getSDKVersion() -> String {
+        if let version = Bundle(identifier: "org.cocoapods.MINTEL-LiveChat")?.infoDictionary?["CFBundleShortVersionString"] as? String {
+            print(version)
+            return version
+        }
+        
+        return ""
+    }
+    
     public func startChat(config:LiveChatConfiguration) {
         
         notification.userRequest()

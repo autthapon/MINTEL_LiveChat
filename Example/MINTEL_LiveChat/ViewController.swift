@@ -45,6 +45,8 @@ class ViewController: UIViewController {
         let config = LiveChatConfiguration(withUserName: "Note", withSalesforceLiveAgentPod: liveagentPod, withSalesForceOrdId: ordID, withSalesforceDeployId: deployID, withSalesforceButtonId: buttonID, withWebHookBaseUrl: webhookUrl, withXApiKey: xApiKey, withUploadBaseUrl: uploadUrl, withSurveyChatbotUrl: chatBotSurveyUrl, withSurveyFormUrl: surveryFormUrl, withAnnouncementUrl: announcementUrl, withFirstName: firstname, withLastName: lastname, withEmail: email, withPhone: phone, withTmnId: tmnId, withDisableBotMode: disableBotMode)
         
         appDelegate.chat.startChat(config: config)
+        
+        print("App Version : ", appDelegate.chat.getSDKVersion())
     }
     
     @objc @IBAction func stopChat() {
