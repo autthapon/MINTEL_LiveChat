@@ -27,6 +27,7 @@ internal class CellIds {
 internal class MINTELNotifId {
     static let userIsTyping = "MINTEL_userIsTyping"
     static let userIsNotTyping = "MINTEL_userIsNotTyping"
+    static let sneakPeak = "MINTEL_sneakPeak"
     static let botTyped = "MINTEL_botTyped"
     static let chatMenuAvailable = "MINTEL_chatMenuAvailable"
     static let toAgentMode = "MINTEL_toAgentMode"

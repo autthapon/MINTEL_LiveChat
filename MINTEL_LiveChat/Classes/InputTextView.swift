@@ -255,6 +255,9 @@ extension InputTextView: UITextViewDelegate {
             NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.userIsTyping),
                                             object: nil,
                                             userInfo:nil)
+            NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.sneakPeak),
+                                                object: nil,
+                                                userInfo:["message": textView.text])
         }
     }
     

@@ -43,6 +43,16 @@ extension ViewController {
                                                object: nil)
         
         NotificationCenter.default.addObserver(self,
+                                                selector: #selector(saleForceUserNotTyping(_:)),
+                                                name: Notification.Name(MINTELNotifId.userIsNotTyping),
+                                                object: nil)
+        
+        NotificationCenter.default.addObserver(self,
+                                                selector: #selector(saleForceSneakPeak(_:)),
+                                                name: Notification.Name(MINTELNotifId.sneakPeak),
+                                                object: nil)
+        
+        NotificationCenter.default.addObserver(self,
                                                selector: #selector(MINTEL_reallyEndChat(_:)),
                                                name: Notification.Name(MINTELNotifId.reallyExitChat),
                                                object: nil)
@@ -97,6 +107,20 @@ extension ViewController {
             break
         }
     }
+    
+    @objc func saleForceSneakPeak(_ notification: Notification) {
+        switch MINTEL_LiveChat.agentState {
+        case .start: break
+        case .waiting: break
+        case .end: break
+        case .joined:
+//            let message:String = notification.userInfo?["message"] as? String ?? ""
+//            debugPrint("Send Sneak Peak : ", message)
+//            ServiceCloud.shared().chatCore.session.sendSneakPeek(message)
+            break
+        }
+    }
+    
     
     @objc func saleForcesDidUpdateQueuePosition(_ notification: Notification) {
 //        let _:SCSChatSession = notification.userInfo?["session"] as! SCSChatSession
