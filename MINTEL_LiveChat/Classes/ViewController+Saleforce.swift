@@ -114,9 +114,9 @@ extension ViewController {
         case .waiting: break
         case .end: break
         case .joined:
-//            let message:String = notification.userInfo?["message"] as? String ?? ""
-//            debugPrint("Send Sneak Peak : ", message)
-//            ServiceCloud.shared().chatCore.session.sendSneakPeek(message)
+            let message:String = notification.userInfo?["message"] as? String ?? ""
+            debugPrint("Send Sneak Peak : ", message)
+            ServiceCloud.shared().chatCore.session.sendSneakPeek(message)
             break
         }
     }

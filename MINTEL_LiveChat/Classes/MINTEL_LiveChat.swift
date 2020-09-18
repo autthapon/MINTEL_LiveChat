@@ -1013,8 +1013,6 @@ extension MINTEL_LiveChat  {
         debugPrint("=== Send Post " , text)
         if ("__00_home_greeting" == text) {
             
-            MINTEL_LiveChat.instance.checkAgentMode()
-            
             if MINTEL_LiveChat.configuration?.phone.count == 0 {
                 MessageList.add(item: MyMessage(text: "สวัสดีครับ", agent: false, bot: true))
             } else {
