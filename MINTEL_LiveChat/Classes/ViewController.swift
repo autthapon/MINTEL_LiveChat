@@ -575,7 +575,7 @@ extension ViewController: UITableViewDataSource {
                     
                     self.closeChat()
                     
-                } else if ("__00_home_greeting" == text) {
+                } else if ("__00_home__greeting" == text) {
                     MINTEL_LiveChat.instance.checkAgentMode()
                 } else {
                 
