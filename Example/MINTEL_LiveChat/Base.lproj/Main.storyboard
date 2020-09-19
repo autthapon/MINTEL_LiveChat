@@ -60,6 +60,14 @@
                                     <action selector="stopChat" destination="vXZ-lx-hvc" eventType="touchUpInside" id="Fwp-48-RNr"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="A15-vG-iQ7">
+                                <rect key="frame" x="16" y="125" width="140" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Start Another Phone"/>
+                                <connections>
+                                    <action selector="startChatAnotherPhoneWithSender:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="CUK-X9-opP"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>

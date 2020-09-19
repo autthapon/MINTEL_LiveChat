@@ -20,6 +20,19 @@ internal extension UIColor {
 
     }
     
+    var MINTEL_hexCodeString: String {
+        var r:CGFloat = 0
+        var g:CGFloat = 0
+        var b:CGFloat = 0
+        var a:CGFloat = 0
+
+        getRed(&r, green: &g, blue: &b, alpha: &a)
+
+        let rgb:Int = (Int)(r*255)<<16 | (Int)(g*255)<<8 | (Int)(b*255)<<0
+
+        return String(format:"#%06x", rgb)
+    }
+    
     convenience init(MyHexString: String, alpha: CGFloat = 1.0) {
         let hexString: String = MyHexString.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
         let scanner = Scanner(string: hexString)
@@ -146,6 +159,30 @@ internal extension String {
         return ceil(boundingBox.height)
     }
     
+    var MINTEL_htmlToAttributedString: NSAttributedString? {
+        guard let data = data(using: .utf8) else { return NSAttributedString() }
+        do {
+            let options: [NSAttributedString.DocumentReadingOptionKey : Any] = [
+                .documentType: NSAttributedString.DocumentType.html,
+                .characterEncoding: String.Encoding.utf8.rawValue
+            ]
+            let attributedString = try NSMutableAttributedString(data: data, options: options, documentAttributes: nil)
+            return attributedString
+        } catch {
+            return NSAttributedString()
+        }
+    }
+    
+    func MINTEL_customHTMLAttributedString(withFont font: UIFont?, textColor: UIColor) -> NSAttributedString? {
+        guard let font = font else {
+            return self.MINTEL_htmlToAttributedString
+        }
+        let hexCode = textColor.MINTEL_hexCodeString
+        let css = "<style>body{font-family: '\(font.fontName)'; font-size:\(font.pointSize)px; color: \(hexCode);}</style>"
+        let modifiedString = css + self
+        return modifiedString.MINTEL_htmlToAttributedString
+    }
+    
     //    var MyHtmlToAttributedString: NSAttributedString? {
     //        guard let data = data(using: .utf8) else { return nil }
     //        do {
@@ -159,6 +196,19 @@ internal extension String {
     //    }
 }
 
+extension UITextView {
+    
+    var MINTEL_htmlText: String? {
+        set(value) {
+            let newValue = value ?? ""
+            self.attributedText = newValue.MINTEL_customHTMLAttributedString(withFont: self.font, textColor: self.textColor ?? .black)
+        }
+        get {
+            return self.attributedText.string
+        }
+    }
+    
+}
 
 extension UIImage {
     func MyResizeImage(targetSize: CGSize) -> UIImage {

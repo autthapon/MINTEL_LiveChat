@@ -47,7 +47,45 @@ class ViewController: UIViewController {
         appDelegate.chat.startChat(config: config)
         
         print("App Version : ", appDelegate.chat.getSDKVersion())
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 10.0) { // Change `2.0` to the desired number of seconds.
+            appDelegate.chat.hideChat()
+        }
     }
+    
+    @objc @IBAction func startChatAnotherPhone(sender: UIButton) {
+            let appDelegate = (UIApplication.shared.delegate as! AppDelegate)
+            
+            let liveagentPod:String         = "d.la2-c2-ukb.salesforceliveagent.com";
+            let ordID:String                = "00D2w000006wosb";
+            let deployID:String             = "5722w0000009B6e";
+            let buttonID:String             = "5732w0000009E15";
+    //        let webhookUrl:String           = "https://asia-east2-tmn-chatbot-integration.cloudfunctions.net"
+          let webhookUrl:String           = "https://asia-east2-acm-clt-chatbots.cloudfunctions.net"
+            let uploadUrl:String            = "https://us-central1-test-tmn-bot.cloudfunctions.net"
+            let xApiKey:String              = "edf1ca88a09546f8a0667c81c93d1f31"
+            let surveryFormUrl:String       = "https://truemoney.secure.force.com/staffsurvey?uid=sessionId"
+            let chatBotSurveyUrl:String     = "https://truemoney.secure.force.com/botsurvey?uid=sessionId"
+            let announcementUrl:String       = "https://us-central1-test-tmn-bot.cloudfunctions.net/announcementmulti?uid=sessionId"
+            // https://asia-east2-acm-clt-chatbots.cloudfunctions.net/onNewSessionMobile
+
+            let firstname = "Note"
+            let lastname = "Note"
+            let phone = "0818888889"
+            let email = "a@a.com"
+            let tmnId = "11241313"
+            let disableBotMode = false
+            
+            let config = LiveChatConfiguration(withUserName: "Note", withSalesforceLiveAgentPod: liveagentPod, withSalesForceOrdId: ordID, withSalesforceDeployId: deployID, withSalesforceButtonId: buttonID, withWebHookBaseUrl: webhookUrl, withXApiKey: xApiKey, withUploadBaseUrl: uploadUrl, withSurveyChatbotUrl: chatBotSurveyUrl, withSurveyFormUrl: surveryFormUrl, withAnnouncementUrl: announcementUrl, withFirstName: firstname, withLastName: lastname, withEmail: email, withPhone: phone, withTmnId: tmnId, withDisableBotMode: disableBotMode)
+            
+            appDelegate.chat.startChat(config: config)
+            
+            print("App Version : ", appDelegate.chat.getSDKVersion())
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 10.0) { // Change `2.0` to the desired number of seconds.
+                appDelegate.chat.hideChat()
+            }
+        }
     
     @objc @IBAction func stopChat() {
         let appDelegate = (UIApplication.shared.delegate as! AppDelegate)

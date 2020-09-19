@@ -623,6 +623,9 @@ extension ViewController: UITableViewDelegate {
             return UITableView.automaticDimension
         } else {
         
+            if MessageList.count() < indexPath.section {
+                return 0
+            }
             let item = MessageList.at(index: indexPath.section)
             
             switch item.kind {

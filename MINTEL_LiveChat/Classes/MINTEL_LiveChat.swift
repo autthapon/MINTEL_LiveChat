@@ -165,7 +165,18 @@ public class MINTEL_LiveChat: UIView {
     public func startChat(config:LiveChatConfiguration) {
         
         notification.userRequest()
-        if (MINTEL_LiveChat.chatStarted) {
+        if (MINTEL_LiveChat.chatInProgress) {
+            
+            if (config.phone == MINTEL_LiveChat.configuration?.phone) {
+                if (self.isHidden == true) {
+                    self.isHidden = false
+                    self.tapAction(sender: UIButton(), survey: MINTEL_LiveChat.surveyMode)
+                    return
+                }
+            } else {
+                self.cleanChat()
+            }
+        } else if (MINTEL_LiveChat.chatStarted) {
             return
         }
         
@@ -220,9 +231,47 @@ public class MINTEL_LiveChat: UIView {
         }
     }
     
+    public func hideChat() {
+        if (MINTEL_LiveChat.chatPanelOpened) {
+            let currentViewController = self.topViewController()
+            if let cu = currentViewController {
+                cu.dismiss(animated: false) {
+                    self.isHidden = true
+                }
+            }
+        } else {
+            self.isHidden = true
+        }
+    }
+    
     public func stopChat() {
-//        self.closeButtonHandle()
         self.reallyEndChat()
+    }
+    
+    fileprivate func cleanChat() {
+        self.removeNotification()
+        if #available(iOS 9.0, *) {
+            Alamofire.SessionManager.default.session.getAllTasks { (tasks) in
+                tasks.forEach{ $0.cancel() }
+            }
+        } else {
+            Alamofire.SessionManager.default.session.getTasksWithCompletionHandler { (sessionDataTask, uploadData, downloadData) in
+                sessionDataTask.forEach { $0.cancel() }
+                uploadData.forEach { $0.cancel() }
+                downloadData.forEach { $0.cancel() }
+            }
+        }
+        
+        MINTEL_LiveChat.chatInProgress = false
+        MINTEL_LiveChat.userId = UUID().uuidString
+
+        ServiceCloud.shared().chatCore.stopSession()
+        ServiceCloud.shared().chatCore.remove(delegate: self)
+        ServiceCloud.shared().chatCore.removeEvent(delegate: self)
+        
+        MINTEL_LiveChat.agentState = .start
+        MINTEL_LiveChat.chatStarted = false
+        MessageList.clear()
     }
     
     internal func reallyEndChat() {

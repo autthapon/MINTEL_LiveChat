@@ -170,14 +170,16 @@ class CustomTableViewCell: UITableViewCell {
         let textView = UITextView()
         self.contentView.addSubview(textView)
         
-        let htmlData = NSString(string: txt).data(using: String.Encoding.unicode.rawValue)
-        let options = [NSAttributedString.DocumentReadingOptionKey.documentType: NSAttributedString.DocumentType.html]
-        let attributedString = try! NSMutableAttributedString(data: htmlData!, options: options, documentAttributes: nil)
-        attributedString.addAttributes([NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16), NSAttributedString.Key.foregroundColor : UIColor.black], range: NSMakeRange(0, attributedString.length))
-//        attributedString.addAttributes(<#T##attrs: [NSAttributedString.Key : Any]##[NSAttributedString.Key : Any]#>, range: <#T##NSRange#>)
-        //        [attributedString addAttributes:@{NSFontAttributeName:[UIFont fontWithName:@"nexabold" size:16.0],NSForegroundColorAttributeName:[UIColor blackColor]} range:NSMakeRange(0, attributedString.length)];
-
-        textView.attributedText = attributedString
+//        let htmlData = NSString(string: txt).data(using: String.Encoding.unicode.rawValue, allowLossyConversion: false)
+//        let options = [NSAttributedString.DocumentReadingOptionKey.documentType: NSAttributedString.DocumentType.html]
+//        let attributedString = try! NSMutableAttributedString(data: htmlData!, options: options, documentAttributes: nil)
+//        attributedString.addAttributes([NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16), NSAttributedString.Key.foregroundColor : UIColor.black], range: NSMakeRange(0, attributedString.length))
+////        attributedString.addAttributes(<#T##attrs: [NSAttributedString.Key : Any]##[NSAttributedString.Key : Any]#>, range: <#T##NSRange#>)
+//        //        [attributedString addAttributes:@{NSFontAttributeName:[UIFont fontWithName:@"nexabold" size:16.0],NSForegroundColorAttributeName:[UIColor blackColor]} range:NSMakeRange(0, attributedString.length)];
+//
+//        textView.attributedText = attributedString
+        
+        textView.MINTEL_htmlText = txt
         
         textView.font = UIFont.systemFont(ofSize: 16)
         textView.isHidden = false
