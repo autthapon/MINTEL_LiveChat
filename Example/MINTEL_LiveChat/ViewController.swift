@@ -48,9 +48,9 @@ class ViewController: UIViewController {
         
         print("App Version : ", appDelegate.chat.getSDKVersion())
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 10.0) { // Change `2.0` to the desired number of seconds.
-            appDelegate.chat.hideChat()
-        }
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 10.0) { // Change `2.0` to the desired number of seconds.
+//            appDelegate.chat.hideChat()
+//        }
     }
     
     @objc @IBAction func startChatAnotherPhone(sender: UIButton) {
@@ -82,9 +82,9 @@ class ViewController: UIViewController {
             
             print("App Version : ", appDelegate.chat.getSDKVersion())
             
-            DispatchQueue.main.asyncAfter(deadline: .now() + 10.0) { // Change `2.0` to the desired number of seconds.
-                appDelegate.chat.hideChat()
-            }
+//            DispatchQueue.main.asyncAfter(deadline: .now() + 10.0) { // Change `2.0` to the desired number of seconds.
+//                appDelegate.chat.hideChat()
+//            }
         }
     
     @objc @IBAction func stopChat() {
