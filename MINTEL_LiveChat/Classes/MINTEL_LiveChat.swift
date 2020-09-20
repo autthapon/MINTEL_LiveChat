@@ -327,7 +327,7 @@ public class MINTEL_LiveChat: UIView {
          MessageList.clear()
     }
     
-    fileprivate func checkAgentMode() {
+    internal func checkAgentMode() {
         let url = String(format: "%@/botconfig", MINTEL_LiveChat.configuration?.webHookBaseUrl ?? "")
         let header:HTTPHeaders = [
             "x-api-key": MINTEL_LiveChat.configuration?.xApikey ?? "" // "381b0ac187994f82bdc05c09d1034afa"
@@ -337,6 +337,7 @@ public class MINTEL_LiveChat: UIView {
             .request(url, method: .get, parameters: nil, encoding: JSONEncoding.init(), headers: header)
             .responseJSON(completionHandler: { response in
 //                debugPrint(response)
+                
                 if let json = response.value {
                     let dict = json as! [String:Any]
                     let disableBotMode = dict["disableBotMode"] as? Bool ?? false
@@ -347,6 +348,9 @@ public class MINTEL_LiveChat: UIView {
                         MessageList.add(item: MyMessage(systemMessageType2: "กรุณารอสักครู่"), remove: true)
                         MINTEL_LiveChat.chatBotMode = false
                         MINTEL_LiveChat.instance.startSaleForce()
+                    } else {
+                        MINTEL_LiveChat.chatUserTypedIn = true
+                        MINTEL_LiveChat.sendPost(text: "__00_home__greeting", menu: false)
                     }
                 }
             })
@@ -907,7 +911,7 @@ extension MINTEL_LiveChat  {
                                     }
                                 }
                                 
-                                let menus:[[String:Any]] = [["action" : ["label" : "จบการสนทนา", "text" : "__00_app_endchat", "display" : false]], ["action" : [ "label" : "เริ่มสนทนา", "text" : "__00_home_greeting", "display" : false]]]
+                                let menus:[[String:Any]] = [["action" : ["label" : "จบการสนทนา", "text" : "__00_app_endchat", "display" : false]], ["action" : [ "label" : "เริ่มสนทนา", "text" : "__00_home__greeting", "display" : false]]]
                                 MessageList.add(item: MyMessage(text: "", agent: false, bot: true, menu: menus))
                                 NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
                                                                 object: nil,
@@ -917,7 +921,8 @@ extension MINTEL_LiveChat  {
                                 MINTEL_LiveChat.chatCanTyped = true
                                 DispatchQueue.global(qos: .userInitiated).async {
                                     DispatchQueue.main.async {
-                                        MINTEL_LiveChat.sendPost(text: "__00_home__greeting", menu: false)
+                                        self.checkAgentMode()
+//                                        MINTEL_LiveChat.sendPost(text: "__00_home__greeting", menu: false)
                                     }
 
                                     NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
@@ -1060,7 +1065,7 @@ extension MINTEL_LiveChat  {
         
         MessageList.add(item: MyMessage(typing: true, agent: !MINTEL_LiveChat.chatBotMode))
         debugPrint("=== Send Post " , text)
-        if ("__00_home_greeting" == text) {
+        if ("__00_home__greeting" == text) {
             
             if MINTEL_LiveChat.configuration?.phone.count == 0 {
                 MessageList.add(item: MyMessage(text: "สวัสดีครับ", agent: false, bot: true))
