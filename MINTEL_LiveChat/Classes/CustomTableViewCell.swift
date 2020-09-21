@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Alamofire
 let menuHeight = 40
 
 func randomString(length: Int) -> String {
@@ -170,24 +171,14 @@ class CustomTableViewCell: UITableViewCell {
         let textView = UITextView()
         self.contentView.addSubview(textView)
         
-//        let htmlData = NSString(string: txt).data(using: String.Encoding.unicode.rawValue, allowLossyConversion: false)
-//        let options = [NSAttributedString.DocumentReadingOptionKey.documentType: NSAttributedString.DocumentType.html]
-//        let attributedString = try! NSMutableAttributedString(data: htmlData!, options: options, documentAttributes: nil)
-//        attributedString.addAttributes([NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16), NSAttributedString.Key.foregroundColor : UIColor.black], range: NSMakeRange(0, attributedString.length))
-////        attributedString.addAttributes(<#T##attrs: [NSAttributedString.Key : Any]##[NSAttributedString.Key : Any]#>, range: <#T##NSRange#>)
-//        //        [attributedString addAttributes:@{NSFontAttributeName:[UIFont fontWithName:@"nexabold" size:16.0],NSForegroundColorAttributeName:[UIColor blackColor]} range:NSMakeRange(0, attributedString.length)];
-//
-//        textView.attributedText = attributedString
-        
         textView.MINTEL_htmlText = txt
         
         textView.font = UIFont.systemFont(ofSize: 16)
         textView.isHidden = false
-//        textView.text = txt
         textView.backgroundColor = UIColor(MyHexString: "#EBEBEB")
         textView.layer.cornerRadius = 18.0
         textView.textContainerInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
-        textView.frame = CGRect(x: avartar.frame.origin.x + avartarWidth + 5, y: 0, width: UIScreen.main.bounds.width - avartar.frame.origin.x - avartarWidth - 10, height: 100)
+        textView.frame = CGRect(x: avartar.frame.origin.x + avartarWidth + 5, y: 0, width: UIScreen.main.bounds.width - avartar.frame.origin.x - avartarWidth - 10 - 45, height: 100)
         textView.dataDetectorTypes = [.link]
         textView.isSelectable = true
         textView.isScrollEnabled = false
@@ -199,53 +190,71 @@ class CustomTableViewCell: UITableViewCell {
         
         if let url = URL(string: txt) {
             if UIApplication.shared.canOpenURL(url as URL) {
-                let request = URLRequest(url: url)
-                let session = URLSession.shared
-                let task = session.dataTask(with: request as URLRequest, completionHandler: { data, response, error in
-                    guard error == nil else {
-                        DispatchQueue.main.async {
-                            textView.isHidden = false
-                        }
-                        return
-                    }
-                    if let httpResponse = response as? HTTPURLResponse, let contentType = httpResponse.allHeaderFields["Content-Type"] as? String {
-                        if contentType.contains("image") {
+                
+                // Check Extension Is it document file ? (.pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx, .zip, .rar)
+                let extSupports = ["pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx", "zip", "rar"]
+                let ext = (txt.lowercased() as NSString).pathExtension
+                if extSupports.contains(ext) {
+                    
+                    // Show Icon Download
+                    let btnDownload = UIButton()
+                    self.contentView.addSubview(btnDownload)
+                    var downloadImage = UIImage(named: "download", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil)
+                    downloadImage = downloadImage?.MyResizeImage(targetSize: CGSize(width:20,height: 20))
+                    btnDownload.setImage(downloadImage, for: .normal)
+                    btnDownload.tag = index
+                    btnDownload.frame = CGRect(x: textView.frame.origin.x + textView.frame.size.width + CGFloat(5.0), y: textView.frame.origin.y + textView.frame.size.height - CGFloat(35), width: 30, height: 30)
+                    btnDownload.addTarget(self, action: #selector(download(_:)), for: .touchUpInside)
+                    
+                } else {
+                    let request = URLRequest(url: url)
+                    let session = URLSession.shared
+                    let task = session.dataTask(with: request as URLRequest, completionHandler: { data, response, error in
+                        guard error == nil else {
                             DispatchQueue.main.async {
-                                textView.isHidden = true
-                                URLSession.shared.dataTask(with: url) { (data, response, error) in
-                                    if error != nil {
-                                        DispatchQueue.main.async {
-                                            textView.isHidden = false
+                                textView.isHidden = false
+                            }
+                            return
+                        }
+                        if let httpResponse = response as? HTTPURLResponse, let contentType = httpResponse.allHeaderFields["Content-Type"] as? String {
+                            if contentType.contains("image") {
+                                DispatchQueue.main.async {
+                                    textView.isHidden = true
+                                    URLSession.shared.dataTask(with: url) { (data, response, error) in
+                                        if error != nil {
+                                            DispatchQueue.main.async {
+                                                textView.isHidden = false
+                                            }
+                                            return
                                         }
-                                        return
-                                    }
 
-                                    guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
-                                        DispatchQueue.main.async {
-                                            textView.isHidden = false
+                                        guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
+                                            DispatchQueue.main.async {
+                                                textView.isHidden = false
+                                            }
+                                            return
                                         }
-                                        return
-                                    }
 
-                                    DispatchQueue.main.async {
-                                        let imaaa = UIImage(data: data!)
-                                        MessageList.setItemAt(index: index, item: MyMessage(image: imaaa!, imageUrl: txt, agent: !MINTEL_LiveChat.chatBotMode, bot: true))
-                                        tableView.reloadData()
-                                    }
-                                }.resume()
+                                        DispatchQueue.main.async {
+                                            let imaaa = UIImage(data: data!)
+                                            MessageList.setItemAt(index: index, item: MyMessage(image: imaaa!, imageUrl: txt, agent: !MINTEL_LiveChat.chatBotMode, bot: true))
+                                            tableView.reloadData()
+                                        }
+                                    }.resume()
+                                }
+                            } else {
+                                DispatchQueue.main.async {
+                                    textView.isHidden = false
+                                }
                             }
                         } else {
                             DispatchQueue.main.async {
                                 textView.isHidden = false
                             }
                         }
-                    } else {
-                        DispatchQueue.main.async {
-                            textView.isHidden = false
-                        }
-                    }
-                })
-                task.resume()
+                    })
+                    task.resume()
+                }
             } else {
                 DispatchQueue.main.async {
                     textView.isHidden = false
@@ -321,12 +330,8 @@ class CustomTableViewCell: UITableViewCell {
         let options = [NSAttributedString.DocumentReadingOptionKey.documentType: NSAttributedString.DocumentType.html]
         let attributedString = try! NSMutableAttributedString(data: htmlData!, options: options, documentAttributes: nil)
         attributedString.addAttributes([NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16), NSAttributedString.Key.foregroundColor : UIColor.black], range: NSMakeRange(0, attributedString.length))
-//        attributedString.addAttributes(<#T##attrs: [NSAttributedString.Key : Any]##[NSAttributedString.Key : Any]#>, range: <#T##NSRange#>)
-//        [attributedString addAttributes:@{NSFontAttributeName:[UIFont fontWithName:@"nexabold" size:16.0],NSForegroundColorAttributeName:[UIColor blackColor]} range:NSMakeRange(0, attributedString.length)];
-
         textView.attributedText = attributedString
         
-//        textView.text = txt
         self.contentView.addSubview(textView)
         textView.backgroundColor = UIColor(MyHexString: "#FF8300")
         textView.layer.cornerRadius = 18.0
@@ -516,6 +521,70 @@ class CustomTableViewCell: UITableViewCell {
         let message = MessageList.at(index: index)
         
         switch message.kind {
+        case .text(let url):
+            
+            //Create directory if not present
+            let paths = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)
+            let documentDirectory = paths.first! as NSString
+            let soundDirPathString = documentDirectory.appendingPathComponent("TrueMoney")
+            
+            do {
+                try FileManager.default.createDirectory(atPath: soundDirPathString, withIntermediateDirectories: true, attributes:nil)
+                print("directory created at \(soundDirPathString)")
+            } catch let error as NSError {
+                print("error while creating dir : \(error.localizedDescription)");
+            }
+            
+            if let audioUrl = URL(string: url) {
+                // create your document folder url
+                let documentsUrl =  FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first! as URL
+                let documentsFolderUrl = documentsUrl.appendingPathComponent("TrueMoney")
+                // your destination file url
+                let destinationUrl = documentsFolderUrl.appendingPathComponent(audioUrl.lastPathComponent)
+                
+                print(destinationUrl)
+                // check if it exists before downloading it
+                if FileManager().fileExists(atPath: destinationUrl.path) {
+                    DispatchQueue.main.async {
+                        let alert = UIAlertController(title: "สำเร็จ", message: "บันทึกไฟล์เรียบร้อยแล้ว", preferredStyle: UIAlertController.Style.alert)
+                        alert.addAction(UIAlertAction(title: "ตกลง",
+                                                      style: UIAlertAction.Style.default,
+                                                      handler: {(_: UIAlertAction!) in
+                                                        //Sign out action
+                        }))
+                        let currentViewController = self.topViewController()
+                        if currentViewController != nil {
+                            currentViewController?.present(alert, animated: true, completion: nil)
+                        }
+                    }
+                } else {
+                    //  if the file doesn't exist
+                    //  just download the data from your url
+                    DispatchQueue.global(qos: DispatchQoS.QoSClass.background).async(execute: {
+                        if let myAudioDataFromUrl = try? Data(contentsOf: audioUrl){
+                            // after downloading your data you need to save it to your destination url
+                            if (try? myAudioDataFromUrl.write(to: destinationUrl, options: [.atomic])) != nil {
+                                DispatchQueue.main.async {
+                                    let alert = UIAlertController(title: "สำเร็จ", message: "บันทึกไฟล์เรียบร้อยแล้ว", preferredStyle: UIAlertController.Style.alert)
+                                    alert.addAction(UIAlertAction(title: "ตกลง",
+                                                                  style: UIAlertAction.Style.default,
+                                                                  handler: {(_: UIAlertAction!) in
+                                                                    //Sign out action
+                                    }))
+                                    let currentViewController = self.topViewController()
+                                    if currentViewController != nil {
+                                        currentViewController?.present(alert, animated: true, completion: nil)
+                                    }
+                                }
+                            } else {
+//                                print("error saving file")
+//                                completion("")
+                            }
+                        }
+                    })
+                }
+            }
+            
         case .image(let img, _):
             UIImageWriteToSavedPhotosAlbum(img, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)
         case .file(let fileName, let fileUrl):
@@ -524,6 +593,47 @@ class CustomTableViewCell: UITableViewCell {
         default:
             return
         }
+    }
+    
+    fileprivate func loadFileFromUrl(url: URL, to localUrl: URL, completion: @escaping () -> ()) {
+        let sessionConfig = URLSessionConfiguration.default
+        let session = URLSession(configuration: sessionConfig)
+        let request = try! URLRequest(url: url, method: .get)
+
+        let task = session.downloadTask(with: request) { (tempLocalUrl, response, error) in
+            if let tempLocalUrl = tempLocalUrl, error == nil {
+                // Success
+                if let statusCode = (response as? HTTPURLResponse)?.statusCode {
+                    print("Success: \(statusCode)")
+                }
+
+                do {
+                    try FileManager.default.copyItem(at: tempLocalUrl, to: localUrl)
+                    completion()
+                } catch (let writeError) {
+                    print("error writing file \(localUrl) : \(writeError)")
+                }
+
+            } else {
+                print("Failure: %@", error?.localizedDescription);
+            }
+        }
+        task.resume()
+    }
+    
+    fileprivate func topViewController(_ viewController: UIViewController? = UIApplication.shared.keyWindow?.rootViewController) -> UIViewController? {
+        if let nav = viewController as? UINavigationController {
+            return topViewController(nav.visibleViewController)
+        }
+        if let tab = viewController as? UITabBarController {
+            if let selected = tab.selectedViewController {
+                return topViewController(selected)
+            }
+        }
+        if let presented = viewController?.presentedViewController {
+            return topViewController(presented)
+        }
+        return viewController
     }
 
     fileprivate func downloadFileAndSave(fileUrl: URL) {
@@ -542,7 +652,7 @@ class CustomTableViewCell: UITableViewCell {
         
 //        if let audioUrl = URL(string: audioFile) {
             // create your document folder url
-            let documentsUrl =  FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask).first! as URL
+        let documentsUrl =  FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first! as URL
             let documentsFolderUrl = documentsUrl.appendingPathComponent("TrueMoney")
             // your destination file url
             debugPrint(fileUrl.pathExtension)
@@ -551,22 +661,50 @@ class CustomTableViewCell: UITableViewCell {
             print(destinationUrl)
             // check if it exists before downloading it
             if FileManager().fileExists(atPath: destinationUrl.path) {
-                print("The file already exists at path")
+                DispatchQueue.main.async {
+                    let alert = UIAlertController(title: "สำเร็จ", message: "บันทึกไฟล์เรียบร้อยแล้ว", preferredStyle: UIAlertController.Style.alert)
+                    alert.addAction(UIAlertAction(title: "ตกลง",
+                                                  style: UIAlertAction.Style.default,
+                                                  handler: {(_: UIAlertAction!) in
+                                                    //Sign out action
+                    }))
+                    let currentViewController = self.topViewController()
+                    if currentViewController != nil {
+                        currentViewController?.present(alert, animated: true, completion: nil)
+                    }
+                }
             } else {
                 //  if the file doesn't exist
                 //  just download the data from your url
-                DispatchQueue.global(qos: DispatchQoS.QoSClass.background).async(execute: {
+                DispatchQueue.main.async {
+                    
                     if let myAudioDataFromUrl = try? Data(contentsOf: fileUrl){
                         // after downloading your data you need to save it to your destination url
                         if (try? myAudioDataFromUrl.write(to: destinationUrl, options: [.atomic])) != nil {
-                            print("file saved")
+                            let alert = UIAlertController(title: "สำเร็จ", message: "บันทึกไฟล์เรียบร้อยแล้ว", preferredStyle: UIAlertController.Style.alert)
+                            alert.addAction(UIAlertAction(title: "ตกลง",
+                                                          style: UIAlertAction.Style.default,
+                                                          handler: {(_: UIAlertAction!) in
+                                                            //Sign out action
+                            }))
+                            let currentViewController = self.topViewController()
+                            if currentViewController != nil {
+                                currentViewController?.present(alert, animated: true, completion: nil)
+                            }
                         } else {
                             print("error saving file")
                         }
+                        
+//                        let objectsToShare = [fileUrl]
+//                        let activityVC = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
+//
+//                        let currentViewController = self.topViewController()
+//                        if currentViewController != nil {
+//                            currentViewController?.present(activityVC, animated: true, completion: nil)
+//                        }
                     }
-                })
+                }
             }
-//        }
     }
     
     @objc func image(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
