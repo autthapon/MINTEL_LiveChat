@@ -546,15 +546,12 @@ class CustomTableViewCell: UITableViewCell {
                 // check if it exists before downloading it
                 if FileManager().fileExists(atPath: destinationUrl.path) {
                     DispatchQueue.main.async {
-                        let alert = UIAlertController(title: "สำเร็จ", message: "บันทึกไฟล์เรียบร้อยแล้ว", preferredStyle: UIAlertController.Style.alert)
-                        alert.addAction(UIAlertAction(title: "ตกลง",
-                                                      style: UIAlertAction.Style.default,
-                                                      handler: {(_: UIAlertAction!) in
-                                                        //Sign out action
-                        }))
+                        let objectsToShare = [destinationUrl]
+                        let activityVC = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
+
                         let currentViewController = self.topViewController()
                         if currentViewController != nil {
-                            currentViewController?.present(alert, animated: true, completion: nil)
+                            currentViewController?.present(activityVC, animated: true, completion: nil)
                         }
                     }
                 } else {
@@ -565,15 +562,12 @@ class CustomTableViewCell: UITableViewCell {
                             // after downloading your data you need to save it to your destination url
                             if (try? myAudioDataFromUrl.write(to: destinationUrl, options: [.atomic])) != nil {
                                 DispatchQueue.main.async {
-                                    let alert = UIAlertController(title: "สำเร็จ", message: "บันทึกไฟล์เรียบร้อยแล้ว", preferredStyle: UIAlertController.Style.alert)
-                                    alert.addAction(UIAlertAction(title: "ตกลง",
-                                                                  style: UIAlertAction.Style.default,
-                                                                  handler: {(_: UIAlertAction!) in
-                                                                    //Sign out action
-                                    }))
+                                    let objectsToShare = [destinationUrl]
+                                    let activityVC = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
+
                                     let currentViewController = self.topViewController()
                                     if currentViewController != nil {
-                                        currentViewController?.present(alert, animated: true, completion: nil)
+                                        currentViewController?.present(activityVC, animated: true, completion: nil)
                                     }
                                 }
                             } else {
@@ -661,16 +655,14 @@ class CustomTableViewCell: UITableViewCell {
             print(destinationUrl)
             // check if it exists before downloading it
             if FileManager().fileExists(atPath: destinationUrl.path) {
+                
                 DispatchQueue.main.async {
-                    let alert = UIAlertController(title: "สำเร็จ", message: "บันทึกไฟล์เรียบร้อยแล้ว", preferredStyle: UIAlertController.Style.alert)
-                    alert.addAction(UIAlertAction(title: "ตกลง",
-                                                  style: UIAlertAction.Style.default,
-                                                  handler: {(_: UIAlertAction!) in
-                                                    //Sign out action
-                    }))
+                    let objectsToShare = [destinationUrl]
+                    let activityVC = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
+
                     let currentViewController = self.topViewController()
                     if currentViewController != nil {
-                        currentViewController?.present(alert, animated: true, completion: nil)
+                        currentViewController?.present(activityVC, animated: true, completion: nil)
                     }
                 }
             } else {
@@ -681,27 +673,18 @@ class CustomTableViewCell: UITableViewCell {
                     if let myAudioDataFromUrl = try? Data(contentsOf: fileUrl){
                         // after downloading your data you need to save it to your destination url
                         if (try? myAudioDataFromUrl.write(to: destinationUrl, options: [.atomic])) != nil {
-                            let alert = UIAlertController(title: "สำเร็จ", message: "บันทึกไฟล์เรียบร้อยแล้ว", preferredStyle: UIAlertController.Style.alert)
-                            alert.addAction(UIAlertAction(title: "ตกลง",
-                                                          style: UIAlertAction.Style.default,
-                                                          handler: {(_: UIAlertAction!) in
-                                                            //Sign out action
-                            }))
-                            let currentViewController = self.topViewController()
-                            if currentViewController != nil {
-                                currentViewController?.present(alert, animated: true, completion: nil)
+                            DispatchQueue.main.async {
+                                let objectsToShare = [destinationUrl]
+                                let activityVC = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
+
+                                let currentViewController = self.topViewController()
+                                if currentViewController != nil {
+                                    currentViewController?.present(activityVC, animated: true, completion: nil)
+                                }
                             }
                         } else {
                             print("error saving file")
                         }
-                        
-//                        let objectsToShare = [fileUrl]
-//                        let activityVC = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
-//
-//                        let currentViewController = self.topViewController()
-//                        if currentViewController != nil {
-//                            currentViewController?.present(activityVC, animated: true, completion: nil)
-//                        }
                     }
                 }
             }
