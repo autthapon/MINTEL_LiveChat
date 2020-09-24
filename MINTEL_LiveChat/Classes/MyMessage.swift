@@ -9,7 +9,7 @@ import Foundation
 
 public enum MyMessageKind : Equatable {
     case text(String)
-    case file(String, URL)
+    case file(String, URL, String)
     case menu(String, [[String:Any]])
     case image(UIImage, String)
     case systemMessageType1(String)
@@ -59,8 +59,8 @@ class MyMessage {
         self.init(kind: .text(text), agent: agent, bot: true)
     }
     
-    convenience init(fileName: String, fileURL: URL) {
-        self.init(kind: .file(fileName, fileURL), agent: false, bot: false)
+    convenience init(fileName: String, fileURL: URL, fileUploadUrl:String) {
+        self.init(kind: .file(fileName, fileURL, fileUploadUrl), agent: false, bot: false)
     }
     
     convenience init(systemMessageType1: String) {

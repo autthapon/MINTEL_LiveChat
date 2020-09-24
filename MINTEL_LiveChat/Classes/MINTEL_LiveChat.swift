@@ -258,7 +258,7 @@ public class MINTEL_LiveChat: UIView {
         dateFormatter.dateFormat = "dd/MM/yyyy HH:mm"
         let date24 = dateFormatter.string(from: date)
         
-        MessageList.add(item: MyMessage(systemMessageType1: String(format: "Chat ended %@", date24)))
+        let _ = MessageList.add(item: MyMessage(systemMessageType1: String(format: "Chat ended %@", date24)))
         NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.reallyExitChat),
                                         object: nil,
                                         userInfo:nil)
@@ -370,7 +370,7 @@ public class MINTEL_LiveChat: UIView {
         dateFormatter.dateFormat = "HH:mm"
         let date24 = dateFormatter.string(from: date)
         
-        MessageList.add(item: MyMessage(systemMessageType1: String(format: "เริ่มการสนทนา %@", date24)))
+        let _ = MessageList.add(item: MyMessage(systemMessageType1: String(format: "เริ่มการสนทนา %@", date24)))
         if (!(MINTEL_LiveChat.configuration?.disableBotMode ?? false)) {
             self.getAnnouncementMessage()
             MINTEL_LiveChat.sendOnNewSession()
@@ -812,7 +812,7 @@ extension MINTEL_LiveChat : SCSChatSessionDelegate {
         debugPrint("Session End")
         DispatchQueue.main.async {
             MINTEL_LiveChat.agentState = .waiting
-            MessageList.add(item: MyMessage(systemMessageType1: "จบการสนทนา"))
+            let _ = MessageList.add(item: MyMessage(systemMessageType1: "จบการสนทนา"))
             NotificationCenter.default.post(name: Notification.Name(SalesForceNotifId.didEnd),
                                             object: nil,
                                             userInfo:["session": session, "event": endEvent])
@@ -858,12 +858,12 @@ extension MINTEL_LiveChat  {
                                 items.forEach { (item) in
                                     let desc = item["Description__c"] as? String ?? ""
                                     if desc.count > 0 {
-                                        MessageList.add(item: MyMessage(text: desc, agent: false, bot: true))
+                                        let _ = MessageList.add(item: MyMessage(text: desc, agent: false, bot: true))
                                     }
                                 }
                                 
                                 let menus:[[String:Any]] = [["action" : ["label" : "จบการสนทนา", "text" : "__00_app_endchat", "display" : false]], ["action" : [ "label" : "เริ่มสนทนา", "text" : "__00_home__greeting", "display" : false]]]
-                                MessageList.add(item: MyMessage(text: "", agent: false, bot: true, menu: menus))
+                                let _ = MessageList.add(item: MyMessage(text: "", agent: false, bot: true, menu: menus))
                                 NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
                                                                 object: nil,
                                                                 userInfo:nil)
@@ -984,7 +984,7 @@ extension MINTEL_LiveChat  {
             print("First notif fired.")
 
             MINTEL_LiveChat.lastAMinuteTimer = Timer.scheduledTimer(withTimeInterval: 60, repeats: false, block: { (timer2) in
-                MessageList.add(item: MyMessage(text: "หากคุณลูกค้าไม่อยู่ในการสนทนา ผมขอจบการสนทนาเพื่อดูแลลูกค้าท่านอื่นต่อครับ หากต้องการข้อมูลสอบถามข้อมูลเพิ่มเติม สามารถติดต่อเข้ามาใหม่ได้ตลอด 24 ชั่วโมง ขอบคุณที่ใช้บริการทรูมันนี่ สวัสดีครับ", agent: false, bot: true))
+                let _ = MessageList.add(item: MyMessage(text: "หากคุณลูกค้าไม่อยู่ในการสนทนา ผมขอจบการสนทนาเพื่อดูแลลูกค้าท่านอื่นต่อครับ หากต้องการข้อมูลสอบถามข้อมูลเพิ่มเติม สามารถติดต่อเข้ามาใหม่ได้ตลอด 24 ชั่วโมง ขอบคุณที่ใช้บริการทรูมันนี่ สวัสดีครับ", agent: false, bot: true))
                 notif.scheduleNotification(message: "ขอบคุณสำหรับการสนทนา หากมีข้อสงสัยเพิ่มเติมสามารถเริ่มต้นแชทอีกครั้งเพื่อสอบถามข้อมูล")
                 MINTEL_LiveChat.instance.reallyEndChat()
                 print("Second notif fired.")
@@ -1014,14 +1014,19 @@ extension MINTEL_LiveChat  {
         
         self.removeTyping()
         
-        MessageList.add(item: MyMessage(typing: true, agent: !MINTEL_LiveChat.chatBotMode))
+        let _ = MessageList.add(item: MyMessage(typing: true, agent: !MINTEL_LiveChat.chatBotMode))
+//        DispatchQueue.main.async {
+//            NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
+//            object: nil,
+//            userInfo:nil)
+//        }
         debugPrint("=== Send Post " , text)
         if ("__00_home__greeting" == text) {
             
             if MINTEL_LiveChat.configuration?.phone.count == 0 {
-                MessageList.add(item: MyMessage(text: "สวัสดีครับ", agent: false, bot: true))
+                let _ = MessageList.add(item: MyMessage(text: "สวัสดีครับ", agent: false, bot: true))
             } else {
-                MessageList.add(item: MyMessage(text: String(format: "สวัสดีครับคุณ %@", MINTEL_LiveChat.configuration?.firstname ?? ""), agent: false, bot: true))
+                let _ = MessageList.add(item: MyMessage(text: String(format: "สวัสดีครับคุณ %@", MINTEL_LiveChat.configuration?.firstname ?? ""), agent: false, bot: true))
             }
             MINTEL_LiveChat.chatStarted = true
             MINTEL_LiveChat.chatCanTyped = true
@@ -1067,7 +1072,6 @@ extension MINTEL_LiveChat  {
                                 }
                                 
                                 if dict["message"] is String {
-    //                                debugPrint(dict["message"])
                                 } else {
                                 
                                     let messages = dict["messages"] as! [[String: Any]]
@@ -1097,9 +1101,9 @@ extension MINTEL_LiveChat  {
                                             if (type == "text") {
                                                 if (quickReply != nil) {
                                                     let items = quickReply!["items"] as? [[String:Any]] ?? []
-                                                    MessageList.add(item: MyMessage(text: quickReplyTitle, agent: true, menu: items))
+                                                    let _ = MessageList.add(item: MyMessage(text: quickReplyTitle, agent: true, menu: items))
                                                 } else {
-                                                    MessageList.add(item: MyMessage(text: quickReplyTitle, agent: true, bot: true))
+                                                    let _ = MessageList.add(item: MyMessage(text: quickReplyTitle, agent: true, bot: true))
                                                 }
                                             }
                                         }
@@ -1119,6 +1123,8 @@ extension MINTEL_LiveChat  {
                                                             userInfo:nil)
                         }
                         
+                        
+                        
                         break
                     case .failure( _):
                         if (!menu) {
@@ -1126,6 +1132,10 @@ extension MINTEL_LiveChat  {
                         }
                         break
                     }
+                    
+//                    NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
+//                    object: nil,
+//                    userInfo:nil)
             }
         } catch {
             debugPrint("Error In Catch")
@@ -1155,7 +1165,7 @@ extension MINTEL_LiveChat : SCSChatEventDelegate {
         
         let agentName = agentjoinedEvent.sender?.name ?? "agent"
         MINTEL_LiveChat.agentName = agentName
-        MessageList.add(item: MyMessage(agentJoin: true, agentName: agentName))
+        let _ = MessageList.add(item: MyMessage(agentJoin: true, agentName: agentName))
         MINTEL_LiveChat.agentState = .joined
         
         self.reLayoutView()
@@ -1189,7 +1199,7 @@ extension MINTEL_LiveChat : SCSChatEventDelegate {
     
     public func session(_ session: SCSChatSession!, didReceiveMessage message: SCSAgentTextEvent!) {
         debugPrint("didReceiveMessage : ", message)
-        MessageList.add(item: MyMessage(text: message.text, agent: true, bot: false))
+        let _ = MessageList.add(item: MyMessage(text: message.text, agent: true, bot: false))
         NotificationCenter.default.post(name: Notification.Name(SalesForceNotifId.didReceiveMessage),
                                         object: nil,
                                         userInfo:["session": session, "message": message])

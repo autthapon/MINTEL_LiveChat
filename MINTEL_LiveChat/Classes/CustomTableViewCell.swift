@@ -506,8 +506,8 @@ class CustomTableViewCell: UITableViewCell {
         switch message.kind {
         case .image(let img, _):
             UIImageWriteToSavedPhotosAlbum(img, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)
-        case .file(let fileName, let fileUrl):
-            debugPrint(fileUrl, fileName)
+        case .file(let fileName, let fileUrl, let fileUploadUrl):
+            debugPrint(fileUrl, fileName, fileUploadUrl)
             self.downloadFileAndSave(fileUrl: fileUrl)
         default:
             return
