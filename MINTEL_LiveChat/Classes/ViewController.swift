@@ -313,6 +313,9 @@ class ViewController: UIViewController {
             MINTEL_LiveChat.openConfirmExitPage = false
             self.closeChat()
         }
+        
+        self.setupNotification()
+        self.setupSaleForcesNotification()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -452,7 +455,7 @@ extension ViewController: UITableViewDataSource {
                 cellIdentifierId = CellIds.systemMessageType2CellId
             case .text( _):
                 cellIdentifierId = agent || bot ? CellIds.receiverCellId : CellIds.senderCellId
-            case .file(_, _):
+            case .file(_, _, _):
                 cellIdentifierId = CellIds.fileCellid
             case .menu( _, _):
                 cellIdentifierId = CellIds.receiverMenuCellid
@@ -480,7 +483,7 @@ extension ViewController: UITableViewDataSource {
                     } else {
                         cell.renderSender(txt: txt, item: item)
                     }
-                case .file(let name, _):
+                case .file(let name, _, _):
                     cell.renderFileSend(txt: name, item: item, index: indexPath.section)
                 case .menu(let title, let menus):
                     cell.setupMenuCell(title, menus, item)
@@ -583,7 +586,7 @@ extension ViewController: UITableViewDataSource {
                     MINTEL_LiveChat.chatUserTypedIn = true
                     let display = targetAction?["display"] as? Bool ?? true
                     if (display) {
-                        MessageList.add(item: MyMessage(text: text, agent: false, bot: false))
+                        let _ = MessageList.add(item: MyMessage(text: text, agent: false, bot: false))
                     }
                     self.tableView.reloadData()
                     self.tableView.scrollToBottom(animated: true)
@@ -607,7 +610,7 @@ extension ViewController: UITableViewDelegate {
             let text = actions["text"] as! String
             let display = actions["display"] as? Bool ?? true
             if (display) {
-                MessageList.add(item: MyMessage(text: text, agent: false, bot: false))
+                let _ = MessageList.add(item: MyMessage(text: text, agent: false, bot: false))
             }
             self.tableView.reloadData()
             self.tableView.scrollToBottom(animated: true)
@@ -641,7 +644,7 @@ extension ViewController: UITableViewDelegate {
                 } else {
                     return CustomTableViewCell.calcSender(txt: txt, item: item)
                 }
-            case .file(let fileName, _):
+            case .file(let fileName, _, _):
                 return CustomTableViewCell.calcSender(txt: fileName, item: item)
             case .menu(let title, let menus):
                 return CustomTableViewCell.calMenuCellHeight(title, menus, item)
@@ -708,7 +711,7 @@ extension ViewController: InputTextViewDelegate {
         print(text)
         if (text.trimmingCharacters(in: .whitespacesAndNewlines).count > 0) {
             MINTEL_LiveChat.chatUserTypedIn = true
-            MessageList.add(item: MyMessage(text: text, agent: false, bot: false))
+            let _ = MessageList.add(item: MyMessage(text: text, agent: false, bot: false))
             self.tableView.reloadData()
             self.tableView.scrollToBottom(animated: true)
             textView.text = ""
@@ -943,10 +946,11 @@ extension ViewController : UINavigationControllerDelegate, UIImagePickerControll
         
         let fileName = "file.jpeg"
         let data = selectedImage.jpegData(compressionQuality: 1.0)
-        MessageList.add(item: MyMessage(image: selectedImage, imageUrl: ""))
+        let messageIndex = MessageList.add(item: MyMessage(image: selectedImage, imageUrl: ""))
         self.tableView.reloadData()
         self.tableView.scrollToBottom(animated: true)
-        self.upload(imageData: data, imageName: fileName, fileData: nil, fileName: nil, parameters: ["session_id": "1"])
+        self.uploadDataFiles = 1
+        self.upload(imageData: data, imageName: fileName, fileData: nil, fileName: nil, parameters: ["session_id": MINTEL_LiveChat.userId], messageIndex: messageIndex)
     }
 }
 
@@ -976,14 +980,14 @@ extension ViewController : UIDocumentMenuDelegate, UIDocumentPickerDelegate {
         if FileManager.default.fileExists(atPath: url.path){
             
             let filename = (url.absoluteString as NSString).lastPathComponent
-            MessageList.add(item: MyMessage(fileName: filename, fileURL: url))
+            let messageIndex = MessageList.add(item: MyMessage(fileName: filename, fileURL: url, fileUploadUrl: ""))
             self.tableView.reloadData()
             self.tableView.scrollToBottom(animated: true)
             do {
                 // Get the saved data
                 let savedData = try Data(contentsOf: url)
                 // Convert the data back into a string
-                self.upload(imageData: nil, imageName: nil, fileData: savedData, fileName: filename, parameters: ["session_id": "1"])
+                self.upload(imageData: nil, imageName: nil, fileData: savedData, fileName: filename, parameters: ["session_id": MINTEL_LiveChat.userId], messageIndex : messageIndex)
             } catch {
                 // Catch any errors
                 print("Unable to read the file")
@@ -1059,6 +1063,7 @@ extension ViewController : UICollectionViewDataSource, UICollectionViewDelegate,
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        self.uploadDataFiles = 1
         self.sendImageToWebhook(index: indexPath.item)
         if (imagePanel) {
             self.hideImagePanel()
@@ -1082,10 +1087,10 @@ extension ViewController : UICollectionViewDataSource, UICollectionViewDelegate,
             if (image != nil) {
                 let fileName = "file.jpeg"
                 let data = image!.jpegData(compressionQuality: 1.0)
-                MessageList.add(item: MyMessage(image: image!, imageUrl: ""))
+                let messageIndex = MessageList.add(item: MyMessage(image: image!, imageUrl: ""))
                 self.tableView.reloadData()
                 self.tableView.scrollToBottom(animated: true)
-                self.upload(imageData: data, imageName: fileName, fileData: nil, fileName: nil, parameters: ["session_id": "1"])
+                self.upload(imageData: data, imageName: fileName, fileData: nil, fileName: nil, parameters: ["session_id": MINTEL_LiveChat.userId], messageIndex : messageIndex)
             }
         }
     }

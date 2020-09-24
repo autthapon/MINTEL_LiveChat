@@ -15,9 +15,11 @@ class MessageList {
         MessageList.items.removeAll()
     }
     
-    static internal func add(item: MyMessage) {
+    static internal func add(item: MyMessage) -> Int {
         MessageList.items.append(item)
         MessageList.sort()
+        
+        return MessageList.items.count - 1
     }
     
     static internal func remove(item: MyMessage, remove: Bool) {
@@ -52,7 +54,7 @@ class MessageList {
         if (remove) {
             MessageList.remove(item: item, remove: remove)
         }
-        MessageList.add(item: item)
+        let _ = MessageList.add(item: item)
     }
     
     static internal func removeTyping() {
@@ -105,6 +107,24 @@ class MessageList {
             var shouldIgnore = false
             var txtToSend = ""
             switch item.kind {
+            case .file(_, _, let txt):
+                txtToSend = txt
+                for i in 0...ignoreMessage.count - 1 {
+                    if (txt.starts(with: ignoreMessage[i])) {
+                        shouldIgnore = true
+                        break
+                    }
+                }
+                break
+            case .image(_, let txt):
+                txtToSend = txt
+                for i in 0...ignoreMessage.count - 1 {
+                    if (txt.starts(with: ignoreMessage[i])) {
+                        shouldIgnore = true
+                        break
+                    }
+                }
+                break
             case .text(let txt):
                 txtToSend = txt
                 for i in 0...ignoreMessage.count - 1 {

@@ -171,14 +171,15 @@ class CustomTableViewCell: UITableViewCell {
         let textView = UITextView()
         self.contentView.addSubview(textView)
         
-        textView.MINTEL_htmlText = txt
+        let textNewLine = txt.replacingOccurrences(of: "\n", with: "<br/>")
+        textView.MINTEL_htmlText = textNewLine
         
         textView.font = UIFont.systemFont(ofSize: 16)
         textView.isHidden = false
         textView.backgroundColor = UIColor(MyHexString: "#EBEBEB")
         textView.layer.cornerRadius = 18.0
         textView.textContainerInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
-        textView.frame = CGRect(x: avartar.frame.origin.x + avartarWidth + 5, y: 0, width: UIScreen.main.bounds.width - avartar.frame.origin.x - avartarWidth - 10 - 45, height: 100)
+        textView.frame = CGRect(x: avartar.frame.origin.x + avartarWidth + 5, y: 0, width: UIScreen.main.bounds.width - avartar.frame.origin.x - avartarWidth - 10 - 45, height: 200)
         textView.dataDetectorTypes = [.link]
         textView.isSelectable = true
         textView.isScrollEnabled = false
@@ -286,13 +287,17 @@ class CustomTableViewCell: UITableViewCell {
         avartar.frame = CGRect(x: padding, y: 0, width: avartarWidth, height: avartar.image?.size.height ?? 0)
         
         let textView = UITextView()
-        textView.font = UIFont.systemFont(ofSize: 16)
+//        self.contentView.addSubview(textView)
         
-        textView.text = txt
+        let textNewLine = txt.replacingOccurrences(of: "\n", with: "<br/>")
+        textView.MINTEL_htmlText = textNewLine
+        
+        textView.font = UIFont.systemFont(ofSize: 16)
+        textView.isHidden = false
         textView.backgroundColor = UIColor(MyHexString: "#EBEBEB")
         textView.layer.cornerRadius = 18.0
         textView.textContainerInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
-        textView.frame = CGRect(x: avartar.frame.origin.x + avartarWidth + 5, y: 0, width: UIScreen.main.bounds.width - avartar.frame.origin.x - avartarWidth - 10, height: 100)
+        textView.frame = CGRect(x: avartar.frame.origin.x + avartarWidth + 5, y: 0, width: UIScreen.main.bounds.width - avartar.frame.origin.x - avartarWidth - 10 - 45, height: 200)
         textView.dataDetectorTypes = [.link]
         textView.isSelectable = true
         textView.isScrollEnabled = false
@@ -325,8 +330,8 @@ class CustomTableViewCell: UITableViewCell {
         let textView = UITextView()
         textView.font = UIFont.systemFont(ofSize: 16)
         
-
-        let htmlData = NSString(string: txt).data(using: String.Encoding.unicode.rawValue)
+        let textNewLine = txt.replacingOccurrences(of: "\n", with: "<br/>")
+        let htmlData = NSString(string: textNewLine).data(using: String.Encoding.unicode.rawValue)
         let options = [NSAttributedString.DocumentReadingOptionKey.documentType: NSAttributedString.DocumentType.html]
         let attributedString = try! NSMutableAttributedString(data: htmlData!, options: options, documentAttributes: nil)
         attributedString.addAttributes([NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16), NSAttributedString.Key.foregroundColor : UIColor.black], range: NSMakeRange(0, attributedString.length))
@@ -581,8 +586,8 @@ class CustomTableViewCell: UITableViewCell {
             
         case .image(let img, _):
             UIImageWriteToSavedPhotosAlbum(img, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)
-        case .file(let fileName, let fileUrl):
-            debugPrint(fileUrl, fileName)
+        case .file(let fileName, let fileUrl, let fileUploadUrl):
+            debugPrint(fileUrl, fileName, fileUploadUrl)
             self.downloadFileAndSave(fileUrl: fileUrl)
         default:
             return

@@ -12,7 +12,7 @@ fileprivate let urlUpload = "https://asia-east2-tmn-chatbot-integration.cloudfun
 
 extension ViewController {
     
-    internal func upload(imageData: Data?, imageName:String?, fileData: Data?, fileName:String?, parameters: [String : Any]) {
+    internal func upload(imageData: Data?, imageName:String?, fileData: Data?, fileName:String?, parameters: [String : Any], messageIndex: Int) {
         
         MINTEL_LiveChat.chatUserTypedIn = true
         
@@ -60,7 +60,7 @@ extension ViewController {
                             if (MINTEL_LiveChat.chatBotMode) {
 //                                MINTEL_LiveChat.sendPost(text: url, menu:false)
                             } else {
-                                self.sendMessageToSaleForce(text: url)
+//                                self.sendMessageToSaleForce(text: url)
                             }
                         }
                     }
@@ -69,6 +69,18 @@ extension ViewController {
                     if (self.uploadDataFiles == 0) {
                         let text = self.uploadDataText.joined(separator: "\n")
                         if (MINTEL_LiveChat.chatBotMode) {
+                            
+                            let msg = MessageList.at(index: messageIndex)
+                            switch(msg.kind) {
+                            case .file(let filename, let fileUrl, _):
+                                MessageList.setItemAt(index: messageIndex, item: MyMessage(fileName: filename, fileURL: fileUrl, fileUploadUrl: text))
+                                break
+                            case .image(let img, _):
+                                MessageList.setItemAt(index: messageIndex, item: MyMessage(image: img, imageUrl: text, agent: false, bot: false))
+                                break
+                            default:
+                                print("NOTHING")
+                            }
                             MINTEL_LiveChat.sendPost(text: text, menu:false)
                         } else {
                             self.sendMessageToSaleForce(text: text)
@@ -81,6 +93,15 @@ extension ViewController {
                 if (self.uploadDataFiles == 0) {
                     let text = self.uploadDataText.joined(separator: "\n")
                     if (MINTEL_LiveChat.chatBotMode) {
+                        
+                        let msg = MessageList.at(index: messageIndex)
+                        switch(msg.kind) {
+                        case .image(let img, _):
+                            MessageList.setItemAt(index: messageIndex, item: MyMessage(image: img, imageUrl: text, agent: !MINTEL_LiveChat.chatBotMode, bot: true))
+                        default:
+                            print("NOTHING")
+                        }
+                        
                         MINTEL_LiveChat.sendPost(text: text, menu:false)
                     } else {
                         self.sendMessageToSaleForce(text: text)
