@@ -496,7 +496,7 @@ public class MINTEL_LiveChat: UIView {
             
             // Add one field mappings to our Case entity
             
-            let csatUuid = UUID().uuidString
+            let csatUuid = MINTEL_LiveChat.userId
             let uniqueFiled = SCSPrechatObject(label: "Unique_ID__c", value: csatUuid)
             let uniqueEntityField = SCSPrechatEntityField(fieldName: "Unique_ID__c", label: "Unique_ID__c")
             uniqueEntityField.doCreate = true
