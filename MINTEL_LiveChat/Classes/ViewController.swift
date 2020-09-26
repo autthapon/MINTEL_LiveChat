@@ -292,7 +292,7 @@ class ViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        let size = ceil(UIScreen.main.bounds.size.width / 3.0) - 3.0
+        let size = ceil(UIScreen.main.bounds.size.width / 4.0) - 3.0
         thumbnailSize = CGSize(width: size, height: size)
         
         if (MINTEL_LiveChat.agentState == .waiting || MINTEL_LiveChat.agentState == .end) {
