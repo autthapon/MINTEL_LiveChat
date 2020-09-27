@@ -36,40 +36,58 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sBv-ag-7uU">
-                                <rect key="frame" x="260" y="44" width="115" height="65"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Next Page"/>
-                                <connections>
-                                    <segue destination="XlK-yx-NEc" kind="show" id="KBg-15-afe"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="86G-kh-P8h">
-                                <rect key="frame" x="0.0" y="44" width="99" height="65"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="86G-kh-P8h">
+                                <rect key="frame" x="16" y="70" width="99" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="99" id="1wR-TI-d6e"/>
+                                    <constraint firstAttribute="height" constant="30" id="Zoc-sG-khd"/>
+                                </constraints>
                                 <state key="normal" title="Start Chat"/>
                                 <connections>
                                     <action selector="startChatWithSender:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="9g0-kE-ugl"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JEV-zw-OlO">
-                                <rect key="frame" x="290" y="117" width="69" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JEV-zw-OlO">
+                                <rect key="frame" x="283" y="202" width="69" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="Hmb-P8-HtS"/>
+                                    <constraint firstAttribute="width" constant="69" id="vMk-jy-Lyq"/>
+                                </constraints>
                                 <state key="normal" title="Stop Chat"/>
                                 <connections>
                                     <action selector="stopChat" destination="vXZ-lx-hvc" eventType="touchUpInside" id="Fwp-48-RNr"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="A15-vG-iQ7">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="A15-vG-iQ7">
                                 <rect key="frame" x="16" y="125" width="140" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Start Another Phone"/>
                                 <connections>
                                     <action selector="startChatAnotherPhoneWithSender:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="CUK-X9-opP"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sBv-ag-7uU">
+                                <rect key="frame" x="260" y="70" width="115" height="65"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="65" id="RTr-4s-9E5"/>
+                                    <constraint firstAttribute="width" constant="115" id="nWM-iE-of8"/>
+                                </constraints>
+                                <state key="normal" title="Next Page"/>
+                                <connections>
+                                    <segue destination="XlK-yx-NEc" kind="show" id="KBg-15-afe"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="trailingMargin" secondItem="JEV-zw-OlO" secondAttribute="trailing" constant="7" id="1Rs-HH-UfA"/>
+                            <constraint firstItem="86G-kh-P8h" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leadingMargin" id="5pW-Lj-E9A"/>
+                            <constraint firstItem="86G-kh-P8h" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" constant="14" id="Avh-2V-7RX"/>
+                            <constraint firstItem="A15-vG-iQ7" firstAttribute="top" secondItem="86G-kh-P8h" secondAttribute="bottom" constant="25" id="RP3-su-Dmf"/>
+                            <constraint firstItem="A15-vG-iQ7" firstAttribute="leading" secondItem="86G-kh-P8h" secondAttribute="leading" id="ZnH-3a-Jbh"/>
+                            <constraint firstItem="sBv-ag-7uU" firstAttribute="top" secondItem="86G-kh-P8h" secondAttribute="top" id="hb0-fQ-nhz"/>
+                            <constraint firstItem="JEV-zw-OlO" firstAttribute="top" secondItem="sBv-ag-7uU" secondAttribute="bottom" constant="67" id="nlP-dh-9Zc"/>
+                            <constraint firstAttribute="trailing" secondItem="sBv-ag-7uU" secondAttribute="trailing" id="wjO-EA-zh3"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="3oJ-oQ-p54"/>
                 </viewController>

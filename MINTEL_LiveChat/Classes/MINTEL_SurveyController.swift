@@ -32,13 +32,11 @@ class MINTEL_SurveyController : UIViewController, WKUIDelegate {
         
         MINTEL_LiveChat.instance.isHidden = false
         self.dismiss(animated: true, completion: nil)
-        
     }
     
     @objc func closeChat() {
         MINTEL_LiveChat.instance.closeButtonHandle()
         self.dismiss(animated: true, completion: nil)
-        
     }
     
     override func viewDidAppear(_ animated: Bool) {

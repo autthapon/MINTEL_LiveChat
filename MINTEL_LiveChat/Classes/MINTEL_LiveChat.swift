@@ -67,6 +67,7 @@ public class MINTEL_LiveChat: UIView {
     private var queueLabel:UILabel!
     private var callCenterLabel:UILabel!
     private var badgeLabel:UILabel!
+    private var surveyView:MINTEL_SurveyController!
     
     private var longPressGestureRecognizer: UILongPressGestureRecognizer?
     private var tapGestureRecognizer:UITapGestureRecognizer?
@@ -195,6 +196,10 @@ public class MINTEL_LiveChat: UIView {
         self.loadFirstMessage()
         self.isHidden = false
         UIApplication.shared.keyWindow?.bringSubviewToFront(self)
+        
+        let bundle = Bundle(for: type(of: self))
+        let storyboard = UIStoryboard(name: "ChatBox", bundle: bundle)
+        self.surveyView = storyboard.instantiateViewController(withIdentifier: "survey") as? MINTEL_SurveyController
         
         if (MINTEL_LiveChat.configuration?.disableBotMode ?? false) {
             
@@ -361,6 +366,14 @@ public class MINTEL_LiveChat: UIView {
         DispatchQueue.main.async {
             self.isHidden = false
             
+            if (MINTEL_LiveChat.surveyMode) {
+                let appViewController = UIApplication.shared.windows.first!.rootViewController!
+                let navigationController = UINavigationController(rootViewController: self.surveyView)
+                navigationController.modalPresentationStyle = .fullScreen
+                appViewController.present(navigationController, animated: true, completion: nil)
+                return
+            }
+            
             var surveyUrl:String = ""
             if (bot) {
                 surveyUrl = MINTEL_LiveChat.configuration?.surveyChatbotUrl ?? ""
@@ -377,26 +390,19 @@ public class MINTEL_LiveChat: UIView {
                 if let cu = currentViewController {
                     cu.dismiss(animated: false) {
                         let appViewController = UIApplication.shared.windows.first!.rootViewController!
-                        
-                        let bundle = Bundle(for: type(of: self))
-                        let storyboard = UIStoryboard(name: "ChatBox", bundle: bundle)
-                        let vc = storyboard.instantiateViewController(withIdentifier: "survey") as! MINTEL_SurveyController
-                        
-                        let navigationController = UINavigationController(rootViewController: vc)
+
+                        let navigationController = UINavigationController(rootViewController: self.surveyView)
                         navigationController.modalPresentationStyle = .fullScreen
                         
                         MINTEL_LiveChat.surveyMode = true
-                        //                        self.isHidden = true
-                        //
-                        vc.url = url
-                        appViewController.present(navigationController, animated: true) {
-                            //                            self.isHidden = true
-                        }
+                        self.surveyView.url = url
+                        appViewController.present(navigationController, animated: true, completion: nil)
                     }
                 }
             }
         }
     }
+    
     
     fileprivate func topViewController(_ viewController: UIViewController? = UIApplication.shared.keyWindow?.rootViewController) -> UIViewController? {
         if let nav = viewController as? UINavigationController {
