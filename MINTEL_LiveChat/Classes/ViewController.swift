@@ -574,15 +574,16 @@ extension ViewController: UITableViewDataSource {
             let text = targetAction?["text"] as? String ?? ""
             if (text.count > 0) {
                 
-                message?.disableMenu = true
+                
                 if ("__00_app_endchat" == text) {
                     
                     self.closeChat()
                     
                 } else if ("__00_home__greeting" == text) {
+                    message?.disableMenu = true
                     MINTEL_LiveChat.instance.checkAgentMode()
                 } else {
-                
+                    message?.disableMenu = true
                     MINTEL_LiveChat.chatUserTypedIn = true
                     let display = targetAction?["display"] as? Bool ?? true
                     if (display) {
