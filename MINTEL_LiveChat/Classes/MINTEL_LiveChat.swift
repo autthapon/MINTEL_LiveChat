@@ -284,6 +284,7 @@ public class MINTEL_LiveChat: UIView {
         self.removeNotification()
         
         if (!MINTEL_LiveChat.chatInProgress) {
+            self.exitApp()
             return
         }
         
@@ -323,6 +324,7 @@ public class MINTEL_LiveChat: UIView {
             let currentViewController = self.topViewController()
             if let cu = currentViewController {
                 cu.dismiss(animated: false) {
+                    self.exitApp()
                 }
             }
         }
