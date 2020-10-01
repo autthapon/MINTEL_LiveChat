@@ -33,6 +33,7 @@ fileprivate var retryTimeoutTimes = 0
 
 public class MINTEL_LiveChat: UIView {
     
+    fileprivate static var userImageFrame:CGRect = CGRect()
     internal static var configuration:LiveChatConfiguration? = nil
     internal static var userId = UUID().uuidString
     internal static var userName = ""
@@ -106,9 +107,20 @@ public class MINTEL_LiveChat: UIView {
                 self.layer.zPosition = 1
                 self.isHidden = false
             }
-            if (MINTEL_LiveChat.chatBotMode) {
+            if (!MINTEL_LiveChat.chatInProgress || MINTEL_LiveChat.agentState == .end) {
+                self.userImageView.image = UIImage(named: "end", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil)
+                self.userImageView.frame = CGRect(x: self.userImageView.frame.origin.x + (self.userImageView.frame.size.width / 2) - 20, y:  self.userImageView.frame.origin.y + 10, width: 40, height: 40)
                 self.userImageView.isHidden = false
                 self.callCenterLabel.isHidden = false
+                self.callCenterLabel.text = "จบการสนทนา"
+                self.queueTitleLabel.isHidden = true
+                self.queueLabel.isHidden = true
+            } else if (MINTEL_LiveChat.chatBotMode) {
+                self.userImageView.image = UIImage(named: "user", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil)
+                self.userImageView.frame = MINTEL_LiveChat.userImageFrame
+                self.userImageView.isHidden = false
+                self.callCenterLabel.isHidden = false
+                self.callCenterLabel.text = "แชตบอท"
                 self.queueTitleLabel.isHidden = true
                 self.queueLabel.isHidden = true
             } else {
@@ -132,9 +144,11 @@ public class MINTEL_LiveChat: UIView {
                     self.queueLabel.isHidden = false
                     break
                 case .joined:
+                    self.userImageView.image = UIImage(named: "agent", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil)
+                    self.userImageView.frame = MINTEL_LiveChat.userImageFrame
                     self.userImageView.isHidden = false
                     self.callCenterLabel.isHidden = false
-                    self.callCenterLabel.text = "TMN Chat"
+                    self.callCenterLabel.text = MINTEL_LiveChat.agentName
                     self.queueTitleLabel.isHidden = true
                     self.queueLabel.isHidden = true
                     break
@@ -320,6 +334,7 @@ public class MINTEL_LiveChat: UIView {
                                         object: nil,
                                         userInfo:nil)
         
+        self.reLayoutView()
         if (MINTEL_LiveChat.chatUserTypedIn) {
             self.openSurvey(bot: MINTEL_LiveChat.chatBotMode)
         } else {
@@ -556,10 +571,11 @@ public class MINTEL_LiveChat: UIView {
         self.userImageView.contentMode = .scaleAspectFit
         self.userImageView.frame = CGRect(x: 0, y: self.closeButton.frame.origin.y + self.closeButton.frame.size.height, width: self.frame.size.width, height: self.frame.size.height - (self.closeButton.frame.origin.y + self.closeButton.frame.size.height + 25))
         self.addSubview(self.userImageView)
+        MINTEL_LiveChat.userImageFrame = self.userImageView.frame
         
         self.callCenterLabel = UILabel(frame: CGRect(x: 0, y: self.userImageView.frame.origin.y + self.userImageView.frame.size.height, width: self.frame.size.width, height: 25))
         self.callCenterLabel.font = UIFont.systemFont(ofSize: 14)
-        self.callCenterLabel.text = "TMN Chat"
+        self.callCenterLabel.text = "แชตบอท"
         self.callCenterLabel.textAlignment = .center
         self.addSubview(self.callCenterLabel)
         
@@ -858,11 +874,15 @@ extension MINTEL_LiveChat : SCSChatSessionDelegate {
     public func session(_ session: SCSChatSession!, didEnd endEvent: SCSChatSessionEndEvent!) {
         debugPrint("Session End")
         DispatchQueue.main.async {
-            MINTEL_LiveChat.agentState = .waiting
+            MINTEL_LiveChat.agentState = .end
             let _ = MessageList.add(item: MyMessage(systemMessageType1: "จบการสนทนา"))
             NotificationCenter.default.post(name: Notification.Name(SalesForceNotifId.didEnd),
                                             object: nil,
                                             userInfo:["session": session, "event": endEvent])
+            
+            DispatchQueue.main.async {
+                self.reLayoutView()
+            }
         }
     }
     
@@ -979,6 +999,7 @@ extension MINTEL_LiveChat  {
     internal static func checkTime() {
         // Timer 2 minutes
         self.stopTimer()
+        
         MINTEL_LiveChat.first2MinutesTimer = Timer.scheduledTimer(withTimeInterval: TimeInterval(firstTimerDuration * 60), repeats: false) { (timer) in
             // Send Notification
             let notif = MINTEL_Notifications()

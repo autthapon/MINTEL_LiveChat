@@ -17,7 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var chat:MINTEL_LiveChat!
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        self.chat = MINTEL_LiveChat.init( frame: CGRect(x: 0, y: 300, width: 80, height: 120))
+        self.chat = MINTEL_LiveChat.init( frame: CGRect(x: 0, y: 300, width: 90, height: 120))
         let notif = MINTEL_Notifications()
         notif.userRequest()
         UNUserNotificationCenter.current().delegate = notif
