@@ -14,6 +14,8 @@ import UserNotifications
 
 let autoDockingDuration: Double = 0.2
 let doubleTapTimeInterval: Double = 0.36
+var firstTimerDuration: Int = 2
+var secondTimerDuration: Int = 1
 
 protocol ChatDelegate{
     func terminate()
@@ -356,6 +358,8 @@ public class MINTEL_LiveChat: UIView {
                         MINTEL_LiveChat.chatBotMode = false
                         MINTEL_LiveChat.instance.startSaleForce()
                     } else {
+                        firstTimerDuration = (dict["activeChatReminder"] as? Int ?? 120) / 60
+                        secondTimerDuration = (dict["chatTimeout"] as? Int ?? 60) / 60
                         MINTEL_LiveChat.chatUserTypedIn = true
                         MINTEL_LiveChat.sendPost(text: "__00_home__greeting", menu: false)
                     }
@@ -975,18 +979,24 @@ extension MINTEL_LiveChat  {
     internal static func checkTime() {
         // Timer 2 minutes
         self.stopTimer()
-        MINTEL_LiveChat.first2MinutesTimer = Timer.scheduledTimer(withTimeInterval: 2 * 60, repeats: false) { (timer) in
+        MINTEL_LiveChat.first2MinutesTimer = Timer.scheduledTimer(withTimeInterval: TimeInterval(firstTimerDuration * 60), repeats: false) { (timer) in
             // Send Notification
             let notif = MINTEL_Notifications()
             notif.scheduleNotification(message: "ขณะนี้ท่านมีรายการสนทนากับศูนย์บริการทรูมันนี่อยู่")
             print("First notif fired.")
             
-            MINTEL_LiveChat.lastAMinuteTimer = Timer.scheduledTimer(withTimeInterval: 60, repeats: false, block: { (timer2) in
+            MINTEL_LiveChat.lastAMinuteTimer = Timer.scheduledTimer(withTimeInterval: TimeInterval(secondTimerDuration * 60), repeats: false, block: { (timer2) in
                 let _ = MessageList.add(item: MyMessage(text: "หากคุณลูกค้าไม่อยู่ในการสนทนา ผมขอจบการสนทนาเพื่อดูแลลูกค้าท่านอื่นต่อครับ หากต้องการข้อมูลสอบถามข้อมูลเพิ่มเติม สามารถติดต่อเข้ามาใหม่ได้ตลอด 24 ชั่วโมง ขอบคุณที่ใช้บริการทรูมันนี่ สวัสดีครับ", agent: false, bot: true))
                 let _ = MessageList.add(item: MyMessage(systemMessageType1: "จบการสนทนา"))
                 notif.scheduleNotification(message: "ขอบคุณสำหรับการสนทนา หากมีข้อสงสัยเพิ่มเติมสามารถเริ่มต้นแชทอีกครั้งเพื่อสอบถามข้อมูล")
                 print("Second notif fired.")
                 MINTEL_LiveChat.chatCanTyped = false
+                NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
+                object: nil,
+                userInfo:nil)
+                NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.reallyExitChat),
+                        object: nil,
+                        userInfo:nil)
             })
         }
     }
