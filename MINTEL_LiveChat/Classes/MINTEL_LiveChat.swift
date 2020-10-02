@@ -35,7 +35,7 @@ public class MINTEL_LiveChat: UIView {
     
     fileprivate static var userImageFrame:CGRect = CGRect()
     internal static var configuration:LiveChatConfiguration? = nil
-    internal static var userId = UUID().uuidString
+    internal static var userId = ""
     internal static var userName = ""
     internal static var chatPanelOpened = false
     internal static var chatStarted = false
@@ -284,7 +284,6 @@ public class MINTEL_LiveChat: UIView {
         }
         
         MINTEL_LiveChat.chatInProgress = false
-        MINTEL_LiveChat.userId = UUID().uuidString
         
         ServiceCloud.shared().chatCore.stopSession()
         ServiceCloud.shared().chatCore.remove(delegate: self)
@@ -317,8 +316,6 @@ public class MINTEL_LiveChat: UIView {
         }
         
         MINTEL_LiveChat.chatInProgress = false
-        MINTEL_LiveChat.userId = UUID().uuidString
-        
         ServiceCloud.shared().chatCore.stopSession()
         ServiceCloud.shared().chatCore.remove(delegate: self)
         ServiceCloud.shared().chatCore.removeEvent(delegate: self)
@@ -403,6 +400,8 @@ public class MINTEL_LiveChat: UIView {
             }
             
             surveyUrl = surveyUrl.replacingOccurrences(of: "sessionId", with: MINTEL_LiveChat.userId)
+            
+            debugPrint("Survey Url : " ,surveyUrl)
             
             // Open Survey Url
             guard let url = URL(string: surveyUrl) else { return }
@@ -524,6 +523,7 @@ public class MINTEL_LiveChat: UIView {
             // Add one field mappings to our Case entity
             
             let csatUuid = MINTEL_LiveChat.userId
+            debugPrint("User Session id : " , csatUuid)
             let uniqueFiled = SCSPrechatObject(label: "Unique_ID__c", value: csatUuid)
             let uniqueEntityField = SCSPrechatEntityField(fieldName: "Unique_ID__c", label: "Unique_ID__c")
             uniqueEntityField.doCreate = true
@@ -900,6 +900,7 @@ extension MINTEL_LiveChat  {
         let params: Parameters = [:]
         let url = (MINTEL_LiveChat.configuration?.announcementUrl ?? "").replacingOccurrences(of: "sessionId", with: MINTEL_LiveChat.userId)
         
+        debugPrint("Url " , url)
         
         let headers:HTTPHeaders = [
             "x-api-key": MINTEL_LiveChat.configuration?.xApikey ?? "" // "381b0ac187994f82bdc05c09d1034afa"
@@ -1066,6 +1067,7 @@ extension MINTEL_LiveChat  {
         }
         
         let params : Parameters = ["session_id": MINTEL_LiveChat.userId,"text": text]
+        debugPrint("Url : " , params)
         let url = String(format: "%@/webhook", MINTEL_LiveChat.configuration?.webHookBaseUrl ?? "")
         let headers:HTTPHeaders = [
             "x-api-key": MINTEL_LiveChat.configuration?.xApikey ?? "" // "edf1ca88a09546f8a0667c81c93d1f31"
