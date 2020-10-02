@@ -62,7 +62,7 @@ class ViewController: UIViewController {
         }
     }
     
-    let imagePanelHeight:CGFloat = 245.0
+    var imagePanelHeight:CGFloat = 245.0
     
     var imagePicker: UIImagePickerController!
     var fetchResult: PHFetchResult<PHAsset>!
@@ -171,6 +171,17 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        
+        if #available(iOS 11.0, *) {
+            if (self.bottomHeight == 0) {
+                imagePanelHeight = 245.0
+            } else {
+                imagePanelHeight = 470.0
+            }
+        } else {
+            imagePanelHeight = 245.0
+        }
 
         self.btnClose = UIBarButtonItem(image: UIImage(named: "close", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil), style: .plain, target: self, action: #selector(self.closeChat))
         self.navigationItem.rightBarButtonItem = self.btnClose
@@ -252,13 +263,25 @@ class ViewController: UIViewController {
     
     @objc func MINTEL_hideBottomMenu(_ notification: Notification) {
         DispatchQueue.main.async {
+            
+            var height = 180.0
+            if #available(iOS 11.0, *) {
+                if (self.bottomHeight == 0) {
+                    height = 180.0
+                } else {
+                    height = 350
+                }
+            } else {
+                height = 180.0
+            }
+            
             self.imagePanel = false
             self.chatMenuPanel = false
             self.inputTextView.hideLeftMenu()
             let keyboardFrame = CGSize(width: 0.0, height: 0.0)
             self.inputTextViewBottomConstraint.constant = 0
             let oldOffset = self.tableView.contentOffset
-            self.menuTableView.frame = CGRect(x: 0, y: UIScreen.main.bounds.size.height, width: UIScreen.main.bounds.size.width, height: 180.0)
+            self.menuTableView.frame = CGRect(x: 0, y: UIScreen.main.bounds.size.height, width: UIScreen.main.bounds.size.width, height: CGFloat(height))
             self.view.layoutIfNeeded()
             self.tableView.setContentOffset(CGPoint(x: oldOffset.x, y: oldOffset.y - keyboardFrame.height + self.bottomHeight), animated: false)
             self.inputTextView.becomeFirstResponder()
@@ -358,6 +381,7 @@ class ViewController: UIViewController {
         inputTextView.delegate = self
         
         self.view.addSubview(imagePanelView)
+        imagePanelView.alwaysBounceVertical = true
         imagePanelView.frame = CGRect(x: 0, y: UIScreen.main.bounds.size.height, width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height)
         imagePanelView.backgroundColor = UIColor(MyHexString: "#EBEBEB")
         imagePanelView.delegate = self
@@ -370,7 +394,18 @@ class ViewController: UIViewController {
         self.menuTableView.delegate = self
         self.menuTableView.dataSource = self
 //        self.menuTableView.backgroundColor = UIColor.red
-        self.menuTableView.frame = CGRect(x: 0, y: UIScreen.main.bounds.size.height, width: UIScreen.main.bounds.size.width, height: 180.0)
+        var height = 180.0
+        if #available(iOS 11.0, *) {
+            if (self.bottomHeight == 0) {
+                height = 180.0
+            } else {
+                height = 350.0
+            }
+        } else {
+            height = 180.0
+        }
+        
+        self.menuTableView.frame = CGRect(x: 0, y: UIScreen.main.bounds.size.height, width: UIScreen.main.bounds.size.width, height: CGFloat( height))
         self.view.layoutIfNeeded()
     }
     
@@ -859,32 +894,60 @@ extension ViewController: InputTextViewDelegate {
     
     func showChatMenuPanel() {
         
-        self.inputTextView.textView.resignFirstResponder()
-        self.chatMenuPanel = true
-        self.imagePanel = false
-        self.menuTableView.isHidden = false
-        self.imagePanelView.isHidden = true
-        
-        let keyboardFrame = CGSize(width: 0, height: imagePanelHeight)
-        self.inputTextViewBottomConstraint.constant = -180.0
-        let oldOffset = self.tableView.contentOffset
-        self.menuTableView.frame = CGRect(x: 0, y: UIScreen.main.bounds.size.height - imagePanelHeight, width: UIScreen.main.bounds.size.width, height: 180.0)
-        self.view.layoutIfNeeded()
-        self.tableView.setContentOffset(CGPoint(x: oldOffset.x, y: oldOffset.y + keyboardFrame.height - self.bottomHeight), animated: false)
-        self.tableView.scrollToBottom(animated: false)
+        DispatchQueue.main.async {
+            self.inputTextView.textView.resignFirstResponder()
+            self.chatMenuPanel = true
+            self.imagePanel = false
+            self.menuTableView.isHidden = false
+            self.imagePanelView.isHidden = true
+            
+            var height = 180.0
+            if #available(iOS 11.0, *) {
+                if (self.bottomHeight == 0) {
+                    height = 180.0
+                } else {
+                    height = 350.0
+                }
+            } else {
+                height = 180.0
+            }
+            
+            let keyboardFrame = CGSize(width: 0, height: self.imagePanelHeight)
+            self.inputTextViewBottomConstraint.constant = CGFloat(-height)
+            let oldOffset = self.tableView.contentOffset
+            self.menuTableView.frame = CGRect(x: 0, y: UIScreen.main.bounds.size.height - self.imagePanelHeight, width: UIScreen.main.bounds.size.width, height: CGFloat(height))
+            self.view.layoutIfNeeded()
+            self.tableView.setContentOffset(CGPoint(x: oldOffset.x, y: oldOffset.y + keyboardFrame.height - self.bottomHeight), animated: false)
+            self.tableView.scrollToBottom(animated: false)
+        }
     }
     
     func hideChatMenuPanel() {
-        self.imagePanel = false
-        self.chatMenuPanel = false
-        self.inputTextView.hideLeftMenu()
-        let keyboardFrame = CGSize(width: 0.0, height: 0.0)
-        self.inputTextViewBottomConstraint.constant = 0
-        let oldOffset = self.tableView.contentOffset
-        self.menuTableView.frame = CGRect(x: 0, y: UIScreen.main.bounds.size.height, width: UIScreen.main.bounds.size.width, height: 180.0)
-        self.view.layoutIfNeeded()
-        self.tableView.setContentOffset(CGPoint(x: oldOffset.x, y: oldOffset.y - keyboardFrame.height + self.bottomHeight), animated: false)
-        self.inputTextView.becomeFirstResponder()
+        
+        DispatchQueue.main.async {
+            var height = 180.0
+            if #available(iOS 11.0, *) {
+                if (self.bottomHeight == 0) {
+                    height = 180.0
+                } else {
+                    height = 350.0
+                }
+            } else {
+                height = 180.0
+            }
+            
+            self.imagePanel = false
+            self.chatMenuPanel = false
+            self.inputTextView.hideLeftMenu()
+            let keyboardFrame = CGSize(width: 0.0, height: 0.0)
+            self.inputTextViewBottomConstraint.constant = 0
+            let oldOffset = self.tableView.contentOffset
+            self.menuTableView.frame = CGRect(x: 0, y: UIScreen.main.bounds.size.height, width: UIScreen.main.bounds.size.width, height: CGFloat(height))
+            self.view.layoutIfNeeded()
+            self.tableView.setContentOffset(CGPoint(x: oldOffset.x, y: oldOffset.y - keyboardFrame.height + self.bottomHeight), animated: false)
+            self.inputTextView.becomeFirstResponder()
+        }
+        
     }
     
     func showImagePanel() {
@@ -895,23 +958,46 @@ extension ViewController: InputTextViewDelegate {
         self.imagePanelView.isHidden = false
         self.menuTableView.isHidden = true
         
+        var height = 180.0
+        if #available(iOS 11.0, *) {
+            if (self.bottomHeight == 0) {
+                height = 180.0
+            } else {
+                height = 350.0
+            }
+        } else {
+            height = 180.0
+        }
+        
         let keyboardFrame = CGSize(width: 0, height: imagePanelHeight)
-        self.inputTextViewBottomConstraint.constant = -180.0
+        self.inputTextViewBottomConstraint.constant = CGFloat(-height)
         let oldOffset = self.tableView.contentOffset
-        self.imagePanelView.frame = CGRect(x: 0, y: UIScreen.main.bounds.size.height - imagePanelHeight, width: UIScreen.main.bounds.size.width, height: 180.0)
+        self.imagePanelView.frame = CGRect(x: 0, y: UIScreen.main.bounds.size.height - imagePanelHeight, width: UIScreen.main.bounds.size.width, height: CGFloat(height))
         self.view.layoutIfNeeded()
         self.tableView.setContentOffset(CGPoint(x: oldOffset.x, y: oldOffset.y + keyboardFrame.height - self.bottomHeight), animated: false)
         self.tableView.scrollToBottom(animated: false)
     }
     
     func hideImagePanel() {
+        
+        var height = 180.0
+        if #available(iOS 11.0, *) {
+            if (self.bottomHeight == 0) {
+                height = 180.0
+            } else {
+                height = 350.0
+            }
+        } else {
+            height = 180.0
+        }
+        
         self.imagePanel = false
         self.imageSelected.removeAll()
         self.inputTextView.hideLeftMenu()
         let keyboardFrame = CGSize(width: 0.0, height: 0.0)
         self.inputTextViewBottomConstraint.constant = 0
         let oldOffset = self.tableView.contentOffset
-        self.imagePanelView.frame = CGRect(x: 0, y: UIScreen.main.bounds.size.height, width: UIScreen.main.bounds.size.width, height: 180.0)
+        self.imagePanelView.frame = CGRect(x: 0, y: UIScreen.main.bounds.size.height, width: UIScreen.main.bounds.size.width, height: CGFloat(height))
         self.view.layoutIfNeeded()
         self.tableView.setContentOffset(CGPoint(x: oldOffset.x, y: oldOffset.y - keyboardFrame.height + self.bottomHeight), animated: false)
         self.inputTextView.becomeFirstResponder()
