@@ -1013,6 +1013,7 @@ extension MINTEL_LiveChat  {
                 notif.scheduleNotification(message: "ขอบคุณสำหรับการสนทนา หากมีข้อสงสัยเพิ่มเติมสามารถเริ่มต้นแชทอีกครั้งเพื่อสอบถามข้อมูล")
                 print("Second notif fired.")
                 MINTEL_LiveChat.chatCanTyped = false
+                MessageList.disableOnMenu()
                 NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
                 object: nil,
                 userInfo:nil)

@@ -80,6 +80,12 @@ class MessageList {
         return MessageList.items.count
     }
     
+    static internal func disableOnMenu() {
+        MessageList.items.forEach { (item) in
+            item.disableMenu = true
+        }
+    }
+    
     fileprivate static func sort() {
         MessageList.items.sort { (itemA, itemB) -> Bool in
             
