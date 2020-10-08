@@ -337,7 +337,7 @@ public class MINTEL_LiveChat: UIView {
                                         userInfo:nil)
         
         self.reLayoutView()
-        if (MINTEL_LiveChat.chatUserTypedIn) {
+        if (MINTEL_LiveChat.chatStarted) {
             self.openSurvey(bot: MINTEL_LiveChat.chatBotMode)
         } else {
             let currentViewController = self.topViewController()
@@ -1065,11 +1065,15 @@ extension MINTEL_LiveChat  {
             } else {
                 let _ = MessageList.add(item: MyMessage(text: String(format: "สวัสดีครับ คุณ%@", MINTEL_LiveChat.configuration?.firstname ?? ""), agent: false, bot: true))
             }
-            MINTEL_LiveChat.chatStarted = true
+//            MINTEL_LiveChat.chatStarted = true
             MINTEL_LiveChat.chatCanTyped = true
             NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
                                             object: nil,
                                             userInfo:nil)
+        } else {
+            if (!menu) {
+                MINTEL_LiveChat.chatStarted = true
+            }
         }
         
         let params : Parameters = ["session_id": MINTEL_LiveChat.userId,"text": text]
