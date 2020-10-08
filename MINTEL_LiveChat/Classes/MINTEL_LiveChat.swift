@@ -120,7 +120,7 @@ public class MINTEL_LiveChat: UIView {
                 self.userImageView.frame = MINTEL_LiveChat.userImageFrame
                 self.userImageView.isHidden = false
                 self.callCenterLabel.isHidden = false
-                self.callCenterLabel.text = "แชตบอท"
+                self.callCenterLabel.text = "แชทบอท"
                 self.queueTitleLabel.isHidden = true
                 self.queueLabel.isHidden = true
             } else {
@@ -580,7 +580,7 @@ public class MINTEL_LiveChat: UIView {
         
         self.callCenterLabel = UILabel(frame: CGRect(x: 0, y: self.userImageView.frame.origin.y + self.userImageView.frame.size.height, width: self.frame.size.width, height: 25))
         self.callCenterLabel.font = UIFont.systemFont(ofSize: 14)
-        self.callCenterLabel.text = "แชตบอท"
+        self.callCenterLabel.text = "แชทบอท"
         self.callCenterLabel.textAlignment = .center
         self.addSubview(self.callCenterLabel)
         
@@ -1063,7 +1063,7 @@ extension MINTEL_LiveChat  {
             if MINTEL_LiveChat.configuration?.phone.count == 0 {
                 let _ = MessageList.add(item: MyMessage(text: "สวัสดีครับ", agent: false, bot: true))
             } else {
-                let _ = MessageList.add(item: MyMessage(text: String(format: "สวัสดีครับ คุณ %@", MINTEL_LiveChat.configuration?.firstname ?? ""), agent: false, bot: true))
+                let _ = MessageList.add(item: MyMessage(text: String(format: "สวัสดีครับ คุณ%@", MINTEL_LiveChat.configuration?.firstname ?? ""), agent: false, bot: true))
             }
             MINTEL_LiveChat.chatStarted = true
             MINTEL_LiveChat.chatCanTyped = true
