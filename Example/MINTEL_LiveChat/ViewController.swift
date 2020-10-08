@@ -91,6 +91,11 @@ class ViewController: UIViewController {
         let appDelegate = (UIApplication.shared.delegate as! AppDelegate)
         appDelegate.chat.stopChat()
     }
+    
+    @objc @IBAction func checkSession() {
+        let appDelegate = (UIApplication.shared.delegate as! AppDelegate)
+        debugPrint("Session : ", appDelegate.chat.isSessionActive())
+    }
 
 
     override func didReceiveMemoryWarning() {

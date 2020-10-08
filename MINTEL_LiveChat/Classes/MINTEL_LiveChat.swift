@@ -170,6 +170,10 @@ public class MINTEL_LiveChat: UIView {
         }
     }
     
+    public func isSessionActive() -> Bool {
+        return MINTEL_LiveChat.chatStarted
+    }
+    
     public func getSDKVersion() -> String {
         if let version = Bundle(identifier: "org.cocoapods.MINTEL-LiveChat")?.infoDictionary?["CFBundleShortVersionString"] as? String {
             print(version)
@@ -203,6 +207,7 @@ public class MINTEL_LiveChat: UIView {
         MINTEL_LiveChat.configuration = config
         MINTEL_LiveChat.userName = config.userName
         MINTEL_LiveChat.chatBotMode = true
+        MINTEL_LiveChat.chatStarted = false
         MINTEL_LiveChat.chatInProgress = true
         MINTEL_LiveChat.chatCanTyped = false
         MINTEL_LiveChat.chatUserTypedIn = false
