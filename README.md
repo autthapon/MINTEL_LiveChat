@@ -55,3 +55,4 @@ MINTEL_LiveChat is available under the MIT license. See the LICENSE file for mor
 
 4. you can stop the Chat , please call stopChat() 
 5. you can hide the Chat , please call hideChat() (chat log is not cleared)
+6. you can check SessionActive by call isSessionActive() 
