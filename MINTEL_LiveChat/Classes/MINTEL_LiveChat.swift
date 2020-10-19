@@ -464,18 +464,56 @@ public class MINTEL_LiveChat: UIView {
         UIApplication.shared.keyWindow?.bringSubviewToFront(self)
     }
     
-    internal func startSaleForce() {
+    internal  func checkTransferQueue() {
+        let params : Parameters = ["session_id": MINTEL_LiveChat.userId]
+        debugPrint("Url : " , params)
+        let url = String(format: "%@/transferqueue", MINTEL_LiveChat.configuration?.webHookBaseUrl ?? "")
+        let headers:HTTPHeaders = [
+            "x-api-key": MINTEL_LiveChat.configuration?.xApikey ?? "" // "edf1ca88a09546f8a0667c81c93d1f31"
+        ]
         
-        self.setupNotification()
-        self.configureSaleForce()
+        do {
+            let jsonEncode = JSONEncoding.init()
+            let originalRequest:URLRequest? = try URLRequest(url: url, method: .post, headers: headers)
+            let encodedURLRequest = try jsonEncode.encode(originalRequest!, with: params)
+            Alamofire
+                .request(encodedURLRequest)
+                .responseJSON { (response) in
+                    
+                    switch response.result {
+                    case .success(_):
+                        if let json = response.value {
+                            if let item = json as? [String:Any] {
+                                let buttonId = item["buttonId"] as? String ?? "default"
+                                if (buttonId != "default") {
+                                    self.configureSaleForce(buttonId: buttonId)
+                                    return
+                                }
+                            }
+                        }
+                        
+                        self.configureSaleForce(buttonId: MINTEL_LiveChat.configuration?.salesforceButtonID ?? "")
+                        break
+                    case .failure( _):
+                        break
+                    }
+            }
+        } catch {
+            debugPrint("Error In Catch")
+        }
     }
     
-    private func configureSaleForce() {
+    internal func startSaleForce() {
+        self.setupNotification()
+        self.checkTransferQueue()
+    }
+    
+    private func configureSaleForce(buttonId: String) {
         
         if let config = SCSChatConfiguration(liveAgentPod: MINTEL_LiveChat.configuration?.salesforceLiveAgentPod,
                                              orgId: MINTEL_LiveChat.configuration?.salesforceOrdID,
                                              deploymentId: MINTEL_LiveChat.configuration?.salesforceDeployID,
-                                             buttonId: MINTEL_LiveChat.configuration?.salesforceButtonID) {
+                                             buttonId: buttonId) {
             
             config.visitorName = String(format:"%@ %@", MINTEL_LiveChat.configuration?.firstname ?? "", MINTEL_LiveChat.configuration?.lastname ?? "")
             config.queueStyle = .position // Fixed
