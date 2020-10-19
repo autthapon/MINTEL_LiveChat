@@ -174,6 +174,13 @@ class CustomTableViewCell: UITableViewCell {
         let textNewLine = txt.replacingOccurrences(of: "\n", with: "<br/>")
         textView.MINTEL_htmlText = textNewLine
         
+        let linkAttributes: [NSAttributedString.Key : Any] = [
+            NSAttributedString.Key.foregroundColor: UIColor.blue,
+            NSAttributedString.Key.underlineColor: UIColor.blue,
+            NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue
+        ]
+        
+        textView.linkTextAttributes = linkAttributes
         textView.font = UIFont.systemFont(ofSize: 16)
         textView.isHidden = false
         textView.backgroundColor = UIColor(MyHexString: "#EBEBEB")
@@ -292,6 +299,13 @@ class CustomTableViewCell: UITableViewCell {
         let textNewLine = txt.replacingOccurrences(of: "\n", with: "<br/>")
         textView.MINTEL_htmlText = textNewLine
         
+        let linkAttributes: [NSAttributedString.Key : Any] = [
+            NSAttributedString.Key.foregroundColor: UIColor.blue,
+            NSAttributedString.Key.underlineColor: UIColor.blue,
+            NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue
+        ]
+        
+        textView.linkTextAttributes = linkAttributes
         textView.font = UIFont.systemFont(ofSize: 16)
         textView.isHidden = false
         textView.backgroundColor = UIColor(MyHexString: "#EBEBEB")
@@ -338,6 +352,14 @@ class CustomTableViewCell: UITableViewCell {
         textView.attributedText = attributedString
         
         self.contentView.addSubview(textView)
+        
+        let linkAttributes: [NSAttributedString.Key : Any] = [
+            NSAttributedString.Key.foregroundColor: UIColor.blue,
+            NSAttributedString.Key.underlineColor: UIColor.blue,
+            NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue
+        ]
+        
+        textView.linkTextAttributes = linkAttributes
         textView.backgroundColor = UIColor(MyHexString: "#FF8300")
         textView.layer.cornerRadius = 18.0
         textView.textContainerInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)

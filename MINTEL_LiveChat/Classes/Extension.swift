@@ -166,6 +166,8 @@ internal extension String {
                 .documentType: NSAttributedString.DocumentType.html,
                 .characterEncoding: String.Encoding.utf8.rawValue
             ]
+            
+            
             let attributedString = try NSMutableAttributedString(data: data, options: options, documentAttributes: nil)
             return attributedString
         } catch {
@@ -174,12 +176,13 @@ internal extension String {
     }
     
     func MINTEL_customHTMLAttributedString(withFont font: UIFont?, textColor: UIColor) -> NSAttributedString? {
-        guard let font = font else {
-            return self.MINTEL_htmlToAttributedString
-        }
+//        guard let font = font else {
+//            return self.MINTEL_htmlToAttributedString
+//        }
         let hexCode = textColor.MINTEL_hexCodeString
-        let css = "<style>body{font-family: '\(font.fontName)'; font-size:\(font.pointSize)px; color: \(hexCode);}</style>"
+        let css = "<style>a:link {color: blue;background-color: transparent;text-decoration: underline;}a:visited {color: blue;background-color: transparent;text-decoration: none;}a:hover {color: blue;background-color: transparent;text-decoration: underline;}a:active {color: blue;background-color: transparent;text-decoration: underline;}</style>"
         let modifiedString = css + self
+        debugPrint(modifiedString)
         return modifiedString.MINTEL_htmlToAttributedString
     }
     
