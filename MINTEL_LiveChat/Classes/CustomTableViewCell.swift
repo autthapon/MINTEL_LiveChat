@@ -915,6 +915,7 @@ class CustomTableViewCell: UITableViewCell {
             lbl.textColor = UIColor(MyHexString: "#FF8300")
             lbl.layer.borderColor = UIColor(MyHexString: "#EBEBEB").cgColor
             lbl.tag = 10000 + i
+            lbl.isUserInteractionEnabled = true
             bgggView.addSubview(lbl)
             yIndex = yIndex + lbl.frame.size.height
         }
@@ -932,6 +933,10 @@ class CustomTableViewCell: UITableViewCell {
         
         return timelbl.frame.origin.y + timelbl.frame.size.height + 15
     }
+//
+//    @objc func menuLabelClick(_ sender: UITapGestureRecognizer) {
+//        debugPrint("Menu Click")
+//    }
     
     //    func setupMenuCell(_ title:String,_ menus:[[String:Any]], _ item : MyMessage) {
     //
