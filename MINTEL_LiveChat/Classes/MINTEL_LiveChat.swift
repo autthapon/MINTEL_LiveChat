@@ -226,7 +226,8 @@ public class MINTEL_LiveChat: UIView {
             
             MessageList.add(item: MyMessage(systemMessageType2: "กรุณารอสักครู่"), remove: true)
             MINTEL_LiveChat.chatBotMode = false
-            MINTEL_LiveChat.instance.startSaleForce()
+            MINTEL_LiveChat.sendOnNewSession(disableBot: MINTEL_LiveChat.configuration?.disableBotMode ?? false)
+            MINTEL_LiveChat.instance.checkTransferQueue()
             MINTEL_LiveChat.stopTimer()
         } else {
             self.tapAction(sender: NSObject(), survey: false)
@@ -380,6 +381,8 @@ public class MINTEL_LiveChat: UIView {
                         MINTEL_LiveChat.chatUserTypedIn = true
                         MINTEL_LiveChat.sendPost(text: "__00_home__greeting", menu: false)
                     }
+                    
+                    MINTEL_LiveChat.sendOnNewSession(disableBot: disableBotMode)
                 }
             })
     }
@@ -453,9 +456,9 @@ public class MINTEL_LiveChat: UIView {
         let _ = MessageList.add(item: MyMessage(systemMessageType1: String(format: "เริ่มการสนทนา %@", date24)))
         if (!(MINTEL_LiveChat.configuration?.disableBotMode ?? false)) {
             self.getAnnouncementMessage()
-            MINTEL_LiveChat.sendOnNewSession()
         }
         
+//        MINTEL_LiveChat.sendOnNewSession()
         MINTEL_LiveChat.sendPost(text: "สวัสดี", menu: true)
         MINTEL_LiveChat.checkTime()
     }
@@ -1018,8 +1021,27 @@ extension MINTEL_LiveChat  {
         return nil
     }
     
-    fileprivate static func sendOnNewSession() {
+    fileprivate static func sendOnNewSession(disableBot: Bool) {
+        
+        #if targetEnvironment(simulator)
+            let identifier = ProcessInfo().environment["SIMULATOR_MODEL_IDENTIFIER"]!
+        #else
+            var systemInfo = utsname()
+            uname(&systemInfo)
+            let machineMirror = Mirror(reflecting: systemInfo.machine)
+            let identifier = machineMirror.children.reduce("") { identifier, element in
+                guard let value = element.value as? Int8 , value != 0 else { return identifier }
+                return identifier + String(UnicodeScalar(UInt8(value)))
+            }
+        #endif
+        
+        let screenResolution = String(format: "%.0fx%.0f", UIScreen.main.bounds.width , UIScreen.main.bounds.height)
+        
         let params : Parameters = [
+            "platform" : "IOS",
+            "user_agent" : identifier,
+            "chatbot_active" : !disableBot,
+            "screen_resolution" : screenResolution,
             "session_id": MINTEL_LiveChat.userId,
             "first_name": MINTEL_LiveChat.configuration?.firstname ?? "",
             "last_name" : MINTEL_LiveChat.configuration?.lastname ?? "",
