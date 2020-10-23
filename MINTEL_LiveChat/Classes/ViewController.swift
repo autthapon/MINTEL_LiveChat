@@ -78,6 +78,7 @@ class ViewController: UIViewController {
     fileprivate var imageSelected:[Int] = []
     internal var uploadDataFiles:Int = 0
     internal var uploadDataText:[String] = [];
+    fileprivate var hoverIndex:Int = -1
     
     var tableView: UITableView = {
         let v = UITableView()
@@ -194,16 +195,7 @@ class ViewController: UIViewController {
         
         resetCachedAssets()
         PHPhotoLibrary.shared().register(self)
-        
-        if fetchResult == nil {
-            let allPhotosOptions = PHFetchOptions()
-            //            allPhotosOptions.predicate = NSPredicate(format: "mediaType = %d", PHAssetMediaType.image.rawValue)
-            allPhotosOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
-            //            allPhotosOptions.includeAllBurstAssets = false
-            //            allPhotosOptions.includeAssetSourceTypes = [.typeUserLibrary, .typeCloudShared]
-            //            allPhotosOptions.includeHiddenAssets = false
-            fetchResult = PHAsset.fetchAssets(with: .image, options: allPhotosOptions)
-        }
+
         self.imagePanelView.reloadData()
         self.tableView.reloadData()
         self.tableView.scrollToBottom(animated: true)
@@ -522,12 +514,19 @@ extension ViewController: UITableViewDataSource {
                     cell.renderFileSend(txt: name, item: item, index: indexPath.section)
                 case .menu(let title, let menus):
                     cell.setupMenuCell(title, menus, item)
-                    let gesture = MyTapGuesture(target: self, action: #selector(ViewController.longPress(_:)))
-                    gesture.minimumPressDuration = 0
-                    gesture.delegate = self
-                    gesture.cell = cell
-                    gesture.message = item
-                    cell.addGestureRecognizer(gesture)
+                    if (!item.disableMenu) {
+                        let gesture = MyTapGuesture(target: self, action: #selector(ViewController.longPress(_:)))
+                        gesture.minimumPressDuration = 0
+                        gesture.delegate = self
+                        gesture.cell = cell
+                        gesture.message = item
+                        cell.tapGuesture = gesture
+                        cell.addGestureRecognizer(gesture)
+                    } else {
+                        if let g = cell.tapGuesture {
+                            cell.removeGestureRecognizer(g)
+                        }
+                    }
                 case .image(let img, _):
                     cell.renderImageCell(image: img, time: item.sentDate, item: item, index: indexPath.section)
 //                    let gesture = cell.tapGuesture ?? MyTapGuesture(target: self, action: #selector(didTap(_:)))
@@ -545,7 +544,13 @@ extension ViewController: UITableViewDataSource {
     }
     
     @objc func longPress(_ sender: MyTapGuesture) {
+        
+        if (sender.message?.disableMenu ?? false) {
+            return
+        }
+        
         if (sender.state == .began) {
+            debugPrint("Begin")
             let message = sender.message
             if (message?.disableMenu ?? false) {
                 return
@@ -556,9 +561,18 @@ extension ViewController: UITableViewDataSource {
                 
                 let touchLocation: CGPoint = (sender.location(in: sender.view))
                 let index = findViewOnTap(menus: menus, title: title, yPosition: touchLocation.y, message: message)
-                if (index > -1) {
+                if (index > -1 && hoverIndex != index) {
+                    
+                    // Clear Background Old
+                    if (hoverIndex > -1) {
+                        let view = sender.cell?.viewWithTag(10000 + hoverIndex) as? UILabel
+                        view?.backgroundColor = UIColor.white
+                    }
+                    
+                    hoverIndex = index
                     let view = sender.cell?.viewWithTag(10000 + index) as? UILabel
-                    view?.backgroundColor = UIColor(MyHexString: "#FF0000")
+                    let orange = UIColor(MyHexString: "#22ff8300")
+                    view?.backgroundColor = orange.withAlphaComponent(0.5)
                 }
             default:
                 return
@@ -568,7 +582,7 @@ extension ViewController: UITableViewDataSource {
             debugPrint("Cancelled")
         } else if (sender.state == .changed) {
             debugPrint("Changed")
-        } else if (sender.state == .ended) {
+            
             let message = sender.message
             if (message?.disableMenu ?? false) {
                 return
@@ -579,12 +593,49 @@ extension ViewController: UITableViewDataSource {
                 
                 let touchLocation: CGPoint = (sender.location(in: sender.view))
                 let index = findViewOnTap(menus: menus, title: title, yPosition: touchLocation.y, message: message)
+                if (index > -1 && hoverIndex != index) {
+                    
+                    if (hoverIndex > -1) {
+                        let view = sender.cell?.viewWithTag(10000 + hoverIndex) as? UILabel
+                        view?.backgroundColor = UIColor.white
+                    }
+                    hoverIndex = index
+                    let view = sender.cell?.viewWithTag(10000 + index) as? UILabel
+                    let orange = UIColor(MyHexString: "#22ff8300")
+                    view?.backgroundColor = orange.withAlphaComponent(0.5)
+                }
+            default:
+                return
+            }
+            
+        } else if (sender.state == .ended) {
+            debugPrint("End")
+            let message = sender.message
+            if (message?.disableMenu ?? false) {
+                return
+            }
+            
+            switch message?.kind {
+            case .menu(let title, let menus):
+                
+                if (hoverIndex > -1) {
+                    let view = sender.cell?.viewWithTag(10000 + hoverIndex) as? UILabel
+                    view?.backgroundColor = UIColor.white
+                }
+                
+                let touchLocation: CGPoint = (sender.location(in: sender.view))
+                let index = findViewOnTap(menus: menus, title: title, yPosition: touchLocation.y, message: message)
                 if (index > -1) {
                     let view = sender.cell?.viewWithTag(10000 + index) as? UILabel
-                    view?.backgroundColor = UIColor(MyHexString: "#FFFFFF")
+                    view?.backgroundColor = UIColor(MyHexString: "#66f0f0f0")
+                    message?.selectedIndex = index
+                    self.findMenuOnTap(menus: menus, title: title, yPosition: touchLocation.y, message: message)
                 } else {
+                   
                     debugPrint("Index : ", index)
                 }
+                
+                hoverIndex = index
             default:
                 return
             }
@@ -659,10 +710,13 @@ extension ViewController: UITableViewDataSource {
             
             if (yPosition >= yIndex) {
                 targetIndex = i
-//                break
             }
             
             yIndex = yIndex + height + 16
+        }
+        
+        if (yPosition >= yIndex) {
+            targetIndex = -1
         }
         
         if (targetIndex > -1) {
@@ -1073,6 +1127,13 @@ extension ViewController: InputTextViewDelegate {
     
     func showImagePanel() {
         
+        if fetchResult == nil {
+            let allPhotosOptions = PHFetchOptions()
+            allPhotosOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
+            fetchResult = PHAsset.fetchAssets(with: .image, options: allPhotosOptions)
+        }
+        
+        self.imagePanelView.reloadData()
         self.inputTextView.textView.resignFirstResponder()
         self.chatMenuPanel = false
         self.imagePanel = true
@@ -1263,7 +1324,7 @@ extension ViewController : UICollectionViewDataSource, UICollectionViewDelegate,
             if cell.representedAssetIdentifier == asset.localIdentifier {
                 cell.thumbnailImage = image
             } else {
-                print("NONONO")
+//                print("NONONO")
             }
         })
         

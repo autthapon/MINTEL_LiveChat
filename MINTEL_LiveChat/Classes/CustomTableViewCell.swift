@@ -803,7 +803,7 @@ class CustomTableViewCell: UITableViewCell {
         return img.size.height + 13 + 20
     }
     
-    func setupMenuCell(_ title:String,_ menus:[[String:Any]], _ item : MyMessage) {
+    func setupMenuCell(_ title:String,_ menus:[[String:Any]], _ itemMessage : MyMessage) {
         
         self.contentView.subviews.forEach { (view) in
             view.removeFromSuperview()
@@ -864,6 +864,13 @@ class CustomTableViewCell: UITableViewCell {
             lbl.numberOfLines = 10
             lbl.textColor = UIColor(MyHexString: "#FF8300")
             lbl.layer.borderColor = UIColor(MyHexString: "#EBEBEB").cgColor
+            
+            if (itemMessage.selectedIndex == i) {
+                lbl.backgroundColor = UIColor(MyHexString: "#66f0f0f0")
+            } else {
+                lbl.backgroundColor = UIColor.white
+            }
+            
             lbl.tag = 10000 + i
             bgggView.addSubview(lbl)
             yIndex = yIndex + lbl.frame.size.height
@@ -876,7 +883,7 @@ class CustomTableViewCell: UITableViewCell {
         self.contentView.addSubview(timelbl)
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "HH:mm"
-        let dateString = dateFormatter.string(from: item.sentDate)
+        let dateString = dateFormatter.string(from: itemMessage.sentDate)
         timelbl.backgroundColor = UIColor.clear
         timelbl.text = dateString
         timelbl.frame = CGRect(x: avartar.frame.origin.x + avartarWidth + 5, y: bgggView.frame.origin.y + bgggView.frame.size.height + 5, width: 100, height: 20)

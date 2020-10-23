@@ -38,6 +38,7 @@ class MyMessage {
     var agent:Bool
     var bot:Bool
     var disableMenu:Bool = false
+    var selectedIndex:Int = -1
     
     private init(kind: MyMessageKind, agent: Bool, bot:Bool) {
         self.kind = kind
