@@ -986,7 +986,7 @@ extension MINTEL_LiveChat  {
                                     MINTEL_LiveChat.chatCanTyped = true
                                     DispatchQueue.global(qos: .userInitiated).async {
                                         DispatchQueue.main.async {
-                                            self.checkAgentMode()
+//                                            self.checkAgentMode()
                                             //                                        MINTEL_LiveChat.sendPost(text: "__00_home__greeting", menu: false)
                                         }
                                         
@@ -1034,6 +1034,8 @@ extension MINTEL_LiveChat  {
                 return identifier + String(UnicodeScalar(UInt8(value)))
             }
         #endif
+        
+        debugPrint("OnNewSessionMobile")
         
         let screenResolution = String(format: "%.0fx%.0f", UIScreen.main.bounds.width , UIScreen.main.bounds.height)
         
