@@ -522,14 +522,17 @@ extension ViewController: UITableViewDataSource {
                     cell.renderFileSend(txt: name, item: item, index: indexPath.section)
                 case .menu(let title, let menus):
                     cell.setupMenuCell(title, menus, item)
-                    let gesture = cell.tapGuesture ?? MyTapGuesture(target: self, action: #selector(didTap(_:)))
+                    let gesture = MyTapGuesture(target: self, action: #selector(ViewController.longPress(_:)))
+                    gesture.minimumPressDuration = 0
+                    gesture.delegate = self
+                    gesture.cell = cell
                     gesture.message = item
                     cell.addGestureRecognizer(gesture)
                 case .image(let img, _):
                     cell.renderImageCell(image: img, time: item.sentDate, item: item, index: indexPath.section)
-                    let gesture = cell.tapGuesture ?? MyTapGuesture(target: self, action: #selector(didTap(_:)))
-                    gesture.message = item
-                    cell.addGestureRecognizer(gesture)
+//                    let gesture = cell.tapGuesture ?? MyTapGuesture(target: self, action: #selector(didTap(_:)))
+//                    gesture.message = item
+//                    cell.addGestureRecognizer(gesture)
                 case .agentJoin(let agentName):
                     cell.renderAgentJoin(agentName)
                 case .typing:
@@ -541,26 +544,132 @@ extension ViewController: UITableViewDataSource {
         }
     }
     
-    @objc func didTap(_ sender: MyTapGuesture? = nil) {
-        print("Tab")
-        let message = sender?.message
-        if (message?.disableMenu ?? false) {
-            return
-        }
-        switch message?.kind {
-        case .text( _):
-            return
-        case .menu(let title, let menus):
-            if sender?.state == .ended {
-                let touchLocation: CGPoint = (sender?.location(in: sender?.view))!
-                findMenuOnTap(menus: menus, title: title, yPosition: touchLocation.y, message: message)
+    @objc func longPress(_ sender: MyTapGuesture) {
+        if (sender.state == .began) {
+            let message = sender.message
+            if (message?.disableMenu ?? false) {
+                return
             }
-        case .image(let image, let imageUrl):
-            let temp:[String:Any] = ["image" : image, "imageUrl" : imageUrl]
-            self.performSegue(withIdentifier: "previewImage", sender: temp)
-        default:
-            return
+            
+            switch message?.kind {
+            case .menu(let title, let menus):
+                
+                let touchLocation: CGPoint = (sender.location(in: sender.view))
+                let index = findViewOnTap(menus: menus, title: title, yPosition: touchLocation.y, message: message)
+                if (index > -1) {
+                    let view = sender.cell?.viewWithTag(10000 + index) as? UILabel
+                    view?.backgroundColor = UIColor(MyHexString: "#FF0000")
+                }
+            default:
+                return
+            }
+            
+        } else if (sender.state == .cancelled) {
+            debugPrint("Cancelled")
+        } else if (sender.state == .changed) {
+            debugPrint("Changed")
+        } else if (sender.state == .ended) {
+            let message = sender.message
+            if (message?.disableMenu ?? false) {
+                return
+            }
+            
+            switch message?.kind {
+            case .menu(let title, let menus):
+                
+                let touchLocation: CGPoint = (sender.location(in: sender.view))
+                let index = findViewOnTap(menus: menus, title: title, yPosition: touchLocation.y, message: message)
+                if (index > -1) {
+                    let view = sender.cell?.viewWithTag(10000 + index) as? UILabel
+                    view?.backgroundColor = UIColor(MyHexString: "#FFFFFF")
+                } else {
+                    debugPrint("Index : ", index)
+                }
+            default:
+                return
+            }
+            
+        } else if (sender.state == .failed) {
+            debugPrint("Failed")
+        } else if (sender.state == .possible) {
+            debugPrint("Possible")
+        } else if (sender.state == .recognized) {
+            debugPrint("Recognized")
+        } else {
+            debugPrint("Else")
         }
+        
+        let touchLocation: CGPoint = (sender.location(in: sender.view))
+        debugPrint(touchLocation)
+    }
+    
+//    @objc func didTap(_ sender: MyTapGuesture? = nil) {
+//        print("Tab")
+//        let message = sender?.message
+//        if (message?.disableMenu ?? false) {
+//            return
+//        }
+//        switch message?.kind {
+//        case .text( _):
+//            return
+//        case .menu(let title, let menus):
+//            if sender?.state == .ended {
+//                let touchLocation: CGPoint = (sender?.location(in: sender?.view))!
+//                findMenuOnTap(menus: menus, title: title, yPosition: touchLocation.y, message: message)
+//            }
+//        case .image(let image, let imageUrl):
+//            let temp:[String:Any] = ["image" : image, "imageUrl" : imageUrl]
+//            self.performSegue(withIdentifier: "previewImage", sender: temp)
+//        default:
+//            return
+//        }
+//    }
+    
+    fileprivate func findViewOnTap(menus:[[String: Any]], title:String, yPosition:CGFloat, message: MyMessage?) -> Int {
+        self.inputTextView.textView.resignFirstResponder()
+        self.hideImagePanel()
+        self.hideChatMenuPanel()
+        
+        if (!MINTEL_LiveChat.chatBotMode) {
+            return -1
+        }
+        
+        if (!MINTEL_LiveChat.chatInProgress) {
+            return -1
+        }
+        
+        var targetIndex:Int = -1
+        var yIndex = CGFloat(0.0)
+        let image = UIImage(named: "chatbot", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil)
+        let width = UIScreen.main.bounds.size.width - (8.0 + (image?.size.width ?? 0.0) + 10.0 + extraSpacing)
+        var height = CGFloat(0.0)
+        if (title.count > 0) {
+            height = title.MyHeight(withConstrainedWidth: width, font: UIFont.systemFont(ofSize: 16.0))
+            height = max(height, 40.0)
+            yIndex = yIndex + height + 16
+        }
+        
+        for i in 0..<menus.count {
+            let item = menus[i]
+            let actions = item["action"] as! [String:Any]
+            let labelText = actions["label"] as? String ?? ""
+            
+            height = labelText.MyHeight(withConstrainedWidth: width, font: UIFont.systemFont(ofSize: 16.0))
+            height = max(40.0, height)
+            
+            if (yPosition >= yIndex) {
+                targetIndex = i
+//                break
+            }
+            
+            yIndex = yIndex + height + 16
+        }
+        
+        if (targetIndex > -1) {
+            debugPrint("Target : ", targetIndex)
+        }
+        
+        return targetIndex
     }
     
     fileprivate func findMenuOnTap(menus:[[String: Any]], title:String, yPosition:CGFloat, message: MyMessage?) {
@@ -633,6 +742,18 @@ extension ViewController: UITableViewDataSource {
                 }
             }
         }
+    }
+}
+
+extension ViewController : UIGestureRecognizerDelegate {
+    
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
+    }
+    
+    
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        return true
     }
 }
 
