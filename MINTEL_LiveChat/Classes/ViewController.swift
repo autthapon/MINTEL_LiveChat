@@ -549,6 +549,8 @@ extension ViewController: UITableViewDataSource {
             return
         }
         
+        self.inputTextView.textView.resignFirstResponder()
+        
         if (sender.state == .began) {
             debugPrint("Begin")
             let message = sender.message
@@ -1294,6 +1296,18 @@ extension ViewController : UICollectionViewDataSource, UICollectionViewDelegate,
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        
+        if (fetchResult == nil) {
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: GridViewCell.self), for: indexPath) as? GridViewCell
+            else { fatalError("unexpected cell in collection view") }
+            cell.representedAssetIdentifier = ""
+            cell.checkbox.tag = indexPath.item
+            cell.checkbox.removeTarget(self, action: #selector(self.didSelectImage(_:)), for: .valueChanged)
+            cell.checkbox.isChecked = false
+            cell.thumbnailImage = nil
+            return cell
+        }
+        
         let asset = fetchResult.object(at: indexPath.item)
         
         debugPrint(asset, asset.mediaSubtypes.rawValue, PHAssetMediaType.audio)
@@ -1341,6 +1355,11 @@ extension ViewController : UICollectionViewDataSource, UICollectionViewDelegate,
     }
     
     fileprivate func sendImageToWebhook(index: Int) {
+        
+        if (fetchResult != nil) {
+            return
+        }
+        
         let asset = fetchResult.object(at: index)
         let options = PHImageRequestOptions()
         options.deliveryMode = .highQualityFormat
@@ -1448,6 +1467,10 @@ private extension UICollectionView {
 
 extension ViewController: PHPhotoLibraryChangeObserver {
     func photoLibraryDidChange(_ changeInstance: PHChange) {
+        
+        if (fetchResult == nil) {
+            return
+        }
         
         guard let changes = changeInstance.changeDetails(for: fetchResult)
             else { return }
