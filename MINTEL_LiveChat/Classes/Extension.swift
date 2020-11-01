@@ -179,7 +179,7 @@ internal extension String {
 //        guard let font = font else {
 //            return self.MINTEL_htmlToAttributedString
 //        }
-        let hexCode = textColor.MINTEL_hexCodeString
+        _ = textColor.MINTEL_hexCodeString
         let css = "<style>a:link {color: blue;background-color: transparent;text-decoration: underline;}a:visited {color: blue;background-color: transparent;text-decoration: none;}a:hover {color: blue;background-color: transparent;text-decoration: underline;}a:active {color: blue;background-color: transparent;text-decoration: underline;}</style>"
         let modifiedString = css + self
 //        debugPrint(modifiedString)

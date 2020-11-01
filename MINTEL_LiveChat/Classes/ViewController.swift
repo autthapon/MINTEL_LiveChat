@@ -515,8 +515,9 @@ extension ViewController: UITableViewDataSource {
                 case .menu(let title, let menus):
                     cell.setupMenuCell(title, menus, item)
                     if (!item.disableMenu) {
-                        let gesture = MyTapGuesture(target: self, action: #selector(ViewController.longPress(_:)))
-                        gesture.minimumPressDuration = 0
+//                        let gesture = MyTapGuesture(target: self, action: #selector(ViewController.longPress(_:)))
+                        let gesture = MyTapGuesture(target: self, action: #selector(self.didTap(_:)))
+//                        gesture.minimumPressDuration = 0
                         gesture.delegate = self
                         gesture.cell = cell
                         gesture.message = item
@@ -549,134 +550,139 @@ extension ViewController: UITableViewDataSource {
             return
         }
         
-        self.inputTextView.textView.resignFirstResponder()
-        
-        if (sender.state == .began) {
-            debugPrint("Begin")
-            let message = sender.message
-            if (message?.disableMenu ?? false) {
-                return
-            }
-            
-            switch message?.kind {
-            case .menu(let title, let menus):
+        DispatchQueue.main.async {
+            self.inputTextView.textView.resignFirstResponder()
+            if (sender.state == .began) {
+                debugPrint("Begin")
+                let message = sender.message
+                if (message?.disableMenu ?? false) {
+                    return
+                }
+                
+                switch message?.kind {
+                case .menu(let title, let menus):
+                    
+                    let touchLocation: CGPoint = (sender.location(in: sender.view))
+                    let index = self.findViewOnTap(menus: menus, title: title, yPosition: touchLocation.y, message: message)
+                    if (index > -1 && self.hoverIndex != index) {
+                        
+                        // Clear Background Old
+                        if (self.hoverIndex > -1) {
+                            let view = sender.cell?.viewWithTag(10000 + self.hoverIndex) as? UILabel
+                            view?.backgroundColor = UIColor.white
+                        }
+                        
+                        self.hoverIndex = index
+                        let view = sender.cell?.viewWithTag(10000 + index) as? UILabel
+                        let orange = UIColor(MyHexString: "#22ff8300")
+                        view?.backgroundColor = orange.withAlphaComponent(0.5)
+                    }
+                default:
+                    return
+                }
+                
+            } else if (sender.state == .cancelled) {
+                debugPrint("Cancelled")
+            } else if (sender.state == .changed) {
+                debugPrint("Changed")
+                
+                let message = sender.message
+                if (message?.disableMenu ?? false) {
+                    return
+                }
+                
+                switch message?.kind {
+                case .menu(let title, let menus):
+                    
+                    let touchLocation: CGPoint = (sender.location(in: sender.view))
+                    let index = self.findViewOnTap(menus: menus, title: title, yPosition: touchLocation.y, message: message)
+                    if (index > -1 && self.hoverIndex != index) {
+                        
+                        if (self.hoverIndex > -1) {
+                            let view = sender.cell?.viewWithTag(10000 + self.hoverIndex) as? UILabel
+                            view?.backgroundColor = UIColor.white
+                        }
+                        self.hoverIndex = index
+                        let view = sender.cell?.viewWithTag(10000 + index) as? UILabel
+                        let orange = UIColor(MyHexString: "#22ff8300")
+                        view?.backgroundColor = orange.withAlphaComponent(0.5)
+                    }
+                default:
+                    return
+                }
+                
+            } else if (sender.state == .ended || sender.state == .possible) {
+                
+                if (sender.state == .ended) {
+                    debugPrint("End")
+                } else if (sender.state == .possible) {
+                    debugPrint("Possible")
+                }
+                
+                let message = sender.message
+                if (message?.disableMenu ?? false) {
+                    return
+                }
                 
                 let touchLocation: CGPoint = (sender.location(in: sender.view))
-                let index = findViewOnTap(menus: menus, title: title, yPosition: touchLocation.y, message: message)
-                if (index > -1 && hoverIndex != index) {
+                debugPrint(touchLocation)
+                
+                switch message?.kind {
+                case .menu(let title, let menus):
                     
-                    // Clear Background Old
-                    if (hoverIndex > -1) {
-                        let view = sender.cell?.viewWithTag(10000 + hoverIndex) as? UILabel
+                    if (self.hoverIndex > -1) {
+                        let view = sender.cell?.viewWithTag(10000 + self.hoverIndex) as? UILabel
                         view?.backgroundColor = UIColor.white
                     }
                     
-                    hoverIndex = index
-                    let view = sender.cell?.viewWithTag(10000 + index) as? UILabel
-                    let orange = UIColor(MyHexString: "#22ff8300")
-                    view?.backgroundColor = orange.withAlphaComponent(0.5)
-                }
-            default:
-                return
-            }
-            
-        } else if (sender.state == .cancelled) {
-            debugPrint("Cancelled")
-        } else if (sender.state == .changed) {
-            debugPrint("Changed")
-            
-            let message = sender.message
-            if (message?.disableMenu ?? false) {
-                return
-            }
-            
-            switch message?.kind {
-            case .menu(let title, let menus):
-                
-                let touchLocation: CGPoint = (sender.location(in: sender.view))
-                let index = findViewOnTap(menus: menus, title: title, yPosition: touchLocation.y, message: message)
-                if (index > -1 && hoverIndex != index) {
-                    
-                    if (hoverIndex > -1) {
-                        let view = sender.cell?.viewWithTag(10000 + hoverIndex) as? UILabel
-                        view?.backgroundColor = UIColor.white
+                    let touchLocation: CGPoint = (sender.location(in: sender.view))
+                    let index = self.findViewOnTap(menus: menus, title: title, yPosition: touchLocation.y, message: message)
+                    if (index > -1) {
+                        let view = sender.cell?.viewWithTag(10000 + index) as? UILabel
+                        view?.backgroundColor = UIColor(MyHexString: "#66f0f0f0")
+                        message?.selectedIndex = index
+                        self.findMenuOnTap(menus: menus, title: title, yPosition: touchLocation.y, message: message, sender: sender)
+                    } else {
+                       
+                        debugPrint("Index : ", index)
                     }
-                    hoverIndex = index
-                    let view = sender.cell?.viewWithTag(10000 + index) as? UILabel
-                    let orange = UIColor(MyHexString: "#22ff8300")
-                    view?.backgroundColor = orange.withAlphaComponent(0.5)
-                }
-            default:
-                return
-            }
-            
-        } else if (sender.state == .ended) {
-            debugPrint("End")
-            let message = sender.message
-            if (message?.disableMenu ?? false) {
-                return
-            }
-            
-            switch message?.kind {
-            case .menu(let title, let menus):
-                
-                if (hoverIndex > -1) {
-                    let view = sender.cell?.viewWithTag(10000 + hoverIndex) as? UILabel
-                    view?.backgroundColor = UIColor.white
+                    
+                    self.hoverIndex = index
+                default:
+                    return
                 }
                 
-                let touchLocation: CGPoint = (sender.location(in: sender.view))
-                let index = findViewOnTap(menus: menus, title: title, yPosition: touchLocation.y, message: message)
-                if (index > -1) {
-                    let view = sender.cell?.viewWithTag(10000 + index) as? UILabel
-                    view?.backgroundColor = UIColor(MyHexString: "#66f0f0f0")
-                    message?.selectedIndex = index
-                    self.findMenuOnTap(menus: menus, title: title, yPosition: touchLocation.y, message: message)
-                } else {
-                   
-                    debugPrint("Index : ", index)
-                }
-                
-                hoverIndex = index
-            default:
-                return
+            } else if (sender.state == .failed) {
+                debugPrint("Failed")
+            } else if (sender.state == .recognized) {
+                debugPrint("Recognized")
+            } else {
+                debugPrint("Else")
             }
-            
-        } else if (sender.state == .failed) {
-            debugPrint("Failed")
-        } else if (sender.state == .possible) {
-            debugPrint("Possible")
-        } else if (sender.state == .recognized) {
-            debugPrint("Recognized")
-        } else {
-            debugPrint("Else")
         }
-        
-        let touchLocation: CGPoint = (sender.location(in: sender.view))
-        debugPrint(touchLocation)
     }
     
-//    @objc func didTap(_ sender: MyTapGuesture? = nil) {
-//        print("Tab")
-//        let message = sender?.message
-//        if (message?.disableMenu ?? false) {
-//            return
-//        }
-//        switch message?.kind {
-//        case .text( _):
-//            return
-//        case .menu(let title, let menus):
-//            if sender?.state == .ended {
-//                let touchLocation: CGPoint = (sender?.location(in: sender?.view))!
-//                findMenuOnTap(menus: menus, title: title, yPosition: touchLocation.y, message: message)
-//            }
-//        case .image(let image, let imageUrl):
-//            let temp:[String:Any] = ["image" : image, "imageUrl" : imageUrl]
-//            self.performSegue(withIdentifier: "previewImage", sender: temp)
-//        default:
-//            return
-//        }
-//    }
+    @objc func didTap(_ sender: MyTapGuesture? = nil) {
+        print("Tab")
+        let message = sender?.message
+        if (message?.disableMenu ?? false) {
+            return
+        }
+        switch message?.kind {
+        case .text( _):
+            return
+        case .menu(let title, let menus):
+            if sender?.state == .ended {
+                let touchLocation: CGPoint = (sender?.location(in: sender?.view))!
+                findMenuOnTap(menus: menus, title: title, yPosition: touchLocation.y, message: message, sender: sender)
+            }
+        case .image(let image, let imageUrl):
+            let temp:[String:Any] = ["image" : image, "imageUrl" : imageUrl]
+            self.performSegue(withIdentifier: "previewImage", sender: temp)
+        default:
+            return
+        }
+    }
     
     fileprivate func findViewOnTap(menus:[[String: Any]], title:String, yPosition:CGFloat, message: MyMessage?) -> Int {
         self.inputTextView.textView.resignFirstResponder()
@@ -725,10 +731,12 @@ extension ViewController: UITableViewDataSource {
             debugPrint("Target : ", targetIndex)
         }
         
+        message?.selectedIndex = targetIndex
+        
         return targetIndex
     }
     
-    fileprivate func findMenuOnTap(menus:[[String: Any]], title:String, yPosition:CGFloat, message: MyMessage?) {
+    fileprivate func findMenuOnTap(menus:[[String: Any]], title:String, yPosition:CGFloat, message: MyMessage?, sender : MyTapGuesture?) {
 //        print("yPosition", yPosition)
         
         // Hide InputBar
@@ -755,6 +763,7 @@ extension ViewController: UITableViewDataSource {
             yIndex = yIndex + height + 16
         }
         
+        var targetIndex = -1
         for i in 0..<menus.count {
             let item = menus[i]
             let actions = item["action"] as! [String:Any]
@@ -765,9 +774,17 @@ extension ViewController: UITableViewDataSource {
             
             if (yPosition >= yIndex) {
                 targetAction = actions
+                targetIndex = i
             }
             
             yIndex = yIndex + height + 16
+        }
+        
+        message?.selectedIndex = targetIndex
+        
+        if (targetIndex > -1) {
+            let view = sender?.cell?.viewWithTag(10000 + targetIndex) as? UILabel
+            view?.backgroundColor = UIColor(MyHexString: "#66f0f0f0")
         }
         
         if (targetAction != nil) {

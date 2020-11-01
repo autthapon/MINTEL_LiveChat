@@ -636,7 +636,7 @@ class CustomTableViewCell: UITableViewCell {
                 }
 
             } else {
-                print("Failure: %@", error?.localizedDescription);
+                print("Failure: %@", error?.localizedDescription ?? "");
             }
         }
         task.resume()

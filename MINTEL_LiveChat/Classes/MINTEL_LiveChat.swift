@@ -986,8 +986,7 @@ extension MINTEL_LiveChat  {
                                     MINTEL_LiveChat.chatCanTyped = true
                                     DispatchQueue.global(qos: .userInitiated).async {
                                         DispatchQueue.main.async {
-//                                            self.checkAgentMode()
-                                            //                                        MINTEL_LiveChat.sendPost(text: "__00_home__greeting", menu: false)
+                                            self.checkAgentMode()
                                         }
                                         
                                         NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
