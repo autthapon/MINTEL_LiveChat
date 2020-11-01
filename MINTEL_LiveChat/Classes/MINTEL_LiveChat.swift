@@ -926,6 +926,7 @@ extension MINTEL_LiveChat : SCSChatSessionDelegate {
                                             object: nil,
                                             userInfo:["session": session, "event": endEvent])
             
+            
             DispatchQueue.main.async {
                 self.reLayoutView()
             }
@@ -1083,6 +1084,8 @@ extension MINTEL_LiveChat  {
                 NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
                 object: nil,
                 userInfo:nil)
+                
+                MINTEL_LiveChat.instance.reallyEndChat()
                 NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.reallyExitChat),
                         object: nil,
                         userInfo:nil)
