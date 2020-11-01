@@ -214,7 +214,6 @@ public class MINTEL_LiveChat: UIView {
         MINTEL_LiveChat.unreadMessage = 0
         MINTEL_LiveChat.agentState = .start
         retryTimeoutTimes = 0
-        self.loadFirstMessage()
         self.isHidden = false
         UIApplication.shared.keyWindow?.bringSubviewToFront(self)
         
@@ -222,15 +221,19 @@ public class MINTEL_LiveChat: UIView {
         let storyboard = UIStoryboard(name: "ChatBox", bundle: bundle)
         self.surveyView = storyboard.instantiateViewController(withIdentifier: "survey") as? MINTEL_SurveyController
         
+        debugPrint("Start Chat : " , MINTEL_LiveChat.configuration?.disableBotMode ?? false)
         if (MINTEL_LiveChat.configuration?.disableBotMode ?? false) {
-            
+           
             MessageList.add(item: MyMessage(systemMessageType2: "กรุณารอสักครู่"), remove: true)
             MINTEL_LiveChat.chatBotMode = false
             MINTEL_LiveChat.sendOnNewSession(disableBot: MINTEL_LiveChat.configuration?.disableBotMode ?? false)
             MINTEL_LiveChat.instance.checkTransferQueue()
             MINTEL_LiveChat.stopTimer()
+            
+//            MINTEL_LiveChat.instance.tapAction(sender: UIButton(), survey: MINTEL_LiveChat.surveyMode)
         } else {
-            self.tapAction(sender: NSObject(), survey: false)
+            self.checkAgentMode()
+//            self.tapAction(sender: NSObject(), survey: false)
         }
         
         self.reLayoutView()
@@ -360,6 +363,8 @@ public class MINTEL_LiveChat: UIView {
             "x-api-key": MINTEL_LiveChat.configuration?.xApikey ?? "" // "381b0ac187994f82bdc05c09d1034afa"
         ]
         
+        debugPrint("Check Bot Config")
+        
         Alamofire
             .request(url, method: .get, parameters: nil, encoding: JSONEncoding.init(), headers: header)
             .responseJSON(completionHandler: { response in
@@ -368,6 +373,11 @@ public class MINTEL_LiveChat: UIView {
                 if let json = response.value {
                     let dict = json as! [String:Any]
                     let disableBotMode = dict["disableBotMode"] as? Bool ?? false
+                    
+//                    let disableBotMode = true
+                    
+                    MINTEL_LiveChat.sendOnNewSession(disableBot: disableBotMode)
+                    
                     if (disableBotMode) {
                         MINTEL_LiveChat.stopTimer()
                         
@@ -378,11 +388,13 @@ public class MINTEL_LiveChat: UIView {
                     } else {
                         firstTimerDuration = (dict["activeChatReminder"] as? Int ?? 120) / 60
                         secondTimerDuration = (dict["chatTimeout"] as? Int ?? 60) / 60
-                        MINTEL_LiveChat.chatUserTypedIn = true
-                        MINTEL_LiveChat.sendPost(text: "__00_home__greeting", menu: false)
+                        MINTEL_LiveChat.instance.loadFirstMessage()
+                        self.tapAction(sender: UIButton(), survey: MINTEL_LiveChat.surveyMode)
+//                        MINTEL_LiveChat.chatUserTypedIn = true
+//                        MINTEL_LiveChat.sendPost(text: "__00_home__greeting", menu: false)
                     }
                     
-                    MINTEL_LiveChat.sendOnNewSession(disableBot: disableBotMode)
+                    
                 }
             })
     }
@@ -409,7 +421,7 @@ public class MINTEL_LiveChat: UIView {
             
             surveyUrl = surveyUrl.replacingOccurrences(of: "sessionId", with: MINTEL_LiveChat.userId)
             
-            debugPrint("Survey Url : " ,surveyUrl)
+//            debugPrint("Survey Url : " ,surveyUrl)
             
             // Open Survey Url
             guard let url = URL(string: surveyUrl) else { return }
@@ -448,19 +460,24 @@ public class MINTEL_LiveChat: UIView {
     }
     
     internal func loadFirstMessage() {
+        
+        
+        
         let date = Date()
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "HH:mm"
         let date24 = dateFormatter.string(from: date)
         
         let _ = MessageList.add(item: MyMessage(systemMessageType1: String(format: "เริ่มการสนทนา %@", date24)))
-        if (!(MINTEL_LiveChat.configuration?.disableBotMode ?? false)) {
-            self.getAnnouncementMessage()
-        }
-        
+//        if (!(MINTEL_LiveChat.configuration?.disableBotMode ?? false)) {
+//
+//        }
+//
+        self.getAnnouncementMessage()
 //        MINTEL_LiveChat.sendOnNewSession()
         MINTEL_LiveChat.sendPost(text: "สวัสดี", menu: true)
         MINTEL_LiveChat.checkTime()
+        
     }
     
     public func sendToFront() {
@@ -469,7 +486,7 @@ public class MINTEL_LiveChat: UIView {
     
     internal  func checkTransferQueue() {
         let params : Parameters = ["session_id": MINTEL_LiveChat.userId]
-        debugPrint("Url : " , params)
+//        debugPrint("Url : " , params)
         let url = String(format: "%@/transferqueue", MINTEL_LiveChat.configuration?.webHookBaseUrl ?? "")
         let headers:HTTPHeaders = [
             "x-api-key": MINTEL_LiveChat.configuration?.xApikey ?? "" // "edf1ca88a09546f8a0667c81c93d1f31"
@@ -502,7 +519,7 @@ public class MINTEL_LiveChat: UIView {
                     }
             }
         } catch {
-            debugPrint("Error In Catch")
+//            debugPrint("Error In Catch")
         }
     }
     
@@ -569,7 +586,7 @@ public class MINTEL_LiveChat: UIView {
             // Add one field mappings to our Case entity
             
             let csatUuid = MINTEL_LiveChat.userId
-            debugPrint("User Session id : " , csatUuid)
+//            debugPrint("User Session id : " , csatUuid)
             let uniqueFiled = SCSPrechatObject(label: "Unique_ID__c", value: csatUuid)
             let uniqueEntityField = SCSPrechatEntityField(fieldName: "Unique_ID__c", label: "Unique_ID__c")
             uniqueEntityField.doCreate = true
@@ -885,11 +902,11 @@ public class MINTEL_LiveChat: UIView {
 
 extension MINTEL_LiveChat : SCSChatSessionDelegate {
     public func session(_ session: SCSChatSession!, didError error: Error!, fatal: Bool) {
-        debugPrint("Error : ", error)
+//        debugPrint("Error : ", error)
     }
     
     public func session(_ session: SCSChatSession!, didUpdateQueuePosition position: NSNumber!, estimatedWaitTime waitTime: NSNumber!) {
-        debugPrint("Queue : ", position)
+//        debugPrint("Queue : ", position)
         
         DispatchQueue.main.async {
             
@@ -918,7 +935,7 @@ extension MINTEL_LiveChat : SCSChatSessionDelegate {
     }
     
     public func session(_ session: SCSChatSession!, didEnd endEvent: SCSChatSessionEndEvent!) {
-        debugPrint("Session End")
+//        debugPrint("Session End")
         DispatchQueue.main.async {
             MINTEL_LiveChat.agentState = .end
             let _ = MessageList.add(item: MyMessage(systemMessageType1: "จบการสนทนา"))
@@ -947,7 +964,7 @@ extension MINTEL_LiveChat  {
         let params: Parameters = [:]
         let url = (MINTEL_LiveChat.configuration?.announcementUrl ?? "").replacingOccurrences(of: "sessionId", with: MINTEL_LiveChat.userId)
         
-        debugPrint("Url " , url)
+        debugPrint("Get Announcement")
         
         let headers:HTTPHeaders = [
             "x-api-key": MINTEL_LiveChat.configuration?.xApikey ?? "" // "381b0ac187994f82bdc05c09d1034afa"
@@ -965,7 +982,7 @@ extension MINTEL_LiveChat  {
                     case .success(_):
                         
                         if let json = response.value {
-                            debugPrint(json)
+//                            debugPrint(json)
                             if json is [String:Any] {
                             } else if let items = json as? [[String:Any]] {
                                 
@@ -987,7 +1004,8 @@ extension MINTEL_LiveChat  {
                                     MINTEL_LiveChat.chatCanTyped = true
                                     DispatchQueue.global(qos: .userInitiated).async {
                                         DispatchQueue.main.async {
-                                            self.checkAgentMode()
+//                                            self.checkAgentMode()
+                                            MINTEL_LiveChat.sendPost(text: "__00_home__greeting", menu: false)
                                         }
                                         
                                         NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
@@ -999,7 +1017,7 @@ extension MINTEL_LiveChat  {
                         }
                         break
                     case .failure(let error):
-                        debugPrint(error)
+//                        debugPrint(error)
                         break
                     }
             }
@@ -1035,7 +1053,7 @@ extension MINTEL_LiveChat  {
             }
         #endif
         
-        debugPrint("OnNewSessionMobile")
+        debugPrint("OnNewSessionMobile : %@", disableBot)
         
         let screenResolution = String(format: "%.0fx%.0f", UIScreen.main.bounds.width , UIScreen.main.bounds.height)
         
@@ -1060,7 +1078,7 @@ extension MINTEL_LiveChat  {
         Alamofire
             .request(url, method: .post, parameters: params, encoding: JSONEncoding.init(), headers: header)
             .responseString(completionHandler: { response in
-                debugPrint(response)
+//                debugPrint(response)
             })
     }
     
@@ -1121,7 +1139,7 @@ extension MINTEL_LiveChat  {
         //            object: nil,
         //            userInfo:nil)
         //        }
-        debugPrint("=== Send Post " , text)
+//        debugPrint("=== Send Post " , text)
         if ("__00_home__greeting" == text) {
             
             if MINTEL_LiveChat.configuration?.phone.count == 0 {
@@ -1141,7 +1159,7 @@ extension MINTEL_LiveChat  {
         }
         
         let params : Parameters = ["session_id": MINTEL_LiveChat.userId,"text": text]
-        debugPrint("Url : " , params)
+//        debugPrint("Url : " , params)
         let url = String(format: "%@/webhook", MINTEL_LiveChat.configuration?.webHookBaseUrl ?? "")
         let headers:HTTPHeaders = [
             "x-api-key": MINTEL_LiveChat.configuration?.xApikey ?? "" // "edf1ca88a09546f8a0667c81c93d1f31"
@@ -1168,7 +1186,7 @@ extension MINTEL_LiveChat  {
                         var goToAgentMode = false
                         retryTimeoutTimes = 0
                         if let json = response.value {
-                            debugPrint(json)
+//                            debugPrint(json)
                             let dict = json as! [String: Any]
                             let error = dict["error"] as? [String: Any] ?? nil
                             if (error == nil) {
@@ -1199,7 +1217,7 @@ extension MINTEL_LiveChat  {
                                                     NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.chatMenuAvailable),
                                                                                     object: nil,
                                                                                     userInfo:nil)
-                                                    debugPrint(items)
+//                                                    debugPrint(items)
                                                     print("Menus Session")
                                                 }
                                             }
@@ -1240,12 +1258,12 @@ extension MINTEL_LiveChat  {
                     }
             }
         } catch {
-            debugPrint("Error In Catch")
+//            debugPrint("Error In Catch")
         }
     }
     
     internal static func retrySendPost(text: String, menu: Bool) {
-        debugPrint("Retry : ", text, "Retry Times : " , retryTimeoutTimes)
+//        debugPrint("Retry : ", text, "Retry Times : " , retryTimeoutTimes)
         retryTimeoutTimes = retryTimeoutTimes + 1
         if (retryTimeoutTimes == 2) {
             NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.toAgentMode),
@@ -1280,7 +1298,7 @@ extension MINTEL_LiveChat : SCSChatEventDelegate {
     
     public func session(_ session: SCSChatSession!, agentLeftConference agentLeftConferenceEvent: SCSAgentLeftConferenceEvent!) {
         MINTEL_LiveChat.agentState = .waiting
-        debugPrint("Agent Left")
+//        debugPrint("Agent Left")
         
         NotificationCenter.default.post(name: Notification.Name(SalesForceNotifId.agentLeftConference),
                                         object: nil,
@@ -1288,19 +1306,19 @@ extension MINTEL_LiveChat : SCSChatEventDelegate {
     }
     
     public func session(_ session: SCSChatSession!, processedOutgoingMessage message: SCSUserTextEvent!) {
-        debugPrint("process Outgoing Message : ", message)
+//        debugPrint("process Outgoing Message : ", message)
     }
     
     public func session(_ session: SCSChatSession!, didUpdateOutgoingMessageDeliveryStatus message: SCSUserTextEvent!) {
-        debugPrint("didUpdateOutgoingMessageDeliveryStatus : ", message)
+//        debugPrint("didUpdateOutgoingMessageDeliveryStatus : ", message)
     }
     
     public func session(_ session: SCSChatSession!, didSelectMenuItem menuEvent: SCSChatMenuSelectionEvent!) {
-        debugPrint("didSelectMenuItem : ", menuEvent)
+//        debugPrint("didSelectMenuItem : ", menuEvent)
     }
     
     public func session(_ session: SCSChatSession!, didReceiveMessage message: SCSAgentTextEvent!) {
-        debugPrint("didReceiveMessage : ", message)
+//        debugPrint("didReceiveMessage : ", message)
         let _ = MessageList.add(item: MyMessage(text: message.text, agent: true, bot: false))
         NotificationCenter.default.post(name: Notification.Name(SalesForceNotifId.didReceiveMessage),
                                         object: nil,
@@ -1326,27 +1344,27 @@ extension MINTEL_LiveChat : SCSChatEventDelegate {
     }
     
     public func session(_ session: SCSChatSession!, didReceiveChatBotMenu menuEvent: SCSChatBotMenuEvent!) {
-        debugPrint("didReceiveChatBotMenu : ", menuEvent)
+//        debugPrint("didReceiveChatBotMenu : ", menuEvent)
     }
     
     public func session(_ session: SCSChatSession!, didReceiveFileTransferRequest fileTransferEvent: SCSFileTransferEvent!) {
-        debugPrint("didReceiveFileTransferRequest : ", fileTransferEvent)
+//        debugPrint("didReceiveFileTransferRequest : ", fileTransferEvent)
     }
     
     public func transferToButtonInitiated(with session: SCSChatSession!) {
-        debugPrint("transferToButtonInitiated : ", session)
+//        debugPrint("transferToButtonInitiated : ", session)
     }
     
     public func transferToButtonCompleted(with session: SCSChatSession!) {
-        debugPrint("transferToButtonCompleted : ", session)
+//        debugPrint("transferToButtonCompleted : ", session)
     }
     
     public func transferToButtonFailed(with session: SCSChatSession!, error: Error!) {
-        debugPrint("transferToButtonFailed : ", session)
+//        debugPrint("transferToButtonFailed : ", session)
     }
     
     public func agentBeganTyping(with session: SCSChatSession!) {
-        debugPrint("agentBeganTyping : ")
+//        debugPrint("agentBeganTyping : ")
         DispatchQueue.main.async {
             MessageList.add(item: MyMessage(typing: true, agent: true), remove: true)
             
@@ -1357,7 +1375,7 @@ extension MINTEL_LiveChat : SCSChatEventDelegate {
     }
     
     public func agentFinishedTyping(with session: SCSChatSession!) {
-        debugPrint("agentFinishedTyping : ")
+//        debugPrint("agentFinishedTyping : ")
         DispatchQueue.main.async {
             MessageList.removeTyping()
             NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),

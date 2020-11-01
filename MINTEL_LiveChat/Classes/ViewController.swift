@@ -798,7 +798,7 @@ extension ViewController: UITableViewDataSource {
                     
                 } else if ("__00_home__greeting" == text) {
                     message?.disableMenu = true
-                    MINTEL_LiveChat.instance.checkAgentMode()
+//                    MINTEL_LiveChat.instance.checkAgentMode()
                 } else {
                     message?.disableMenu = true
                     MINTEL_LiveChat.chatUserTypedIn = true
