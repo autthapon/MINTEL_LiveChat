@@ -471,74 +471,76 @@ extension ViewController: UITableViewDataSource {
             
         } else {
             let item = MessageList.at(index: indexPath.section)
-            let agent = item.agent
-            let bot = item.bot
-            
-            var cellIdentifierId:String
-            switch item.kind {
-            case .systemMessageType1( _):
-                cellIdentifierId = CellIds.systemMessageCellId
-            case .systemMessageType2( _):
-                cellIdentifierId = CellIds.systemMessageType2CellId
-            case .text( _):
-                cellIdentifierId = agent || bot ? CellIds.receiverCellId : CellIds.senderCellId
-            case .file(_, _, _):
-                cellIdentifierId = CellIds.fileCellid
-            case .menu( _, _):
-                cellIdentifierId = CellIds.receiverMenuCellid
-            case .image( _, _):
-                cellIdentifierId = CellIds.imageMessageCellId
-            case .agentJoin:
-                cellIdentifierId = CellIds.agentJoinCellId
-            case .typing:
-                cellIdentifierId = CellIds.typingCellId
-            }
-            
-            if let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifierId, for: indexPath) as? CustomTableViewCell {
-                cell.selectionStyle = .none
-                cell.viewController = self
+            if (item != nil) {
+                let agent = item!.agent
+                let bot = item!.bot
                 
-                switch item.kind {
-                case .systemMessageType1(let txt):
-                    cell.renderSystemMessage(text: txt)
-                case .systemMessageType2(let txt):
-                    cell.renderSystemMessageType2(text: txt)
-                case .text(let txt):
-                    
-                    if (agent || bot) {
-                        cell.renderReceiverCell(txt, item: item, index: indexPath.section, tableView: tableView)
-                    } else {
-                        cell.renderSender(txt: txt, item: item)
-                    }
-                case .file(let name, _, _):
-                    cell.renderFileSend(txt: name, item: item, index: indexPath.section)
-                case .menu(let title, let menus):
-                    cell.setupMenuCell(title, menus, item)
-                    if (!item.disableMenu) {
-//                        let gesture = MyTapGuesture(target: self, action: #selector(ViewController.longPress(_:)))
-                        let gesture = MyTapGuesture(target: self, action: #selector(self.didTap(_:)))
-//                        gesture.minimumPressDuration = 0
-                        gesture.delegate = self
-                        gesture.cell = cell
-                        gesture.message = item
-                        cell.tapGuesture = gesture
-                        cell.addGestureRecognizer(gesture)
-                    } else {
-                        if let g = cell.tapGuesture {
-                            cell.removeGestureRecognizer(g)
-                        }
-                    }
-                case .image(let img, _):
-                    cell.renderImageCell(image: img, time: item.sentDate, item: item, index: indexPath.section)
-//                    let gesture = cell.tapGuesture ?? MyTapGuesture(target: self, action: #selector(didTap(_:)))
-//                    gesture.message = item
-//                    cell.addGestureRecognizer(gesture)
-                case .agentJoin(let agentName):
-                    cell.renderAgentJoin(agentName)
+                var cellIdentifierId:String
+                switch item!.kind {
+                case .systemMessageType1( _):
+                    cellIdentifierId = CellIds.systemMessageCellId
+                case .systemMessageType2( _):
+                    cellIdentifierId = CellIds.systemMessageType2CellId
+                case .text( _):
+                    cellIdentifierId = agent || bot ? CellIds.receiverCellId : CellIds.senderCellId
+                case .file(_, _, _):
+                    cellIdentifierId = CellIds.fileCellid
+                case .menu( _, _):
+                    cellIdentifierId = CellIds.receiverMenuCellid
+                case .image( _, _):
+                    cellIdentifierId = CellIds.imageMessageCellId
+                case .agentJoin:
+                    cellIdentifierId = CellIds.agentJoinCellId
                 case .typing:
-                    cell.renderTyping(item: item)
+                    cellIdentifierId = CellIds.typingCellId
                 }
-                return cell
+                
+                if let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifierId, for: indexPath) as? CustomTableViewCell {
+                    cell.selectionStyle = .none
+                    cell.viewController = self
+                    
+                    switch item!.kind {
+                    case .systemMessageType1(let txt):
+                        cell.renderSystemMessage(text: txt)
+                    case .systemMessageType2(let txt):
+                        cell.renderSystemMessageType2(text: txt)
+                    case .text(let txt):
+                        
+                        if (agent || bot) {
+                            cell.renderReceiverCell(txt, item: item!, index: indexPath.section, tableView: tableView)
+                        } else {
+                            cell.renderSender(txt: txt, item: item!)
+                        }
+                    case .file(let name, _, _):
+                        cell.renderFileSend(txt: name, item: item!, index: indexPath.section)
+                    case .menu(let title, let menus):
+                        cell.setupMenuCell(title, menus, item!)
+                        if (!item!.disableMenu) {
+    //                        let gesture = MyTapGuesture(target: self, action: #selector(ViewController.longPress(_:)))
+                            let gesture = MyTapGuesture(target: self, action: #selector(self.didTap(_:)))
+    //                        gesture.minimumPressDuration = 0
+                            gesture.delegate = self
+                            gesture.cell = cell
+                            gesture.message = item
+                            cell.tapGuesture = gesture
+                            cell.addGestureRecognizer(gesture)
+                        } else {
+                            if let g = cell.tapGuesture {
+                                cell.removeGestureRecognizer(g)
+                            }
+                        }
+                    case .image(let img, _):
+                        cell.renderImageCell(image: img, time: item!.sentDate, item: item!, index: indexPath.section)
+    //                    let gesture = cell.tapGuesture ?? MyTapGuesture(target: self, action: #selector(didTap(_:)))
+    //                    gesture.message = item
+    //                    cell.addGestureRecognizer(gesture)
+                    case .agentJoin(let agentName):
+                        cell.renderAgentJoin(agentName)
+                    case .typing:
+                        cell.renderTyping(item: item!)
+                    }
+                    return cell
+                }
             }
             return UITableViewCell()
         }
@@ -862,29 +864,31 @@ extension ViewController: UITableViewDelegate {
                 return 0
             }
             let item = MessageList.at(index: indexPath.section)
-            
-            switch item.kind {
-            case .systemMessageType1(let txt):
-                return CustomTableViewCell.calcRowHeightSystemMessage(text: txt)
-            case .systemMessageType2(let txt):
-                return CustomTableViewCell.calcRowHeightSystemMessageType2(text: txt)
-            case .text(let txt):
-                if (item.bot) {
-                    return CustomTableViewCell.calcReceiverCell(txt, item: item)
-                } else {
-                    return CustomTableViewCell.calcSender(txt: txt, item: item)
+            if (item != nil) {
+                switch item!.kind {
+                case .systemMessageType1(let txt):
+                    return CustomTableViewCell.calcRowHeightSystemMessage(text: txt)
+                case .systemMessageType2(let txt):
+                    return CustomTableViewCell.calcRowHeightSystemMessageType2(text: txt)
+                case .text(let txt):
+                    if (item!.bot) {
+                        return CustomTableViewCell.calcReceiverCell(txt, item: item!)
+                    } else {
+                        return CustomTableViewCell.calcSender(txt: txt, item: item!)
+                    }
+                case .file(let fileName, _, _):
+                    return CustomTableViewCell.calcSender(txt: fileName, item: item!)
+                case .menu(let title, let menus):
+                    return CustomTableViewCell.calMenuCellHeight(title, menus, item!)
+                case .image(let image, _ ):
+                    return CustomTableViewCell.calcImageCellHeight(image)
+                case .agentJoin:
+                    return CustomTableViewCell.calcAgentJoinCellHeight()
+                case .typing:
+                    return 40
                 }
-            case .file(let fileName, _, _):
-                return CustomTableViewCell.calcSender(txt: fileName, item: item)
-            case .menu(let title, let menus):
-                return CustomTableViewCell.calMenuCellHeight(title, menus, item)
-            case .image(let image, _ ):
-                return CustomTableViewCell.calcImageCellHeight(image)
-            case .agentJoin:
-                return CustomTableViewCell.calcAgentJoinCellHeight()
-            case .typing:
-                return 40
             }
+            return 0
         }
     }
 }

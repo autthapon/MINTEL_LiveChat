@@ -202,6 +202,8 @@ public class MINTEL_LiveChat: UIView {
         }
         
         self.layer.zPosition = 1
+        MessageList.clear()
+        self.cleanAlamofire()
         MINTEL_LiveChat.openConfirmExitPage = false
         MINTEL_LiveChat.userId = UUID().uuidString
         MINTEL_LiveChat.configuration = config
@@ -229,11 +231,8 @@ public class MINTEL_LiveChat: UIView {
             MINTEL_LiveChat.sendOnNewSession(disableBot: MINTEL_LiveChat.configuration?.disableBotMode ?? false)
             MINTEL_LiveChat.instance.checkTransferQueue()
             MINTEL_LiveChat.stopTimer()
-            
-//            MINTEL_LiveChat.instance.tapAction(sender: UIButton(), survey: MINTEL_LiveChat.surveyMode)
         } else {
             self.checkAgentMode()
-//            self.tapAction(sender: NSObject(), survey: false)
         }
         
         self.reLayoutView()
@@ -278,12 +277,18 @@ public class MINTEL_LiveChat: UIView {
         self.reallyEndChat()
     }
     
-    fileprivate func cleanChat() {
-        self.removeNotification()
+    fileprivate func cleanAlamofire() {
+        
         if #available(iOS 9.0, *) {
             Alamofire.SessionManager.default.session.getAllTasks { (tasks) in
                 tasks.forEach{ $0.cancel() }
             }
+            Alamofire.SessionManager.default.session.getTasksWithCompletionHandler { (sessionDataTask, uploadData, downloadData) in
+                sessionDataTask.forEach { $0.cancel() }
+                uploadData.forEach { $0.cancel() }
+                downloadData.forEach { $0.cancel() }
+            }
+            
         } else {
             Alamofire.SessionManager.default.session.getTasksWithCompletionHandler { (sessionDataTask, uploadData, downloadData) in
                 sessionDataTask.forEach { $0.cancel() }
@@ -291,6 +296,11 @@ public class MINTEL_LiveChat: UIView {
                 downloadData.forEach { $0.cancel() }
             }
         }
+    }
+    
+    fileprivate func cleanChat() {
+        self.removeNotification()
+        self.cleanAlamofire()
         
         MINTEL_LiveChat.chatInProgress = false
         
@@ -312,18 +322,7 @@ public class MINTEL_LiveChat: UIView {
             return
         }
         
-        if #available(iOS 9.0, *) {
-            Alamofire.SessionManager.default.session.getAllTasks { (tasks) in
-                tasks.forEach{ $0.cancel() }
-            }
-        } else {
-            Alamofire.SessionManager.default.session.getTasksWithCompletionHandler { (sessionDataTask, uploadData, downloadData) in
-                sessionDataTask.forEach { $0.cancel() }
-                uploadData.forEach { $0.cancel() }
-                downloadData.forEach { $0.cancel() }
-            }
-        }
-        
+        self.cleanAlamofire()
         MINTEL_LiveChat.chatInProgress = false
         ServiceCloud.shared().chatCore.stopSession()
         ServiceCloud.shared().chatCore.remove(delegate: self)
@@ -461,20 +460,13 @@ public class MINTEL_LiveChat: UIView {
     
     internal func loadFirstMessage() {
         
-        
-        
         let date = Date()
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "HH:mm"
         let date24 = dateFormatter.string(from: date)
         
         let _ = MessageList.add(item: MyMessage(systemMessageType1: String(format: "เริ่มการสนทนา %@", date24)))
-//        if (!(MINTEL_LiveChat.configuration?.disableBotMode ?? false)) {
-//
-//        }
-//
         self.getAnnouncementMessage()
-//        MINTEL_LiveChat.sendOnNewSession()
         MINTEL_LiveChat.sendPost(text: "สวัสดี", menu: true)
         MINTEL_LiveChat.checkTime()
         
@@ -763,6 +755,8 @@ public class MINTEL_LiveChat: UIView {
         MINTEL_LiveChat.surveyMode = false
         MINTEL_LiveChat.agentState = .start
         MINTEL_LiveChat.chatStarted = false
+        self.cleanChat();
+        self.cleanAlamofire()
         UIApplication.shared.keyWindow?.sendSubviewToBack(self)
         MessageList.clear()
         DispatchQueue.main.async {
@@ -978,6 +972,9 @@ extension MINTEL_LiveChat  {
             Alamofire
                 .request(encodedURLRequest)
                 .responseJSON { (response) in
+                    
+                     debugPrint("Load First Message response .")
+                    
                     switch response.result {
                     case .success(_):
                         
@@ -1134,12 +1131,6 @@ extension MINTEL_LiveChat  {
         self.removeTyping()
         
         let _ = MessageList.add(item: MyMessage(typing: true, agent: !MINTEL_LiveChat.chatBotMode))
-        //        DispatchQueue.main.async {
-        //            NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
-        //            object: nil,
-        //            userInfo:nil)
-        //        }
-//        debugPrint("=== Send Post " , text)
         if ("__00_home__greeting" == text) {
             
             if MINTEL_LiveChat.configuration?.phone.count == 0 {
@@ -1159,7 +1150,6 @@ extension MINTEL_LiveChat  {
         }
         
         let params : Parameters = ["session_id": MINTEL_LiveChat.userId,"text": text]
-//        debugPrint("Url : " , params)
         let url = String(format: "%@/webhook", MINTEL_LiveChat.configuration?.webHookBaseUrl ?? "")
         let headers:HTTPHeaders = [
             "x-api-key": MINTEL_LiveChat.configuration?.xApikey ?? "" // "edf1ca88a09546f8a0667c81c93d1f31"
@@ -1175,6 +1165,9 @@ extension MINTEL_LiveChat  {
             Alamofire
                 .request(encodedURLRequest)
                 .responseJSON { (response) in
+                    
+                    
+                    debugPrint("Send Post response .")
                     
                     self.checkTime()
                     
@@ -1252,7 +1245,9 @@ extension MINTEL_LiveChat  {
                         break
                     case .failure( _):
                         if (!menu) {
-                            self.retrySendPost(text: text, menu: menu)
+                            if (MINTEL_LiveChat.chatInProgress) {
+                                self.retrySendPost(text: text, menu: menu)
+                            }
                         }
                         break
                     }
@@ -1270,7 +1265,7 @@ extension MINTEL_LiveChat  {
                                             object: nil,
                                             userInfo:nil)
         } else {
-            
+            debugPrint("Retry Send")
             MessageList.add(item: MyMessage(text: "กรุณารอสักครู่", agent: false, bot: true), remove: true)
             MINTEL_LiveChat.sendPost(text: text, menu: menu)
         }

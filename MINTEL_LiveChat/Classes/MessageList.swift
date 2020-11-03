@@ -72,8 +72,11 @@ class MessageList {
         MessageList.items[index] = item
     }
     
-    static internal func at(index: Int) -> MyMessage {
-        return MessageList.items[index]
+    static internal func at(index: Int) -> MyMessage? {
+        if (MessageList.items.count > index) {
+            return MessageList.items[index]
+        }
+        return nil
     }
     
     static internal func count() -> Int {

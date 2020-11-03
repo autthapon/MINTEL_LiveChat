@@ -71,17 +71,19 @@ extension ViewController {
                         if (MINTEL_LiveChat.chatBotMode) {
                             
                             let msg = MessageList.at(index: messageIndex)
-                            switch(msg.kind) {
-                            case .file(let filename, let fileUrl, _):
-                                MessageList.setItemAt(index: messageIndex, item: MyMessage(fileName: filename, fileURL: fileUrl, fileUploadUrl: text))
-                                break
-                            case .image(let img, _):
-                                MessageList.setItemAt(index: messageIndex, item: MyMessage(image: img, imageUrl: text, agent: false, bot: false))
-                                break
-                            default:
-                                print("NOTHING")
+                            if (msg != nil) {
+                                switch(msg!.kind) {
+                                case .file(let filename, let fileUrl, _):
+                                    MessageList.setItemAt(index: messageIndex, item: MyMessage(fileName: filename, fileURL: fileUrl, fileUploadUrl: text))
+                                    break
+                                case .image(let img, _):
+                                    MessageList.setItemAt(index: messageIndex, item: MyMessage(image: img, imageUrl: text, agent: false, bot: false))
+                                    break
+                                default:
+                                    print("NOTHING")
+                                }
+                                MINTEL_LiveChat.sendPost(text: text, menu:false)
                             }
-                            MINTEL_LiveChat.sendPost(text: text, menu:false)
                         } else {
                             self.sendMessageToSaleForce(text: text)
                         }
@@ -95,14 +97,16 @@ extension ViewController {
                     if (MINTEL_LiveChat.chatBotMode) {
                         
                         let msg = MessageList.at(index: messageIndex)
-                        switch(msg.kind) {
-                        case .image(let img, _):
-                            MessageList.setItemAt(index: messageIndex, item: MyMessage(image: img, imageUrl: text, agent: !MINTEL_LiveChat.chatBotMode, bot: true))
-                        default:
-                            print("NOTHING")
+                        if (msg != nil) {
+                            switch(msg!.kind) {
+                            case .image(let img, _):
+                                MessageList.setItemAt(index: messageIndex, item: MyMessage(image: img, imageUrl: text, agent: !MINTEL_LiveChat.chatBotMode, bot: true))
+                            default:
+                                print("NOTHING")
+                            }
+                            
+                            MINTEL_LiveChat.sendPost(text: text, menu:false)
                         }
-                        
-                        MINTEL_LiveChat.sendPost(text: text, menu:false)
                     } else {
                         self.sendMessageToSaleForce(text: text)
                     }

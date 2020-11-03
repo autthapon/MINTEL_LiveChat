@@ -546,73 +546,74 @@ class CustomTableViewCell: UITableViewCell {
     @objc func download(_ sender:UIButton) {
         let index = sender.tag
         let message = MessageList.at(index: index)
-        
-        switch message.kind {
-        case .text(let url):
-            
-            //Create directory if not present
-            let paths = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)
-            let documentDirectory = paths.first! as NSString
-            let soundDirPathString = documentDirectory.appendingPathComponent("TrueMoney")
-            
-            do {
-                try FileManager.default.createDirectory(atPath: soundDirPathString, withIntermediateDirectories: true, attributes:nil)
-                print("directory created at \(soundDirPathString)")
-            } catch let error as NSError {
-                print("error while creating dir : \(error.localizedDescription)");
-            }
-            
-            if let audioUrl = URL(string: url) {
-                // create your document folder url
-                let documentsUrl =  FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first! as URL
-                let documentsFolderUrl = documentsUrl.appendingPathComponent("TrueMoney")
-                // your destination file url
-                let destinationUrl = documentsFolderUrl.appendingPathComponent(audioUrl.lastPathComponent)
+        if (message != nil) {
+            switch message!.kind {
+            case .text(let url):
                 
-                print(destinationUrl)
-                // check if it exists before downloading it
-                if FileManager().fileExists(atPath: destinationUrl.path) {
-                    DispatchQueue.main.async {
-                        let objectsToShare = [destinationUrl]
-                        let activityVC = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
+                //Create directory if not present
+                let paths = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)
+                let documentDirectory = paths.first! as NSString
+                let soundDirPathString = documentDirectory.appendingPathComponent("TrueMoney")
+                
+                do {
+                    try FileManager.default.createDirectory(atPath: soundDirPathString, withIntermediateDirectories: true, attributes:nil)
+                    print("directory created at \(soundDirPathString)")
+                } catch let error as NSError {
+                    print("error while creating dir : \(error.localizedDescription)");
+                }
+                
+                if let audioUrl = URL(string: url) {
+                    // create your document folder url
+                    let documentsUrl =  FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first! as URL
+                    let documentsFolderUrl = documentsUrl.appendingPathComponent("TrueMoney")
+                    // your destination file url
+                    let destinationUrl = documentsFolderUrl.appendingPathComponent(audioUrl.lastPathComponent)
+                    
+                    print(destinationUrl)
+                    // check if it exists before downloading it
+                    if FileManager().fileExists(atPath: destinationUrl.path) {
+                        DispatchQueue.main.async {
+                            let objectsToShare = [destinationUrl]
+                            let activityVC = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
 
-                        let currentViewController = self.topViewController()
-                        if currentViewController != nil {
-                            currentViewController?.present(activityVC, animated: true, completion: nil)
-                        }
-                    }
-                } else {
-                    //  if the file doesn't exist
-                    //  just download the data from your url
-                    DispatchQueue.global(qos: DispatchQoS.QoSClass.background).async(execute: {
-                        if let myAudioDataFromUrl = try? Data(contentsOf: audioUrl){
-                            // after downloading your data you need to save it to your destination url
-                            if (try? myAudioDataFromUrl.write(to: destinationUrl, options: [.atomic])) != nil {
-                                DispatchQueue.main.async {
-                                    let objectsToShare = [destinationUrl]
-                                    let activityVC = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
-
-                                    let currentViewController = self.topViewController()
-                                    if currentViewController != nil {
-                                        currentViewController?.present(activityVC, animated: true, completion: nil)
-                                    }
-                                }
-                            } else {
-//                                print("error saving file")
-//                                completion("")
+                            let currentViewController = self.topViewController()
+                            if currentViewController != nil {
+                                currentViewController?.present(activityVC, animated: true, completion: nil)
                             }
                         }
-                    })
+                    } else {
+                        //  if the file doesn't exist
+                        //  just download the data from your url
+                        DispatchQueue.global(qos: DispatchQoS.QoSClass.background).async(execute: {
+                            if let myAudioDataFromUrl = try? Data(contentsOf: audioUrl){
+                                // after downloading your data you need to save it to your destination url
+                                if (try? myAudioDataFromUrl.write(to: destinationUrl, options: [.atomic])) != nil {
+                                    DispatchQueue.main.async {
+                                        let objectsToShare = [destinationUrl]
+                                        let activityVC = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
+
+                                        let currentViewController = self.topViewController()
+                                        if currentViewController != nil {
+                                            currentViewController?.present(activityVC, animated: true, completion: nil)
+                                        }
+                                    }
+                                } else {
+    //                                print("error saving file")
+    //                                completion("")
+                                }
+                            }
+                        })
+                    }
                 }
+                
+            case .image(let img, _):
+                UIImageWriteToSavedPhotosAlbum(img, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)
+            case .file(let fileName, let fileUrl, let fileUploadUrl):
+                debugPrint(fileUrl, fileName, fileUploadUrl)
+                self.downloadFileAndSave(fileUrl: fileUrl)
+            default:
+                return
             }
-            
-        case .image(let img, _):
-            UIImageWriteToSavedPhotosAlbum(img, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)
-        case .file(let fileName, let fileUrl, let fileUploadUrl):
-            debugPrint(fileUrl, fileName, fileUploadUrl)
-            self.downloadFileAndSave(fileUrl: fileUrl)
-        default:
-            return
         }
     }
     
