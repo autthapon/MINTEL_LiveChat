@@ -1197,7 +1197,12 @@ extension MINTEL_LiveChat  {
                                         let type = body["type"] as? String ?? ""
                                         let intent = body["intent"] as? String ?? ""
                                         if "06_rate" == intent {
-                                            MINTEL_LiveChat.instance.reallyEndChat()
+                                            if (MINTEL_LiveChat.chatPanelOpened) {
+                                                let currentViewController = MINTEL_LiveChat.instance.topViewController() as? ViewController
+                                                if let cu = currentViewController {
+                                                    cu.closeChat()
+                                                }
+                                            }
                                             return
                                         }
                                         let quickReplyTitle = body["text"] as? String ?? ""
