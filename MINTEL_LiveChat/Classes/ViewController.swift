@@ -495,7 +495,8 @@ extension ViewController: UITableViewDataSource {
                     cellIdentifierId = CellIds.typingCellId
                 }
                 
-                if let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifierId, for: indexPath) as? CustomTableViewCell {
+//                if let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifierId, for: indexPath) as? CustomTableViewCell {
+                if let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifierId) as? CustomTableViewCell {
                     cell.selectionStyle = .none
                     cell.viewController = self
                     
@@ -1377,7 +1378,7 @@ extension ViewController : UICollectionViewDataSource, UICollectionViewDelegate,
     
     fileprivate func sendImageToWebhook(index: Int) {
         
-        if (fetchResult != nil) {
+        if (fetchResult == nil) {
             return
         }
         
