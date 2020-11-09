@@ -1231,6 +1231,8 @@ extension MINTEL_LiveChat  {
                                         }
                                     }
                                     
+                                    
+                                    
                                     NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
                                                                     object: nil,
                                                                     userInfo:nil)

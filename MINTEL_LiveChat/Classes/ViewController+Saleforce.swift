@@ -126,20 +126,28 @@ extension ViewController {
 //        let _:SCSChatSession = notification.userInfo?["session"] as! SCSChatSession
 //        let position:Int = notification.userInfo?["position"] as! Int
         
-        DispatchQueue.main.async {
-            self.tableView.reloadData()
-            self.tableView.scrollToBottom(animated: true)
-        }
+        DispatchQueue.global().async(execute: {
+            DispatchQueue.main.async {
+                UIView.performWithoutAnimation {
+                    self.tableView.reloadData()
+                    self.tableView.scrollToBottom(animated: false)
+                }
+            }
+        })
     }
     
     @objc func saleForcesAgentJoined(_ notification: Notification) {
 //        let _:SCSChatSession = notification.userInfo?["session"] as! SCSChatSession
 //        let agentJoinEvent:SCSAgentJoinEvent = notification.userInfo?["event"] as! SCSAgentJoinEvent
         
-        DispatchQueue.main.async {
-            self.tableView.reloadData()
-            self.tableView.scrollToBottom(animated: true)
-        }
+        DispatchQueue.global().async(execute: {
+            DispatchQueue.main.async {
+                UIView.performWithoutAnimation {
+                    self.tableView.reloadData()
+                    self.tableView.scrollToBottom(animated: false)
+                }
+            }
+        })
         
         self.inputTextView.MINTEL_enable()
         
@@ -148,20 +156,28 @@ extension ViewController {
     @objc func saleForcesDidReceivedMessage(_ notification: Notification) {
 //        let _:SCSChatSession = notification.userInfo?["session"] as! SCSChatSession
 //        let textEvent:SCSAgentTextEvent = notification.userInfo?["message"] as! SCSAgentTextEvent
-        DispatchQueue.main.async {
-            self.tableView.reloadData()
-            self.tableView.scrollToBottom(animated: true)
-        }
+        DispatchQueue.global().async(execute: {
+            DispatchQueue.main.async {
+                UIView.performWithoutAnimation {
+                    self.tableView.reloadData()
+                    self.tableView.scrollToBottom(animated: false)
+                }
+            }
+        })
     }
     
     @objc func saleForcesAgentLeft(_ notification: Notification) {
         let _:SCSChatSession = notification.userInfo?["session"] as! SCSChatSession
         let _:SCSAgentLeftConferenceEvent = notification.userInfo?["event"] as! SCSAgentLeftConferenceEvent
         
-        DispatchQueue.main.async {
-            self.tableView.reloadData()
-            self.tableView.scrollToBottom(animated: true)
-        }
+        DispatchQueue.global().async(execute: {
+            DispatchQueue.main.async {
+                UIView.performWithoutAnimation {
+                    self.tableView.reloadData()
+                    self.tableView.scrollToBottom(animated: false)
+                }
+            }
+        })
         
         self.disableUserInteraction()
         
@@ -172,24 +188,33 @@ extension ViewController {
         let _:SCSChatSession = notification.userInfo?["session"] as! SCSChatSession
         let _:SCSChatSessionEndEvent = notification.userInfo?["event"] as! SCSChatSessionEndEvent
         
-        DispatchQueue.main.async {
-            self.tableView.reloadData()
-            self.tableView.scrollToBottom(animated: false)
-            self.disableUserInteraction()
-        }
+        DispatchQueue.global().async(execute: {
+            DispatchQueue.main.async {
+                UIView.performWithoutAnimation {
+                    self.tableView.reloadData()
+                    self.tableView.scrollToBottom(animated: false)
+                }
+            }
+        })
         
+        self.disableUserInteraction()
        
 //        MINTEL_LiveChat.instance.reallyEndChat()
     }
     
     fileprivate func reallyEndChat() {
         
-        DispatchQueue.main.async {
-            self.tableView.reloadData()
-            self.tableView.scrollToBottom(animated: true)
-            self.hideImagePanel()
-            self.inputTextView.textView.resignFirstResponder()
-        }
+        self.disableUserInteraction()
+        DispatchQueue.global().async(execute: {
+            DispatchQueue.main.async {
+                UIView.performWithoutAnimation {
+                    self.tableView.reloadData()
+                    self.tableView.scrollToBottom(animated: false)
+                    self.hideImagePanel()
+                    self.inputTextView.textView.resignFirstResponder()
+                }
+            }
+        })
         
         self.viewConfirm.removeFromSuperview()
     }
@@ -264,23 +289,26 @@ extension ViewController {
     
     func switchToAgentMode() {
         
-        debugPrint("Switch To Agent Mode =====")
+//        debugPrint("Switch To Agent Mode =====")
         
         MINTEL_LiveChat.stopTimer()
         self.disableUserInteraction()
         
         // REmove previous กรุณารอสักครู่
         
+        DispatchQueue.global().async(execute: {
+            DispatchQueue.main.async {
+                UIView.performWithoutAnimation {
+                    MessageList.add(item: MyMessage(systemMessageType2: "กรุณารอสักครู่"), remove: true)
+                    MINTEL_LiveChat.chatBotMode = false
+                    MINTEL_LiveChat.instance.startSaleForce()
+                    self.tableView.reloadData()
+                    self.tableView.scrollToBottom(animated: false)
+                }
+            }
+        })
         
-        DispatchQueue.main.async {
-        
-            MessageList.add(item: MyMessage(systemMessageType2: "กรุณารอสักครู่"), remove: true)
-            self.tableView.reloadData()
-            self.disableUserInteraction()
-            self.tableView.scrollToBottom(animated: true)
-            MINTEL_LiveChat.chatBotMode = false
-            MINTEL_LiveChat.instance.startSaleForce()
-        }
+        self.disableUserInteraction()
     }
     
     

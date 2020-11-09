@@ -148,6 +148,11 @@ class CustomTableViewCell: UITableViewCell {
         return lbl.frame.size.height + 25
     }
     
+    fileprivate static func getQueryStringParameter(url: String, param: String) -> String? {
+      guard let url = URLComponents(string: url) else { return nil }
+      return url.queryItems?.first(where: { $0.name == param })?.value
+    }
+    
     func renderReceiverCell(_ txt:String, item: MyMessage, index: Int, tableView: UITableView) {
         
         self.contentView.subviews.forEach { (view) in
@@ -171,8 +176,29 @@ class CustomTableViewCell: UITableViewCell {
         let textView = UITextView()
         self.contentView.addSubview(textView)
         
-        let textNewLine = txt.replacingOccurrences(of: "\n", with: "<br/>")
-        textView.MINTEL_htmlText = textNewLine
+        let extSupports = ["pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx", "zip", "rar"]
+        let txtLower = txt.lowercased()
+        var isEndWithSupported = false
+        for edd in extSupports {
+            isEndWithSupported = txtLower.hasSuffix(edd)
+            if (isEndWithSupported) {
+                break
+            }
+        }
+        
+        if (isEndWithSupported) {
+            let mname = CustomTableViewCell.getQueryStringParameter(url: txt, param: "mname")
+            if (mname?.count ?? 0 > 0) {
+                textView.text = mname
+            } else {
+                let theFileName = (txt as NSString).lastPathComponent
+                textView.text = theFileName
+            }
+        } else {
+        
+            let textNewLine = txt.replacingOccurrences(of: "\n", with: "<br/>")
+            textView.MINTEL_htmlText = textNewLine
+        }
         
         let linkAttributes: [NSAttributedString.Key : Any] = [
             NSAttributedString.Key.foregroundColor: UIColor.blue,
@@ -201,8 +227,16 @@ class CustomTableViewCell: UITableViewCell {
                 
                 // Check Extension Is it document file ? (.pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx, .zip, .rar)
                 let extSupports = ["pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx", "zip", "rar"]
-                let ext = (txt.lowercased() as NSString).pathExtension
-                if extSupports.contains(ext) {
+                let txtLower = txt.lowercased()
+                var isEndWithSupported = false
+                for edd in extSupports {
+                    isEndWithSupported = txtLower.hasSuffix(edd)
+                    if (isEndWithSupported) {
+                        break
+                    }
+                }
+                
+                if isEndWithSupported {
                     
                     // Show Icon Download
                     let btnDownload = UIButton()
@@ -213,6 +247,18 @@ class CustomTableViewCell: UITableViewCell {
                     btnDownload.tag = index
                     btnDownload.frame = CGRect(x: textView.frame.origin.x + textView.frame.size.width + CGFloat(5.0), y: textView.frame.origin.y + textView.frame.size.height - CGFloat(35), width: 30, height: 30)
                     btnDownload.addTarget(self, action: #selector(download(_:)), for: .touchUpInside)
+                    
+                    let mname = CustomTableViewCell.getQueryStringParameter(url: txt, param: "mname")
+                    textView.attributedText = NSAttributedString(string: "")
+                    if (mname?.count ?? 0 > 0) {
+                        textView.text = mname
+                    } else {
+                        let theFileName = (txt as NSString).lastPathComponent
+                        textView.text = theFileName
+                    }
+                    
+                    textView.sizeToFit()
+                    textView.frame = CGRect(x: avartar.frame.origin.x + avartarWidth + 5, y: 0, width: textView.contentSize.width, height: textView.contentSize.height)
                     
                 } else {
                     let request = URLRequest(url: url)
@@ -294,10 +340,8 @@ class CustomTableViewCell: UITableViewCell {
         avartar.frame = CGRect(x: padding, y: 0, width: avartarWidth, height: avartar.image?.size.height ?? 0)
         
         let textView = UITextView()
-//        self.contentView.addSubview(textView)
         
         let textNewLine = txt.replacingOccurrences(of: "\n", with: "<br/>")
-        textView.MINTEL_htmlText = textNewLine
         
         let linkAttributes: [NSAttributedString.Key : Any] = [
             NSAttributedString.Key.foregroundColor: UIColor.blue,
@@ -305,31 +349,80 @@ class CustomTableViewCell: UITableViewCell {
             NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue
         ]
         
-        textView.linkTextAttributes = linkAttributes
-        textView.font = UIFont.systemFont(ofSize: 16)
-        textView.isHidden = false
-        textView.backgroundColor = UIColor(MyHexString: "#EBEBEB")
-        textView.layer.cornerRadius = 18.0
-        textView.textContainerInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
-        textView.frame = CGRect(x: avartar.frame.origin.x + avartarWidth + 5, y: 0, width: UIScreen.main.bounds.width - avartar.frame.origin.x - avartarWidth - 10 - 45, height: 200)
-        textView.dataDetectorTypes = [.link]
-        textView.isSelectable = true
-        textView.isScrollEnabled = false
-        textView.isEditable = false
-        textView.tintColor = UIColor.black
-        textView.textColor = UIColor.black
-        textView.sizeToFit()
-        textView.frame = CGRect(x: avartar.frame.origin.x + avartarWidth + 5, y: 0, width: textView.contentSize.width, height: textView.contentSize.height)
+        let extSupports = ["pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx", "zip", "rar"]
+        let txtLower = txt.lowercased()
+        var isEndWithSupported = false
+        for edd in extSupports {
+            isEndWithSupported = txtLower.hasSuffix(edd)
+            if (isEndWithSupported) {
+                break
+            }
+        }
         
-        let timelbl = UILabel()
-        timelbl.font = UIFont.systemFont(ofSize: 12)
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "HH:mm"
-        let dateString = dateFormatter.string(from: item.sentDate)
-        timelbl.text = dateString
-        timelbl.frame = CGRect(x: textView.frame.origin.x, y: textView.frame.origin.y + textView.frame.size.height + 5, width: 100, height: 20)
+        if (isEndWithSupported) {
+            
+            let mname = CustomTableViewCell.getQueryStringParameter(url: txt, param: "mname")
+            textView.attributedText = NSAttributedString(string: "")
+            if (mname?.count ?? 0 > 0) {
+                textView.text = mname
+            } else {
+                let theFileName = (txt as NSString).lastPathComponent
+                textView.text = theFileName
+            }
+            textView.linkTextAttributes = linkAttributes
+            textView.font = UIFont.systemFont(ofSize: 16)
+            textView.isHidden = false
+            textView.backgroundColor = UIColor(MyHexString: "#EBEBEB")
+            textView.layer.cornerRadius = 18.0
+            textView.textContainerInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+            textView.frame = CGRect(x: avartar.frame.origin.x + avartarWidth + 5, y: 0, width: UIScreen.main.bounds.width - avartar.frame.origin.x - avartarWidth - 10 - 45, height: 200)
+            textView.dataDetectorTypes = [.link]
+            textView.isSelectable = true
+            textView.isScrollEnabled = false
+            textView.isEditable = false
+            textView.tintColor = UIColor.black
+            textView.textColor = UIColor.black
+            textView.sizeToFit()
+            textView.frame = CGRect(x: avartar.frame.origin.x + avartarWidth + 5, y: 0, width: textView.contentSize.width, height: textView.contentSize.height)
+            
+            let timelbl = UILabel()
+            timelbl.font = UIFont.systemFont(ofSize: 12)
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "HH:mm"
+            let dateString = dateFormatter.string(from: item.sentDate)
+            timelbl.text = dateString
+            timelbl.frame = CGRect(x: textView.frame.origin.x, y: textView.frame.origin.y + textView.frame.size.height + 5, width: 100, height: 20)
+            
+            return timelbl.frame.origin.y + timelbl.frame.size.height + 10
+        } else {
         
-        return timelbl.frame.origin.y + timelbl.frame.size.height + 10
+            textView.MINTEL_htmlText = textNewLine
+            textView.linkTextAttributes = linkAttributes
+            textView.font = UIFont.systemFont(ofSize: 16)
+            textView.isHidden = false
+            textView.backgroundColor = UIColor(MyHexString: "#EBEBEB")
+            textView.layer.cornerRadius = 18.0
+            textView.textContainerInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+            textView.frame = CGRect(x: avartar.frame.origin.x + avartarWidth + 5, y: 0, width: UIScreen.main.bounds.width - avartar.frame.origin.x - avartarWidth - 10 - 45, height: 200)
+            textView.dataDetectorTypes = [.link]
+            textView.isSelectable = true
+            textView.isScrollEnabled = false
+            textView.isEditable = false
+            textView.tintColor = UIColor.black
+            textView.textColor = UIColor.black
+            textView.sizeToFit()
+            textView.frame = CGRect(x: avartar.frame.origin.x + avartarWidth + 5, y: 0, width: textView.contentSize.width, height: textView.contentSize.height)
+            
+            let timelbl = UILabel()
+            timelbl.font = UIFont.systemFont(ofSize: 12)
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "HH:mm"
+            let dateString = dateFormatter.string(from: item.sentDate)
+            timelbl.text = dateString
+            timelbl.frame = CGRect(x: textView.frame.origin.x, y: textView.frame.origin.y + textView.frame.size.height + 5, width: 100, height: 20)
+            
+            return timelbl.frame.origin.y + timelbl.frame.size.height + 10
+        }
     }
     
     func renderSender(txt: String, item :MyMessage) {
@@ -567,9 +660,13 @@ class CustomTableViewCell: UITableViewCell {
                     let documentsUrl =  FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first! as URL
                     let documentsFolderUrl = documentsUrl.appendingPathComponent("TrueMoney")
                     // your destination file url
-                    let destinationUrl = documentsFolderUrl.appendingPathComponent(audioUrl.lastPathComponent)
+                    let mname = CustomTableViewCell.getQueryStringParameter(url: url, param: "mname")
+                    var targetName = audioUrl.lastPathComponent
+                    if (mname?.count ?? 0 > 0) {
+                        targetName = mname ?? audioUrl.lastPathComponent
+                    }
+                    let destinationUrl = documentsFolderUrl.appendingPathComponent(targetName)
                     
-                    print(destinationUrl)
                     // check if it exists before downloading it
                     if FileManager().fileExists(atPath: destinationUrl.path) {
                         DispatchQueue.main.async {
