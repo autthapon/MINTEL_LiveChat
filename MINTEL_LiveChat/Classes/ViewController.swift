@@ -1384,7 +1384,7 @@ extension ViewController : UICollectionViewDataSource, UICollectionViewDelegate,
         options.resizeMode = .exact
         //        options.isSynchronous = true
         //        options.isNetworkAccessAllowed = true
-        let requestSize = CGSize(width: 500, height: 500)
+        let requestSize = CGSize(width: 250, height: 250)
         imageManager.requestImage(for: asset, targetSize: requestSize, contentMode: .aspectFill, options: options, resultHandler: { image, _ in
             // The cell may have been recycled by the time this handler gets called;
             // set the cell's thumbnail image only if it's still showing the same asset.
@@ -1419,7 +1419,8 @@ extension ViewController : UICollectionViewDataSource, UICollectionViewDelegate,
         options.resizeMode = .none
         options.isSynchronous = true
         options.isNetworkAccessAllowed = true
-        imageManager.requestImage(for: asset, targetSize: PHImageManagerMaximumSize , contentMode: .aspectFill, options: options) { (image, info) in
+        let requestSize = CGSize(width: 100, height: 100)
+        imageManager.requestImage(for: asset, targetSize: requestSize , contentMode: .aspectFill, options: options) { (image, info) in
             let isDegraded = (info?[PHImageResultIsDegradedKey] as? Bool) ?? false
             if isDegraded {
                 return
@@ -1428,8 +1429,12 @@ extension ViewController : UICollectionViewDataSource, UICollectionViewDelegate,
             if (image != nil) {
                 DispatchQueue.global().async(execute: {
                     DispatchQueue.main.sync {
+                        
                         let fileName = "file.jpeg"
                         let data = image!.jpegData(compressionQuality: 1.0)
+                        var imageSize: Int = data?.count ?? 0
+                        print("actual size of image in KB: %f ", Double(imageSize) / 1000.0)
+
                         let messageIndex = MessageList.add(item: MyMessage(image: image!, imageUrl: ""))
                         self.tableView.reloadData()
                         self.tableView.scrollToBottom(animated: false)

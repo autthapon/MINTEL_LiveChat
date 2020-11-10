@@ -33,6 +33,7 @@ extension ViewController {
             }
             
             if let data = imageData{
+                
                 multipartFormData.append(data, withName: "file", fileName: imageName ?? "", mimeType: self.mimeType(for: data))
             }
             
@@ -52,7 +53,6 @@ extension ViewController {
                     }
                     
                     if let json = response.value {
-                        debugPrint(json)
                         let dict = json as! [String: Any]
                         let url = dict["url"] as? String ?? ""
                         if url.count > 0 {
@@ -87,6 +87,8 @@ extension ViewController {
                         } else {
                             self.sendMessageToSaleForce(text: text)
                         }
+                        
+                        self.uploadDataText.removeAll()
                     }
                 }
             case .failure(let error):

@@ -27,8 +27,8 @@ class ViewController: UIViewController {
         let deployID:String             = "5722w0000009B6e";
         let buttonID:String             = "5732w0000009E15";
 //        let webhookUrl:String           = "https://asia-east2-tmn-chatbot-integration.cloudfunctions.net"
-      let webhookUrl:String           = "https://asia-east2-acm-clt-chatbots.cloudfunctions.net"
-        let uploadUrl:String            = "https://us-central1-test-tmn-bot.cloudfunctions.net"
+        let webhookUrl:String           = "https://asia-east2-acm-clt-chatbots.cloudfunctions.net"
+        let uploadUrl:String            = "https://asia-east2-acm-clt-chatbots.cloudfunctions.net"
         let xApiKey:String              = "edf1ca88a09546f8a0667c81c93d1f31"
         let surveryFormUrl:String       = "https://truemoney.secure.force.com/staffsurvey?uid=sessionId"
         let chatBotSurveyUrl:String     = "https://truemoney.secure.force.com/botsurvey?uid=sessionId"
@@ -61,8 +61,8 @@ class ViewController: UIViewController {
             let deployID:String             = "5722w0000009B6e";
             let buttonID:String             = "5732w0000009E15";
     //        let webhookUrl:String           = "https://asia-east2-tmn-chatbot-integration.cloudfunctions.net"
-          let webhookUrl:String           = "https://asia-east2-acm-clt-chatbots.cloudfunctions.net"
-            let uploadUrl:String            = "https://us-central1-test-tmn-bot.cloudfunctions.net"
+            let webhookUrl:String           = "https://asia-east2-acm-clt-chatbots.cloudfunctions.net"
+            let uploadUrl:String            = "https://asia-east2-acm-clt-chatbots.cloudfunctions.net"
             let xApiKey:String              = "edf1ca88a09546f8a0667c81c93d1f31"
             let surveryFormUrl:String       = "https://truemoney.secure.force.com/staffsurvey?uid=sessionId"
             let chatBotSurveyUrl:String     = "https://truemoney.secure.force.com/botsurvey?uid=sessionId"
