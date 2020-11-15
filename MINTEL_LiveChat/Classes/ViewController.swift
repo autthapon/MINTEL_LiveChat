@@ -435,8 +435,12 @@ class ViewController: UIViewController {
             UIView.animate(withDuration: keyboardAnimationDuration, delay: 0, options: UIView.AnimationOptions(rawValue: curve), animations: {
                 self.view.layoutIfNeeded()
                 self.tableView.setContentOffset(CGPoint(x: oldOffset.x, y: oldOffset.y - keyboardFrame.height + self.bottomHeight), animated: false)
-            }, completion: nil)
+            }) {_ in 
+                self.tableView.reloadData()
+            }
         }
+        
+        self.view.layoutIfNeeded()
     }
     
     @objc func tableViewTapped(recognizer: UITapGestureRecognizer) {

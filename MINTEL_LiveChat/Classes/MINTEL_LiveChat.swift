@@ -1366,21 +1366,20 @@ extension MINTEL_LiveChat : SCSChatEventDelegate {
     public func agentBeganTyping(with session: SCSChatSession!) {
 //        debugPrint("agentBeganTyping : ")
         DispatchQueue.main.async {
-            MessageList.add(item: MyMessage(typing: true, agent: true), remove: true)
-            
-            NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
-                                            object: nil,
-                                            userInfo:nil)
+//            MessageList.add(item: MyMessage(typing: true, agent: true), remove: true)
+//            NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
+//                                            object: nil,
+//                                            userInfo:nil)
         }
     }
     
     public func agentFinishedTyping(with session: SCSChatSession!) {
 //        debugPrint("agentFinishedTyping : ")
         DispatchQueue.main.async {
-            MessageList.removeTyping()
-            NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
-                                            object: nil,
-                                            userInfo:nil)
+//            MessageList.removeTyping()
+//            NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
+//                                            object: nil,
+//                                            userInfo:nil)
         }
     }
     
