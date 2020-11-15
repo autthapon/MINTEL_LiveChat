@@ -1216,7 +1216,7 @@ extension MINTEL_LiveChat  {
                                                                                     object: nil,
                                                                                     userInfo:nil)
 //                                                    debugPrint(items)
-                                                    print("Menus Session")
+//                                                    print("Menus Session")
                                                 }
                                             }
                                         } else {
@@ -1230,8 +1230,6 @@ extension MINTEL_LiveChat  {
                                             }
                                         }
                                     }
-                                    
-                                    
                                     
                                     NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
                                                                     object: nil,

@@ -46,6 +46,7 @@ extension ViewController {
             case .success(let upload, _, _):
                 upload.responseJSON { response in
                     print("Succesfully uploaded")
+                    debugPrint(response)
                     self.uploadDataFiles = self.uploadDataFiles - 1;
                     if let err = response.error{
                         debugPrint(err)

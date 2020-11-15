@@ -76,6 +76,8 @@ class ViewController: UIViewController {
     fileprivate var thumbnailSize: CGSize!
     fileprivate var previousPreheatRect = CGRect.zero
     fileprivate var imageSelected:[Int] = []
+    fileprivate var keyboardShown:Bool = false
+    fileprivate var keyboardShowFrame:CGRect = CGRect(x: 0, y: 0, width: 0, height: 0)
     internal var uploadDataFiles:Int = 0
     internal var uploadDataText:[String] = [];
     fileprivate var hoverIndex:Int = -1
@@ -194,8 +196,8 @@ class ViewController: UIViewController {
         resetCachedAssets()
         PHPhotoLibrary.shared().register(self)
 
-        DispatchQueue.global().async(execute: {
-            DispatchQueue.main.sync {
+//        DispatchQueue.global().async(execute: {
+//            DispatchQueue.main.sync {
                 self.imagePanelView.reloadData()
                 if (self.tableView.numberOfSections > 0) {
                     self.tableView.reloadData()
@@ -208,8 +210,8 @@ class ViewController: UIViewController {
                 if (MINTEL_LiveChat.agentState == .waiting) {
                     self.disableUserInteraction()
                 }
-            }
-        })
+//            }
+//        })
     }
     
     fileprivate func setupNotification() {
@@ -252,13 +254,13 @@ class ViewController: UIViewController {
     
     
     @objc func MINTEL_chatMenuAvailable(_ notification: Notification) {
-        DispatchQueue.main.async {
+//        DispatchQueue.main.async {
             self.menuTableView.reloadData()
-        }
+//        }
     }
     
     @objc func MINTEL_hideBottomMenu(_ notification: Notification) {
-        DispatchQueue.main.async {
+//        DispatchQueue.main.async {
             
             var height = 180.0
             if #available(iOS 11.0, *) {
@@ -282,11 +284,11 @@ class ViewController: UIViewController {
             self.tableView.setContentOffset(CGPoint(x: oldOffset.x, y: oldOffset.y - keyboardFrame.height + self.bottomHeight), animated: false)
             self.inputTextView.becomeFirstResponder()
             self.tableView.scrollToBottom(animated: false)
-        }
+//        }
     }
     
     @objc func botTyped(_ notification: Notification) {
-        DispatchQueue.global().async(execute: {
+//        DispatchQueue.global().async(execute: {
             DispatchQueue.main.async {
                 self.tableView.reloadData()
                 self.tableView.scrollToBottom(animated: false)
@@ -294,7 +296,7 @@ class ViewController: UIViewController {
                     self.inputTextView.MINTEL_enable()
                 }
             }
-        })
+//        })
     }
     
     @objc func toAgentModeFromNotification(_ notification: Notification) {
@@ -408,9 +410,11 @@ class ViewController: UIViewController {
     }
     
     @objc func keyboardWillShow(notification:NSNotification){
+        self.keyboardShown = true
         let userInfo = notification.userInfo!
         if var keyboardFrame  = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue, let keyboardAnimationDuration = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? TimeInterval {
             keyboardFrame = self.view.convert(keyboardFrame, from: nil)
+            self.keyboardShowFrame = keyboardFrame
             let oldOffset = self.tableView.contentOffset
             self.inputTextViewBottomConstraint.constant = -keyboardFrame.height + bottomHeight
             UIView.animate(withDuration: keyboardAnimationDuration) {
@@ -421,9 +425,11 @@ class ViewController: UIViewController {
     }
     
     @objc func keyboardWillHide(notification:NSNotification){
+        self.keyboardShown = false
         let userInfo = notification.userInfo!
         if var keyboardFrame  = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue, let keyboardAnimationDuration = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? TimeInterval, let curve = userInfo[UIResponder.keyboardAnimationCurveUserInfoKey] as? UInt {
             keyboardFrame = self.view.convert(keyboardFrame, from: nil)
+            self.keyboardShowFrame = keyboardFrame
             self.inputTextViewBottomConstraint.constant = 0
             let oldOffset = self.tableView.contentOffset
             UIView.animate(withDuration: keyboardAnimationDuration, delay: 0, options: UIView.AnimationOptions(rawValue: curve), animations: {
@@ -559,7 +565,7 @@ extension ViewController: UITableViewDataSource {
             return
         }
         
-        DispatchQueue.main.async {
+//        DispatchQueue.main.async {
             self.inputTextView.textView.resignFirstResponder()
             if (sender.state == .began) {
                 debugPrint("Begin")
@@ -633,7 +639,7 @@ extension ViewController: UITableViewDataSource {
                     return
                 }
                 
-                let touchLocation: CGPoint = (sender.location(in: sender.view))
+                let touchLocation: CGPoint = (sender.location(in: self.tableView))
                 debugPrint(touchLocation)
                 
                 switch message?.kind {
@@ -668,11 +674,10 @@ extension ViewController: UITableViewDataSource {
             } else {
                 debugPrint("Else")
             }
-        }
+//        }
     }
     
     @objc func didTap(_ sender: MyTapGuesture? = nil) {
-        print("Tab")
         let message = sender?.message
         if (message?.disableMenu ?? false) {
             return
@@ -749,9 +754,7 @@ extension ViewController: UITableViewDataSource {
 //        print("yPosition", yPosition)
         
         // Hide InputBar
-        self.inputTextView.textView.resignFirstResponder()
-        self.hideImagePanel()
-        self.hideChatMenuPanel()
+        
         
         if (!MINTEL_LiveChat.chatBotMode) {
             return
@@ -766,11 +769,20 @@ extension ViewController: UITableViewDataSource {
         let image = UIImage(named: "chatbot", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil)
         let width = UIScreen.main.bounds.size.width - (8.0 + (image?.size.width ?? 0.0) + 10.0 + extraSpacing)
         var height = CGFloat(0.0)
+        
         if (title.count > 0) {
             height = title.MyHeight(withConstrainedWidth: width, font: UIFont.systemFont(ofSize: 16.0))
             height = max(height, 40.0)
             yIndex = yIndex + height + 16
         }
+        
+        if (self.keyboardShown) {
+            yIndex = yIndex + self.keyboardShowFrame.size.height
+        }
+        
+        self.inputTextView.textView.resignFirstResponder()
+        self.hideImagePanel()
+        self.hideChatMenuPanel()
         
         var targetIndex = -1
         for i in 0..<menus.count {
@@ -805,22 +817,23 @@ extension ViewController: UITableViewDataSource {
                 } else if ("__00_home__greeting" == text) {
                     message?.disableMenu = true
                 } else {
-                    DispatchQueue.global().async(execute: {
-                        DispatchQueue.main.sync {
+//                    DispatchQueue.global().async(execute: {
+//                        DispatchQueue.main.sync {
                             message?.disableMenu = true
                             MINTEL_LiveChat.chatUserTypedIn = true
                             let display = targetAction?["display"] as? Bool ?? true
                             if (display) {
                                 let _ = MessageList.add(item: MyMessage(text: text, agent: false, bot: false))
                             }
-                            self.tableView.reloadData()
-                            self.tableView.scrollToBottom(animated: false)
                             MINTEL_LiveChat.sendPost(text: text, menu: false)
                             if (self.imagePanel) {
                                 self.hideImagePanel()
                             }
-                        }
-                    })
+                            self.tableView.reloadData()
+                            self.tableView.scrollToBottom(animated: false)
+                            
+//                        }
+//                    })
                 }
             }
         }
@@ -851,8 +864,8 @@ extension ViewController: UITableViewDelegate {
             if (display) {
                 let _ = MessageList.add(item: MyMessage(text: text, agent: false, bot: false))
             }
-            DispatchQueue.global().async(execute: {
-                DispatchQueue.main.sync {
+//            DispatchQueue.global().async(execute: {
+//                DispatchQueue.main.sync {
                     self.tableView.reloadData()
                     self.tableView.scrollToBottom(animated: false)
                     MINTEL_LiveChat.sendPost(text: text, menu: false)
@@ -860,8 +873,8 @@ extension ViewController: UITableViewDelegate {
                     self.inputTextView.hideLeftMenu()
                     self.inputTextView.textView.resignFirstResponder()
                     self.MINTEL_hideBottomMenu(Notification(name: Notification.Name(rawValue: "TEST")))
-                }
-            })
+//                }
+//            })
         }
     }
     
@@ -908,8 +921,8 @@ extension UITableView {
     
     func scrollToBottom(animated: Bool){
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
-            DispatchQueue.main.async {
+//        DispatchQueue.main.asyncAfter(deadline: .now(), execute: {
+//            DispatchQueue.main.async {
                 if (self.numberOfSections > 0) {
                     let indexPath = IndexPath(
                         row: self.numberOfRows(inSection:  self.numberOfSections-1) - 1,
@@ -918,18 +931,18 @@ extension UITableView {
                         self.scrollToRow(at: indexPath, at: .bottom, animated: animated)
                     }
                 }
-            }
-        })
+//            }
+//        })
     }
     
     func scrollToTop() {
         
-        DispatchQueue.main.async {
+//        DispatchQueue.main.async {
             let indexPath = IndexPath(row: 0, section: 0)
             if self.hasRowAtIndexPath(indexPath: indexPath) {
                 self.scrollToRow(at: indexPath, at: .top, animated: false)
             }
-        }
+//        }
     }
     
     func hasRowAtIndexPath(indexPath: IndexPath) -> Bool {
@@ -955,8 +968,8 @@ extension ViewController: InputTextViewDelegate {
     }
     
     func didPressSendButton(_ text: String, _ sender: UIButton, _ textView: UITextView) {
-        DispatchQueue.global().async(execute: {
-            DispatchQueue.main.sync {
+//        DispatchQueue.global().async(execute: {
+//            DispatchQueue.main.sync {
                 if (text.trimmingCharacters(in: .whitespacesAndNewlines).count > 0) {
                     
                     MINTEL_LiveChat.chatUserTypedIn = true
@@ -986,8 +999,8 @@ extension ViewController: InputTextViewDelegate {
                         }
                     }
                 }
-            }
-        })
+//            }
+//        })
     }
     
     func didPressFirstLeftButton(_ sender: UIButton, _ textView: UITextView) {
@@ -1109,7 +1122,7 @@ extension ViewController: InputTextViewDelegate {
     
     func showChatMenuPanel() {
         
-        DispatchQueue.main.async {
+//        DispatchQueue.main.async {
             self.inputTextView.textView.resignFirstResponder()
             self.chatMenuPanel = true
             self.imagePanel = false
@@ -1134,12 +1147,12 @@ extension ViewController: InputTextViewDelegate {
             self.view.layoutIfNeeded()
             self.tableView.setContentOffset(CGPoint(x: oldOffset.x, y: oldOffset.y + keyboardFrame.height - self.bottomHeight), animated: false)
             self.tableView.scrollToBottom(animated: false)
-        }
+//        }
     }
     
     func hideChatMenuPanel() {
         
-        DispatchQueue.main.async {
+//        DispatchQueue.main.async {
             var height = 180.0
             if #available(iOS 11.0, *) {
                 if (self.bottomHeight == 0) {
@@ -1161,7 +1174,7 @@ extension ViewController: InputTextViewDelegate {
             self.view.layoutIfNeeded()
             self.tableView.setContentOffset(CGPoint(x: oldOffset.x, y: oldOffset.y - keyboardFrame.height + self.bottomHeight), animated: false)
             self.inputTextView.becomeFirstResponder()
-        }
+//        }
         
     }
     
@@ -1173,8 +1186,8 @@ extension ViewController: InputTextViewDelegate {
             fetchResult = PHAsset.fetchAssets(with: .image, options: allPhotosOptions)
         }
         
-        DispatchQueue.global().async(execute: {
-            DispatchQueue.main.sync {
+//        DispatchQueue.global().async(execute: {
+//            DispatchQueue.main.sync {
                 self.imagePanelView.reloadData()
                 self.inputTextView.textView.resignFirstResponder()
                 self.chatMenuPanel = false
@@ -1200,14 +1213,14 @@ extension ViewController: InputTextViewDelegate {
                 self.view.layoutIfNeeded()
                 self.tableView.setContentOffset(CGPoint(x: oldOffset.x, y: oldOffset.y + keyboardFrame.height - self.bottomHeight), animated: false)
                 self.tableView.scrollToBottom(animated: false)
-            }
-        })
+//            }
+//        })
     }
     
     func hideImagePanel() {
         
-        DispatchQueue.global().async(execute: {
-            DispatchQueue.main.sync {
+//        DispatchQueue.global().async(execute: {
+//            DispatchQueue.main.sync {
                 var height = 180.0
                 if #available(iOS 11.0, *) {
                     if (self.bottomHeight == 0) {
@@ -1230,8 +1243,8 @@ extension ViewController: InputTextViewDelegate {
                 self.tableView.setContentOffset(CGPoint(x: oldOffset.x, y: oldOffset.y - keyboardFrame.height + self.bottomHeight), animated: false)
                 self.inputTextView.becomeFirstResponder()
                 self.imagePanelView.reloadData()
-            }
-        })
+//            }
+//        })
     }
 }
 
@@ -1255,8 +1268,8 @@ extension ViewController : UINavigationControllerDelegate, UIImagePickerControll
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]){
-        DispatchQueue.global().async(execute: {
-            DispatchQueue.main.sync {
+//        DispatchQueue.global().async(execute: {
+//            DispatchQueue.main.sync {
                 self.imagePicker.dismiss(animated: true, completion: nil)
                 guard let selectedImage = info[.originalImage] as? UIImage else {
                     print("Image not found!")
@@ -1270,8 +1283,8 @@ extension ViewController : UINavigationControllerDelegate, UIImagePickerControll
                 self.tableView.scrollToBottom(animated: false)
                 self.uploadDataFiles = 1
                 self.upload(imageData: data, imageName: fileName, fileData: nil, fileName: nil, parameters: ["session_id": MINTEL_LiveChat.userId], messageIndex: messageIndex)
-            }
-        })
+//            }
+//        })
     }
 }
 
@@ -1299,8 +1312,8 @@ extension ViewController : UIDocumentMenuDelegate, UIDocumentPickerDelegate {
         debugPrint(url)
         
         if FileManager.default.fileExists(atPath: url.path){
-            DispatchQueue.global().async(execute: {
-                DispatchQueue.main.sync {
+//            DispatchQueue.global().async(execute: {
+//                DispatchQueue.main.sync {
                     let filename = (url.absoluteString as NSString).lastPathComponent
                     let messageIndex = MessageList.add(item: MyMessage(fileName: filename, fileURL: url, fileUploadUrl: ""))
                     self.tableView.reloadData()
@@ -1314,8 +1327,8 @@ extension ViewController : UIDocumentMenuDelegate, UIDocumentPickerDelegate {
                         // Catch any errors
                         print("Unable to read the file")
                     }
-                }
-            })
+//                }
+//            })
         }
     }
 }
@@ -1384,7 +1397,7 @@ extension ViewController : UICollectionViewDataSource, UICollectionViewDelegate,
         options.resizeMode = .exact
         //        options.isSynchronous = true
         //        options.isNetworkAccessAllowed = true
-        let requestSize = CGSize(width: 500, height: 500)
+        let requestSize = CGSize(width: 250, height: 250)
         imageManager.requestImage(for: asset, targetSize: requestSize, contentMode: .aspectFill, options: options, resultHandler: { image, _ in
             // The cell may have been recycled by the time this handler gets called;
             // set the cell's thumbnail image only if it's still showing the same asset.
@@ -1400,11 +1413,11 @@ extension ViewController : UICollectionViewDataSource, UICollectionViewDelegate,
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         self.uploadDataFiles = 1
-        self.sendImageToWebhook(index: indexPath.item)
         if (imagePanel) {
             self.hideImagePanel()
             self.checkImageSelectedForDisableInput()
         }
+        self.sendImageToWebhook(index: indexPath.item)
     }
     
     fileprivate func sendImageToWebhook(index: Int) {
@@ -1419,23 +1432,43 @@ extension ViewController : UICollectionViewDataSource, UICollectionViewDelegate,
         options.resizeMode = .none
         options.isSynchronous = true
         options.isNetworkAccessAllowed = true
-        imageManager.requestImage(for: asset, targetSize: PHImageManagerMaximumSize , contentMode: .aspectFill, options: options) { (image, info) in
+        let requestSize = CGSize(width: 500, height: 500)
+        imageManager.requestImage(for: asset, targetSize: requestSize , contentMode: .aspectFill, options: options) { (image, info) in
             let isDegraded = (info?[PHImageResultIsDegradedKey] as? Bool) ?? false
             if isDegraded {
                 return
             }
     
             if (image != nil) {
-                DispatchQueue.global().async(execute: {
-                    DispatchQueue.main.sync {
+//                DispatchQueue.global().async(execute: {
+//                    DispatchQueue.main.sync {
                         let fileName = "file.jpeg"
                         let data = image!.jpegData(compressionQuality: 1.0)
+                        let imageSize: Int = data?.count ?? 0
+                        let imageSizeInMB = Double(imageSize) / (1024.0 * 1024.0)
+                        print("size of image in MB: %f ", imageSizeInMB)
+                        
+                        if (imageSizeInMB >= 10) {
+                            
+                            let alert = UIAlertController(title:"", message: "ขออภัยไฟล์เกินขนาดที่กำหนดกรุณาเลือกไฟล์ขนาดไม่เกิน 1 MB",    preferredStyle: UIAlertController.Style.alert)
+                            alert.addAction(UIAlertAction(title: "ตกลง",
+                                                          style: UIAlertAction.Style.default,
+                                                                  handler: {(_: UIAlertAction!) in
+                                    }))
+                            self.present(alert, animated: true, completion: nil)
+                            self.tableView.reloadData()
+                            self.tableView.scrollToBottom(animated: false)
+                            return
+                        }
+
+//                        print("actual size of image in KB: %f ", Double(imageSize) / 1000.0)
+
                         let messageIndex = MessageList.add(item: MyMessage(image: image!, imageUrl: ""))
                         self.tableView.reloadData()
                         self.tableView.scrollToBottom(animated: false)
                         self.upload(imageData: data, imageName: fileName, fileData: nil, fileName: nil, parameters: ["session_id": MINTEL_LiveChat.userId], messageIndex : messageIndex)
-                    }
-                })
+//                    }
+//                })
             }
         }
     }
@@ -1534,35 +1567,37 @@ extension ViewController: PHPhotoLibraryChangeObserver {
         
         // Change notifications may be made on a background queue. Re-dispatch to the
         // main queue before acting on the change as we'll be updating the UI.
-        DispatchQueue.global().async(execute: {
-            DispatchQueue.main.sync {
+//        DispatchQueue.global().async(execute: {
+//            DispatchQueue.main.sync {
                 // Hang on to the new fetch result.
                 self.fetchResult = changes.fetchResultAfterChanges
                 if changes.hasIncrementalChanges {
                     // If we have incremental diffs, animate them in the collection view.
-                    self.imagePanelView.performBatchUpdates({
-                        // For indexes to make sense, updates must be in this order:
-                        // delete, insert, reload, move
-                        if let removed = changes.removedIndexes, removed.count > 0 {
-                            self.imagePanelView.deleteItems(at: removed.map({ IndexPath(item: $0, section: 0) }))
-                        }
-                        if let inserted = changes.insertedIndexes, inserted.count > 0 {
-                            self.imagePanelView.insertItems(at: inserted.map({ IndexPath(item: $0, section: 0) }))
-                        }
-                        if let changed = changes.changedIndexes, changed.count > 0 {
-                            self.imagePanelView.reloadItems(at: changed.map({ IndexPath(item: $0, section: 0) }))
-                        }
-                        changes.enumerateMoves { fromIndex, toIndex in
-                            self.imagePanelView.moveItem(at: IndexPath(item: fromIndex, section: 0),
-                                                         to: IndexPath(item: toIndex, section: 0))
-                        }
-                    })
+                    DispatchQueue.main.async {
+                        self.imagePanelView.performBatchUpdates({
+                            // For indexes to make sense, updates must be in this order:
+                            // delete, insert, reload, move
+                            if let removed = changes.removedIndexes, removed.count > 0 {
+                                self.imagePanelView.deleteItems(at: removed.map({ IndexPath(item: $0, section: 0) }))
+                            }
+                            if let inserted = changes.insertedIndexes, inserted.count > 0 {
+                                self.imagePanelView.insertItems(at: inserted.map({ IndexPath(item: $0, section: 0) }))
+                            }
+                            if let changed = changes.changedIndexes, changed.count > 0 {
+                                self.imagePanelView.reloadItems(at: changed.map({ IndexPath(item: $0, section: 0) }))
+                            }
+                            changes.enumerateMoves { fromIndex, toIndex in
+                                self.imagePanelView.moveItem(at: IndexPath(item: fromIndex, section: 0),
+                                                             to: IndexPath(item: toIndex, section: 0))
+                            }
+                        })
+                    }
                 } else {
                     // Reload the collection view if incremental diffs are not available.
                     self.imagePanelView.reloadData()
                 }
                 self.resetCachedAssets()
-            }
-        })
+//            }
+//        })
     }
 }
