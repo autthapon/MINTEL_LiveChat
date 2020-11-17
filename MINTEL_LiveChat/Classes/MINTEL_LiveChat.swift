@@ -52,6 +52,7 @@ public class MINTEL_LiveChat: UIView {
     
     fileprivate static var first2MinutesTimer:Timer? = nil
     fileprivate static var lastAMinuteTimer:Timer? = nil
+    fileprivate static var backgroundTaskIdentifier:UIBackgroundTaskIdentifier? = nil
     private var notification:MINTEL_Notifications = MINTEL_Notifications()
     private var draggable: Bool = true
     private var dragging: Bool = false
@@ -1084,6 +1085,18 @@ extension MINTEL_LiveChat  {
         self.stopTimer()
         
         MINTEL_LiveChat.first2MinutesTimer = Timer.scheduledTimer(withTimeInterval: TimeInterval(firstTimerDuration * 60), repeats: false) { (timer) in
+        if (MINTEL_LiveChat.backgroundTaskIdentifier != nil) {
+            UIApplication.shared.endBackgroundTask(MINTEL_LiveChat.backgroundTaskIdentifier!)
+            MINTEL_LiveChat.backgroundTaskIdentifier = .invalid
+        }
+
+        MINTEL_LiveChat.backgroundTaskIdentifier = UIApplication.shared.beginBackgroundTask(withName: "TimerMINTEL") {
+            if (nil != MINTEL_LiveChat.backgroundTaskIdentifier) {
+                UIApplication.shared.endBackgroundTask(MINTEL_LiveChat.backgroundTaskIdentifier!)
+                MINTEL_LiveChat.backgroundTaskIdentifier = .invalid
+            }
+        }
+        
             // Send Notification
             let notif = MINTEL_Notifications()
             notif.scheduleNotification(message: "ขณะนี้ท่านมีรายการสนทนากับศูนย์บริการทรูมันนี่อยู่")
@@ -1100,7 +1113,7 @@ extension MINTEL_LiveChat  {
                 object: nil,
                 userInfo:nil)
                 
-                MINTEL_LiveChat.instance.reallyEndChat()
+//                MINTEL_LiveChat.instance.reallyEndChat()
                 NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.reallyExitChat),
                         object: nil,
                         userInfo:nil)

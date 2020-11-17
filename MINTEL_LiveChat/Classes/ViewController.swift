@@ -548,9 +548,9 @@ extension ViewController: UITableViewDataSource {
                         }
                     case .image(let img, _):
                         cell.renderImageCell(image: img, time: item!.sentDate, item: item!, index: indexPath.section)
-    //                    let gesture = cell.tapGuesture ?? MyTapGuesture(target: self, action: #selector(didTap(_:)))
-    //                    gesture.message = item
-    //                    cell.addGestureRecognizer(gesture)
+                        let gesture = cell.tapGuesture ?? MyTapGuesture(target: self, action: #selector(didTap(_:)))
+                        gesture.message = item
+                        cell.addGestureRecognizer(gesture)
                     case .agentJoin(let agentName):
                         cell.renderAgentJoin(agentName)
                     case .typing:
