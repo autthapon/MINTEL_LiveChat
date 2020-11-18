@@ -891,6 +891,13 @@ extension ViewController: UITableViewDelegate {
             if MessageList.count() < indexPath.section {
                 return 0
             }
+//
+//            tableView.cell
+//            let cell = tableView.cellForRow(at: indexPath) as? CustomTableViewCell
+//            if (cell == nil) {
+//                return 0
+//            }
+            
             let item = MessageList.at(index: indexPath.section)
             if (item != nil) {
                 switch item!.kind {
@@ -1003,6 +1010,8 @@ extension ViewController: InputTextViewDelegate {
                         }
                     }
                 }
+        
+        self.inputTextView.resetSizeTextView()
 //            }
 //        })
     }

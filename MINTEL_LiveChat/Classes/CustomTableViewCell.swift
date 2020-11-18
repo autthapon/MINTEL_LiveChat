@@ -174,6 +174,7 @@ class CustomTableViewCell: UITableViewCell {
         avartar.frame = CGRect(x: padding, y: 0, width: avartarWidth, height: avartar.image?.size.height ?? 0)
         
         let textView = UITextView()
+        textView.tag = 5002
         self.contentView.addSubview(textView)
         
         let extSupports = ["pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx", "zip", "rar"]
@@ -195,7 +196,7 @@ class CustomTableViewCell: UITableViewCell {
                 textView.text = theFileName
             }
         } else {
-        
+//            textView.text = txt
             let textNewLine = txt.replacingOccurrences(of: "\n", with: "<br/>")
             textView.MINTEL_htmlText = textNewLine
         }
@@ -328,27 +329,32 @@ class CustomTableViewCell: UITableViewCell {
         let dateString = dateFormatter.string(from: item.sentDate)
         timelbl.backgroundColor = UIColor.clear
         timelbl.text = dateString
+        timelbl.tag = 5003
         timelbl.frame = CGRect(x: textView.frame.origin.x, y: textView.frame.origin.y + textView.frame.size.height + 5, width: 100, height: 20)
     }
     
     static func calcReceiverCell(_ txt:String, item: MyMessage) -> CGFloat {
+//        let timelbl = cell.viewWithTag(5003) as! UILabel
+//        let textView = cell.viewWithTag(5002) as! UITextView
+//        return textView.frame.origin.y + textView.frame.size.height + timelbl.frame.size.height + 5
         
         let avartar = UIImageView()
         let avartarImage = UIImage(named: "chatbot", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil)
         let avartarWidth = avartarImage?.size.width ?? 0.0
         avartar.image = avartarImage
         avartar.frame = CGRect(x: padding, y: 0, width: avartarWidth, height: avartar.image?.size.height ?? 0)
-        
+
         let textView = UITextView()
-        
+
         let textNewLine = txt.replacingOccurrences(of: "\n", with: "<br/>")
-        
+//        textView.MINTEL_htmlText = textNewLine
+
         let linkAttributes: [NSAttributedString.Key : Any] = [
             NSAttributedString.Key.foregroundColor: UIColor.blue,
             NSAttributedString.Key.underlineColor: UIColor.blue,
             NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue
         ]
-        
+
         let extSupports = ["pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx", "zip", "rar"]
         let txtLower = txt.lowercased()
         var isEndWithSupported = false
@@ -358,9 +364,9 @@ class CustomTableViewCell: UITableViewCell {
                 break
             }
         }
-        
+
         if (isEndWithSupported) {
-            
+
             let mname = CustomTableViewCell.getQueryStringParameter(url: txt, param: "mname")
             textView.attributedText = NSAttributedString(string: "")
             if (mname?.count ?? 0 > 0) {
@@ -384,7 +390,7 @@ class CustomTableViewCell: UITableViewCell {
             textView.textColor = UIColor.black
             textView.sizeToFit()
             textView.frame = CGRect(x: avartar.frame.origin.x + avartarWidth + 5, y: 0, width: textView.contentSize.width, height: textView.contentSize.height)
-            
+
             let timelbl = UILabel()
             timelbl.font = UIFont.systemFont(ofSize: 12)
             let dateFormatter = DateFormatter()
@@ -392,11 +398,12 @@ class CustomTableViewCell: UITableViewCell {
             let dateString = dateFormatter.string(from: item.sentDate)
             timelbl.text = dateString
             timelbl.frame = CGRect(x: textView.frame.origin.x, y: textView.frame.origin.y + textView.frame.size.height + 5, width: 100, height: 20)
-            
+
             return timelbl.frame.origin.y + timelbl.frame.size.height + 10
         } else {
-        
-            textView.MINTEL_htmlText = textNewLine
+
+//            textView.MINTEL_htmlText = textNewLine
+            textView.text = txt
             textView.linkTextAttributes = linkAttributes
             textView.font = UIFont.systemFont(ofSize: 16)
             textView.isHidden = false
@@ -412,7 +419,7 @@ class CustomTableViewCell: UITableViewCell {
             textView.textColor = UIColor.black
             textView.sizeToFit()
             textView.frame = CGRect(x: avartar.frame.origin.x + avartarWidth + 5, y: 0, width: textView.contentSize.width, height: textView.contentSize.height)
-            
+
             let timelbl = UILabel()
             timelbl.font = UIFont.systemFont(ofSize: 12)
             let dateFormatter = DateFormatter()
@@ -420,7 +427,7 @@ class CustomTableViewCell: UITableViewCell {
             let dateString = dateFormatter.string(from: item.sentDate)
             timelbl.text = dateString
             timelbl.frame = CGRect(x: textView.frame.origin.x, y: textView.frame.origin.y + textView.frame.size.height + 5, width: 100, height: 20)
-            
+
             return timelbl.frame.origin.y + timelbl.frame.size.height + 10
         }
     }

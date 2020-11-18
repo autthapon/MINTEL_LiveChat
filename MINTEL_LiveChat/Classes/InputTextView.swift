@@ -261,6 +261,9 @@ extension InputTextView: UITextViewDelegate {
         }
     }
     
+    func resetSizeTextView() {
+        self.textViewHeightConstraint.constant = InputTextView.textViewHeight
+    }
 }
 
 
