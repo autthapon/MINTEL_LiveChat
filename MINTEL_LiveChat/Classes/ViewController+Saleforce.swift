@@ -129,6 +129,7 @@ extension ViewController {
 //        DispatchQueue.global().async(execute: {
 //            DispatchQueue.main.async {
 //                UIView.performWithoutAnimation {
+                    self.disableUserInteraction()
                     self.tableView.reloadData()
                     self.tableView.scrollToBottom(animated: false)
 //                }
@@ -173,13 +174,12 @@ extension ViewController {
 //        DispatchQueue.global().async(execute: {
             DispatchQueue.main.async {
 //                UIView.performWithoutAnimation {
+                    self.disableUserInteraction()
                     self.tableView.reloadData()
                     self.tableView.scrollToBottom(animated: false)
 //                }
             }
 //        })
-        
-        self.disableUserInteraction()
         
 //        MINTEL_LiveChat.instance.reallyEndChat()
     }
@@ -293,7 +293,7 @@ extension ViewController {
 //        debugPrint("Switch To Agent Mode =====")
         
         MINTEL_LiveChat.stopTimer()
-        self.disableUserInteraction()
+//        self.disableUserInteraction()
         
         // REmove previous กรุณารอสักครู่
         
