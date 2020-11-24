@@ -33,7 +33,6 @@ extension ViewController {
             }
             
             if let data = imageData{
-                
                 multipartFormData.append(data, withName: "file", fileName: imageName ?? "", mimeType: self.mimeType(for: data))
             }
             

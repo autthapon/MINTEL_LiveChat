@@ -1301,7 +1301,6 @@ extension ViewController : UINavigationControllerDelegate, UIImagePickerControll
     }
 }
 
-
 extension ViewController : UIDocumentMenuDelegate, UIDocumentPickerDelegate {
     func documentMenu(_ documentMenu: UIDocumentMenuViewController, didPickDocumentPicker documentPicker: UIDocumentPickerViewController) {
     }
@@ -1334,6 +1333,24 @@ extension ViewController : UIDocumentMenuDelegate, UIDocumentPickerDelegate {
                     do {
                         // Get the saved data
                         let savedData = try Data(contentsOf: url)
+                        
+                        let imageSize: Int = savedData.count
+                        let imageSizeInMB = Double(imageSize) / (1024.0 * 1024.0)
+                        print("size of image in MB: %f ", imageSizeInMB)
+                        
+                        if (imageSizeInMB >= 10) {
+                            
+                            let alert = UIAlertController(title:"", message: "ขออภัยไฟล์เกินขนาดที่กำหนดกรุณาเลือกไฟล์ขนาดไม่เกิน 10 MB",    preferredStyle: UIAlertController.Style.alert)
+                            alert.addAction(UIAlertAction(title: "ตกลง",
+                                                          style: UIAlertAction.Style.default,
+                                                                  handler: {(_: UIAlertAction!) in
+                                    }))
+                            self.present(alert, animated: true, completion: nil)
+                            self.tableView.reloadData()
+                            self.tableView.scrollToBottom(animated: false)
+                            return
+                        }
+                        
                         // Convert the data back into a string
                         self.upload(imageData: nil, imageName: nil, fileData: savedData, fileName: filename, parameters: ["session_id": MINTEL_LiveChat.userId], messageIndex : messageIndex)
                     } catch {
@@ -1463,7 +1480,7 @@ extension ViewController : UICollectionViewDataSource, UICollectionViewDelegate,
                         
                         if (imageSizeInMB >= 10) {
                             
-                            let alert = UIAlertController(title:"", message: "ขออภัยไฟล์เกินขนาดที่กำหนดกรุณาเลือกไฟล์ขนาดไม่เกิน 1 MB",    preferredStyle: UIAlertController.Style.alert)
+                            let alert = UIAlertController(title:"", message: "ขออภัยไฟล์เกินขนาดที่กำหนดกรุณาเลือกไฟล์ขนาดไม่เกิน 10 MB",    preferredStyle: UIAlertController.Style.alert)
                             alert.addAction(UIAlertAction(title: "ตกลง",
                                                           style: UIAlertAction.Style.default,
                                                                   handler: {(_: UIAlertAction!) in
