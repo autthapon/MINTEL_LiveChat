@@ -149,8 +149,9 @@ class CustomTableViewCell: UITableViewCell {
     }
     
     fileprivate static func getQueryStringParameter(url: String, param: String) -> String? {
-      guard let url = URLComponents(string: url) else { return nil }
-      return url.queryItems?.first(where: { $0.name == param })?.value
+        let tempUrl = url.addingPercentEncoding(withAllowedCharacters:NSCharacterSet.urlQueryAllowed) ?? ""
+        guard let temp = URLComponents(string: tempUrl) else { return nil }
+        return temp.queryItems?.first(where: { $0.name == param })?.value
     }
     
     func renderReceiverCell(_ txt:String, item: MyMessage, index: Int, tableView: UITableView) {
