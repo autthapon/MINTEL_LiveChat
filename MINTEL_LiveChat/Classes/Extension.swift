@@ -213,4 +213,19 @@ extension UIImage {
     }
 }
 
+public func MyImageColor(color: UIColor, size: CGSize = CGSize(width: 1, height: 1)) -> UIImage? {
+    let rect = CGRect(origin: .zero, size: size)
+    UIGraphicsBeginImageContextWithOptions(rect.size, false, 0.0)
+    color.setFill()
+    UIRectFill(rect)
+    let image = UIGraphicsGetImageFromCurrentImageContext()
+    UIGraphicsEndImageContext()
+    
+    guard let cgImage = image?.cgImage else { return nil }
+    return UIImage(cgImage: cgImage)
+}
 
+public class MyButton : UIButton {
+    public var TMN_Menu:[String:Any] = [:]
+    var TMN_Message:MyMessage? = nil
+}

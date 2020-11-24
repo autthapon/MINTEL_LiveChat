@@ -909,7 +909,7 @@ class CustomTableViewCell: UITableViewCell {
         return img.size.height + 13 + 20
     }
     
-    func setupMenuCell(_ title:String,_ menus:[[String:Any]], _ itemMessage : MyMessage) {
+    func setupMenuCell(_ title:String,_ menus:[[String:Any]], _ itemMessage : MyMessage, _ viewController: ViewController) {
         
         self.contentView.subviews.forEach { (view) in
             view.removeFromSuperview()
@@ -960,22 +960,22 @@ class CustomTableViewCell: UITableViewCell {
             
             height = labelText.MyHeight(withConstrainedWidth: bgggView.frame.size.width - 20, font: UIFont.systemFont(ofSize: 16.0))
             height = max(40.0, height)
-            let lbl = PaddingLabel(withInsets: 8, 8, 18, 18)
+            let lbl = MyButton(type: .custom) // PaddingLabel(withInsets: 8, 8, 18, 18)
             lbl.frame = CGRect(x: 0.0, y: yIndex, width: width, height: height + 16)
-            lbl.text = labelText
-            lbl.font = UIFont.systemFont(ofSize: 16.0)
-            lbl.textAlignment = .center
+            lbl.setTitle(labelText, for: .normal)
+            lbl.setBackgroundImage(MyImageColor(color: UIColor(MyHexString: "#22ff8300").withAlphaComponent(0.5)), for: .highlighted)
+            lbl.setBackgroundImage(MyImageColor(color: UIColor.white), for: .normal)
+            lbl.setBackgroundImage(MyImageColor(color: UIColor(MyHexString: "#66f0f0f0")), for: .selected)
+            lbl.titleLabel?.font = UIFont.systemFont(ofSize: 16.0)
+            lbl.titleLabel?.textAlignment = .center
+            lbl.titleLabel?.numberOfLines = 10
+            lbl.setTitleColor(UIColor(MyHexString: "#FF8300"), for: .normal)
             lbl.backgroundColor = UIColor.white
             lbl.layer.borderWidth = 0.5
-            lbl.numberOfLines = 10
-            lbl.textColor = UIColor(MyHexString: "#FF8300")
             lbl.layer.borderColor = UIColor(MyHexString: "#EBEBEB").cgColor
-            
-            if (itemMessage.selectedIndex == i) {
-                lbl.backgroundColor = UIColor(MyHexString: "#66f0f0f0")
-            } else {
-                lbl.backgroundColor = UIColor.white
-            }
+            lbl.TMN_Menu = item
+            lbl.TMN_Message = itemMessage
+            lbl.isSelected = i == itemMessage.selectedIndex
             
             lbl.tag = 10000 + i
             bgggView.addSubview(lbl)

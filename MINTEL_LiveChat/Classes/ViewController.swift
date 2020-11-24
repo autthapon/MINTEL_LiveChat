@@ -81,6 +81,7 @@ class ViewController: UIViewController {
     internal var uploadDataFiles:Int = 0
     internal var uploadDataText:[String] = [];
     fileprivate var hoverIndex:Int = -1
+    let theMenuGesture:MyTapGuesture = MyTapGuesture()
     
     var tableView: UITableView = {
         let v = UITableView()
@@ -367,7 +368,7 @@ class ViewController: UIViewController {
         tableView.separatorStyle = .none
         tableView.keyboardDismissMode = .onDrag
         
-        tableView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tableViewTapped(recognizer:))))
+//        tableView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tableViewTapped(recognizer:))))
         
         self.view.addSubview(inputTextView)
         inputTextView.MyEdges([.left, .right], to: self.view, offset: .zero)
@@ -531,19 +532,17 @@ extension ViewController: UITableViewDataSource {
                     case .file(let name, _, _):
                         cell.renderFileSend(txt: name, item: item!, index: indexPath.section)
                     case .menu(let title, let menus):
-                        cell.setupMenuCell(title, menus, item!)
+                        cell.setupMenuCell(title, menus, item!, self)
                         if (!item!.disableMenu) {
-    //                        let gesture = MyTapGuesture(target: self, action: #selector(ViewController.longPress(_:)))
-                            let gesture = MyTapGuesture(target: self, action: #selector(self.didTap(_:)))
-    //                        gesture.minimumPressDuration = 0
-                            gesture.delegate = self
-                            gesture.cell = cell
-                            gesture.message = item
-                            cell.tapGuesture = gesture
-                            cell.addGestureRecognizer(gesture)
+                            
+                            for i in 0..<menus.count {
+                                let lbl = cell.viewWithTag(10000 + i) as! UIButton
+                                lbl.addTarget(self, action: #selector(menuPress(_:)), for: .touchUpInside)
+                            }
                         } else {
-                            if let g = cell.tapGuesture {
-                                cell.removeGestureRecognizer(g)
+                            for i in 0..<menus.count {
+                                let lbl = cell.viewWithTag(10000 + i) as! UIButton
+                                lbl.isUserInteractionEnabled = false
                             }
                         }
                     case .image(let img, _):
@@ -563,283 +562,72 @@ extension ViewController: UITableViewDataSource {
         }
     }
     
-    @objc func longPress(_ sender: MyTapGuesture) {
+    @objc func menuPress(_ sender: UIButton) {
         
-        if (sender.message?.disableMenu ?? false) {
+        if (!MINTEL_LiveChat.chatBotMode) {
             return
         }
         
-//        DispatchQueue.main.async {
-            self.inputTextView.textView.resignFirstResponder()
-            if (sender.state == .began) {
-                debugPrint("Begin")
-                let message = sender.message
-                if (message?.disableMenu ?? false) {
-                    return
-                }
-                
-                switch message?.kind {
-                case .menu(let title, let menus):
+        if (!MINTEL_LiveChat.chatInProgress) {
+            return
+        }
+        
+        self.inputTextView.textView.resignFirstResponder()
+        self.hideImagePanel()
+        self.hideChatMenuPanel()
+        
+        let myButton = sender as? MyButton
+        let targetIndex = (myButton?.tag ?? 0) - 10000
+        if (targetIndex >= 0) {
+            sender.isSelected = true
+            myButton?.TMN_Message?.selectedIndex = targetIndex
+            myButton?.TMN_Message?.disableMenu = true
+            if (myButton?.TMN_Menu != nil) {
+                let targetAction = myButton?.TMN_Menu["action"] as? [String:Any]
+                let text = targetAction?["text"] as? String ?? ""
+                if (text.count > 0) {
                     
-                    let touchLocation: CGPoint = (sender.location(in: sender.view))
-                    let index = self.findViewOnTap(menus: menus, title: title, yPosition: touchLocation.y, message: message)
-                    if (index > -1 && self.hoverIndex != index) {
-                        
-                        // Clear Background Old
-                        if (self.hoverIndex > -1) {
-                            let view = sender.cell?.viewWithTag(10000 + self.hoverIndex) as? UILabel
-                            view?.backgroundColor = UIColor.white
-                        }
-                        
-                        self.hoverIndex = index
-                        let view = sender.cell?.viewWithTag(10000 + index) as? UILabel
-                        let orange = UIColor(MyHexString: "#22ff8300")
-                        view?.backgroundColor = orange.withAlphaComponent(0.5)
-                    }
-                default:
-                    return
-                }
-                
-            } else if (sender.state == .cancelled) {
-                debugPrint("Cancelled")
-            } else if (sender.state == .changed) {
-                debugPrint("Changed")
-                
-                let message = sender.message
-                if (message?.disableMenu ?? false) {
-                    return
-                }
-                
-                switch message?.kind {
-                case .menu(let title, let menus):
-                    
-                    let touchLocation: CGPoint = (sender.location(in: sender.view))
-                    let index = self.findViewOnTap(menus: menus, title: title, yPosition: touchLocation.y, message: message)
-                    if (index > -1 && self.hoverIndex != index) {
-                        
-                        if (self.hoverIndex > -1) {
-                            let view = sender.cell?.viewWithTag(10000 + self.hoverIndex) as? UILabel
-                            view?.backgroundColor = UIColor.white
-                        }
-                        self.hoverIndex = index
-                        let view = sender.cell?.viewWithTag(10000 + index) as? UILabel
-                        let orange = UIColor(MyHexString: "#22ff8300")
-                        view?.backgroundColor = orange.withAlphaComponent(0.5)
-                    }
-                default:
-                    return
-                }
-                
-            } else if (sender.state == .ended || sender.state == .possible) {
-                
-                if (sender.state == .ended) {
-                    debugPrint("End")
-                } else if (sender.state == .possible) {
-                    debugPrint("Possible")
-                }
-                
-                let message = sender.message
-                if (message?.disableMenu ?? false) {
-                    return
-                }
-                
-                let touchLocation: CGPoint = (sender.location(in: self.tableView))
-                debugPrint(touchLocation)
-                
-                switch message?.kind {
-                case .menu(let title, let menus):
-                    
-                    if (self.hoverIndex > -1) {
-                        let view = sender.cell?.viewWithTag(10000 + self.hoverIndex) as? UILabel
-                        view?.backgroundColor = UIColor.white
-                    }
-                    
-                    let touchLocation: CGPoint = (sender.location(in: sender.view))
-                    let index = self.findViewOnTap(menus: menus, title: title, yPosition: touchLocation.y, message: message)
-                    if (index > -1) {
-                        let view = sender.cell?.viewWithTag(10000 + index) as? UILabel
-                        view?.backgroundColor = UIColor(MyHexString: "#66f0f0f0")
-                        message?.selectedIndex = index
-                        self.findMenuOnTap(menus: menus, title: title, yPosition: touchLocation.y, message: message, sender: sender)
+                    if ("__00_app_endchat" == text) {
+                        self.closeChat()
+                    } else if ("__00_home__greeting" == text) {
+                        myButton?.TMN_Message?.disableMenu = true
                     } else {
-                       
-                        debugPrint("Index : ", index)
+    //                    DispatchQueue.global().async(execute: {
+    //                        DispatchQueue.main.sync {
+                                myButton?.TMN_Message?.disableMenu = true
+                                MINTEL_LiveChat.chatUserTypedIn = true
+                                let display = targetAction?["display"] as? Bool ?? true
+                                if (display) {
+                                    let _ = MessageList.add(item: MyMessage(text: text, agent: false, bot: false))
+                                }
+                                MINTEL_LiveChat.sendPost(text: text, menu: false)
+                                if (self.imagePanel) {
+                                    self.hideImagePanel()
+                                }
+                                self.tableView.reloadData()
+                                self.tableView.scrollToBottom(animated: false)
+                                
+    //                        }
+    //                    })
                     }
-                    
-                    self.hoverIndex = index
-                default:
-                    return
                 }
-                
-            } else if (sender.state == .failed) {
-                debugPrint("Failed")
-            } else if (sender.state == .recognized) {
-                debugPrint("Recognized")
-            } else {
-                debugPrint("Else")
             }
-//        }
+        }
+        
+        
+        
+//        debugPrint(myButton.TMN_Menu)
     }
     
     @objc func didTap(_ sender: MyTapGuesture? = nil) {
+    
         let message = sender?.message
-        if (message?.disableMenu ?? false) {
-            return
-        }
         switch message?.kind {
-        case .text( _):
-            return
-        case .menu(let title, let menus):
-            if sender?.state == .ended {
-                let touchLocation: CGPoint = (sender?.location(in: sender?.view))!
-                findMenuOnTap(menus: menus, title: title, yPosition: touchLocation.y, message: message, sender: sender)
-            }
         case .image(let image, let imageUrl):
             let temp:[String:Any] = ["image" : image, "imageUrl" : imageUrl]
             self.performSegue(withIdentifier: "previewImage", sender: temp)
         default:
             return
-        }
-    }
-    
-    fileprivate func findViewOnTap(menus:[[String: Any]], title:String, yPosition:CGFloat, message: MyMessage?) -> Int {
-        self.inputTextView.textView.resignFirstResponder()
-        self.hideImagePanel()
-        self.hideChatMenuPanel()
-        
-        if (!MINTEL_LiveChat.chatBotMode) {
-            return -1
-        }
-        
-        if (!MINTEL_LiveChat.chatInProgress) {
-            return -1
-        }
-        
-        var targetIndex:Int = -1
-        var yIndex = CGFloat(0.0)
-        let image = UIImage(named: "chatbot", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil)
-        let width = UIScreen.main.bounds.size.width - (8.0 + (image?.size.width ?? 0.0) + 10.0 + extraSpacing)
-        var height = CGFloat(0.0)
-        if (title.count > 0) {
-            height = title.MyHeight(withConstrainedWidth: width, font: UIFont.systemFont(ofSize: 16.0))
-            height = max(height, 40.0)
-            yIndex = yIndex + height + 16
-        }
-        
-        for i in 0..<menus.count {
-            let item = menus[i]
-            let actions = item["action"] as! [String:Any]
-            let labelText = actions["label"] as? String ?? ""
-            
-            height = labelText.MyHeight(withConstrainedWidth: width, font: UIFont.systemFont(ofSize: 16.0))
-            height = max(40.0, height)
-            
-            if (yPosition >= yIndex) {
-                targetIndex = i
-            }
-            
-            yIndex = yIndex + height + 16
-        }
-        
-        if (yPosition >= yIndex) {
-            targetIndex = -1
-        }
-        
-        if (targetIndex > -1) {
-            debugPrint("Target : ", targetIndex)
-        }
-        
-        message?.selectedIndex = targetIndex
-        
-        return targetIndex
-    }
-    
-    fileprivate func findMenuOnTap(menus:[[String: Any]], title:String, yPosition:CGFloat, message: MyMessage?, sender : MyTapGuesture?) {
-//        print("yPosition", yPosition)
-        
-        // Hide InputBar
-        
-        
-        if (!MINTEL_LiveChat.chatBotMode) {
-            return
-        }
-        
-        if (!MINTEL_LiveChat.chatInProgress) {
-            return
-        }
-        
-        var targetAction:[String:Any]? = nil
-        var yIndex = CGFloat(0.0)
-        let image = UIImage(named: "chatbot", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil)
-        let width = UIScreen.main.bounds.size.width - (8.0 + (image?.size.width ?? 0.0) + 10.0 + extraSpacing)
-        var height = CGFloat(0.0)
-        
-        if (title.count > 0) {
-            height = title.MyHeight(withConstrainedWidth: width, font: UIFont.systemFont(ofSize: 16.0))
-            height = max(height, 40.0)
-            yIndex = yIndex + height + 16
-        }
-        
-        if (self.keyboardShown) {
-            yIndex = yIndex + self.keyboardShowFrame.size.height
-        }
-        
-        self.inputTextView.textView.resignFirstResponder()
-        self.hideImagePanel()
-        self.hideChatMenuPanel()
-        
-        var targetIndex = -1
-        for i in 0..<menus.count {
-            let item = menus[i]
-            let actions = item["action"] as! [String:Any]
-            let labelText = actions["label"] as? String ?? ""
-            
-            height = labelText.MyHeight(withConstrainedWidth: width, font: UIFont.systemFont(ofSize: 16.0))
-            height = max(40.0, height)
-            
-            if (yPosition >= yIndex) {
-                targetAction = actions
-                targetIndex = i
-            }
-            
-            yIndex = yIndex + height + 16
-        }
-        
-        message?.selectedIndex = targetIndex
-        
-        if (targetIndex > -1) {
-            let view = sender?.cell?.viewWithTag(10000 + targetIndex) as? UILabel
-            view?.backgroundColor = UIColor(MyHexString: "#66f0f0f0")
-        }
-        
-        if (targetAction != nil) {
-            let text = targetAction?["text"] as? String ?? ""
-            if (text.count > 0) {
-                
-                if ("__00_app_endchat" == text) {
-                    self.closeChat()
-                } else if ("__00_home__greeting" == text) {
-                    message?.disableMenu = true
-                } else {
-//                    DispatchQueue.global().async(execute: {
-//                        DispatchQueue.main.sync {
-                            message?.disableMenu = true
-                            MINTEL_LiveChat.chatUserTypedIn = true
-                            let display = targetAction?["display"] as? Bool ?? true
-                            if (display) {
-                                let _ = MessageList.add(item: MyMessage(text: text, agent: false, bot: false))
-                            }
-                            MINTEL_LiveChat.sendPost(text: text, menu: false)
-                            if (self.imagePanel) {
-                                self.hideImagePanel()
-                            }
-                            self.tableView.reloadData()
-                            self.tableView.scrollToBottom(animated: false)
-                            
-//                        }
-//                    })
-                }
-            }
         }
     }
 }

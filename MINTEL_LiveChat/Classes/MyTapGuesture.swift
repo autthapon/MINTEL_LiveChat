@@ -7,8 +7,8 @@
 
 import Foundation
 
-//class MyTapGuesture : UILongPressGestureRecognizer {
 class MyTapGuesture : UITapGestureRecognizer {
     var message: MyMessage?
     var cell : UITableViewCell?
+    var menu: [String:Any] = [:]
 }
