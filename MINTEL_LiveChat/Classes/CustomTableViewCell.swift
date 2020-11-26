@@ -72,6 +72,7 @@ class CustomTableViewCell: UITableViewCell {
         let lbl = PaddingLabel(withInsets: 0.5, 0.5, 3, 3)
         lbl.font = UIFont.systemFont(ofSize: 12)
         lbl.text = text
+        lbl.numberOfLines = 5
         lbl.backgroundColor = UIColor(MyHexString: "#EBEBEB")
         lbl.textColor = UIColor(MyHexString: "#5A5A5A")
         lbl.textAlignment = .center

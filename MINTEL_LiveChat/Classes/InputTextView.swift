@@ -111,9 +111,6 @@ class InputTextView: UIView {
         self.setupSaleForceEvent()
     }
     
-    
-    
-    
     internal func hideLeftMenu() {
         self.setupLeftBarItems()
     }
@@ -282,6 +279,16 @@ extension InputTextView {
             self.rightStackView.isUserInteractionEnabled = true
             self.textView.isUserInteractionEnabled = true
             self.textView.isEditable = true
+        }
+    }
+    
+    internal func MINTEL_disable() {
+        DispatchQueue.main.async {
+            self.hideLeftMenu()
+            self.leftStackView.isUserInteractionEnabled = false
+            self.rightStackView.isUserInteractionEnabled = false
+            self.textView.isUserInteractionEnabled = false
+            self.textView.isEditable = false
         }
     }
     

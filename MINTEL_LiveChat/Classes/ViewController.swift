@@ -295,6 +295,8 @@ class ViewController: UIViewController {
                 self.tableView.scrollToBottom(animated: false)
                 if (MINTEL_LiveChat.chatCanTyped) {
                     self.inputTextView.MINTEL_enable()
+                } else {
+                    self.inputTextView.MINTEL_disable()
                 }
             }
 //        })

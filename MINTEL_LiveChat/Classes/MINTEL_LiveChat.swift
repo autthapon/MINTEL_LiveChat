@@ -48,6 +48,7 @@ public class MINTEL_LiveChat: UIView {
     internal static var chatBotMode = true
     internal static var chatMenus:[[String:Any]] = []
     internal static var unreadMessage:Int = 0
+    internal static var botConfig:[String:Any] = [:]
     //    internal static var items = [MyMessage]()
     
     fileprivate static var first2MinutesTimer:Timer? = nil
@@ -368,10 +369,11 @@ public class MINTEL_LiveChat: UIView {
         Alamofire
             .request(url, method: .get, parameters: nil, encoding: JSONEncoding.init(), headers: header)
             .responseJSON(completionHandler: { response in
-                //                debugPrint(response)
+                                debugPrint(response)
                 
                 if let json = response.value {
                     let dict = json as! [String:Any]
+                    MINTEL_LiveChat.botConfig = dict
                     let disableBotMode = dict["disableBotMode"] as? Bool ?? false
                     
 //                    let disableBotMode = true
@@ -593,19 +595,73 @@ public class MINTEL_LiveChat: UIView {
             ServiceCloud.shared().chatCore.remove(delegate: self)
             ServiceCloud.shared().chatCore.removeEvent(delegate: self)
             
-            //            ServiceCloud.shared().chatCore.determineAvailability(with: config) { (error, available, waitingTime) in
+            MINTEL_LiveChat.chatStarted = true
+            MINTEL_LiveChat.chatInProgress = true
+            MINTEL_LiveChat.chatBotMode = false
+            MINTEL_LiveChat.chatCanTyped = false
             
-            ServiceCloud.shared().chatCore.add(delegate: self)
-            ServiceCloud.shared().chatCore.addEvent(delegate: self)
-            ServiceCloud.shared().chatCore.startSession(with: config) { (error, chat) in
-                
-                MINTEL_LiveChat.chatStarted = true
-                MINTEL_LiveChat.chatInProgress = true
-                MINTEL_LiveChat.chatBotMode = false
-                MINTEL_LiveChat.chatCanTyped = true
-                //                    debugPrint(error ?? nil)
-            }
-            //            }
+            ServiceCloud.shared().chatCore.determineAvailability(with: config,
+                                       completion: { (error: Error?,
+                                                      available: Bool,
+                                                      estimatedWaitTime: TimeInterval) in
+                if (error != nil) {
+                    // TO DO: Handle error
+                    debugPrint(error)
+                    let noAgentsText = MINTEL_LiveChat.botConfig["noAgentsText"] as? [String:Any]
+                    let textToShow = noAgentsText?[buttonId] as? String ?? "ขออภัยครับ ไม่มีเจ้าหน้าที่ให้บริการในขณะนี้"
+                    let _ = MessageList.add(item: MyMessage(systemMessageType1: textToShow))
+                    
+                    NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
+                                                    object: nil,
+                                                    userInfo:nil)
+                }
+                else if (available) {
+                    // TO DO: Enable chat button...
+
+                    // Optionally, use the estimatedWaitTime to
+                    // show an estimated wait time until an agent
+                    // is available. This value is only valid if
+                    // SCSChatConfiguration.queueStyle is set to
+                    // EstimatedWaitTime. Estimate is returned
+                    // in seconds.
+                    debugPrint("Available")
+                    ServiceCloud.shared().chatCore.add(delegate: self)
+                    ServiceCloud.shared().chatCore.addEvent(delegate: self)
+                    ServiceCloud.shared().chatCore.startSession(with: config) { (error, chat) in
+                        MINTEL_LiveChat.chatStarted = true
+                        MINTEL_LiveChat.chatInProgress = true
+                        MINTEL_LiveChat.chatBotMode = false
+                        MINTEL_LiveChat.chatCanTyped = true
+                    }
+                }
+                else {
+                    // TO DO: Disable button or warn user that no agents are available
+                    debugPrint("No Agent Available")
+                    let noAgentsText = MINTEL_LiveChat.botConfig["noAgentsText"] as? [[String:Any]]
+                    var found = false
+                    noAgentsText?.forEach({ (item) in
+                        let bId = item["button"] as? String ?? ""
+                        if (bId == buttonId) {
+                            found = true
+                            let textToShow = item["text"] as? String ?? "ขออภัยครับ ไม่มีเจ้าหน้าที่ให้บริการในขณะนี้"
+                            let _ = MessageList.add(item: MyMessage(systemMessageType1: textToShow))
+                        }
+                    })
+                    
+                    if (!found) {
+                        let _ = MessageList.add(item: MyMessage(systemMessageType1: "ขออภัยครับ ไม่มีเจ้าหน้าที่ให้บริการในขณะนี้"))
+                    }
+                    
+                    NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
+                                                    object: nil,
+                                                    userInfo:nil)
+                }
+
+            })
+            
+            NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
+                                            object: nil,
+                                            userInfo:nil)
         }
     }
     
@@ -1103,7 +1159,7 @@ extension MINTEL_LiveChat  {
             print("First notif fired.")
             
             MINTEL_LiveChat.lastAMinuteTimer = Timer.scheduledTimer(withTimeInterval: TimeInterval(secondTimerDuration * 60), repeats: false, block: { (timer2) in
-                let _ = MessageList.add(item: MyMessage(text: "หากคุณลูกค้าไม่อยู่ในการสนทนา ผมขอจบการสนทนาเพื่อดูแลลูกค้าท่านอื่นต่อครับ หากต้องการข้อมูลสอบถามข้อมูลเพิ่มเติม สามารถติดต่อเข้ามาใหม่ได้ตลอด 24 ชั่วโมง ขอบคุณที่ใช้บริการทรูมันนี่ สวัสดีครับ", agent: false, bot: true))
+                let _ = MessageList.add(item: MyMessage(text: "หากคุณลูกค้าไม่อยู่ในการสนทนา ผมขอจบการสนทนาเพื่อดูแลลูกค้าท่านอื่นต่อนะครับ\n\nกรณีต้องการสอบถามข้อมูลเพิ่มเติม กรุณาคลิก X ปิดหน้าต่าง และเริ่มการสนทนาใหม่ได้ตลอด 24 ชั่วโมงครับ\n\nขอบคุณที่ใช้บริการทรูมันนี่ สวัสดีครับ", agent: false, bot: true))
                 let _ = MessageList.add(item: MyMessage(systemMessageType1: "จบการสนทนา"))
                 notif.scheduleNotification(message: "ขอบคุณสำหรับการสนทนา หากมีข้อสงสัยเพิ่มเติมสามารถเริ่มต้นแชทอีกครั้งเพื่อสอบถามข้อมูล")
                 print("Second notif fired.")
