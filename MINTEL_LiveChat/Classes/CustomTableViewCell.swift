@@ -225,7 +225,8 @@ class CustomTableViewCell: UITableViewCell {
         textView.sizeToFit()
         textView.frame = CGRect(x: avartar.frame.origin.x + avartarWidth + 5, y: 0, width: textView.contentSize.width, height: textView.contentSize.height)
         
-        if let url = URL(string: txt) {
+        let tempUrl = txt.addingPercentEncoding(withAllowedCharacters:NSCharacterSet.urlQueryAllowed) ?? ""
+        if let url = URL(string: tempUrl) {
             if UIApplication.shared.canOpenURL(url as URL) {
                 
                 // Check Extension Is it document file ? (.pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx, .zip, .rar)
@@ -664,7 +665,8 @@ class CustomTableViewCell: UITableViewCell {
                     print("error while creating dir : \(error.localizedDescription)");
                 }
                 
-                if let audioUrl = URL(string: url) {
+                let tempUrl = url.addingPercentEncoding(withAllowedCharacters:NSCharacterSet.urlQueryAllowed) ?? ""
+                if let audioUrl = URL(string: tempUrl) {
                     // create your document folder url
                     let documentsUrl =  FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first! as URL
                     let documentsFolderUrl = documentsUrl.appendingPathComponent("TrueMoney")
