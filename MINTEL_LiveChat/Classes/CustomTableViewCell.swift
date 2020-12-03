@@ -679,39 +679,35 @@ class CustomTableViewCell: UITableViewCell {
                     let destinationUrl = documentsFolderUrl.appendingPathComponent(targetName)
                     
                     // check if it exists before downloading it
-                    if FileManager().fileExists(atPath: destinationUrl.path) {
-                        DispatchQueue.main.async {
-                            let objectsToShare = [destinationUrl]
-                            let activityVC = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
-
-                            let currentViewController = self.topViewController()
-                            if currentViewController != nil {
-                                currentViewController?.present(activityVC, animated: true, completion: nil)
-                            }
+                    do {
+                        if FileManager().fileExists(atPath: destinationUrl.path) {
+                            try? FileManager().removeItem(atPath: destinationUrl.path)
                         }
-                    } else {
+                    } catch {
+                        
+                    }
                         //  if the file doesn't exist
                         //  just download the data from your url
-                        DispatchQueue.global(qos: DispatchQoS.QoSClass.background).async(execute: {
-                            if let myAudioDataFromUrl = try? Data(contentsOf: audioUrl){
-                                // after downloading your data you need to save it to your destination url
-                                if (try? myAudioDataFromUrl.write(to: destinationUrl, options: [.atomic])) != nil {
-                                    DispatchQueue.main.async {
-                                        let objectsToShare = [destinationUrl]
-                                        let activityVC = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
+                    DispatchQueue.global(qos: DispatchQoS.QoSClass.background).async(execute: {
+                        if let myAudioDataFromUrl = try? Data(contentsOf: audioUrl){
+                            // after downloading your data you need to save it to your destination url
+                            if (try? myAudioDataFromUrl.write(to: destinationUrl, options: [.atomic])) != nil {
+                                DispatchQueue.main.async {
+                                    let objectsToShare = [destinationUrl]
+                                    let activityVC = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
 
-                                        let currentViewController = self.topViewController()
-                                        if currentViewController != nil {
-                                            currentViewController?.present(activityVC, animated: true, completion: nil)
-                                        }
+                                    let currentViewController = self.topViewController()
+                                    if currentViewController != nil {
+                                        currentViewController?.present(activityVC, animated: true, completion: nil)
                                     }
-                                } else {
-    //                                print("error saving file")
-    //                                completion("")
                                 }
+                            } else {
+//                                print("error saving file")
+//                                completion("")
                             }
-                        })
-                    }
+                        }
+                    })
+                    
                 }
                 
             case .image(let img, _):
