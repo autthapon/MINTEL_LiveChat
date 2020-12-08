@@ -215,6 +215,21 @@ class ViewController: UIViewController {
 //        })
     }
     
+    fileprivate func topViewController(_ viewController: UIViewController? = UIApplication.shared.keyWindow?.rootViewController) -> UIViewController? {
+        if let nav = viewController as? UINavigationController {
+            return topViewController(nav.visibleViewController)
+        }
+        if let tab = viewController as? UITabBarController {
+            if let selected = tab.selectedViewController {
+                return topViewController(selected)
+            }
+        }
+        if let presented = viewController?.presentedViewController {
+            return topViewController(presented)
+        }
+        return viewController
+    }
+    
     fileprivate func setupNotification() {
         
         
@@ -324,6 +339,13 @@ class ViewController: UIViewController {
         if (MINTEL_LiveChat.agentState == .waiting || MINTEL_LiveChat.agentState == .end) {
             self.disableUserInteraction()
         }
+    }
+    
+    func downloadFile() {
+        guard let url = URL(string: "https://www.tutorialspoint.com/swift/swift_tutorial.pdf")else {return}
+        let urlSession = URLSession(configuration: .default, delegate: self, delegateQueue: OperationQueue())
+        let downloadTask = urlSession.downloadTask(with: url)
+        downloadTask.resume()
     }
     
     override func viewDidAppear(_ animated: Bool) {

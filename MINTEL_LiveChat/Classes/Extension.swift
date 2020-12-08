@@ -229,3 +229,26 @@ public class MyButton : UIButton {
     public var TMN_Menu:[String:Any] = [:]
     var TMN_Message:MyMessage? = nil
 }
+
+
+extension ViewController : URLSessionDownloadDelegate {
+    func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
+        print("File Downloaded Location- ",  location)
+        
+        guard let url = downloadTask.originalRequest?.url else {
+            return
+        }
+        let docsPath = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
+        let destinationPath = docsPath.appendingPathComponent(url.lastPathComponent)
+        
+        try? FileManager.default.removeItem(at: destinationPath)
+        
+        do{
+            try FileManager.default.copyItem(at: location, to: destinationPath)
+//            self.pdfUrl = destinationPath
+            print("File Downloaded Location- ",  destinationPath ?? "NOT")
+        }catch let error {
+            print("Copy Error: \(error.localizedDescription)")
+        }
+    }
+}

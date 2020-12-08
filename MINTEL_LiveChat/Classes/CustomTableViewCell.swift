@@ -149,7 +149,7 @@ class CustomTableViewCell: UITableViewCell {
         return lbl.frame.size.height + 25
     }
     
-    fileprivate static func getQueryStringParameter(url: String, param: String) -> String? {
+    static func getQueryStringParameter(url: String, param: String) -> String? {
         let tempUrl = url.addingPercentEncoding(withAllowedCharacters:NSCharacterSet.urlQueryAllowed) ?? ""
         guard let temp = URLComponents(string: tempUrl) else { return nil }
         return temp.queryItems?.first(where: { $0.name == param })?.value
@@ -653,63 +653,37 @@ class CustomTableViewCell: UITableViewCell {
             switch message!.kind {
             case .text(let url):
                 
-                //Create directory if not present
-                let paths = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)
-                let documentDirectory = paths.first! as NSString
-                let soundDirPathString = documentDirectory.appendingPathComponent("TrueMoney")
-                
-                do {
-                    try FileManager.default.createDirectory(atPath: soundDirPathString, withIntermediateDirectories: true, attributes:nil)
-                    print("directory created at \(soundDirPathString)")
-                } catch let error as NSError {
-                    print("error while creating dir : \(error.localizedDescription)");
-                }
-                
-                let tempUrl = url.addingPercentEncoding(withAllowedCharacters:NSCharacterSet.urlQueryAllowed) ?? ""
-                if let audioUrl = URL(string: tempUrl) {
-                    // create your document folder url
-                    let documentsUrl =  FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first! as URL
-                    let documentsFolderUrl = documentsUrl.appendingPathComponent("TrueMoney")
-                    // your destination file url
-                    let mname = CustomTableViewCell.getQueryStringParameter(url: url, param: "mname")
-                    var targetName = audioUrl.lastPathComponent
-                    if (mname?.count ?? 0 > 0) {
-                        targetName = mname ?? audioUrl.lastPathComponent
-                    }
-                    let destinationUrl = documentsFolderUrl.appendingPathComponent(targetName)
+                let oldMname = CustomTableViewCell.getQueryStringParameter(url: url, param: "mname")
+                if let oooo = oldMname {
+                    let newMname = oldMname?.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)
+                    let tempUrl = url.replacingOccurrences(of: oooo, with: newMname!)
                     
-                    // check if it exists before downloading it
-                    do {
-                        if FileManager().fileExists(atPath: destinationUrl.path) {
-                            try? FileManager().removeItem(atPath: destinationUrl.path)
-                        }
-                    } catch {
-                        
-                    }
-                        //  if the file doesn't exist
-                        //  just download the data from your url
-                    DispatchQueue.global(qos: DispatchQoS.QoSClass.background).async(execute: {
-                        if let myAudioDataFromUrl = try? Data(contentsOf: audioUrl){
-                            // after downloading your data you need to save it to your destination url
-                            if (try? myAudioDataFromUrl.write(to: destinationUrl, options: [.atomic])) != nil {
-                                DispatchQueue.main.async {
-                                    let objectsToShare = [destinationUrl]
-                                    let activityVC = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
+                    Downloader.load(url: URL(string: tempUrl)!, mname: oldMname!) { (pathUrl) in
+                        DispatchQueue.main.async {
+                            let objectsToShare = [pathUrl]
+                            let activityVC = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
 
-                                    let currentViewController = self.topViewController()
-                                    if currentViewController != nil {
-                                        currentViewController?.present(activityVC, animated: true, completion: nil)
-                                    }
-                                }
-                            } else {
-//                                print("error saving file")
-//                                completion("")
+                            let currentViewController = self.topViewController()
+                            if currentViewController != nil {
+                                currentViewController?.present(activityVC, animated: true, completion: nil)
                             }
                         }
-                    })
-                    
+
+                    }
+                } else {
+                    Downloader.load(url: URL(string: url)!, mname: "") { (pathUrl) in
+                        DispatchQueue.main.async {
+                            let objectsToShare = [pathUrl]
+                            let activityVC = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
+
+                            let currentViewController = self.topViewController()
+                            if currentViewController != nil {
+                                currentViewController?.present(activityVC, animated: true, completion: nil)
+                            }
+                        }
+
+                    }
                 }
-                
             case .image(let img, _):
                 UIImageWriteToSavedPhotosAlbum(img, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)
             case .file(let fileName, let fileUrl, let fileUploadUrl):
