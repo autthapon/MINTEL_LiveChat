@@ -265,53 +265,85 @@ class CustomTableViewCell: UITableViewCell {
                     textView.frame = CGRect(x: avartar.frame.origin.x + avartarWidth + 5, y: 0, width: textView.contentSize.width, height: textView.contentSize.height)
                     
                 } else {
-                    let request = URLRequest(url: url)
-                    let session = URLSession.shared
-                    let task = session.dataTask(with: request as URLRequest, completionHandler: { data, response, error in
-                        guard error == nil else {
-                            DispatchQueue.main.async {
-                                textView.isHidden = false
-                            }
-                            return
-                        }
-                        if let httpResponse = response as? HTTPURLResponse, let contentType = httpResponse.allHeaderFields["Content-Type"] as? String {
-                            if contentType.contains("image") {
+                    
+                    if tempUrl.hasSuffix("jpg") {
+                        
+                        let oldMname = CustomTableViewCell.getQueryStringParameter(url: txt, param: "mname")
+                        if let oooo = oldMname {
+                            let newMname = oldMname?.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)
+                            let tempUrl = txt.replacingOccurrences(of: oooo, with: newMname!)
+                            
+                            URLSession.shared.dataTask(with: URL(string: tempUrl)!) { (data, response, error) in
+                                if error != nil {
+                                    DispatchQueue.main.async {
+                                        textView.isHidden = false
+                                    }
+                                    return
+                                }
+
+                                guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
+                                    DispatchQueue.main.async {
+                                        textView.isHidden = false
+                                    }
+                                    return
+                                }
+
                                 DispatchQueue.main.async {
-                                    textView.isHidden = true
-                                    URLSession.shared.dataTask(with: url) { (data, response, error) in
-                                        if error != nil {
-                                            DispatchQueue.main.async {
-                                                textView.isHidden = false
+                                    let imaaa = UIImage(data: data!)
+                                    MessageList.setItemAt(index: index, item: MyMessage(image: imaaa!, imageUrl: txt, agent: !MINTEL_LiveChat.chatBotMode, bot: true))
+                                    tableView.reloadData()
+                                }
+                            }.resume()
+                        }
+                    } else {
+                        let request = URLRequest(url: url)
+                        let session = URLSession.shared
+                        let task = session.dataTask(with: request as URLRequest, completionHandler: { data, response, error in
+                            guard error == nil else {
+                                DispatchQueue.main.async {
+                                    textView.isHidden = false
+                                }
+                                return
+                            }
+                            if let httpResponse = response as? HTTPURLResponse, let contentType = httpResponse.allHeaderFields["Content-Type"] as? String {
+                                if contentType.contains("image") {
+                                    DispatchQueue.main.async {
+                                        textView.isHidden = true
+                                        URLSession.shared.dataTask(with: url) { (data, response, error) in
+                                            if error != nil {
+                                                DispatchQueue.main.async {
+                                                    textView.isHidden = false
+                                                }
+                                                return
                                             }
-                                            return
-                                        }
 
-                                        guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
-                                            DispatchQueue.main.async {
-                                                textView.isHidden = false
+                                            guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
+                                                DispatchQueue.main.async {
+                                                    textView.isHidden = false
+                                                }
+                                                return
                                             }
-                                            return
-                                        }
 
-                                        DispatchQueue.main.async {
-                                            let imaaa = UIImage(data: data!)
-                                            MessageList.setItemAt(index: index, item: MyMessage(image: imaaa!, imageUrl: txt, agent: !MINTEL_LiveChat.chatBotMode, bot: true))
-                                            tableView.reloadData()
-                                        }
-                                    }.resume()
+                                            DispatchQueue.main.async {
+                                                let imaaa = UIImage(data: data!)
+                                                MessageList.setItemAt(index: index, item: MyMessage(image: imaaa!, imageUrl: txt, agent: !MINTEL_LiveChat.chatBotMode, bot: true))
+                                                tableView.reloadData()
+                                            }
+                                        }.resume()
+                                    }
+                                } else {
+                                    DispatchQueue.main.async {
+                                        textView.isHidden = false
+                                    }
                                 }
                             } else {
                                 DispatchQueue.main.async {
                                     textView.isHidden = false
                                 }
                             }
-                        } else {
-                            DispatchQueue.main.async {
-                                textView.isHidden = false
-                            }
-                        }
-                    })
-                    task.resume()
+                        })
+                        task.resume()
+                    }
                 }
             } else {
                 DispatchQueue.main.async {
@@ -661,7 +693,7 @@ class CustomTableViewCell: UITableViewCell {
                     Downloader.load(url: URL(string: tempUrl)!, mname: oldMname!) { (pathUrl) in
                         DispatchQueue.main.async {
                             let objectsToShare = [pathUrl]
-                            let activityVC = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
+                            let activityVC = UIActivityViewController(activityItems: objectsToShare as [Any], applicationActivities: nil)
 
                             let currentViewController = self.topViewController()
                             if currentViewController != nil {

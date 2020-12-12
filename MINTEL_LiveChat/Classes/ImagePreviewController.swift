@@ -42,26 +42,60 @@ class ImagePreviewController : UIViewController {
     
     fileprivate func previewImageFromUrl(txt:String) {
         DispatchQueue.main.async {
-            if let url = URL(string: txt) {
-                URLSession.shared.dataTask(with: url) { (data, response, error) in
-                    if error != nil {
-                        DispatchQueue.main.async {
-                            
+            
+            if txt.hasSuffix("jpg") {
+                
+                let oldMname = CustomTableViewCell.getQueryStringParameter(url: txt, param: "mname")
+                if let oooo = oldMname {
+                    let newMname = oldMname?.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)
+                    let tempUrl = txt.replacingOccurrences(of: oooo, with: newMname!)
+                    
+                    URLSession.shared.dataTask(with: URL(string: tempUrl)!) { (data, response, error) in
+                        if error != nil {
+                            DispatchQueue.main.async {
+//                                textView.isHidden = false
+                            }
+                            return
                         }
-                        return
-                    }
 
-                    guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
-                        DispatchQueue.main.async {
+                        guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
+                            DispatchQueue.main.async {
+//                                textView.isHidden = false
+                            }
+                            return
                         }
-                        return
-                    }
 
-                    DispatchQueue.main.async {
-                        let imaaa = UIImage(data: data!)
-                        self.imageView.image = imaaa
-                    }
-                }.resume()
+                        DispatchQueue.main.async {
+                            let imaaa = UIImage(data: data!)
+//                            MessageList.setItemAt(index: index, item: MyMessage(image: imaaa!, imageUrl: txt, agent: !MINTEL_LiveChat.chatBotMode, bot: true))
+//                            tableView.reloadData()
+                            self.imageView.image = imaaa
+                        }
+                    }.resume()
+                }
+            } else {
+            
+                if let url = URL(string: txt) {
+                    URLSession.shared.dataTask(with: url) { (data, response, error) in
+                        if error != nil {
+                            DispatchQueue.main.async {
+                                
+                            }
+                            return
+                        }
+
+                        guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
+                            DispatchQueue.main.async {
+                            }
+                            return
+                        }
+
+                        DispatchQueue.main.async {
+                            let imaaa = UIImage(data: data!)
+                            self.imageView.image = imaaa
+                        }
+                    }.resume()
+                }
             }
         }
     }
