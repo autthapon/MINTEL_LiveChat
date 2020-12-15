@@ -613,8 +613,6 @@ extension ViewController: UITableViewDataSource {
                     
                     if ("__00_app_endchat" == text) {
                         self.closeChat()
-                    } else if ("__00_home__greeting" == text) {
-                        myButton?.TMN_Message?.disableMenu = true
                     } else {
     //                    DispatchQueue.global().async(execute: {
     //                        DispatchQueue.main.sync {
