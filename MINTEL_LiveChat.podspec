@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'MINTEL_LiveChat'
-  s.version          = '1.2.16'
+  s.version          = '1.2.17'
   s.summary          = 'MINTEL_LiveChat Library'
 
 # This description is used to generate tags and improve search results.
