@@ -187,8 +187,12 @@ public class MINTEL_LiveChat: UIView {
     
     public func startChat(config:LiveChatConfiguration) {
         
-        
         notification.userRequest()
+        
+        if (!self.isHidden) {
+            return
+        }
+        
         if (MINTEL_LiveChat.chatInProgress) {
             
             if (config.phone == MINTEL_LiveChat.configuration?.phone) {
