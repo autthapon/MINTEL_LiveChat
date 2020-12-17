@@ -43,7 +43,7 @@ class ImagePreviewController : UIViewController {
     fileprivate func previewImageFromUrl(txt:String) {
         DispatchQueue.main.async {
             
-            if txt.hasSuffix("jpg") {
+            if (txt.lowercased().hasSuffix("jpg") || txt.lowercased().hasSuffix("png") || txt.lowercased().hasSuffix("jpeg")) {
                 
                 let oldMname = CustomTableViewCell.getQueryStringParameter(url: txt, param: "mname")
                 if let oooo = oldMname {

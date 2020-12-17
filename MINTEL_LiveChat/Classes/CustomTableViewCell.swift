@@ -266,7 +266,7 @@ class CustomTableViewCell: UITableViewCell {
                     
                 } else {
                     
-                    if tempUrl.hasSuffix("jpg") {
+                    if (tempUrl.lowercased().hasSuffix("jpg") || tempUrl.lowercased().hasSuffix("jpeg") || tempUrl.lowercased().hasSuffix("png")) {
                         
                         let oldMname = CustomTableViewCell.getQueryStringParameter(url: txt, param: "mname")
                         if let oooo = oldMname {
