@@ -58,3 +58,6 @@ MINTEL_LiveChat is available under the MIT license. See the LICENSE file for mor
 6. you can check SessionActive by call isSessionActive() 
 7. please call applicationDidEnterBackground() in AppDelgate applicationDidEnterBackground function
 8. please call applicationWillEnterForeground() in AppDelegate applicationWillEnterForeground function
+9. please call userNotificationCenter( willPresent) in UNUserNotificationCenterDelegate.userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void)
+
+
