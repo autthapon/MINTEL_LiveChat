@@ -1184,70 +1184,58 @@ extension MINTEL_LiveChat  {
         UserDefaults.standard.removeObject(forKey: "MINTEL_LiveChatTimeDidBackground")
     }
     
-    public func applicationDidEnterBackground() {
+    public func applicationDidEnterBackground(){
         
-        let dateFormatterGet = DateFormatter()
-        dateFormatterGet.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        if (MINTEL_LiveChat.chatInProgress) {
         
-        UserDefaults.standard.set(Date(), forKey: "MINTEL_LiveChatTimeDidBackground")
-        
-        debugPrint("===> Background : " , dateFormatterGet.string(from: Date()))
-        
-        let notificationCenter = UNUserNotificationCenter.current()
-
-        notificationCenter.getNotificationSettings { (settings) in
-          if settings.authorizationStatus == .authorized {
+            let dateFormatterGet = DateFormatter()
+            dateFormatterGet.dateFormat = "yyyy-MM-dd HH:mm:ss"
             
-                // First Local Notification
-                let content = UNMutableNotificationContent()
+            UserDefaults.standard.set(Date(), forKey: "MINTEL_LiveChatTimeDidBackground")
+            
+            debugPrint("===> Background : " , dateFormatterGet.string(from: Date()))
+            
+            let notificationCenter = UNUserNotificationCenter.current()
+
+            notificationCenter.getNotificationSettings { (settings) in
+              if settings.authorizationStatus == .authorized {
                 
-                content.title = "ทรูมันนี่"
-                content.body = "ขณะนี้ท่านมีรายการสนทนากับศูนย์บริการทรูมันนี่อยู่"
-                content.sound = UNNotificationSound.default
-                content.badge = 0
-            
-                let trigger = UNTimeIntervalNotificationTrigger(timeInterval: TimeInterval(firstTimerDuration * 60), repeats: false)
-                let request = UNNotificationRequest(identifier: "MINTEL_LiveChatNotification_First", content: content, trigger: trigger)
+                    // First Local Notification
+                    let content = UNMutableNotificationContent()
+                    
+                    content.title = "ทรูมันนี่"
+                    content.body = "ขณะนี้ท่านมีรายการสนทนากับศูนย์บริการทรูมันนี่อยู่"
+                    content.sound = UNNotificationSound.default
+                    content.badge = 0
+                
+                    let trigger = UNTimeIntervalNotificationTrigger(timeInterval: TimeInterval(firstTimerDuration * 60), repeats: false)
+                    let request = UNNotificationRequest(identifier: "MINTEL_LiveChatNotification_First", content: content, trigger: trigger)
 
-                notificationCenter.add(request) { (error) in
-                    if let error = error {
-                        print("Error \(error.localizedDescription)")
+                    notificationCenter.add(request) { (error) in
+                        if let error = error {
+                            print("Error \(error.localizedDescription)")
+                        }
                     }
-                }
-            
-                // Second Notification
-                let secondContent = UNMutableNotificationContent()
+                
+                    // Second Notification
+                    let secondContent = UNMutableNotificationContent()
 
-                secondContent.title = "ทรูมันนี่"
-                secondContent.body = "ขอบคุณสำหรับการสนทนา หากมีข้อสงสัยเพิ่มเติมสามารถเริ่มต้นแชทอีกครั้งเพื่อสอบถามข้อมูล"
-                secondContent.sound = UNNotificationSound.default
-                secondContent.badge = 0
+                    secondContent.title = "ทรูมันนี่"
+                    secondContent.body = "ขอบคุณสำหรับการสนทนา หากมีข้อสงสัยเพิ่มเติมสามารถเริ่มต้นแชทอีกครั้งเพื่อสอบถามข้อมูล"
+                    secondContent.sound = UNNotificationSound.default
+                    secondContent.badge = 0
 
-                let secondTrigger = UNTimeIntervalNotificationTrigger(timeInterval: TimeInterval((secondTimerDuration + firstTimerDuration) * 60), repeats: false)
-                let secondRequest = UNNotificationRequest(identifier: "MINTEL_LiveChatNotification_Second", content: secondContent, trigger: secondTrigger)
+                    let secondTrigger = UNTimeIntervalNotificationTrigger(timeInterval: TimeInterval((secondTimerDuration + firstTimerDuration) * 60), repeats: false)
+                    let secondRequest = UNNotificationRequest(identifier: "MINTEL_LiveChatNotification_Second", content: secondContent, trigger: secondTrigger)
 
-                notificationCenter.add(secondRequest) { (error) in
-                    if let error = error {
-                        print("Error \(error.localizedDescription)")
+                    notificationCenter.add(secondRequest) { (error) in
+                        if let error = error {
+                            print("Error \(error.localizedDescription)")
+                        }
                     }
-                }
-          }
+              }
+            }
         }
-        
-//        MINTEL_LiveChat.backgroundTaskIdentifier = UIApplication.shared.beginBackgroundTask(expirationHandler: {
-//            if nil != MINTEL_LiveChat.backgroundTaskIdentifier {
-//                UIApplication.shared.endBackgroundTask(MINTEL_LiveChat.backgroundTaskIdentifier!)
-//            }
-//        })
-//
-//
-//        MINTEL_LiveChat.first2MinutesTimer = Timer.scheduledTimer(withTimeInterval: TimeInterval(1 * 60), repeats: false, block: { (timer) in
-//            let notif = MINTEL_Notifications()
-//            notif.scheduleNotification(message: "ขณะนี้ท่านมีรายการสนทนากับศูนย์บริการทรูมันนี่อยู่")
-//            print("First notif fired.")
-//        })
-//        MINTEL_LiveChat.first2MinutesTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.doSomething), userInfo: nil, repeats: true)
-
     }
     
     internal static func checkTime() {
