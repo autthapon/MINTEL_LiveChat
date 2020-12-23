@@ -476,8 +476,7 @@ public class MINTEL_LiveChat: UIView {
         let _ = MessageList.add(item: MyMessage(systemMessageType1: String(format: "เริ่มการสนทนา %@", date24)))
         self.getAnnouncementMessage()
         MINTEL_LiveChat.sendPost(text: "สวัสดี", menu: true)
-        MINTEL_LiveChat.checkTime()
-        
+
     }
     
     public func sendToFront() {
@@ -611,7 +610,7 @@ public class MINTEL_LiveChat: UIView {
                                                       estimatedWaitTime: TimeInterval) in
                 if (error != nil) {
                     // TO DO: Handle error
-                    debugPrint(error)
+//                    debugPrint(error)
                     let noAgentsText = MINTEL_LiveChat.botConfig["noAgentsText"] as? [String:Any]
                     let textToShow = noAgentsText?[buttonId] as? String ?? "ขออภัยครับ ไม่มีเจ้าหน้าที่ให้บริการในขณะนี้"
                     let _ = MessageList.add(item: MyMessage(systemMessageType1: textToShow))
@@ -1141,6 +1140,36 @@ extension MINTEL_LiveChat  {
             })
     }
     
+    
+    public func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification) {
+        debugPrint(notification.request.identifier)
+        let dateFormatterGet = DateFormatter()
+        dateFormatterGet.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        let notificationCenter = UNUserNotificationCenter.current()
+        
+        notificationCenter.removeDeliveredNotifications(withIdentifiers: [notification.request.identifier])
+        notificationCenter.removePendingNotificationRequests(withIdentifiers: [notification.request.identifier])
+        
+        let dateTimeFromBackground = UserDefaults.standard.object(forKey: "MINTEL_LiveChatTimeDidBackground") as? Date
+        if (dateTimeFromBackground != nil) {
+            
+            if (notification.request.identifier == "MINTEL_LiveChatNotification_First") {
+                
+            } else if (notification.request.identifier == "MINTEL_LiveChatNotification_Second") {
+                let _ = MessageList.add(item: MyMessage(text: "หากคุณลูกค้าไม่อยู่ในการสนทนา ผมขอจบการสนทนาเพื่อดูแลลูกค้าท่านอื่นต่อนะครับ\n\nกรณีต้องการสอบถามข้อมูลเพิ่มเติม กรุณาคลิก X ปิดหน้าต่าง และเริ่มการสนทนาใหม่ได้ตลอด 24 ชั่วโมงครับ\n\nขอบคุณที่ใช้บริการทรูมันนี่ สวัสดีครับ", agent: false, bot: true))
+                let _ = MessageList.add(item: MyMessage(systemMessageType1: "จบการสนทนา"))
+                MINTEL_LiveChat.chatCanTyped = false
+                MessageList.disableOnMenu()
+                NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
+                    object: nil,
+                    userInfo:nil)
+
+                NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.reallyExitChat),
+                        object: nil,
+                        userInfo:nil)
+            }
+        }
+    }
     public func applicationWillEnterForeground() {
         
         let dateFormatterGet = DateFormatter()
@@ -1148,7 +1177,11 @@ extension MINTEL_LiveChat  {
         
         let notificationCenter = UNUserNotificationCenter.current()
         notificationCenter.removeDeliveredNotifications(withIdentifiers: ["MINTEL_LiveChatNotification_First", "MINTEL_LiveChatNotification_Second"])
-        notificationCenter.removePendingNotificationRequests(withIdentifiers: ["MINTEL_LiveChatNotification_First", "MINTEL_LiveChatNotification_Second"])
+//        notificationCenter.removePendingNotificationRequests(withIdentifiers: ["MINTEL_LiveChatNotification_First", "MINTEL_LiveChatNotification_Second"])
+        
+        if (!MINTEL_LiveChat.chatInProgress || !MINTEL_LiveChat.chatCanTyped) {
+            return
+        }
         
         let dateTimeFromBackground = UserDefaults.standard.object(forKey: "MINTEL_LiveChatTimeDidBackground") as? Date
         if (dateTimeFromBackground != nil) {
@@ -1168,6 +1201,7 @@ extension MINTEL_LiveChat  {
                 let _ = MessageList.add(item: MyMessage(text: "หากคุณลูกค้าไม่อยู่ในการสนทนา ผมขอจบการสนทนาเพื่อดูแลลูกค้าท่านอื่นต่อนะครับ\n\nกรณีต้องการสอบถามข้อมูลเพิ่มเติม กรุณาคลิก X ปิดหน้าต่าง และเริ่มการสนทนาใหม่ได้ตลอด 24 ชั่วโมงครับ\n\nขอบคุณที่ใช้บริการทรูมันนี่ สวัสดีครับ", agent: false, bot: true))
                 let _ = MessageList.add(item: MyMessage(systemMessageType1: "จบการสนทนา"))
                 MINTEL_LiveChat.chatCanTyped = false
+                
                 MessageList.disableOnMenu()
                 NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
                     object: nil,
@@ -1181,102 +1215,66 @@ extension MINTEL_LiveChat  {
             }
         }
         
-        UserDefaults.standard.removeObject(forKey: "MINTEL_LiveChatTimeDidBackground")
+//        UserDefaults.standard.removeObject(forKey: "MINTEL_LiveChatTimeDidBackground")
+    }
+    
+    internal static func setupLocalNotification() {
+        let dateFormatterGet = DateFormatter()
+        dateFormatterGet.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        
+        UserDefaults.standard.set(Date(), forKey: "MINTEL_LiveChatTimeDidBackground")
+        
+        debugPrint("===> Background : " , dateFormatterGet.string(from: Date()))
+        
+        let notificationCenter = UNUserNotificationCenter.current()
+        notificationCenter.removeDeliveredNotifications(withIdentifiers: ["MINTEL_LiveChatNotification_First", "MINTEL_LiveChatNotification_Second"])
+        notificationCenter.removePendingNotificationRequests(withIdentifiers: ["MINTEL_LiveChatNotification_First", "MINTEL_LiveChatNotification_Second"])
+        
+        notificationCenter.getNotificationSettings { (settings) in
+          if settings.authorizationStatus == .authorized {
+            
+                // First Local Notification
+                let content = UNMutableNotificationContent()
+                
+                content.title = "ทรูมันนี่"
+                content.body = "ขณะนี้ท่านมีรายการสนทนากับศูนย์บริการทรูมันนี่อยู่"
+                content.sound = UNNotificationSound.default
+                content.badge = 0
+            
+                let trigger = UNTimeIntervalNotificationTrigger(timeInterval: TimeInterval(firstTimerDuration * 60), repeats: false)
+                let request = UNNotificationRequest(identifier: "MINTEL_LiveChatNotification_First", content: content, trigger: trigger)
+
+                notificationCenter.add(request) { (error) in
+                    if let error = error {
+                        print("Error \(error.localizedDescription)")
+                    }
+                }
+            
+                // Second Notification
+                let secondContent = UNMutableNotificationContent()
+
+                secondContent.title = "ทรูมันนี่"
+                secondContent.body = "ขอบคุณสำหรับการสนทนา หากมีข้อสงสัยเพิ่มเติมสามารถเริ่มต้นแชทอีกครั้งเพื่อสอบถามข้อมูล"
+                secondContent.sound = UNNotificationSound.default
+                secondContent.badge = 0
+
+                let secondTrigger = UNTimeIntervalNotificationTrigger(timeInterval: TimeInterval((secondTimerDuration + firstTimerDuration) * 60), repeats: false)
+                let secondRequest = UNNotificationRequest(identifier: "MINTEL_LiveChatNotification_Second", content: secondContent, trigger: secondTrigger)
+
+                notificationCenter.add(secondRequest) { (error) in
+                    if let error = error {
+                        print("Error \(error.localizedDescription)")
+                    }
+                }
+          }
+        }
     }
     
     public func applicationDidEnterBackground(){
         
-        if (MINTEL_LiveChat.chatInProgress) {
-        
-            let dateFormatterGet = DateFormatter()
-            dateFormatterGet.dateFormat = "yyyy-MM-dd HH:mm:ss"
-            
-            UserDefaults.standard.set(Date(), forKey: "MINTEL_LiveChatTimeDidBackground")
-            
-            debugPrint("===> Background : " , dateFormatterGet.string(from: Date()))
-            
-            let notificationCenter = UNUserNotificationCenter.current()
-
-            notificationCenter.getNotificationSettings { (settings) in
-              if settings.authorizationStatus == .authorized {
-                
-                    // First Local Notification
-                    let content = UNMutableNotificationContent()
-                    
-                    content.title = "ทรูมันนี่"
-                    content.body = "ขณะนี้ท่านมีรายการสนทนากับศูนย์บริการทรูมันนี่อยู่"
-                    content.sound = UNNotificationSound.default
-                    content.badge = 0
-                
-                    let trigger = UNTimeIntervalNotificationTrigger(timeInterval: TimeInterval(firstTimerDuration * 60), repeats: false)
-                    let request = UNNotificationRequest(identifier: "MINTEL_LiveChatNotification_First", content: content, trigger: trigger)
-
-                    notificationCenter.add(request) { (error) in
-                        if let error = error {
-                            print("Error \(error.localizedDescription)")
-                        }
-                    }
-                
-                    // Second Notification
-                    let secondContent = UNMutableNotificationContent()
-
-                    secondContent.title = "ทรูมันนี่"
-                    secondContent.body = "ขอบคุณสำหรับการสนทนา หากมีข้อสงสัยเพิ่มเติมสามารถเริ่มต้นแชทอีกครั้งเพื่อสอบถามข้อมูล"
-                    secondContent.sound = UNNotificationSound.default
-                    secondContent.badge = 0
-
-                    let secondTrigger = UNTimeIntervalNotificationTrigger(timeInterval: TimeInterval((secondTimerDuration + firstTimerDuration) * 60), repeats: false)
-                    let secondRequest = UNNotificationRequest(identifier: "MINTEL_LiveChatNotification_Second", content: secondContent, trigger: secondTrigger)
-
-                    notificationCenter.add(secondRequest) { (error) in
-                        if let error = error {
-                            print("Error \(error.localizedDescription)")
-                        }
-                    }
-              }
-            }
-        }
-    }
-    
-    internal static func checkTime() {
-        // Timer 2 minutes
-        self.stopTimer()
-        
-//        MINTEL_LiveChat.first2MinutesTimer = Timer.scheduledTimer(withTimeInterval: TimeInterval(firstTimerDuration * 60), repeats: false) { (timer) in
+//        if (MINTEL_LiveChat.chatInProgress) {
 //
-//            if (MINTEL_LiveChat.backgroundTaskIdentifier != nil) {
-//                UIApplication.shared.endBackgroundTask(MINTEL_LiveChat.backgroundTaskIdentifier!)
-//                MINTEL_LiveChat.backgroundTaskIdentifier = .invalid
-//            }
-
-//            MINTEL_LiveChat.backgroundTaskIdentifier = UIApplication.shared.beginBackgroundTask(withName: "TimerMINTEL") {
-//                if (nil != MINTEL_LiveChat.backgroundTaskIdentifier) {
-//                    UIApplication.shared.endBackgroundTask(MINTEL_LiveChat.backgroundTaskIdentifier!)
-//                    MINTEL_LiveChat.backgroundTaskIdentifier = .invalid
-//                }
-//            }
 //
-//            // Send Notification
-//            let notif = MINTEL_Notifications()
-//            notif.scheduleNotification(message: "ขณะนี้ท่านมีรายการสนทนากับศูนย์บริการทรูมันนี่อยู่")
-//            print("First notif fired.")
-//
-//            MINTEL_LiveChat.lastAMinuteTimer = Timer.scheduledTimer(withTimeInterval: TimeInterval(secondTimerDuration * 60), repeats: false, block: { (timer2) in
-//                let _ = MessageList.add(item: MyMessage(text: "หากคุณลูกค้าไม่อยู่ในการสนทนา ผมขอจบการสนทนาเพื่อดูแลลูกค้าท่านอื่นต่อนะครับ\n\nกรณีต้องการสอบถามข้อมูลเพิ่มเติม กรุณาคลิก X ปิดหน้าต่าง และเริ่มการสนทนาใหม่ได้ตลอด 24 ชั่วโมงครับ\n\nขอบคุณที่ใช้บริการทรูมันนี่ สวัสดีครับ", agent: false, bot: true))
-//                let _ = MessageList.add(item: MyMessage(systemMessageType1: "จบการสนทนา"))
-//                notif.scheduleNotification(message: "ขอบคุณสำหรับการสนทนา หากมีข้อสงสัยเพิ่มเติมสามารถเริ่มต้นแชทอีกครั้งเพื่อสอบถามข้อมูล")
-//                print("Second notif fired.")
-//                MINTEL_LiveChat.chatCanTyped = false
-//                MessageList.disableOnMenu()
-//                NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
-//                object: nil,
-//                userInfo:nil)
-//
-////                MINTEL_LiveChat.instance.reallyEndChat()
-//                NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.reallyExitChat),
-//                        object: nil,
-//                        userInfo:nil)
-//            })
 //        }
     }
     
@@ -1289,6 +1287,12 @@ extension MINTEL_LiveChat  {
             MINTEL_LiveChat.lastAMinuteTimer?.invalidate()
             MINTEL_LiveChat.lastAMinuteTimer = nil
         }
+        
+        let notificationCenter = UNUserNotificationCenter.current()
+        notificationCenter.removeDeliveredNotifications(withIdentifiers: ["MINTEL_LiveChatNotification_First", "MINTEL_LiveChatNotification_Second"])
+        notificationCenter.removePendingNotificationRequests(withIdentifiers: ["MINTEL_LiveChatNotification_First", "MINTEL_LiveChatNotification_Second"])
+        
+        UserDefaults.standard.removeObject(forKey: "MINTEL_LiveChatTimeDidBackground")
     }
     
     fileprivate static func removeTyping() {
@@ -1301,6 +1305,8 @@ extension MINTEL_LiveChat  {
     internal static func sendPost(text: String, menu: Bool) {
         
         self.removeTyping()
+        
+        MINTEL_LiveChat.setupLocalNotification()
         
         let _ = MessageList.add(item: MyMessage(typing: true, agent: !MINTEL_LiveChat.chatBotMode))
         if ("__00_home__greeting" == text) {
@@ -1340,9 +1346,7 @@ extension MINTEL_LiveChat  {
                     
                     
                     debugPrint("Send Post response .")
-                    
-                    self.checkTime()
-                    
+
                     // Remove Typing
                     self.removeTyping()
                     

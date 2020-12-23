@@ -37,10 +37,7 @@ extension ViewController {
             }
             
         }, usingThreshold: UInt64.init(), to: url, method: .post, headers: headers) { (result) in
-            
-            MINTEL_LiveChat.checkTime()
-            
-            
+        
             switch result{
             case .success(let upload, _, _):
                 upload.responseJSON { response in
