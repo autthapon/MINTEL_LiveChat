@@ -523,6 +523,7 @@ public class MINTEL_LiveChat: UIView {
     }
     
     internal func startSaleForce() {
+        MINTEL_LiveChat.stopTimer()
         self.setupNotification()
         self.checkTransferQueue()
     }
@@ -603,6 +604,8 @@ public class MINTEL_LiveChat: UIView {
             MINTEL_LiveChat.chatInProgress = true
             MINTEL_LiveChat.chatBotMode = false
             MINTEL_LiveChat.chatCanTyped = false
+            
+            MINTEL_LiveChat.stopTimer()
             
             ServiceCloud.shared().chatCore.determineAvailability(with: config,
                                        completion: { (error: Error?,
@@ -1279,15 +1282,6 @@ extension MINTEL_LiveChat  {
     }
     
     internal static func stopTimer() {
-        if (MINTEL_LiveChat.first2MinutesTimer != nil) {
-            MINTEL_LiveChat.first2MinutesTimer?.invalidate()
-            MINTEL_LiveChat.first2MinutesTimer = nil
-        }
-        if (MINTEL_LiveChat.lastAMinuteTimer != nil) {
-            MINTEL_LiveChat.lastAMinuteTimer?.invalidate()
-            MINTEL_LiveChat.lastAMinuteTimer = nil
-        }
-        
         let notificationCenter = UNUserNotificationCenter.current()
         notificationCenter.removeDeliveredNotifications(withIdentifiers: ["MINTEL_LiveChatNotification_First", "MINTEL_LiveChatNotification_Second"])
         notificationCenter.removePendingNotificationRequests(withIdentifiers: ["MINTEL_LiveChatNotification_First", "MINTEL_LiveChatNotification_Second"])
@@ -1306,7 +1300,9 @@ extension MINTEL_LiveChat  {
         
         self.removeTyping()
         
-        MINTEL_LiveChat.setupLocalNotification()
+        if (MINTEL_LiveChat.chatBotMode) {
+            MINTEL_LiveChat.setupLocalNotification()
+        }
         
         let _ = MessageList.add(item: MyMessage(typing: true, agent: !MINTEL_LiveChat.chatBotMode))
         if ("__00_home__greeting" == text) {
