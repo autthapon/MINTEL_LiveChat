@@ -514,6 +514,7 @@ public class MINTEL_LiveChat: UIView {
                         self.configureSaleForce(buttonId: MINTEL_LiveChat.configuration?.salesforceButtonID ?? "")
                         break
                     case .failure( _):
+                        self.configureSaleForce(buttonId: MINTEL_LiveChat.configuration?.salesforceButtonID ?? "")
                         break
                     }
             }
@@ -537,7 +538,7 @@ public class MINTEL_LiveChat: UIView {
             
             config.visitorName = String(format:"%@ %@", MINTEL_LiveChat.configuration?.firstname ?? "", MINTEL_LiveChat.configuration?.lastname ?? "")
             config.queueStyle = .position // Fixed
-            config.allowBackgroundNotifications = false
+            //config.allowBackgroundNotifications = false
             
             let firstNameField = SCSPrechatObject(label: "First Name", value: MINTEL_LiveChat.configuration?.firstname ?? "")
             let lastNameField = SCSPrechatObject(label: "Last Name", value: MINTEL_LiveChat.configuration?.lastname ?? "")
