@@ -389,7 +389,7 @@ public class MINTEL_LiveChat: UIView {
                         MINTEL_LiveChat.stopTimer()
                         
                         // REmove previous กรุณารอสักครู่
-                        MessageList.add(item: MyMessage(systemMessageType2: "กรุณารอสักครู่"), remove: true)
+                        MessageList.add(item: MyMessage(systemMessageType2: "กรุณารอสักครู่ 1"), remove: true)
                         MINTEL_LiveChat.chatBotMode = false
                         MINTEL_LiveChat.instance.startSaleForce()
                     } else {
@@ -491,6 +491,8 @@ public class MINTEL_LiveChat: UIView {
             "x-api-key": MINTEL_LiveChat.configuration?.xApikey ?? "" // "edf1ca88a09546f8a0667c81c93d1f31"
         ]
         
+        MessageList.add(item: MyMessage(systemMessageType2: "กรุณารอสักครู่ 3"), remove: true)
+        
         do {
             let jsonEncode = JSONEncoding.init()
             let originalRequest:URLRequest? = try URLRequest(url: url, method: .post, headers: headers)
@@ -498,6 +500,8 @@ public class MINTEL_LiveChat: UIView {
             Alamofire
                 .request(encodedURLRequest)
                 .responseJSON { (response) in
+                    
+                    MessageList.add(item: MyMessage(systemMessageType2: "กรุณารอสักครู่ 4"), remove: true)
                     
                     switch response.result {
                     case .success(_):
@@ -511,9 +515,14 @@ public class MINTEL_LiveChat: UIView {
                             }
                         }
                         
+                        MessageList.add(item: MyMessage(systemMessageType2: "กรุณารอสักครู่ 4.1"), remove: true)
+                        
                         self.configureSaleForce(buttonId: MINTEL_LiveChat.configuration?.salesforceButtonID ?? "")
                         break
                     case .failure( _):
+                        
+                        MessageList.add(item: MyMessage(systemMessageType2: "กรุณารอสักครู่ 4.2"), remove: true)
+                        
                         self.configureSaleForce(buttonId: MINTEL_LiveChat.configuration?.salesforceButtonID ?? "")
                         break
                     }
@@ -526,6 +535,9 @@ public class MINTEL_LiveChat: UIView {
     internal func startSaleForce() {
         MINTEL_LiveChat.stopTimer()
         self.setupNotification()
+        
+        MessageList.add(item: MyMessage(systemMessageType2: "กรุณารอสักครู่ 2"), remove: true)
+        
         self.checkTransferQueue()
     }
     
@@ -609,6 +621,8 @@ public class MINTEL_LiveChat: UIView {
             
             MINTEL_LiveChat.stopTimer()
             
+            MessageList.add(item: MyMessage(systemMessageType2: "กรุณารอสักครู่ 5"), remove: true)
+            
             ServiceCloud.shared().chatCore.determineAvailability(with: config,
                                        completion: { (error: Error?,
                                                       available: Bool,
@@ -633,6 +647,9 @@ public class MINTEL_LiveChat: UIView {
                     // SCSChatConfiguration.queueStyle is set to
                     // EstimatedWaitTime. Estimate is returned
                     // in seconds.
+                    
+                    MessageList.add(item: MyMessage(systemMessageType2: "กรุณารอสักครู่ Available"), remove: true)
+                    
                     debugPrint("Available")
                     ServiceCloud.shared().chatCore.add(delegate: self)
                     ServiceCloud.shared().chatCore.addEvent(delegate: self)
@@ -644,6 +661,8 @@ public class MINTEL_LiveChat: UIView {
                     }
                 }
                 else {
+                    MessageList.add(item: MyMessage(systemMessageType2: "กรุณารอสักครู่ No Available"), remove: true)
+                    
                     // TO DO: Disable button or warn user that no agents are available
                     debugPrint("No Agent Available")
                     let noAgentsText = MINTEL_LiveChat.botConfig["noAgentsText"] as? [[String:Any]]
