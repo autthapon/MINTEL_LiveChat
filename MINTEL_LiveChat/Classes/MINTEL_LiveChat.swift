@@ -45,6 +45,7 @@ public class MINTEL_LiveChat: UIView {
     internal static var instance:MINTEL_LiveChat!
     internal static var agentName:String = ""
     internal static var agentState:SaleforceAgentState = .start
+    internal static var lastDidTransitionAgentState = ""
     internal static var chatBotMode = true
     internal static var chatMenus:[[String:Any]] = []
     internal static var unreadMessage:Int = 0
@@ -389,7 +390,7 @@ public class MINTEL_LiveChat: UIView {
                         MINTEL_LiveChat.stopTimer()
                         
                         // REmove previous กรุณารอสักครู่
-                        MessageList.add(item: MyMessage(systemMessageType2: "กรุณารอสักครู่ 1"), remove: true)
+                        //MessageList.add(item: MyMessage(systemMessageType2: "กรุณารอสักครู่ 1"), remove: true)
                         MINTEL_LiveChat.chatBotMode = false
                         MINTEL_LiveChat.instance.startSaleForce()
                     } else {
@@ -491,7 +492,7 @@ public class MINTEL_LiveChat: UIView {
             "x-api-key": MINTEL_LiveChat.configuration?.xApikey ?? "" // "edf1ca88a09546f8a0667c81c93d1f31"
         ]
         
-        MessageList.add(item: MyMessage(systemMessageType2: "กรุณารอสักครู่ 3"), remove: true)
+        //MessageList.add(item: MyMessage(systemMessageType2: "กรุณารอสักครู่ 3"), remove: true)
         
         do {
             let jsonEncode = JSONEncoding.init()
@@ -501,7 +502,7 @@ public class MINTEL_LiveChat: UIView {
                 .request(encodedURLRequest)
                 .responseJSON { (response) in
                     
-                    MessageList.add(item: MyMessage(systemMessageType2: "กรุณารอสักครู่ 4"), remove: true)
+                    //MessageList.add(item: MyMessage(systemMessageType2: "กรุณารอสักครู่ 4"), remove: true)
                     
                     switch response.result {
                     case .success(_):
@@ -515,13 +516,13 @@ public class MINTEL_LiveChat: UIView {
                             }
                         }
                         
-                        MessageList.add(item: MyMessage(systemMessageType2: "กรุณารอสักครู่ 4.1"), remove: true)
+                        //MessageList.add(item: MyMessage(systemMessageType2: "กรุณารอสักครู่ 4.1"), remove: true)
                         
                         self.configureSaleForce(buttonId: MINTEL_LiveChat.configuration?.salesforceButtonID ?? "")
                         break
                     case .failure( _):
                         
-                        MessageList.add(item: MyMessage(systemMessageType2: "กรุณารอสักครู่ 4.2"), remove: true)
+                        //MessageList.add(item: MyMessage(systemMessageType2: "กรุณารอสักครู่ 4.2"), remove: true)
                         
                         self.configureSaleForce(buttonId: MINTEL_LiveChat.configuration?.salesforceButtonID ?? "")
                         break
@@ -536,7 +537,7 @@ public class MINTEL_LiveChat: UIView {
         MINTEL_LiveChat.stopTimer()
         self.setupNotification()
         
-        MessageList.add(item: MyMessage(systemMessageType2: "กรุณารอสักครู่ 2"), remove: true)
+        //MessageList.add(item: MyMessage(systemMessageType2: "กรุณารอสักครู่ 2"), remove: true)
         
         self.checkTransferQueue()
     }
@@ -621,8 +622,9 @@ public class MINTEL_LiveChat: UIView {
             
             MINTEL_LiveChat.stopTimer()
             
-            MessageList.add(item: MyMessage(systemMessageType2: "กรุณารอสักครู่ 5"), remove: true)
+            //MessageList.add(item: MyMessage(systemMessageType2: "กรุณารอสักครู่ 5"), remove: true)
             
+            /*
             ServiceCloud.shared().chatCore.determineAvailability(with: config,
                                        completion: { (error: Error?,
                                                       available: Bool,
@@ -686,6 +688,16 @@ public class MINTEL_LiveChat: UIView {
                 }
 
             })
+ */
+            
+            ServiceCloud.shared().chatCore.add(delegate: self)
+            ServiceCloud.shared().chatCore.addEvent(delegate: self)
+            ServiceCloud.shared().chatCore.startSession(with: config) { (error, chat) in
+                MINTEL_LiveChat.chatStarted = true
+                MINTEL_LiveChat.chatInProgress = true
+                MINTEL_LiveChat.chatBotMode = false
+                MINTEL_LiveChat.chatCanTyped = true
+            }
             
             NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
                                             object: nil,
@@ -1017,7 +1029,14 @@ extension MINTEL_LiveChat : SCSChatSessionDelegate {
 //        debugPrint("Session End")
         DispatchQueue.main.async {
             MINTEL_LiveChat.agentState = .end
-            let _ = MessageList.add(item: MyMessage(systemMessageType1: "จบการสนทนา"))
+            if MINTEL_LiveChat.lastDidTransitionAgentState == "queued" {
+                let _ = MessageList.add(item: MyMessage(systemMessageType1: "ขออภัยครับ ไม่มีเจ้าหน้าที่ให้บริการในขณะนี้"))
+            } else {
+                let _ = MessageList.add(item: MyMessage(systemMessageType1: "จบการสนทนา"))
+            }
+            
+            MINTEL_LiveChat.lastDidTransitionAgentState = ""
+            
             NotificationCenter.default.post(name: Notification.Name(SalesForceNotifId.didEnd),
                                             object: nil,
                                             userInfo:["session": session, "event": endEvent])
@@ -1033,6 +1052,12 @@ extension MINTEL_LiveChat : SCSChatSessionDelegate {
         if previous == SCSChatSessionState.connecting && current == SCSChatSessionState.queued {
             DispatchQueue.main.async {
                 self.queueLabel.tag = Int.max
+            }
+        }
+        
+        if previous == SCSChatSessionState.queued && current == SCSChatSessionState.ending {
+            DispatchQueue.main.async {
+                MINTEL_LiveChat.lastDidTransitionAgentState = "queued"
             }
         }
     }
