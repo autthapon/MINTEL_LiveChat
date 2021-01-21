@@ -742,7 +742,7 @@ extension UITableView {
     
     func scrollToBottom(animated: Bool){
         
-//        DispatchQueue.main.asyncAfter(deadline: .now(), execute: {
+        DispatchQueue.main.asyncAfter(deadline: .now()+0.5, execute: {
 //            DispatchQueue.main.async {
                 if (self.numberOfSections > 0) {
                     let indexPath = IndexPath(
@@ -753,7 +753,7 @@ extension UITableView {
                     }
                 }
 //            }
-//        })
+        })
     }
     
     func scrollToTop() {

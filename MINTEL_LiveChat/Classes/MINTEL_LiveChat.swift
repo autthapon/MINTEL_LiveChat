@@ -551,7 +551,6 @@ public class MINTEL_LiveChat: UIView {
             
             config.visitorName = String(format:"%@ %@", MINTEL_LiveChat.configuration?.firstname ?? "", MINTEL_LiveChat.configuration?.lastname ?? "")
             config.queueStyle = .position // Fixed
-            //config.allowBackgroundNotifications = false
             
             let firstNameField = SCSPrechatObject(label: "First Name", value: MINTEL_LiveChat.configuration?.firstname ?? "")
             let lastNameField = SCSPrechatObject(label: "Last Name", value: MINTEL_LiveChat.configuration?.lastname ?? "")
@@ -610,7 +609,8 @@ public class MINTEL_LiveChat: UIView {
             config.prechatFields = [firstNameField, lastNameField, emailField, phoneFiled, tmnIdFiled, uniqueFiled] as [SCSPrechatObject]
             // Update config object with the entity mappings
             config.prechatEntities = [contactEntity, csatEntity]
-            //            config.allowBackgroundNotifications = false
+            //config.allowBackgroundNotifications = false
+            //config.allowBackgroundExecution = false
             
             ServiceCloud.shared().chatCore.remove(delegate: self)
             ServiceCloud.shared().chatCore.removeEvent(delegate: self)
