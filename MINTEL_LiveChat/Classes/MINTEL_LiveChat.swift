@@ -324,6 +324,7 @@ public class MINTEL_LiveChat: UIView {
     internal func reallyEndChat() {
         
         self.removeNotification()
+        MINTEL_LiveChat.stopTimer()
         
         if (!MINTEL_LiveChat.chatInProgress) {
             self.exitApp()
