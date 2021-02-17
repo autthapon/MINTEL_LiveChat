@@ -300,7 +300,7 @@ extension ViewController {
 //        DispatchQueue.global().async(execute: {
 //            DispatchQueue.main.async {
                 UIView.performWithoutAnimation {
-                    MessageList.add(item: MyMessage(systemMessageType2: "กรุณารอสักครู่"), remove: true)
+                    MessageList.add(item: MyMessage(systemMessageType2: MINTEL_LiveChat.getLanguageString(str: "please_wait")), remove: true)
                     MINTEL_LiveChat.chatBotMode = false
                     MINTEL_LiveChat.instance.startSaleForce()
                     self.tableView.reloadData()

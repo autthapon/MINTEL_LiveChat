@@ -48,7 +48,7 @@ public class MINTEL_Notifications: NSObject, UNUserNotificationCenterDelegate {
         let content = UNMutableNotificationContent()
 //        let userActions = "MINTEL_LiveChat"
         
-        content.title = "ทรูมันนี่"
+        content.title = MINTEL_LiveChat.getLanguageString(str: "truemoney")
         content.body = message
         content.sound = UNNotificationSound.default
         content.badge = 0

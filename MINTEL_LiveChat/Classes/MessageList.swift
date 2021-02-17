@@ -36,6 +36,8 @@ class MessageList {
                 if item.kind == it.kind {
                     if (msg == "กรุณารอสักครู่") {
                         return true
+                    } else if (msg == MINTEL_LiveChat.getLanguageString(str: "please_wait")) {
+                        return true
                     }
                 }
             case .typing:

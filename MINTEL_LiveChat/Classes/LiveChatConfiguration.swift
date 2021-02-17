@@ -28,8 +28,10 @@ public class LiveChatConfiguration {
     internal var email:String!
     internal var phone:String!
     internal var tmnId:String!
+    internal var language:String!
     
-    public init(withUserName userName:String, withSalesforceLiveAgentPod salesforceLiveAgentPod:String, withSalesForceOrdId salesforceOrdId:String, withSalesforceDeployId salesforceDeployId:String, withSalesforceButtonId salesforceButtonId:String, withWebHookBaseUrl webhookBaseUrl:String, withXApiKey xapiKey:String, withUploadBaseUrl uploadBaseUrl:String, withSurveyChatbotUrl surveyChatbotUrl:String?, withSurveyFormUrl surveyFormUrl:String?, withAnnouncementUrl announcementUrl:String, withFirstName firstname:String, withLastName lastname:String, withEmail email:String, withPhone phone:String, withTmnId tmnId:String, withDisableBotMode disableBotMode:Bool = false) {
+    public init(withUserName userName:String, withSalesforceLiveAgentPod salesforceLiveAgentPod:String, withSalesForceOrdId salesforceOrdId:String, withSalesforceDeployId salesforceDeployId:String, withSalesforceButtonId salesforceButtonId:String, withWebHookBaseUrl webhookBaseUrl:String, withXApiKey xapiKey:String, withUploadBaseUrl uploadBaseUrl:String, withSurveyChatbotUrl surveyChatbotUrl:String?, withSurveyFormUrl surveyFormUrl:String?, withAnnouncementUrl announcementUrl:String, withFirstName firstname:String, withLastName lastname:String, withEmail email:String, withPhone phone:String, withTmnId tmnId:String, withDisableBotMode disableBotMode:Bool = false,
+                withLanguage language:String = "th") {
         self.userName = userName
         self.salesforceLiveAgentPod = salesforceLiveAgentPod
         self.salesforceOrdID = salesforceOrdId
@@ -47,5 +49,6 @@ public class LiveChatConfiguration {
         self.email = email
         self.tmnId = tmnId
         self.disableBotMode = disableBotMode
+        self.language = language
     }
 }

@@ -1151,7 +1151,7 @@ extension ViewController : UIDocumentMenuDelegate, UIDocumentPickerDelegate {
                         if (imageSizeInMB >= 10) {
                             
                             let alert = UIAlertController(title:"", message: "ขออภัยไฟล์เกินขนาดที่กำหนดกรุณาเลือกไฟล์ขนาดไม่เกิน 10 MB",    preferredStyle: UIAlertController.Style.alert)
-                            alert.addAction(UIAlertAction(title: "ตกลง",
+                            alert.addAction(UIAlertAction(title: MINTEL_LiveChat.getLanguageString(str: "OK"),
                                                           style: UIAlertAction.Style.default,
                                                                   handler: {(_: UIAlertAction!) in
                                     }))
@@ -1291,7 +1291,7 @@ extension ViewController : UICollectionViewDataSource, UICollectionViewDelegate,
                         if (imageSizeInMB >= 10) {
                             
                             let alert = UIAlertController(title:"", message: "ขออภัยไฟล์เกินขนาดที่กำหนดกรุณาเลือกไฟล์ขนาดไม่เกิน 10 MB",    preferredStyle: UIAlertController.Style.alert)
-                            alert.addAction(UIAlertAction(title: "ตกลง",
+                            alert.addAction(UIAlertAction(title: MINTEL_LiveChat.getLanguageString(str: "OK"),
                                                           style: UIAlertAction.Style.default,
                                                                   handler: {(_: UIAlertAction!) in
                                     }))

@@ -897,7 +897,7 @@ class CustomTableViewCell: UITableViewCell {
         var xPosition = (screen.width - imgView.image!.size.width) / 2.0
         imgView.frame = CGRect(x: xPosition, y: 10, width: imgView.image!.size.width, height: imgView.image!.size.height)
         
-        let lbl = CustomTableViewCell.createSystemMessage(text: String(format: "ท่านกำลังสนทนากับ %@", agentName))
+        let lbl = CustomTableViewCell.createSystemMessage(text: String(format: MINTEL_LiveChat.getLanguageString(str: "chatting_with") + "%@", agentName))
         self.contentView.addSubview(lbl)
         xPosition = (screen.width - (lbl.frame.size.width + 25)) / 2.0
         lbl.frame = CGRect(x: xPosition, y: 10 + imgView.image!.size.height + 2, width: lbl.frame.size.width + 25, height: lbl.frame.size.height + 20)
