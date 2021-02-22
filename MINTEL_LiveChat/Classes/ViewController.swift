@@ -184,6 +184,8 @@ class ViewController: UIViewController {
         } else {
             imagePanelHeight = 245.0
         }
+        
+        //self.btnConfirmExit.setTitle(MINTEL_LiveChat.getLanguageString(str: "please_wait"), for: .normal)
 
         self.btnClose = UIBarButtonItem(image: UIImage(named: "close", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil), style: .plain, target: self, action: #selector(self.closeChat))
         self.navigationItem.rightBarButtonItem = self.btnClose

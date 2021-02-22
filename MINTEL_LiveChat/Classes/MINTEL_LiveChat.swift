@@ -349,6 +349,19 @@ public class MINTEL_LiveChat: UIView {
         }
     }
     
+    public func unhideChat() {
+        if (MINTEL_LiveChat.chatPanelOpened) {
+            let currentViewController = self.topViewController()
+            if let cu = currentViewController {
+                cu.dismiss(animated: false) {
+                    self.isHidden = false
+                }
+            }
+        } else {
+            self.isHidden = false
+        }
+    }
+    
     public func getNotificationIdentifier() -> String {
         return "MINTEL_LiveChatNotification"
     }
