@@ -350,16 +350,19 @@ public class MINTEL_LiveChat: UIView {
     }
     
     public func unhideChat() {
-        if (MINTEL_LiveChat.chatPanelOpened) {
-            let currentViewController = self.topViewController()
-            if let cu = currentViewController {
-                cu.dismiss(animated: false) {
-                    self.isHidden = false
+        if (MINTEL_LiveChat.chatStarted == true) {
+            if (MINTEL_LiveChat.chatPanelOpened) {
+                let currentViewController = self.topViewController()
+                if let cu = currentViewController {
+                    cu.dismiss(animated: false) {
+                        self.isHidden = false
+                    }
                 }
+            } else {
+                self.isHidden = false
             }
-        } else {
-            self.isHidden = false
         }
+        
     }
     
     public func getNotificationIdentifier() -> String {
@@ -518,21 +521,26 @@ public class MINTEL_LiveChat: UIView {
 //            debugPrint("Survey Url : " ,surveyUrl)
             
             // Open Survey Url
-            guard let url = URL(string: surveyUrl) else { return }
-            if (UIApplication.shared.canOpenURL(url)) {
-                let currentViewController = self.topViewController()
-                if let cu = currentViewController {
-                    cu.dismiss(animated: false) {
-                        let appViewController = UIApplication.shared.windows.first!.rootViewController!
+            //guard let url = URL(string: surveyUrl) else { return }
+            if let url = URL(string: surveyUrl) {
+                if (UIApplication.shared.canOpenURL(url)) {
+                    let currentViewController = self.topViewController()
+                    if let cu = currentViewController {
+                        cu.dismiss(animated: false) {
+                            let appViewController = UIApplication.shared.windows.first!.rootViewController!
 
-                        let navigationController = UINavigationController(rootViewController: self.surveyView)
-                        navigationController.modalPresentationStyle = .fullScreen
-                        
-                        MINTEL_LiveChat.surveyMode = true
-                        self.surveyView.url = url
-                        appViewController.present(navigationController, animated: true, completion: nil)
+                            let navigationController = UINavigationController(rootViewController: self.surveyView)
+                            navigationController.modalPresentationStyle = .fullScreen
+                            
+                            MINTEL_LiveChat.surveyMode = true
+                            self.surveyView.url = url
+                            appViewController.present(navigationController, animated: true, completion: nil)
+                        }
                     }
                 }
+            }
+            else {
+                // bad url
             }
         }
     }

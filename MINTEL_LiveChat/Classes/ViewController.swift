@@ -273,7 +273,16 @@ class ViewController: UIViewController {
     
     @objc func MINTEL_chatMenuAvailable(_ notification: Notification) {
 //        DispatchQueue.main.async {
+        
+        do {
             self.menuTableView.reloadData()
+        } catch {
+            print("Error info: \(error)")
+        }
+            
+        //debugPrint(self.menuTableView)
+        //debugPrint(self.menuTableView.visibleCells)
+        
 //        }
     }
     
@@ -1327,7 +1336,12 @@ extension ViewController : UICollectionViewDataSource, UICollectionViewDelegate,
     }
     
     fileprivate func resetCachedAssets() {
-        imageManager.stopCachingImagesForAllAssets()
+        do {
+            imageManager.stopCachingImagesForAllAssets()
+        } catch {
+            print("Error info: \(error)")
+        }
+        //imageManager.stopCachingImagesForAllAssets()
         previousPreheatRect = .zero
     }
     
