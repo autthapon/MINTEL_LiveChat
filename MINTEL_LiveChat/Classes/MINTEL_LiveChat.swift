@@ -73,7 +73,7 @@ public class MINTEL_LiveChat: UIView {
     private var queueLabel:UILabel!
     private var callCenterLabel:UILabel!
     private var badgeLabel:UILabel!
-    private var surveyView:MINTEL_SurveyController!
+    private var surveyView:MINTEL_SurveyController = MINTEL_SurveyController()
     
     private var longPressGestureRecognizer: UILongPressGestureRecognizer?
     private var tapGestureRecognizer:UITapGestureRecognizer?
@@ -297,7 +297,7 @@ public class MINTEL_LiveChat: UIView {
         
         let bundle = Bundle(for: type(of: self))
         let storyboard = UIStoryboard(name: "ChatBox", bundle: bundle)
-        self.surveyView = storyboard.instantiateViewController(withIdentifier: "survey") as? MINTEL_SurveyController
+        self.surveyView = storyboard.instantiateViewController(withIdentifier: "survey") as! MINTEL_SurveyController
         
         debugPrint("Start Chat : " , MINTEL_LiveChat.configuration?.disableBotMode ?? false)
         if (MINTEL_LiveChat.configuration?.disableBotMode ?? false) {
