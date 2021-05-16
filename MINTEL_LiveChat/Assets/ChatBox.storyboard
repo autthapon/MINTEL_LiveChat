@@ -54,6 +54,7 @@
                     <connections>
                         <outlet property="btnConfirmBack" destination="syu-79-8J7" id="MAv-hX-LuM"/>
                         <outlet property="btnConfirmExit" destination="3U7-6Y-a8o" id="fBe-4A-MMb"/>
+                        <outlet property="labelHeader" destination="7gp-uv-azP" id="dEb-hX-LuM"/>
                         <outlet property="viewConfirm" destination="PJI-ud-K4a" id="N98-ch-cBF"/>
                         <segue destination="aKJ-kC-w6c" kind="presentation" identifier="previewImage" modalPresentationStyle="fullScreen" id="7HH-HS-rYl"/>
                     </connections>

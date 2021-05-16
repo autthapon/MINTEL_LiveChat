@@ -110,6 +110,7 @@ public class MINTEL_LiveChat: UIView {
                 self.layer.zPosition = 1
                 self.isHidden = false
             }
+            
             if (!MINTEL_LiveChat.chatInProgress || MINTEL_LiveChat.agentState == .end) {
                 self.userImageView.image = UIImage(named: "end", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil)
                 self.userImageView.frame = CGRect(x: self.userImageView.frame.origin.x + (self.userImageView.frame.size.width / 2) - 20, y:  self.userImageView.frame.origin.y + 10, width: 40, height: 40)
@@ -123,7 +124,7 @@ public class MINTEL_LiveChat: UIView {
                 self.userImageView.frame = MINTEL_LiveChat.userImageFrame
                 self.userImageView.isHidden = false
                 self.callCenterLabel.isHidden = false
-                self.callCenterLabel.text = "แชทบอท"
+                self.callCenterLabel.text = MINTEL_LiveChat.getLanguageString(str: "chatbot")
                 self.queueTitleLabel.isHidden = true
                 self.queueLabel.isHidden = true
             } else {
@@ -132,18 +133,21 @@ public class MINTEL_LiveChat: UIView {
                     self.userImageView.isHidden = true
                     self.callCenterLabel.isHidden = true
                     self.queueTitleLabel.isHidden = false
+                    self.queueTitleLabel.text = MINTEL_LiveChat.getLanguageString(str: "your_queue_number")
                     self.queueLabel.isHidden = false
                     break
                 case .waiting:
                     self.userImageView.isHidden = true
                     self.callCenterLabel.isHidden = true
                     self.queueTitleLabel.isHidden = false
+                    self.queueTitleLabel.text = MINTEL_LiveChat.getLanguageString(str: "your_queue_number")
                     self.queueLabel.isHidden = false
                     break
                 case .end:
                     self.userImageView.isHidden = true
                     self.callCenterLabel.isHidden = true
                     self.queueTitleLabel.isHidden = false
+                    self.queueTitleLabel.text = MINTEL_LiveChat.getLanguageString(str: "your_queue_number")
                     self.queueLabel.isHidden = false
                     break
                 case .joined:
@@ -181,6 +185,9 @@ public class MINTEL_LiveChat: UIView {
             if (str == "end_conversation") {
                 return "End Conversation"
             }
+            if (str == "end_conversation2") {
+                return "End Conversation"
+            }
             if (str == "your_queue_number") {
                 return "Your queue number is "
             }
@@ -205,12 +212,18 @@ public class MINTEL_LiveChat: UIView {
             if (str == "chatting_with") {
                 return "You are chatting with "
             }
+            if (str == "chatbot") {
+                return "Chatbot"
+            }
         } else {
             if (str == "conversation_started") {
                 return "เริ่มการสนทนา "
             }
             if (str == "end_conversation") {
                 return "จบการสนทนา"
+            }
+            if (str == "end_conversation2") {
+                return "สิ้นสุดการสนทนา"
             }
             if (str == "your_queue_number") {
                 return "คิวของคุณคือลำดับที่ "
@@ -235,6 +248,9 @@ public class MINTEL_LiveChat: UIView {
             }
             if (str == "chatting_with") {
                 return "ท่านกำลังสนทนากับ "
+            }
+            if (str == "chatbot") {
+                return "แชทบอท"
             }
         }
         
@@ -821,13 +837,13 @@ public class MINTEL_LiveChat: UIView {
         
         self.callCenterLabel = UILabel(frame: CGRect(x: 0, y: self.userImageView.frame.origin.y + self.userImageView.frame.size.height, width: self.frame.size.width, height: 25))
         self.callCenterLabel.font = UIFont.systemFont(ofSize: 14)
-        self.callCenterLabel.text = "แชทบอท"
+        self.callCenterLabel.text = MINTEL_LiveChat.getLanguageString(str: "chatbot")
         self.callCenterLabel.textAlignment = .center
         self.addSubview(self.callCenterLabel)
         
         let titleHeight = (self.frame.size.height * 60) / 200
         self.queueTitleLabel = UILabel(frame: CGRect(x: 0, y: self.closeButton.frame.origin.y + self.closeButton.frame.size.height + 8, width: self.frame.size.width, height: titleHeight))
-        self.queueTitleLabel.text = " " + MINTEL_LiveChat.getLanguageString(str: "your_queue_number")
+        self.queueTitleLabel.text = MINTEL_LiveChat.getLanguageString(str: "chatbot")
         self.queueTitleLabel.numberOfLines = 2
         self.queueTitleLabel.textAlignment = .center
         self.queueTitleLabel.font = UIFont.systemFont(ofSize: 14)
@@ -1102,6 +1118,7 @@ extension MINTEL_LiveChat : SCSChatSessionDelegate {
                 self.queueLabel.tag = position.intValue
                 self.queueLabel.text = String(format: "%d", self.queueLabel.tag)
             }
+            self.queueTitleLabel.text = " " + MINTEL_LiveChat.getLanguageString(str: "your_queue_number")
             
             MINTEL_LiveChat.agentState = .waiting
             self.reLayoutView()

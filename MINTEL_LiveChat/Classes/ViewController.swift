@@ -70,6 +70,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var viewConfirm:UIView!
     @IBOutlet weak var btnConfirmExit:UIButton!
     @IBOutlet weak var btnConfirmBack:UIButton!
+    @IBOutlet weak var labelHeader:UILabel!
     var btnClose:UIBarButtonItem!
     
     fileprivate let imageManager = PHCachingImageManager()
@@ -185,8 +186,10 @@ class ViewController: UIViewController {
             imagePanelHeight = 245.0
         }
         
-        //self.btnConfirmExit.setTitle(MINTEL_LiveChat.getLanguageString(str: "please_wait"), for: .normal)
-
+        self.btnConfirmBack.setTitle(MINTEL_LiveChat.getLanguageString(str: "back"), for: .normal)
+        self.btnConfirmExit.setTitle(MINTEL_LiveChat.getLanguageString(str: "end_conversation2"), for: .normal)
+        self.labelHeader.text = MINTEL_LiveChat.getLanguageString(str: "end_conversation2")
+        
         self.btnClose = UIBarButtonItem(image: UIImage(named: "close", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil), style: .plain, target: self, action: #selector(self.closeChat))
         self.navigationItem.rightBarButtonItem = self.btnClose
         
