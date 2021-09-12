@@ -16,6 +16,7 @@ let autoDockingDuration: Double = 0.2
 let doubleTapTimeInterval: Double = 0.36
 var firstTimerDuration: Int = 2
 var secondTimerDuration: Int = 1
+var currentButtonId: String = "default"
 
 protocol ChatDelegate{
     func terminate()
@@ -317,7 +318,8 @@ public class MINTEL_LiveChat: UIView {
         
         debugPrint("Start Chat : " , MINTEL_LiveChat.configuration?.disableBotMode ?? false)
         if (MINTEL_LiveChat.configuration?.disableBotMode ?? false) {
-           
+            self.getBotConfig()
+            
             MessageList.add(item: MyMessage(systemMessageType2: MINTEL_LiveChat.getLanguageString(str: "please_wait")), remove: true)
             MINTEL_LiveChat.chatBotMode = false
             MINTEL_LiveChat.sendOnNewSession(disableBot: MINTEL_LiveChat.configuration?.disableBotMode ?? false)
@@ -512,6 +514,26 @@ public class MINTEL_LiveChat: UIView {
             })
     }
     
+    internal func getBotConfig() {
+            let url = String(format: "%@/botconfig", MINTEL_LiveChat.configuration?.webHookBaseUrl ?? "")
+            let header:HTTPHeaders = [
+                "x-api-key": MINTEL_LiveChat.configuration?.xApikey ?? "" // "381b0ac187994f82bdc05c09d1034afa"
+            ]
+            
+            debugPrint("Check Bot Config 2")
+            
+            Alamofire
+                .request(url, method: .get, parameters: nil, encoding: JSONEncoding.init(), headers: header)
+                .responseJSON(completionHandler: { response in
+                                    debugPrint(response)
+                    
+                    if let json = response.value {
+                        let dict = json as! [String:Any]
+                        MINTEL_LiveChat.botConfig = dict
+                    }
+                })
+        }
+    
     fileprivate func openSurvey(bot:Bool) {
         
         DispatchQueue.main.async {
@@ -658,6 +680,7 @@ public class MINTEL_LiveChat: UIView {
                                              orgId: MINTEL_LiveChat.configuration?.salesforceOrdID,
                                              deploymentId: MINTEL_LiveChat.configuration?.salesforceDeployID,
                                              buttonId: buttonId) {
+            currentButtonId = buttonId
             
             config.visitorName = String(format:"%@ %@", MINTEL_LiveChat.configuration?.firstname ?? "", MINTEL_LiveChat.configuration?.lastname ?? "")
             config.queueStyle = .position // Fixed
@@ -1141,7 +1164,23 @@ extension MINTEL_LiveChat : SCSChatSessionDelegate {
         DispatchQueue.main.async {
             MINTEL_LiveChat.agentState = .end
             if MINTEL_LiveChat.lastDidTransitionAgentState == "queued" {
-                let _ = MessageList.add(item: MyMessage(systemMessageType1: MINTEL_LiveChat.getLanguageString(str: "no_agent_available")))
+                let noAgentsText = MINTEL_LiveChat.botConfig["noAgentsText"] as? [[String:Any]]
+                
+                var found = false
+                noAgentsText?.forEach({ (item) in
+                    let bId = item["button"] as? String ?? ""
+                    if (bId == currentButtonId) {
+                        found = true
+                        let textToShow = item["text"] as? String ?? "ขออภัยครับ ไม่มีเจ้าหน้าที่ให้บริการในขณะนี้"
+                        let _ = MessageList.add(item: MyMessage(systemMessageType1: textToShow))
+                    }
+                })
+                
+                if (!found) {
+                    let _ = MessageList.add(item: MyMessage(systemMessageType1: "ขออภัยครับ ไม่มีเจ้าหน้าที่ให้บริการในขณะนี้"))
+                }
+                
+                //let _ = MessageList.add(item: MyMessage(systemMessageType1: MINTEL_LiveChat.getLanguageString(str: "no_agent_available")))
             } else {
                 let _ = MessageList.add(item: MyMessage(systemMessageType1: "จบการสนทนา"))
             }
