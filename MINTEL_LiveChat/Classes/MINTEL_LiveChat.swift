@@ -608,7 +608,7 @@ public class MINTEL_LiveChat: UIView {
         
         let _ = MessageList.add(item: MyMessage(systemMessageType1: String(format: MINTEL_LiveChat.getLanguageString(str: "conversation_started") + "%@", date24)))
         self.getAnnouncementMessage()
-        MINTEL_LiveChat.sendPost(text: "สวัสดี", menu: true)
+        MINTEL_LiveChat.sendPost(text: MINTEL_LiveChat.configuration?.startupIntent ?? "สวัสดี", menu: true)
 
     }
     
@@ -1262,7 +1262,8 @@ extension MINTEL_LiveChat  {
                                     DispatchQueue.global(qos: .userInitiated).async {
                                         DispatchQueue.main.async {
 //                                            self.checkAgentMode()
-                                            MINTEL_LiveChat.sendPost(text: "__00_home__greeting", menu: false)
+                                            //MINTEL_LiveChat.sendPost(text: "__00_home__greeting", menu: false)
+                                            MINTEL_LiveChat.sendPost(text: MINTEL_LiveChat.configuration?.startupIntent ?? "", menu: false)
                                         }
                                         
                                         NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
@@ -1499,7 +1500,7 @@ extension MINTEL_LiveChat  {
         if (MINTEL_LiveChat.chatBotMode) {
             MINTEL_LiveChat.setupLocalNotification()
         }
-        
+            
         let _ = MessageList.add(item: MyMessage(typing: true, agent: !MINTEL_LiveChat.chatBotMode))
         if ("__00_home__greeting" == text) {
             
@@ -1513,6 +1514,7 @@ extension MINTEL_LiveChat  {
             NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
                                             object: nil,
                                             userInfo:nil)
+            
         } else {
             if (!menu) {
                 MINTEL_LiveChat.chatStarted = true
