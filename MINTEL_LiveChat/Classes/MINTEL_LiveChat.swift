@@ -1263,7 +1263,7 @@ extension MINTEL_LiveChat  {
                                         DispatchQueue.main.async {
 //                                            self.checkAgentMode()
                                             //MINTEL_LiveChat.sendPost(text: "__00_home__greeting", menu: false)
-                                            MINTEL_LiveChat.sendPost(text: MINTEL_LiveChat.configuration?.startupIntent ?? "", menu: false)
+                                            MINTEL_LiveChat.sendPost(text: MINTEL_LiveChat.configuration?.startupIntent ?? "__00_home__greeting", menu: false)
                                         }
                                         
                                         NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
