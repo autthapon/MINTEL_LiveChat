@@ -608,8 +608,8 @@ public class MINTEL_LiveChat: UIView {
         
         let _ = MessageList.add(item: MyMessage(systemMessageType1: String(format: MINTEL_LiveChat.getLanguageString(str: "conversation_started") + "%@", date24)))
         self.getAnnouncementMessage()
-        MINTEL_LiveChat.sendPost(text: MINTEL_LiveChat.configuration?.startupIntent ?? "สวัสดี", menu: true)
-
+        //MINTEL_LiveChat.sendPost(text: MINTEL_LiveChat.configuration?.startupIntent ?? "สวัสดี", menu: true)
+        //MINTEL_LiveChat.sendPost(text: "สวัสดี", menu: true)
     }
     
     public func sendToFront() {
@@ -1263,7 +1263,19 @@ extension MINTEL_LiveChat  {
                                         DispatchQueue.main.async {
 //                                            self.checkAgentMode()
                                             //MINTEL_LiveChat.sendPost(text: "__00_home__greeting", menu: false)
+                                            
+                                            if MINTEL_LiveChat.configuration?.phone.count == 0 {
+                                                let _ = MessageList.add(item: MyMessage(text: "สวัสดีครับ", agent: false, bot: true))
+                                            } else {
+                                                let _ = MessageList.add(item: MyMessage(text: String(format: "สวัสดีครับ คุณ%@", MINTEL_LiveChat.configuration?.firstname ?? ""), agent: false, bot: true))
+                                            }
+                                            MINTEL_LiveChat.chatCanTyped = true
+                                            NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
+                                                                            object: nil,
+                                                                            userInfo:nil)
+                                
                                             MINTEL_LiveChat.sendPost(text: MINTEL_LiveChat.configuration?.startupIntent ?? "__00_home__greeting", menu: false)
+ 
                                         }
                                         
                                         NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
@@ -1503,7 +1515,7 @@ extension MINTEL_LiveChat  {
             
         let _ = MessageList.add(item: MyMessage(typing: true, agent: !MINTEL_LiveChat.chatBotMode))
         if ("__00_home__greeting" == text) {
-            
+            /*
             if MINTEL_LiveChat.configuration?.phone.count == 0 {
                 let _ = MessageList.add(item: MyMessage(text: "สวัสดีครับ", agent: false, bot: true))
             } else {
@@ -1514,7 +1526,7 @@ extension MINTEL_LiveChat  {
             NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
                                             object: nil,
                                             userInfo:nil)
-            
+            */
         } else {
             if (!menu) {
                 MINTEL_LiveChat.chatStarted = true
