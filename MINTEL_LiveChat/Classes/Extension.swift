@@ -204,13 +204,15 @@ extension UIImage {
         let newSize = widthRatio > heightRatio ?  CGSize(width: size.width * heightRatio, height: size.height * heightRatio) : CGSize(width: size.width * widthRatio,  height: size.height * widthRatio)
         let rect = CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height)
         
-        UIGraphicsBeginImageContextWithOptions(newSize, false, 1.0)
+        //UIGraphicsBeginImageContextWithOptions(newSize, false, 1.0)
+        UIGraphicsBeginImageContextWithOptions(newSize, false, 0)
         self.draw(in: rect)
         let newImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         
         return newImage!
     }
+    
 }
 
 public func MyImageColor(color: UIColor, size: CGSize = CGSize(width: 1, height: 1)) -> UIImage? {
