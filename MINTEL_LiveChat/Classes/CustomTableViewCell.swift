@@ -10,6 +10,23 @@ import UIKit
 import Alamofire
 let menuHeight = 40
 
+extension CGRect{
+    init(_ x:CGFloat,_ y:CGFloat,_ width:CGFloat,_ height:CGFloat) {
+        self.init(x:x,y:y,width:width,height:height)
+    }
+
+}
+extension CGSize{
+    init(_ width:CGFloat,_ height:CGFloat) {
+        self.init(width:width,height:height)
+    }
+}
+extension CGPoint{
+    init(_ x:CGFloat,_ y:CGFloat) {
+        self.init(x:x,y:y)
+    }
+}
+
 func randomString(length: Int) -> String {
     
     let letters : NSString = "abcdefghijklmnopqrst uvwxyzABCDEFGHIJKLMNOPQ RSTUVWXYZ0123456789"
@@ -155,6 +172,17 @@ class CustomTableViewCell: UITableViewCell {
         return temp.queryItems?.first(where: { $0.name == param })?.value
     }
     
+    func resizeImage(image: UIImage, newHeight: CGFloat) -> UIImage {
+        let scale = newHeight / image.size.height
+        let newWidth = image.size.width * scale
+        UIGraphicsBeginImageContext(CGSize(newWidth, newHeight))
+        image.draw(in: CGRect(0, 0, newWidth, newHeight))
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+
+        return newImage!
+    }
+    
     func renderReceiverCell(_ txt:String, item: MyMessage, index: Int, tableView: UITableView) {
         
         self.contentView.subviews.forEach { (view) in
@@ -268,9 +296,11 @@ class CustomTableViewCell: UITableViewCell {
                     
                     if (tempUrl.lowercased().hasSuffix("jpg") || tempUrl.lowercased().hasSuffix("jpeg") || tempUrl.lowercased().hasSuffix("png")) {
                         
-                        let oldMname = CustomTableViewCell.getQueryStringParameter(url: txt, param: "mname")
-                        if let oooo = oldMname {
-                            let newMname = oldMname?.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)
+                        //let oldMname = CustomTableViewCell.getQueryStringParameter(url: txt, param: "mname")
+                        let oldMname = "image"
+                        let oooo = oldMname
+                        //if let oooo = oldMname {
+                            let newMname = oldMname.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)
                             let tempUrl = txt.replacingOccurrences(of: oooo, with: newMname!)
                             
                             URLSession.shared.dataTask(with: URL(string: tempUrl)!) { (data, response, error) in
@@ -294,7 +324,7 @@ class CustomTableViewCell: UITableViewCell {
                                     tableView.reloadData()
                                 }
                             }.resume()
-                        }
+                        //}
                     } else {
                         let request = URLRequest(url: url)
                         let session = URLSession.shared
@@ -609,7 +639,7 @@ class CustomTableViewCell: UITableViewCell {
             view.removeFromSuperview()
         }
         
-        let img = image.MyResizeImage(targetSize: CGSize(width:200,height: 200))
+        let img = image.MyResizeImage(targetSize: CGSize(width:270,height: 300))
         let imgView = UIImageView(image: img)
         self.contentView.addSubview(imgView)
         let screen = UIScreen.main.bounds
