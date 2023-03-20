@@ -230,13 +230,13 @@ public class MINTEL_LiveChat: UIView {
                 return "คิวของคุณคือลำดับที่ "
             }
             if (str == "chat_is_active") {
-                return "ขณะนี้ท่านมีรายการสนทนากับศูนย์บริการทรูมันนี่อยู่"
+                return "ขณะนี้คุณลูกค้ามีการสนทนากับศูนย์บริการทรูมันนี่อยู่"
             }
             if (str == "please_wait") {
                 return "กรุณารอสักครู่"
             }
             if (str == "no_agent_available") {
-                return "ขออภัยครับ ไม่มีเจ้าหน้าที่ให้บริการในขณะนี้"
+                return "ขออภัยค่ะ เจ้าหน้าที่ไม่สามารถให้บริการได้ในขณะนี้"
             }
             if (str == "truemoney") {
                 return "ทรูมันนี่"
@@ -248,7 +248,7 @@ public class MINTEL_LiveChat: UIView {
                 return "ตกลง"
             }
             if (str == "chatting_with") {
-                return "ท่านกำลังสนทนากับ "
+                return "คุณกำลังสนทนากับ "
             }
             if (str == "chatbot") {
                 return "แชทบอท"
@@ -1265,9 +1265,9 @@ extension MINTEL_LiveChat  {
                                             //MINTEL_LiveChat.sendPost(text: "__00_home__greeting", menu: false)
                                             
                                             if MINTEL_LiveChat.configuration?.phone.count == 0 {
-                                                let _ = MessageList.add(item: MyMessage(text: "สวัสดีครับ", agent: false, bot: true))
+                                                let _ = MessageList.add(item: MyMessage(text: "สวัสดีค่ะ", agent: false, bot: true))
                                             } else {
-                                                let _ = MessageList.add(item: MyMessage(text: String(format: "สวัสดีครับ คุณ%@", MINTEL_LiveChat.configuration?.firstname ?? ""), agent: false, bot: true))
+                                                let _ = MessageList.add(item: MyMessage(text: String(format: "สวัสดีค่ะ คุณ%@", MINTEL_LiveChat.configuration?.firstname ?? ""), agent: false, bot: true))
                                             }
                                             MINTEL_LiveChat.chatCanTyped = true
                                             NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
@@ -1368,7 +1368,7 @@ extension MINTEL_LiveChat  {
             if (notification.request.identifier == "MINTEL_LiveChatNotification_First") {
                 
             } else if (notification.request.identifier == "MINTEL_LiveChatNotification_Second") {
-                let _ = MessageList.add(item: MyMessage(text: "หากคุณลูกค้าไม่อยู่ในการสนทนา ผมขอจบการสนทนาเพื่อดูแลลูกค้าท่านอื่นต่อนะครับ\n\nกรณีต้องการสอบถามข้อมูลเพิ่มเติม กรุณาคลิก X ปิดหน้าต่าง และเริ่มการสนทนาใหม่ได้ตลอด 24 ชั่วโมงครับ\n\nขอบคุณที่ใช้บริการทรูมันนี่ สวัสดีครับ", agent: false, bot: true))
+                let _ = MessageList.add(item: MyMessage(text: "หากคุณลูกค้าไม่อยู่ในการสนทนา ทรูมันนี่ขอจบการสนทนาเพื่อดูแลลูกค้าท่านอื่นต่อนะคะ\n\nกรณีต้องการสอบถามข้อมูลเพิ่มเติม กรุณาคลิก X ปิดหน้าต่าง และเริ่มการสนทนาใหม่ได้ตลอด 24 ชั่วโมง\n\nขอบคุณที่ใช้บริการทรูมันนี่ สวัสดีค่ะ", agent: false, bot: true))
                 let _ = MessageList.add(item: MyMessage(systemMessageType1: MINTEL_LiveChat.getLanguageString(str: "end_conversation")))
                 MINTEL_LiveChat.chatCanTyped = false
                 MessageList.disableOnMenu()
@@ -1410,7 +1410,7 @@ extension MINTEL_LiveChat  {
             debugPrint("Second Duration : ", secondTime)
             debugPrint("Minute Pass : ", minutes)
             if (minutes >= secondTime) {
-                let _ = MessageList.add(item: MyMessage(text: "หากคุณลูกค้าไม่อยู่ในการสนทนา ผมขอจบการสนทนาเพื่อดูแลลูกค้าท่านอื่นต่อนะครับ\n\nกรณีต้องการสอบถามข้อมูลเพิ่มเติม กรุณาคลิก X ปิดหน้าต่าง และเริ่มการสนทนาใหม่ได้ตลอด 24 ชั่วโมงครับ\n\nขอบคุณที่ใช้บริการทรูมันนี่ สวัสดีครับ", agent: false, bot: true))
+                let _ = MessageList.add(item: MyMessage(text: "หากคุณลูกค้าไม่อยู่ในการสนทนา ทรูมันนี่ขอจบการสนทนาเพื่อดูแลลูกค้าท่านอื่นต่อนะคะ\n\nกรณีต้องการสอบถามข้อมูลเพิ่มเติม กรุณาคลิก X ปิดหน้าต่าง และเริ่มการสนทนาใหม่ได้ตลอด 24 ชั่วโมง\n\nขอบคุณที่ใช้บริการทรูมันนี่ สวัสดีค่ะ", agent: false, bot: true))
                 let _ = MessageList.add(item: MyMessage(systemMessageType1: MINTEL_LiveChat.getLanguageString(str: "end_conversation")))
                 MINTEL_LiveChat.chatCanTyped = false
                 
