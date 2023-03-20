@@ -296,11 +296,11 @@ class CustomTableViewCell: UITableViewCell {
                     
                     if (tempUrl.lowercased().hasSuffix("jpg") || tempUrl.lowercased().hasSuffix("jpeg") || tempUrl.lowercased().hasSuffix("png")) {
                         
-                        //let oldMname = CustomTableViewCell.getQueryStringParameter(url: txt, param: "mname")
-                        let oldMname = "image"
-                        let oooo = oldMname
-                        //if let oooo = oldMname {
-                            let newMname = oldMname.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)
+                        let oldMname = CustomTableViewCell.getQueryStringParameter(url: txt, param: "mname")
+                        //let oldMname = "image"
+                        //let oooo = oldMname
+                        if let oooo = oldMname {
+                            let newMname = oldMname?.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)
                             let tempUrl = txt.replacingOccurrences(of: oooo, with: newMname!)
                             
                             URLSession.shared.dataTask(with: URL(string: tempUrl)!) { (data, response, error) in
@@ -324,7 +324,7 @@ class CustomTableViewCell: UITableViewCell {
                                     tableView.reloadData()
                                 }
                             }.resume()
-                        //}
+                        }
                     } else {
                         let request = URLRequest(url: url)
                         let session = URLSession.shared
