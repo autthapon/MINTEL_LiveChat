@@ -472,7 +472,8 @@ class ViewController: UIViewController {
             self.inputTextViewBottomConstraint.constant = 0
             let oldOffset = self.tableView.contentOffset
             UIView.animate(withDuration: keyboardAnimationDuration, delay: 0, options: UIView.AnimationOptions(rawValue: curve), animations: {
-                self.view.layoutIfNeeded()
+                // Prevent crash 2/May/2023
+                //self.view.layoutIfNeeded()
                 self.tableView.setContentOffset(CGPoint(x: oldOffset.x, y: oldOffset.y - keyboardFrame.height + self.bottomHeight), animated: false)
             }) {_ in 
                 self.tableView.reloadData()
