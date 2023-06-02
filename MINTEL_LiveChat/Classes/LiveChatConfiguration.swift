@@ -32,7 +32,7 @@ public class LiveChatConfiguration {
     internal var startupIntent:String!
     
     public init(withUserName userName:String, withSalesforceLiveAgentPod salesforceLiveAgentPod:String, withSalesForceOrdId salesforceOrdId:String, withSalesforceDeployId salesforceDeployId:String, withSalesforceButtonId salesforceButtonId:String, withWebHookBaseUrl webhookBaseUrl:String, withXApiKey xapiKey:String, withUploadBaseUrl uploadBaseUrl:String, withSurveyChatbotUrl surveyChatbotUrl:String?, withSurveyFormUrl surveyFormUrl:String?, withAnnouncementUrl announcementUrl:String, withFirstName firstname:String, withLastName lastname:String, withEmail email:String, withPhone phone:String, withTmnId tmnId:String, withDisableBotMode disableBotMode:Bool = false,
-                withLanguage language:String = "th", withStartupIntent startupIntent:String = "สวัสดี") {
+                withLanguage language:String = "th", withStartupIntent startupIntent:String = "__00_home__greeting") {
         self.userName = userName
         self.salesforceLiveAgentPod = salesforceLiveAgentPod
         self.salesforceOrdID = salesforceOrdId
