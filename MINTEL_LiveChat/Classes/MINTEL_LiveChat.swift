@@ -183,11 +183,20 @@ public class MINTEL_LiveChat: UIView {
             if (str == "conversation_started") {
                 return "Chat started on "
             }
-            if (str == "end_conversation") {
+            if (str == "end_conversation_chat") {
                 return "End Conversation"
             }
-            if (str == "end_conversation2") {
-                return "End Conversation"
+            if (str == "end_conversation_title") {
+                return "We are happy to assist you"
+            }
+            if (str == "end_conversation_message") {
+                return "If you need more help\nYou can always contact us"
+            }
+            if (str == "end_conversation_confirm") {
+                return "Confirm End Conversation"
+            }
+            if (str == "end_conversation_back") {
+                return "Continue chat session"
             }
             if (str == "your_queue_number") {
                 return "Your queue number is "
@@ -220,11 +229,20 @@ public class MINTEL_LiveChat: UIView {
             if (str == "conversation_started") {
                 return "เริ่มการสนทนา "
             }
-            if (str == "end_conversation") {
+            if (str == "end_conversation_chat") {
                 return "จบการสนทนา"
             }
-            if (str == "end_conversation2") {
-                return "สิ้นสุดการสนทนา"
+            if (str == "end_conversation_title") {
+                return "เรายินดีที่ได้ช่วยเหลือคุณ"
+            }
+            if (str == "end_conversation_message") {
+                return "ถ้าคุณต้องการความช่วยเหลือเพิ่ม\nสามารถติดต่อเราได้ตลอดนะ"
+            }
+            if (str == "end_conversation_confirm") {
+                return "จบการสนทนา"
+            }
+            if (str == "end_conversation_back") {
+                return "กลับไปแชทต่อ"
             }
             if (str == "your_queue_number") {
                 return "คิวของคุณคือลำดับที่ "
@@ -1369,7 +1387,7 @@ extension MINTEL_LiveChat  {
                 
             } else if (notification.request.identifier == "MINTEL_LiveChatNotification_Second") {
                 let _ = MessageList.add(item: MyMessage(text: "หากคุณลูกค้าไม่อยู่ในการสนทนา ทรูมันนี่ขอจบการสนทนาเพื่อดูแลลูกค้าท่านอื่นต่อนะคะ\n\nกรณีต้องการสอบถามข้อมูลเพิ่มเติม กรุณาคลิก X ปิดหน้าต่าง และเริ่มการสนทนาใหม่ได้ตลอด 24 ชั่วโมง\n\nขอบคุณที่ใช้บริการทรูมันนี่ สวัสดีค่ะ", agent: false, bot: true))
-                let _ = MessageList.add(item: MyMessage(systemMessageType1: MINTEL_LiveChat.getLanguageString(str: "end_conversation")))
+                let _ = MessageList.add(item: MyMessage(systemMessageType1: MINTEL_LiveChat.getLanguageString(str: "end_conversation_chat")))
                 MINTEL_LiveChat.chatCanTyped = false
                 MessageList.disableOnMenu()
                 NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
@@ -1411,7 +1429,7 @@ extension MINTEL_LiveChat  {
             debugPrint("Minute Pass : ", minutes)
             if (minutes >= secondTime) {
                 let _ = MessageList.add(item: MyMessage(text: "หากคุณลูกค้าไม่อยู่ในการสนทนา ทรูมันนี่ขอจบการสนทนาเพื่อดูแลลูกค้าท่านอื่นต่อนะคะ\n\nกรณีต้องการสอบถามข้อมูลเพิ่มเติม กรุณาคลิก X ปิดหน้าต่าง และเริ่มการสนทนาใหม่ได้ตลอด 24 ชั่วโมง\n\nขอบคุณที่ใช้บริการทรูมันนี่ สวัสดีค่ะ", agent: false, bot: true))
-                let _ = MessageList.add(item: MyMessage(systemMessageType1: MINTEL_LiveChat.getLanguageString(str: "end_conversation")))
+                let _ = MessageList.add(item: MyMessage(systemMessageType1: MINTEL_LiveChat.getLanguageString(str: "end_conversation_chat")))
                 MINTEL_LiveChat.chatCanTyped = false
                 
                 MessageList.disableOnMenu()
