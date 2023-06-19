@@ -184,7 +184,7 @@ public class MINTEL_LiveChat: UIView {
                 return "Chat started on "
             }
             if (str == "end_conversation_chat") {
-                return "End Conversation"
+                return "The agent has left the chat"
             }
             if (str == "end_conversation_title") {
                 return "We are happy to assist you"
@@ -230,7 +230,7 @@ public class MINTEL_LiveChat: UIView {
                 return "เริ่มการสนทนา "
             }
             if (str == "end_conversation_chat") {
-                return "จบการสนทนา"
+                return "เจ้าหน้าที่ออกจากแชทแล้ว" // จบการสนทนา
             }
             if (str == "end_conversation_title") {
                 return "เรายินดีที่ได้ช่วยเหลือคุณ"
@@ -1200,7 +1200,7 @@ extension MINTEL_LiveChat : SCSChatSessionDelegate {
                 
                 //let _ = MessageList.add(item: MyMessage(systemMessageType1: MINTEL_LiveChat.getLanguageString(str: "no_agent_available")))
             } else {
-                let _ = MessageList.add(item: MyMessage(systemMessageType1: "จบการสนทนา"))
+                let _ = MessageList.add(item: MyMessage(systemMessageType1: MINTEL_LiveChat.getLanguageString(str: "end_conversation_chat")))
             }
             
             MINTEL_LiveChat.lastDidTransitionAgentState = ""
