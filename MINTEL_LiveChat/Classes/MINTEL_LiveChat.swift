@@ -114,7 +114,12 @@ public class MINTEL_LiveChat: UIView {
             
             if (!MINTEL_LiveChat.chatInProgress || MINTEL_LiveChat.agentState == .end) {
                 self.userImageView.image = UIImage(named: "end", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil)
+                /*
                 self.userImageView.frame = CGRect(x: self.userImageView.frame.origin.x + (self.userImageView.frame.size.width / 2) - 20, y:  self.userImageView.frame.origin.y + 10, width: 40, height: 40)
+                */
+                // From DO truemoney
+                self.userImageView.frame = CGRect(x: self.userImageView.frame.origin.x + (self.userImageView.frame.size.width / 2) - 20, y:  self.userImageView.frame.origin.y + (self.userImageView.frame.size.height / 2) - 20, width: 40, height: 40)
+                
                 self.userImageView.isHidden = false
                 self.callCenterLabel.isHidden = false
                 self.callCenterLabel.text = MINTEL_LiveChat.getLanguageString(str: "end_conversation")
@@ -574,7 +579,7 @@ public class MINTEL_LiveChat: UIView {
             
             surveyUrl = surveyUrl.replacingOccurrences(of: "sessionId", with: MINTEL_LiveChat.userId)
             
-//            debugPrint("Survey Url : " ,surveyUrl)
+            debugPrint("Survey Url : " ,surveyUrl)
             
             // Open Survey Url
             //guard let url = URL(string: surveyUrl) else { return }
@@ -590,6 +595,7 @@ public class MINTEL_LiveChat: UIView {
                             
                             MINTEL_LiveChat.surveyMode = true
                             self.surveyView.url = url
+                                        debugPrint("Survey Url : " , url)
                             appViewController.present(navigationController, animated: true, completion: nil)
                         }
                     }
@@ -1023,9 +1029,10 @@ public class MINTEL_LiveChat: UIView {
                     let bundle = Bundle(for: type(of: self))
                     let storyboard = UIStoryboard(name: "ChatBox", bundle: bundle)
                     let vc = storyboard.instantiateInitialViewController()!
-                    let viewController = UIApplication.shared.windows.first!.rootViewController!
-                    viewController.modalPresentationStyle = .fullScreen
-                    viewController.present(vc, animated: true) {
+                    //let viewController = UIApplication.shared.windows.first!.rootViewController!
+                    let viewController = UIApplication.chatTopViewController(controller: UIApplication.shared.windows.first!.rootViewController!)
+                    viewController?.modalPresentationStyle = .fullScreen
+                    viewController?.present(vc, animated: true) {
                         self.isHidden = true
                     }
                 }
@@ -1139,6 +1146,25 @@ public class MINTEL_LiveChat: UIView {
         
         let bundleURL = podBundle.url(forResource: "ChatBox", withExtension: "bundle")
         return Bundle(url: bundleURL!)!
+    }
+}
+
+extension UIApplication {
+    class func chatTopViewController(controller: UIViewController? = UIApplication.shared.keyWindow?.rootViewController) -> UIViewController? {
+        if let navigationController = controller as? UINavigationController {
+            return chatTopViewController(controller: navigationController.visibleViewController)
+        }
+        if let tabController = controller as? UITabBarController {
+            if let selected = tabController.selectedViewController {
+                return chatTopViewController(controller: selected)
+
+            }
+        }
+        if let presented = controller?.presentedViewController {
+
+            return chatTopViewController(controller: presented)
+        }
+        return controller
     }
 }
 
