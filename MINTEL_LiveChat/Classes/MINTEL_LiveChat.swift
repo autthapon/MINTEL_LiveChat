@@ -1246,6 +1246,7 @@ extension MINTEL_LiveChat : SCSChatSessionDelegate {
         if previous == SCSChatSessionState.connecting && current == SCSChatSessionState.queued {
             DispatchQueue.main.async {
                 self.queueLabel.tag = Int.max
+                self.tapAction(sender: UIButton(), survey: MINTEL_LiveChat.surveyMode)
             }
         }
         
