@@ -237,6 +237,9 @@ public class MINTEL_LiveChat: UIView {
             if (str == "end_conversation_chat") {
                 return "เจ้าหน้าที่ออกจากแชทแล้ว" // จบการสนทนา
             }
+            if (str == "end_conversation_chatbot") {
+                return "เรายินดีที่ได้ช่วยเหลือคุณ"
+            }
             if (str == "end_conversation_title") {
                 return "เรายินดีที่ได้ช่วยเหลือคุณ"
             }
@@ -278,7 +281,7 @@ public class MINTEL_LiveChat: UIView {
             }
         }
         
-        return "hello"
+        return ""
     }
     
     public func isSessionActive() -> Bool {
@@ -1226,7 +1229,13 @@ extension MINTEL_LiveChat : SCSChatSessionDelegate {
                 
                 //let _ = MessageList.add(item: MyMessage(systemMessageType1: MINTEL_LiveChat.getLanguageString(str: "no_agent_available")))
             } else {
-                let _ = MessageList.add(item: MyMessage(systemMessageType1: MINTEL_LiveChat.getLanguageString(str: "end_conversation_chat")))
+                var ending = MINTEL_LiveChat.getLanguageString(str: "end_conversation_chat");
+                /*
+                if (MINTEL_LiveChat.chatBotMode == true) {
+                    ending = MINTEL_LiveChat.getLanguageString(str: "end_conversation_chatbot");
+                }
+                */
+                let _ = MessageList.add(item: MyMessage(systemMessageType1: ending))
             }
             
             MINTEL_LiveChat.lastDidTransitionAgentState = ""
@@ -1414,7 +1423,11 @@ extension MINTEL_LiveChat  {
                 
             } else if (notification.request.identifier == "MINTEL_LiveChatNotification_Second") {
                 let _ = MessageList.add(item: MyMessage(text: "หากคุณลูกค้าไม่อยู่ในการสนทนา ทรูมันนี่ขอจบการสนทนาเพื่อดูแลลูกค้าท่านอื่นต่อนะคะ\n\nกรณีต้องการสอบถามข้อมูลเพิ่มเติม กรุณาคลิก X ปิดหน้าต่าง และเริ่มการสนทนาใหม่ได้ตลอด 24 ชั่วโมง\n\nขอบคุณที่ใช้บริการทรูมันนี่ สวัสดีค่ะ", agent: false, bot: true))
-                let _ = MessageList.add(item: MyMessage(systemMessageType1: MINTEL_LiveChat.getLanguageString(str: "end_conversation_chat")))
+                var ending = MINTEL_LiveChat.getLanguageString(str: "end_conversation_chat");
+                if (MINTEL_LiveChat.chatBotMode == true) {
+                    ending = MINTEL_LiveChat.getLanguageString(str: "end_conversation_chatbot");
+                }
+                let _ = MessageList.add(item: MyMessage(systemMessageType1: ending))
                 MINTEL_LiveChat.chatCanTyped = false
                 MessageList.disableOnMenu()
                 NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
@@ -1455,8 +1468,12 @@ extension MINTEL_LiveChat  {
             debugPrint("Second Duration : ", secondTime)
             debugPrint("Minute Pass : ", minutes)
             if (minutes >= secondTime) {
-                let _ = MessageList.add(item: MyMessage(text: "หากคุณลูกค้าไม่อยู่ในการสนทนา ทรูมันนี่ขอจบการสนทนาเพื่อดูแลลูกค้าท่านอื่นต่อนะคะ\n\nกรณีต้องการสอบถามข้อมูลเพิ่มเติม กรุณาคลิก X ปิดหน้าต่าง และเริ่มการสนทนาใหม่ได้ตลอด 24 ชั่วโมง\n\nขอบคุณที่ใช้บริการทรูมันนี่ สวัสดีค่ะ", agent: false, bot: true))
-                let _ = MessageList.add(item: MyMessage(systemMessageType1: MINTEL_LiveChat.getLanguageString(str: "end_conversation_chat")))
+                let _ = MessageList.add(item: MyMessage(text: "หากคุณลูกค้าไม่อยู่ในการสนทนา ทรูมันนี่ขอจบการสนทนาเพื่อดูแลลูกค้าท่านอื่นต่อนะ\n\nกรณีต้องการสอบถามข้อมูลเพิ่มเติม กรุณาคลิก X ปิดหน้าต่าง และเริ่มการสนทนาใหม่ได้ตลอด 24 ชั่วโมง\n\nขอบคุณที่ใช้บริการทรูมันนี่ สวัสดีค่ะ", agent: false, bot: true))
+                var ending = MINTEL_LiveChat.getLanguageString(str: "end_conversation_chat");
+                if (MINTEL_LiveChat.chatBotMode == true) {
+                    ending = MINTEL_LiveChat.getLanguageString(str: "end_conversation_chatbot");
+                }
+                let _ = MessageList.add(item: MyMessage(systemMessageType1: ending))
                 MINTEL_LiveChat.chatCanTyped = false
                 
                 MessageList.disableOnMenu()
@@ -1573,9 +1590,15 @@ extension MINTEL_LiveChat  {
                                             userInfo:nil)
             */
         } else {
+            /*
             if (!menu) {
                 MINTEL_LiveChat.chatStarted = true
             }
+ */
+        }
+        
+        if (!menu) {
+            MINTEL_LiveChat.chatStarted = true
         }
         
         let params : Parameters = ["session_id": MINTEL_LiveChat.userId,"text": text]
