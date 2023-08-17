@@ -473,7 +473,8 @@ class ViewController: UIViewController {
             let oldOffset = self.tableView.contentOffset
             self.inputTextViewBottomConstraint.constant = -keyboardFrame.height + bottomHeight
             UIView.animate(withDuration: keyboardAnimationDuration) {
-                self.view.layoutIfNeeded()
+                // Might need to remove this one as we might got bad_access error
+                //self.view.layoutIfNeeded()
                 self.tableView.setContentOffset(CGPoint(x: oldOffset.x, y: oldOffset.y + keyboardFrame.height - self.bottomHeight), animated: false)
             }
         }
