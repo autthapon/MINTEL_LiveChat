@@ -1033,7 +1033,10 @@ public class MINTEL_LiveChat: UIView {
                     let storyboard = UIStoryboard(name: "ChatBox", bundle: bundle)
                     let vc = storyboard.instantiateInitialViewController()!
                     //let viewController = UIApplication.shared.windows.first!.rootViewController!
-                    let viewController = UIApplication.chatTopViewController(controller: UIApplication.shared.windows.first!.rootViewController!)
+                    
+                    //let viewController = UIApplication.chatTopViewController(controller: UIApplication.shared.windows.first!.rootViewController!)
+                    
+                    let viewController = MINTEL_LiveChat.instance.topViewController();
                     viewController?.modalPresentationStyle = .fullScreen
                     viewController?.present(vc, animated: true) {
                         self.isHidden = true
