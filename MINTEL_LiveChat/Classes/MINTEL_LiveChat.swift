@@ -1258,11 +1258,13 @@ extension MINTEL_LiveChat : SCSChatSessionDelegate {
         if previous == SCSChatSessionState.connecting && current == SCSChatSessionState.queued {
             DispatchQueue.main.async {
                 self.queueLabel.tag = Int.max
+            }
+        } else if previous == SCSChatSessionState.inactive && current == SCSChatSessionState.connecting {
+            // Auto expand
+            DispatchQueue.main.async {
                 self.tapAction(sender: UIButton(), survey: MINTEL_LiveChat.surveyMode)
             }
-        }
-        
-        if previous == SCSChatSessionState.queued && current == SCSChatSessionState.ending {
+        } else if previous == SCSChatSessionState.queued && current == SCSChatSessionState.ending {
             DispatchQueue.main.async {
                 MINTEL_LiveChat.lastDidTransitionAgentState = "queued"
             }
