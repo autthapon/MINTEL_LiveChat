@@ -1473,7 +1473,7 @@ extension MINTEL_LiveChat  {
             debugPrint("Second Duration : ", secondTime)
             debugPrint("Minute Pass : ", minutes)
             if (minutes >= secondTime) {
-                let _ = MessageList.add(item: MyMessage(text: "หากคุณลูกค้าไม่อยู่ในการสนทนา ทรูมันนี่ขอจบการสนทนาเพื่อดูแลลูกค้าท่านอื่นต่อนะ\n\nกรณีต้องการสอบถามข้อมูลเพิ่มเติม กรุณาคลิก X ปิดหน้าต่าง และเริ่มการสนทนาใหม่ได้ตลอด 24 ชั่วโมง\n\nขอบคุณที่ใช้บริการทรูมันนี่ สวัสดีค่ะ", agent: false, bot: true))
+                let _ = MessageList.add(item: MyMessage(text: "หากคุณลูกค้าไม่อยู่ในการสนทนา ทรูมันนี่ขอจบการสนทนาเพื่อดูแลลูกค้าท่านอื่นต่อนะคะ\n\nกรณีต้องการสอบถามข้อมูลเพิ่มเติม กรุณาคลิก X ปิดหน้าต่าง และเริ่มการสนทนาใหม่ได้ตลอด 24 ชั่วโมง\n\nขอบคุณที่ใช้บริการทรูมันนี่ สวัสดีค่ะ", agent: false, bot: true))
                 var ending = MINTEL_LiveChat.getLanguageString(str: "end_conversation_chat");
                 if (MINTEL_LiveChat.chatBotMode == true) {
                     ending = MINTEL_LiveChat.getLanguageString(str: "end_conversation_chatbot");
