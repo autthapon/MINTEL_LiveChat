@@ -1346,7 +1346,33 @@ extension MINTEL_LiveChat  {
                         }
                         break
                     case .failure(let error):
-//                        debugPrint(error)
+                        debugPrint(error)
+                        
+                        // Start chat anyway
+                        MINTEL_LiveChat.chatCanTyped = true
+                        DispatchQueue.global(qos: .userInitiated).async {
+                            DispatchQueue.main.async {
+//                                            self.checkAgentMode()
+                                //MINTEL_LiveChat.sendPost(text: "__00_home__greeting", menu: false)
+                                
+                                if MINTEL_LiveChat.configuration?.phone.count == 0 {
+                                    let _ = MessageList.add(item: MyMessage(text: "สวัสดีค่ะ", agent: false, bot: true))
+                                } else {
+                                    let _ = MessageList.add(item: MyMessage(text: String(format: "สวัสดีค่ะ คุณ%@", MINTEL_LiveChat.configuration?.firstname ?? ""), agent: false, bot: true))
+                                }
+                                MINTEL_LiveChat.chatCanTyped = true
+                                NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
+                                                                object: nil,
+                                                                userInfo:nil)
+                    
+                                MINTEL_LiveChat.sendPost(text: MINTEL_LiveChat.configuration?.startupIntent ?? "__00_home__greeting", menu: false)
+
+                            }
+                            
+                            NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
+                                                            object: nil,
+                                                            userInfo:nil)
+                        }
                         break
                     }
             }
@@ -1407,7 +1433,7 @@ extension MINTEL_LiveChat  {
         Alamofire
             .request(url, method: .post, parameters: params, encoding: JSONEncoding.init(), headers: header)
             .responseString(completionHandler: { response in
-//                debugPrint(response)
+                debugPrint(response)
             })
     }
     
