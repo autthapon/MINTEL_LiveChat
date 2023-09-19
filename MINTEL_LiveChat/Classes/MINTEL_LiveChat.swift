@@ -581,7 +581,7 @@ public class MINTEL_LiveChat: UIView {
             }
             
             surveyUrl = surveyUrl.replacingOccurrences(of: "sessionId", with: MINTEL_LiveChat.userId)
-            
+                + "&lang=" + (MINTEL_LiveChat.configuration?.language ?? "")
             debugPrint("Survey Url : " ,surveyUrl)
             
             // Open Survey Url
