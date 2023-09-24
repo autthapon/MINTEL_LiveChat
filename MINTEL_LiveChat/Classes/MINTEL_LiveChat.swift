@@ -1277,19 +1277,24 @@ extension MINTEL_LiveChat  {
         let params: Parameters = [:]
         let url = (MINTEL_LiveChat.configuration?.announcementUrl ?? "").replacingOccurrences(of: "sessionId", with: MINTEL_LiveChat.userId)
         
-        debugPrint("Get Announcement")
+        debugPrint("Get Announcement " + url)
         
         let headers:HTTPHeaders = [
             "x-api-key": MINTEL_LiveChat.configuration?.xApikey ?? "" // "381b0ac187994f82bdc05c09d1034afa"
         ]
         
         do {
+            /*
             let jsonEncode = JSONEncoding.init()
-            var originalRequest:URLRequest? = try URLRequest(url: url, method: .post, headers: headers)
+            var originalRequest:URLRequest? = try URLRequest(url: url, method: .get)
             originalRequest?.timeoutInterval = 30
             let encodedURLRequest = try jsonEncode.encode(originalRequest!, with: params)
+ 
             Alamofire
                 .request(encodedURLRequest)
+                */
+            Alamofire
+                .request(url, method: .get, parameters: nil, encoding: JSONEncoding.init(), headers: headers)
                 .responseJSON { (response) in
                     
                      debugPrint("Load First Message response .")
@@ -1303,26 +1308,32 @@ extension MINTEL_LiveChat  {
                             } else if let items = json as? [[String:Any]] {
                                 
                                 if items.count > 0 {
-                                    items.forEach { (item) in
-                                        let desc = item["Description__c"] as? String ?? ""
-                                        if desc.count > 0 {
-                                            let _ = MessageList.add(item: MyMessage(text: desc, agent: false, bot: true))
+                                    DispatchQueue.global(qos: .userInitiated).async {
+                                        DispatchQueue.main.async {
+                                            items.forEach { (item) in
+                                                let desc = item["Description__c"] as? String ?? ""
+                                                if desc.count > 0 {
+                                                    let _ = MessageList.add(item: MyMessage(text: desc, agent: false, bot: true))
+                                                }
+                                            }
+
+                                            let menus:[[String:Any]] = [["action" : ["label" : "จบการสนทนา", "text" : "__00_app_endchat", "display" : false]], ["action" : [ "label" : "เริ่มการสนทนา", "text" : MINTEL_LiveChat.configuration?.startupIntent ?? "__00_home__greeting", "display" : false]]]
+                                            let _ = MessageList.add(item: MyMessage(text: "", agent: false, bot: true, menu: menus))
+                                            
+                                            let seconds = 1.0
+                                            DispatchQueue.main.asyncAfter(deadline: .now() + seconds) {
+                                                // Put your code which should be executed with a delay here
+                                                NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
+                                                object: nil,
+                                                userInfo:nil)
+                                            }
                                         }
                                     }
                                     
-                                    let menus:[[String:Any]] = [["action" : ["label" : "จบการสนทนา", "text" : "__00_app_endchat", "display" : false]], ["action" : [ "label" : "เริ่มการสนทนา", "text" : MINTEL_LiveChat.configuration?.startupIntent ?? "__00_home__greeting", "display" : false]]]
-                                    let _ = MessageList.add(item: MyMessage(text: "", agent: false, bot: true, menu: menus))
-                                    NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
-                                                                    object: nil,
-                                                                    userInfo:nil)
                                 } else {
-                                    
                                     MINTEL_LiveChat.chatCanTyped = true
                                     DispatchQueue.global(qos: .userInitiated).async {
                                         DispatchQueue.main.async {
-//                                            self.checkAgentMode()
-                                            //MINTEL_LiveChat.sendPost(text: "__00_home__greeting", menu: false)
-                                            
                                             if MINTEL_LiveChat.configuration?.phone.count == 0 {
                                                 let _ = MessageList.add(item: MyMessage(text: "สวัสดีค่ะ", agent: false, bot: true))
                                             } else {
@@ -1352,9 +1363,6 @@ extension MINTEL_LiveChat  {
                         MINTEL_LiveChat.chatCanTyped = true
                         DispatchQueue.global(qos: .userInitiated).async {
                             DispatchQueue.main.async {
-//                                            self.checkAgentMode()
-                                //MINTEL_LiveChat.sendPost(text: "__00_home__greeting", menu: false)
-                                
                                 if MINTEL_LiveChat.configuration?.phone.count == 0 {
                                     let _ = MessageList.add(item: MyMessage(text: "สวัสดีค่ะ", agent: false, bot: true))
                                 } else {
