@@ -184,7 +184,7 @@ public class MINTEL_LiveChat: UIView {
     }
     
     internal static func getLanguageString(str:String) -> String {
-        if (MINTEL_LiveChat.configuration?.language == "en") {
+        if (MINTEL_LiveChat.configuration?.language != "th") {
             if (str == "conversation_started") {
                 return "Chat started on "
             }
