@@ -591,8 +591,10 @@ public class MINTEL_LiveChat: UIView {
                     let currentViewController = self.topViewController()
                     if let cu = currentViewController {
                         cu.dismiss(animated: false) {
-                            let appViewController = UIApplication.shared.windows.first!.rootViewController!
-
+                            // Asked to change by Do TMN
+                            //let appViewController = UIApplication.shared.windows.first!.rootViewController!
+                            let appViewController = self.topViewController()!
+                            
                             let navigationController = UINavigationController(rootViewController: self.surveyView)
                             navigationController.modalPresentationStyle = .fullScreen
                             
