@@ -185,6 +185,24 @@ public class MINTEL_LiveChat: UIView {
     
     internal static func getLanguageString(str:String) -> String {
         if (MINTEL_LiveChat.configuration?.language != "th") {
+            if (str == "hello") {
+                if (MINTEL_LiveChat.configuration?.language == "my") {
+                    return "မင်္ဂလာပါ။"
+                } else if (MINTEL_LiveChat.configuration?.language == "km" ) {
+                    return "ជំរាបសួរ"
+                } else {
+                    return "Hello"
+                }
+            }
+            if (str == "helloname") {
+                if (MINTEL_LiveChat.configuration?.language == "my") {
+                    return "မင်္ဂလာပါ။ "
+                } else if (MINTEL_LiveChat.configuration?.language == "km" ) {
+                    return "ជំរាបសួរ "
+                } else {
+                    return "Hello "
+                }
+            }
             if (str == "conversation_started") {
                 return "Chat started on "
             }
@@ -210,7 +228,16 @@ public class MINTEL_LiveChat: UIView {
                 return "Your chat with True Money is still active"
             }
             if (str == "please_wait") {
-                return "Please wait"
+                /*
+                if (MINTEL_LiveChat.configuration?.language == "my") {
+                    return "အချက်အလက်အတွက်ကျေးဇူးတင်ပါသည်။ ခဏကြာ ဝန်ထမ်းမှ သင့်ကို စတင်ပြီး ဝန်ဆောင်မှုပေးလိမ့်မယ်။"
+                } else if (MINTEL_LiveChat.configuration?.language == "km" ) {
+                    return "អរគុណសម្រាប់ពត៌មាន បន្តិចទៀតក្រុមការងារនឹងមកបម្រើសេវាកម្មជូនលោកអ្នក"
+                } else {
+                    return "Thank you for the information. After a while, the staff will come to serve you from now on"
+                }
+                */
+                return "Thank you for the information. After a while, the staff will come to serve you from now on"
             }
             if (str == "no_agent_available") {
                 return "Sorry, no agent available"
@@ -231,6 +258,12 @@ public class MINTEL_LiveChat: UIView {
                 return "Chatbot"
             }
         } else {
+            if (str == "hello") {
+                return "สวัสดีค่ะ"
+            }
+            if (str == "helloname") {
+                return "สวัสดีค่ะ คุณ"
+            }
             if (str == "conversation_started") {
                 return "เริ่มการสนทนา "
             }
@@ -1337,9 +1370,9 @@ extension MINTEL_LiveChat  {
                                     DispatchQueue.global(qos: .userInitiated).async {
                                         DispatchQueue.main.async {
                                             if MINTEL_LiveChat.configuration?.phone.count == 0 {
-                                                let _ = MessageList.add(item: MyMessage(text: "สวัสดีค่ะ", agent: false, bot: true))
+                                                let _ = MessageList.add(item: MyMessage(text: MINTEL_LiveChat.getLanguageString(str: "hello"), agent: false, bot: true))
                                             } else {
-                                                let _ = MessageList.add(item: MyMessage(text: String(format: "สวัสดีค่ะ คุณ%@", MINTEL_LiveChat.configuration?.firstname ?? ""), agent: false, bot: true))
+                                                let _ = MessageList.add(item: MyMessage(text: String(format: MINTEL_LiveChat.getLanguageString(str: "helloname") + "%@", MINTEL_LiveChat.configuration?.firstname ?? ""), agent: false, bot: true))
                                             }
                                             MINTEL_LiveChat.chatCanTyped = true
                                             NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
@@ -1696,7 +1729,7 @@ extension MINTEL_LiveChat  {
                                             }
                                             return
                                         }
-                                        let quickReplyTitle = body["text"] as? String ?? ""
+                                        var quickReplyTitle = body["text"] as? String ?? ""
                                         let quickReply = body["quickReply"] as? [String: Any] ?? nil
                                         if (menu) {
                                             if (type == "text") {
@@ -1716,6 +1749,19 @@ extension MINTEL_LiveChat  {
                                                     let items = quickReply!["items"] as? [[String:Any]] ?? []
                                                     let _ = MessageList.add(item: MyMessage(text: quickReplyTitle, agent: true, menu: items))
                                                 } else {
+                                                    if (quickReplyTitle == "ขอบคุณสำหรับข้อมูลค่ะ อีกสักครู่เจ้าหน้าที่จะมาให้บริการคุณลูกค้าต่อจากนี้ค่ะ") {
+                                                        if (MINTEL_LiveChat.configuration?.language == "my") {
+                                                            quickReplyTitle = "အချက်အလက်အတွက်ကျေးဇူးတင်ပါသည်။ ခဏကြာ ဝန်ထမ်းမှ သင့်ကို စတင်ပြီး ဝန်ဆောင်မှုပေးလိမ့်မယ်။"
+                                                        } else if (MINTEL_LiveChat.configuration?.language == "km" ) {
+                                                            quickReplyTitle = "អរគុណសម្រាប់ព័ត៌មាន បន្តិចទៀតក្រុមការងារនឹងមកបម្រើសេវាកម្មជូនលោកអ្នក"
+                                                        }
+                                                    } else if (quickReplyTitle == "ระหว่างรอเจ้าหน้าที่มาให้บริการ คุณลูกค้าจะไม่สามารถพิมพ์ข้อความเพิ่มเติมได้") {
+                                                        if (MINTEL_LiveChat.configuration?.language == "my") {
+                                                            quickReplyTitle = "ဝန်ဆောင်မှုပေးရန် ဝန်ထမ်းကို စောင့်နေစဉ်။ သင်သည် နောက်ထပ် မက်ဆေ့ချ်များကိုရိုက်ထည့်နိုင်မည် မဟုတ်ပါ။"
+                                                        } else if (MINTEL_LiveChat.configuration?.language == "km" ) {
+                                                            quickReplyTitle = "ខណះពេលដែលកំពុងរងចាំលោកអ្នកនឹងមិនអាចវាយសារបន្ថែមបានទេ"
+                                                        }
+                                                    }
                                                     let _ = MessageList.add(item: MyMessage(text: quickReplyTitle, agent: true, bot: true))
                                                 }
                                             }
