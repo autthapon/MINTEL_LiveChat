@@ -71,7 +71,9 @@ class MessageList {
     }
     
     static internal func setItemAt(index: Int, item: MyMessage) {
-        MessageList.items[index] = item
+        if (MessageList.items.count > index) {
+            MessageList.items[index] = item
+        }
     }
     
     static internal func at(index: Int) -> MyMessage? {
@@ -110,7 +112,7 @@ class MessageList {
     }
     
     static internal func getMessageForAgent() -> String {
-        let ignoreMessage = ["Connecting", "agent", "Your place", "TrueMoney Care สวัสดีครับ"]
+        let ignoreMessage = ["Connecting", "agent", "Your place", "TrueMoney Care สวัสดีค่ะ"]
         
         var allMsg = ""
         

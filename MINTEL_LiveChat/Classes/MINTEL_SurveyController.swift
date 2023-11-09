@@ -67,7 +67,12 @@ class MINTEL_SurveyController : UIViewController, WKUIDelegate {
         self.navigationItem.rightBarButtonItem = self.btnClose
         self.navigationItem.titleView = UIImageView(image: UIImage(named: "true_bar_title", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil))
         
-        let request = URLRequest(url: self.url!)
-        webView.load(request)
+        //debugPrint("Survey Url : " , self.url)
+
+        if let defaultUrl = URL(string: "https://truemoney.my.salesforce.com/botsurvey?uid=sessionId") {
+            //debugPrint("Survey Url : " , self.url)
+            let request = URLRequest(url: self.url ?? defaultUrl)
+            webView.load(request)
+        }
     }
 }

@@ -71,6 +71,9 @@ class ViewController: UIViewController {
     @IBOutlet weak var btnConfirmExit:UIButton!
     @IBOutlet weak var btnConfirmBack:UIButton!
     @IBOutlet weak var labelHeader:UILabel!
+    @IBOutlet weak var labelMessage:UILabel!
+    @IBOutlet weak var confirmEndImageView: UIImageView!
+
     var btnClose:UIBarButtonItem!
     
     fileprivate let imageManager = PHCachingImageManager()
@@ -186,13 +189,26 @@ class ViewController: UIViewController {
             imagePanelHeight = 245.0
         }
         
-        self.btnConfirmBack.setTitle(MINTEL_LiveChat.getLanguageString(str: "back"), for: .normal)
-        self.btnConfirmExit.setTitle(MINTEL_LiveChat.getLanguageString(str: "end_conversation2"), for: .normal)
-        self.labelHeader.text = MINTEL_LiveChat.getLanguageString(str: "end_conversation2")
+        self.btnConfirmBack.setTitle(MINTEL_LiveChat.getLanguageString(str: "end_conversation_back"), for: .normal)
+        self.btnConfirmExit.setTitle(MINTEL_LiveChat.getLanguageString(str: "end_conversation_confirm"), for: .normal)
+        self.labelHeader.text = MINTEL_LiveChat.getLanguageString(str: "end_conversation_title")
+        self.labelMessage.text = MINTEL_LiveChat.getLanguageString(str: "end_conversation_message")
+        self.labelMessage.numberOfLines = 0
         
         self.btnClose = UIBarButtonItem(image: UIImage(named: "close", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil), style: .plain, target: self, action: #selector(self.closeChat))
         self.navigationItem.rightBarButtonItem = self.btnClose
         
+        // Load image
+        if let url = URL(string: "https://truemoney.my.salesforce-sites.com/chatsurveyweb/resource/1548558681000/appmenuconfirmimg?ext.png") {
+            if let loadedData = try? Data(contentsOf: url) {
+                if let loadedImage = UIImage(data: loadedData) {
+                    DispatchQueue.main.async {
+                        self.confirmEndImageView.image = loadedImage
+                    }
+                }
+            }
+        }
+    
         self.navigationItem.titleView = UIImageView(image: UIImage(named: "true_bar_title", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil))
         self.view.backgroundColor = UIColor.white
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name:UIResponder.keyboardWillShowNotification, object: nil)
@@ -457,7 +473,8 @@ class ViewController: UIViewController {
             let oldOffset = self.tableView.contentOffset
             self.inputTextViewBottomConstraint.constant = -keyboardFrame.height + bottomHeight
             UIView.animate(withDuration: keyboardAnimationDuration) {
-                self.view.layoutIfNeeded()
+                // Might need to remove this one as we might got bad_access error
+                //self.view.layoutIfNeeded()
                 self.tableView.setContentOffset(CGPoint(x: oldOffset.x, y: oldOffset.y + keyboardFrame.height - self.bottomHeight), animated: false)
             }
         }
@@ -472,14 +489,15 @@ class ViewController: UIViewController {
             self.inputTextViewBottomConstraint.constant = 0
             let oldOffset = self.tableView.contentOffset
             UIView.animate(withDuration: keyboardAnimationDuration, delay: 0, options: UIView.AnimationOptions(rawValue: curve), animations: {
-                self.view.layoutIfNeeded()
+                // Prevent crash 2/May/2023
+                //self.view.layoutIfNeeded()
                 self.tableView.setContentOffset(CGPoint(x: oldOffset.x, y: oldOffset.y - keyboardFrame.height + self.bottomHeight), animated: false)
             }) {_ in 
                 self.tableView.reloadData()
             }
         }
         
-        self.view.layoutIfNeeded()
+        //self.view.layoutIfNeeded()
     }
     
     @objc func tableViewTapped(recognizer: UITapGestureRecognizer) {

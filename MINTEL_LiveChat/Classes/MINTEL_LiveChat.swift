@@ -114,7 +114,12 @@ public class MINTEL_LiveChat: UIView {
             
             if (!MINTEL_LiveChat.chatInProgress || MINTEL_LiveChat.agentState == .end) {
                 self.userImageView.image = UIImage(named: "end", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil)
+                /*
                 self.userImageView.frame = CGRect(x: self.userImageView.frame.origin.x + (self.userImageView.frame.size.width / 2) - 20, y:  self.userImageView.frame.origin.y + 10, width: 40, height: 40)
+                */
+                // From DO truemoney
+                self.userImageView.frame = CGRect(x: self.userImageView.frame.origin.x + (self.userImageView.frame.size.width / 2) - 20, y:  self.userImageView.frame.origin.y + (self.userImageView.frame.size.height / 2) - 20, width: 40, height: 40)
+                
                 self.userImageView.isHidden = false
                 self.callCenterLabel.isHidden = false
                 self.callCenterLabel.text = MINTEL_LiveChat.getLanguageString(str: "end_conversation")
@@ -179,15 +184,42 @@ public class MINTEL_LiveChat: UIView {
     }
     
     internal static func getLanguageString(str:String) -> String {
-        if (MINTEL_LiveChat.configuration?.language == "en") {
+        if (MINTEL_LiveChat.configuration?.language != "th") {
+            if (str == "hello") {
+                if (MINTEL_LiveChat.configuration?.language == "my") {
+                    return "မင်္ဂလာပါ။"
+                } else if (MINTEL_LiveChat.configuration?.language == "km" ) {
+                    return "ជំរាបសួរ"
+                } else {
+                    return "Hello"
+                }
+            }
+            if (str == "helloname") {
+                if (MINTEL_LiveChat.configuration?.language == "my") {
+                    return "မင်္ဂလာပါ။ "
+                } else if (MINTEL_LiveChat.configuration?.language == "km" ) {
+                    return "ជំរាបសួរ "
+                } else {
+                    return "Hello "
+                }
+            }
             if (str == "conversation_started") {
                 return "Chat started on "
             }
-            if (str == "end_conversation") {
-                return "End Conversation"
+            if (str == "end_conversation_chat") {
+                return "The agent has left the chat"
             }
-            if (str == "end_conversation2") {
-                return "End Conversation"
+            if (str == "end_conversation_title") {
+                return "We are happy to assist you"
+            }
+            if (str == "end_conversation_message") {
+                return "If you need more help\nYou can always contact us"
+            }
+            if (str == "end_conversation_confirm") {
+                return "Confirm End Conversation"
+            }
+            if (str == "end_conversation_back") {
+                return "Continue chat session"
             }
             if (str == "your_queue_number") {
                 return "Your queue number is "
@@ -196,7 +228,16 @@ public class MINTEL_LiveChat: UIView {
                 return "Your chat with True Money is still active"
             }
             if (str == "please_wait") {
-                return "Please wait"
+                /*
+                if (MINTEL_LiveChat.configuration?.language == "my") {
+                    return "အချက်အလက်အတွက်ကျေးဇူးတင်ပါသည်။ ခဏကြာ ဝန်ထမ်းမှ သင့်ကို စတင်ပြီး ဝန်ဆောင်မှုပေးလိမ့်မယ်။"
+                } else if (MINTEL_LiveChat.configuration?.language == "km" ) {
+                    return "អរគុណសម្រាប់ពត៌មាន បន្តិចទៀតក្រុមការងារនឹងមកបម្រើសេវាកម្មជូនលោកអ្នក"
+                } else {
+                    return "Thank you for the information. After a while, the staff will come to serve you from now on"
+                }
+                */
+                return "Thank you for the information. After a while, the staff will come to serve you from now on"
             }
             if (str == "no_agent_available") {
                 return "Sorry, no agent available"
@@ -217,26 +258,44 @@ public class MINTEL_LiveChat: UIView {
                 return "Chatbot"
             }
         } else {
+            if (str == "hello") {
+                return "สวัสดีค่ะ"
+            }
+            if (str == "helloname") {
+                return "สวัสดีค่ะ คุณ"
+            }
             if (str == "conversation_started") {
                 return "เริ่มการสนทนา "
             }
-            if (str == "end_conversation") {
+            if (str == "end_conversation_chat") {
+                return "เจ้าหน้าที่ออกจากแชทแล้ว" // จบการสนทนา
+            }
+            if (str == "end_conversation_chatbot") {
+                return "เรายินดีที่ได้ช่วยเหลือคุณ"
+            }
+            if (str == "end_conversation_title") {
+                return "เรายินดีที่ได้ช่วยเหลือคุณ"
+            }
+            if (str == "end_conversation_message") {
+                return "ถ้าคุณต้องการความช่วยเหลือเพิ่ม\nสามารถติดต่อเราได้ตลอดนะ"
+            }
+            if (str == "end_conversation_confirm") {
                 return "จบการสนทนา"
             }
-            if (str == "end_conversation2") {
-                return "สิ้นสุดการสนทนา"
+            if (str == "end_conversation_back") {
+                return "กลับไปแชทต่อ"
             }
             if (str == "your_queue_number") {
                 return "คิวของคุณคือลำดับที่ "
             }
             if (str == "chat_is_active") {
-                return "ขณะนี้ท่านมีรายการสนทนากับศูนย์บริการทรูมันนี่อยู่"
+                return "ขณะนี้คุณลูกค้ามีการสนทนากับศูนย์บริการทรูมันนี่อยู่"
             }
             if (str == "please_wait") {
                 return "กรุณารอสักครู่"
             }
             if (str == "no_agent_available") {
-                return "ขออภัยครับ ไม่มีเจ้าหน้าที่ให้บริการในขณะนี้"
+                return "ขออภัยค่ะ เจ้าหน้าที่ไม่สามารถให้บริการได้ในขณะนี้"
             }
             if (str == "truemoney") {
                 return "ทรูมันนี่"
@@ -248,14 +307,14 @@ public class MINTEL_LiveChat: UIView {
                 return "ตกลง"
             }
             if (str == "chatting_with") {
-                return "ท่านกำลังสนทนากับ "
+                return "คุณกำลังสนทนากับ "
             }
             if (str == "chatbot") {
                 return "แชทบอท"
             }
         }
         
-        return "hello"
+        return ""
     }
     
     public func isSessionActive() -> Bool {
@@ -555,8 +614,8 @@ public class MINTEL_LiveChat: UIView {
             }
             
             surveyUrl = surveyUrl.replacingOccurrences(of: "sessionId", with: MINTEL_LiveChat.userId)
-            
-//            debugPrint("Survey Url : " ,surveyUrl)
+                + "&lang=" + (MINTEL_LiveChat.configuration?.language ?? "")
+            debugPrint("Survey Url : " ,surveyUrl)
             
             // Open Survey Url
             //guard let url = URL(string: surveyUrl) else { return }
@@ -565,13 +624,16 @@ public class MINTEL_LiveChat: UIView {
                     let currentViewController = self.topViewController()
                     if let cu = currentViewController {
                         cu.dismiss(animated: false) {
-                            let appViewController = UIApplication.shared.windows.first!.rootViewController!
-
+                            // Asked to change by Do TMN
+                            //let appViewController = UIApplication.shared.windows.first!.rootViewController!
+                            let appViewController = self.topViewController()!
+                            
                             let navigationController = UINavigationController(rootViewController: self.surveyView)
                             navigationController.modalPresentationStyle = .fullScreen
                             
                             MINTEL_LiveChat.surveyMode = true
                             self.surveyView.url = url
+                                        debugPrint("Survey Url : " , url)
                             appViewController.present(navigationController, animated: true, completion: nil)
                         }
                     }
@@ -608,8 +670,8 @@ public class MINTEL_LiveChat: UIView {
         
         let _ = MessageList.add(item: MyMessage(systemMessageType1: String(format: MINTEL_LiveChat.getLanguageString(str: "conversation_started") + "%@", date24)))
         self.getAnnouncementMessage()
-        MINTEL_LiveChat.sendPost(text: "สวัสดี", menu: true)
-
+        //MINTEL_LiveChat.sendPost(text: MINTEL_LiveChat.configuration?.startupIntent ?? "สวัสดี", menu: true)
+        //MINTEL_LiveChat.sendPost(text: "สวัสดี", menu: true)
     }
     
     public func sendToFront() {
@@ -1005,9 +1067,13 @@ public class MINTEL_LiveChat: UIView {
                     let bundle = Bundle(for: type(of: self))
                     let storyboard = UIStoryboard(name: "ChatBox", bundle: bundle)
                     let vc = storyboard.instantiateInitialViewController()!
-                    let viewController = UIApplication.shared.windows.first!.rootViewController!
-                    viewController.modalPresentationStyle = .fullScreen
-                    viewController.present(vc, animated: true) {
+                    //let viewController = UIApplication.shared.windows.first!.rootViewController!
+                    
+                    //let viewController = UIApplication.chatTopViewController(controller: UIApplication.shared.windows.first!.rootViewController!)
+                    
+                    let viewController = MINTEL_LiveChat.instance.topViewController();
+                    viewController?.modalPresentationStyle = .fullScreen
+                    viewController?.present(vc, animated: true) {
                         self.isHidden = true
                     }
                 }
@@ -1124,6 +1190,25 @@ public class MINTEL_LiveChat: UIView {
     }
 }
 
+extension UIApplication {
+    class func chatTopViewController(controller: UIViewController? = UIApplication.shared.keyWindow?.rootViewController) -> UIViewController? {
+        if let navigationController = controller as? UINavigationController {
+            return chatTopViewController(controller: navigationController.visibleViewController)
+        }
+        if let tabController = controller as? UITabBarController {
+            if let selected = tabController.selectedViewController {
+                return chatTopViewController(controller: selected)
+
+            }
+        }
+        if let presented = controller?.presentedViewController {
+
+            return chatTopViewController(controller: presented)
+        }
+        return controller
+    }
+}
+
 extension MINTEL_LiveChat : SCSChatSessionDelegate {
     public func session(_ session: SCSChatSession!, didError error: Error!, fatal: Bool) {
 //        debugPrint("Error : ", error)
@@ -1182,7 +1267,13 @@ extension MINTEL_LiveChat : SCSChatSessionDelegate {
                 
                 //let _ = MessageList.add(item: MyMessage(systemMessageType1: MINTEL_LiveChat.getLanguageString(str: "no_agent_available")))
             } else {
-                let _ = MessageList.add(item: MyMessage(systemMessageType1: "จบการสนทนา"))
+                var ending = MINTEL_LiveChat.getLanguageString(str: "end_conversation_chat");
+                /*
+                if (MINTEL_LiveChat.chatBotMode == true) {
+                    ending = MINTEL_LiveChat.getLanguageString(str: "end_conversation_chatbot");
+                }
+                */
+                let _ = MessageList.add(item: MyMessage(systemMessageType1: ending))
             }
             
             MINTEL_LiveChat.lastDidTransitionAgentState = ""
@@ -1203,9 +1294,12 @@ extension MINTEL_LiveChat : SCSChatSessionDelegate {
             DispatchQueue.main.async {
                 self.queueLabel.tag = Int.max
             }
-        }
-        
-        if previous == SCSChatSessionState.queued && current == SCSChatSessionState.ending {
+        } else if previous == SCSChatSessionState.inactive && current == SCSChatSessionState.connecting {
+            // Auto expand
+            DispatchQueue.main.async {
+                self.tapAction(sender: UIButton(), survey: MINTEL_LiveChat.surveyMode)
+            }
+        } else if previous == SCSChatSessionState.queued && current == SCSChatSessionState.ending {
             DispatchQueue.main.async {
                 MINTEL_LiveChat.lastDidTransitionAgentState = "queued"
             }
@@ -1218,19 +1312,24 @@ extension MINTEL_LiveChat  {
         let params: Parameters = [:]
         let url = (MINTEL_LiveChat.configuration?.announcementUrl ?? "").replacingOccurrences(of: "sessionId", with: MINTEL_LiveChat.userId)
         
-        debugPrint("Get Announcement")
+        debugPrint("Get Announcement " + url)
         
         let headers:HTTPHeaders = [
             "x-api-key": MINTEL_LiveChat.configuration?.xApikey ?? "" // "381b0ac187994f82bdc05c09d1034afa"
         ]
         
         do {
+            /*
             let jsonEncode = JSONEncoding.init()
-            var originalRequest:URLRequest? = try URLRequest(url: url, method: .post, headers: headers)
+            var originalRequest:URLRequest? = try URLRequest(url: url, method: .get)
             originalRequest?.timeoutInterval = 30
             let encodedURLRequest = try jsonEncode.encode(originalRequest!, with: params)
+ 
             Alamofire
                 .request(encodedURLRequest)
+                */
+            Alamofire
+                .request(url, method: .get, parameters: nil, encoding: JSONEncoding.init(), headers: headers)
                 .responseJSON { (response) in
                     
                      debugPrint("Load First Message response .")
@@ -1244,25 +1343,44 @@ extension MINTEL_LiveChat  {
                             } else if let items = json as? [[String:Any]] {
                                 
                                 if items.count > 0 {
-                                    items.forEach { (item) in
-                                        let desc = item["Description__c"] as? String ?? ""
-                                        if desc.count > 0 {
-                                            let _ = MessageList.add(item: MyMessage(text: desc, agent: false, bot: true))
+                                    DispatchQueue.global(qos: .userInitiated).async {
+                                        DispatchQueue.main.async {
+                                            items.forEach { (item) in
+                                                let desc = item["Description__c"] as? String ?? ""
+                                                if desc.count > 0 {
+                                                    let _ = MessageList.add(item: MyMessage(text: desc, agent: false, bot: true))
+                                                }
+                                            }
+
+                                            let menus:[[String:Any]] = [["action" : ["label" : "จบการสนทนา", "text" : "__00_app_endchat", "display" : false]], ["action" : [ "label" : "เริ่มการสนทนา", "text" : MINTEL_LiveChat.configuration?.startupIntent ?? "__00_home__greeting", "display" : false]]]
+                                            let _ = MessageList.add(item: MyMessage(text: "", agent: false, bot: true, menu: menus))
+                                            
+                                            let seconds = 1.0
+                                            DispatchQueue.main.asyncAfter(deadline: .now() + seconds) {
+                                                // Put your code which should be executed with a delay here
+                                                NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
+                                                object: nil,
+                                                userInfo:nil)
+                                            }
                                         }
                                     }
                                     
-                                    let menus:[[String:Any]] = [["action" : ["label" : "จบการสนทนา", "text" : "__00_app_endchat", "display" : false]], ["action" : [ "label" : "เริ่มการสนทนา", "text" : "__00_home__greeting", "display" : false]]]
-                                    let _ = MessageList.add(item: MyMessage(text: "", agent: false, bot: true, menu: menus))
-                                    NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
-                                                                    object: nil,
-                                                                    userInfo:nil)
                                 } else {
-                                    
                                     MINTEL_LiveChat.chatCanTyped = true
                                     DispatchQueue.global(qos: .userInitiated).async {
                                         DispatchQueue.main.async {
-//                                            self.checkAgentMode()
-                                            MINTEL_LiveChat.sendPost(text: "__00_home__greeting", menu: false)
+                                            if MINTEL_LiveChat.configuration?.phone.count == 0 {
+                                                let _ = MessageList.add(item: MyMessage(text: MINTEL_LiveChat.getLanguageString(str: "hello"), agent: false, bot: true))
+                                            } else {
+                                                let _ = MessageList.add(item: MyMessage(text: String(format: MINTEL_LiveChat.getLanguageString(str: "helloname") + "%@", MINTEL_LiveChat.configuration?.firstname ?? ""), agent: false, bot: true))
+                                            }
+                                            MINTEL_LiveChat.chatCanTyped = true
+                                            NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
+                                                                            object: nil,
+                                                                            userInfo:nil)
+                                
+                                            MINTEL_LiveChat.sendPost(text: MINTEL_LiveChat.configuration?.startupIntent ?? "__00_home__greeting", menu: false)
+ 
                                         }
                                         
                                         NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
@@ -1274,7 +1392,30 @@ extension MINTEL_LiveChat  {
                         }
                         break
                     case .failure(let error):
-//                        debugPrint(error)
+                        debugPrint(error)
+                        
+                        // Start chat anyway
+                        MINTEL_LiveChat.chatCanTyped = true
+                        DispatchQueue.global(qos: .userInitiated).async {
+                            DispatchQueue.main.async {
+                                if MINTEL_LiveChat.configuration?.phone.count == 0 {
+                                    let _ = MessageList.add(item: MyMessage(text: "สวัสดีค่ะ", agent: false, bot: true))
+                                } else {
+                                    let _ = MessageList.add(item: MyMessage(text: String(format: "สวัสดีค่ะ คุณ%@", MINTEL_LiveChat.configuration?.firstname ?? ""), agent: false, bot: true))
+                                }
+                                MINTEL_LiveChat.chatCanTyped = true
+                                NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
+                                                                object: nil,
+                                                                userInfo:nil)
+                    
+                                MINTEL_LiveChat.sendPost(text: MINTEL_LiveChat.configuration?.startupIntent ?? "__00_home__greeting", menu: false)
+
+                            }
+                            
+                            NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
+                                                            object: nil,
+                                                            userInfo:nil)
+                        }
                         break
                     }
             }
@@ -1335,7 +1476,7 @@ extension MINTEL_LiveChat  {
         Alamofire
             .request(url, method: .post, parameters: params, encoding: JSONEncoding.init(), headers: header)
             .responseString(completionHandler: { response in
-//                debugPrint(response)
+                debugPrint(response)
             })
     }
     
@@ -1355,8 +1496,12 @@ extension MINTEL_LiveChat  {
             if (notification.request.identifier == "MINTEL_LiveChatNotification_First") {
                 
             } else if (notification.request.identifier == "MINTEL_LiveChatNotification_Second") {
-                let _ = MessageList.add(item: MyMessage(text: "หากคุณลูกค้าไม่อยู่ในการสนทนา ผมขอจบการสนทนาเพื่อดูแลลูกค้าท่านอื่นต่อนะครับ\n\nกรณีต้องการสอบถามข้อมูลเพิ่มเติม กรุณาคลิก X ปิดหน้าต่าง และเริ่มการสนทนาใหม่ได้ตลอด 24 ชั่วโมงครับ\n\nขอบคุณที่ใช้บริการทรูมันนี่ สวัสดีครับ", agent: false, bot: true))
-                let _ = MessageList.add(item: MyMessage(systemMessageType1: MINTEL_LiveChat.getLanguageString(str: "end_conversation")))
+                let _ = MessageList.add(item: MyMessage(text: "หากคุณลูกค้าไม่อยู่ในการสนทนา ทรูมันนี่ขอจบการสนทนาเพื่อดูแลลูกค้าท่านอื่นต่อนะคะ\n\nกรณีต้องการสอบถามข้อมูลเพิ่มเติม กรุณาคลิก X ปิดหน้าต่าง และเริ่มการสนทนาใหม่ได้ตลอด 24 ชั่วโมง\n\nขอบคุณที่ใช้บริการทรูมันนี่ สวัสดีค่ะ", agent: false, bot: true))
+                var ending = MINTEL_LiveChat.getLanguageString(str: "end_conversation_chat");
+                if (MINTEL_LiveChat.chatBotMode == true) {
+                    ending = MINTEL_LiveChat.getLanguageString(str: "end_conversation_chatbot");
+                }
+                let _ = MessageList.add(item: MyMessage(systemMessageType1: ending))
                 MINTEL_LiveChat.chatCanTyped = false
                 MessageList.disableOnMenu()
                 NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
@@ -1397,8 +1542,12 @@ extension MINTEL_LiveChat  {
             debugPrint("Second Duration : ", secondTime)
             debugPrint("Minute Pass : ", minutes)
             if (minutes >= secondTime) {
-                let _ = MessageList.add(item: MyMessage(text: "หากคุณลูกค้าไม่อยู่ในการสนทนา ผมขอจบการสนทนาเพื่อดูแลลูกค้าท่านอื่นต่อนะครับ\n\nกรณีต้องการสอบถามข้อมูลเพิ่มเติม กรุณาคลิก X ปิดหน้าต่าง และเริ่มการสนทนาใหม่ได้ตลอด 24 ชั่วโมงครับ\n\nขอบคุณที่ใช้บริการทรูมันนี่ สวัสดีครับ", agent: false, bot: true))
-                let _ = MessageList.add(item: MyMessage(systemMessageType1: MINTEL_LiveChat.getLanguageString(str: "end_conversation")))
+                let _ = MessageList.add(item: MyMessage(text: "หากคุณลูกค้าไม่อยู่ในการสนทนา ทรูมันนี่ขอจบการสนทนาเพื่อดูแลลูกค้าท่านอื่นต่อนะคะ\n\nกรณีต้องการสอบถามข้อมูลเพิ่มเติม กรุณาคลิก X ปิดหน้าต่าง และเริ่มการสนทนาใหม่ได้ตลอด 24 ชั่วโมง\n\nขอบคุณที่ใช้บริการทรูมันนี่ สวัสดีค่ะ", agent: false, bot: true))
+                var ending = MINTEL_LiveChat.getLanguageString(str: "end_conversation_chat");
+                if (MINTEL_LiveChat.chatBotMode == true) {
+                    ending = MINTEL_LiveChat.getLanguageString(str: "end_conversation_chatbot");
+                }
+                let _ = MessageList.add(item: MyMessage(systemMessageType1: ending))
                 MINTEL_LiveChat.chatCanTyped = false
                 
                 MessageList.disableOnMenu()
@@ -1499,10 +1648,10 @@ extension MINTEL_LiveChat  {
         if (MINTEL_LiveChat.chatBotMode) {
             MINTEL_LiveChat.setupLocalNotification()
         }
-        
+            
         let _ = MessageList.add(item: MyMessage(typing: true, agent: !MINTEL_LiveChat.chatBotMode))
         if ("__00_home__greeting" == text) {
-            
+            /*
             if MINTEL_LiveChat.configuration?.phone.count == 0 {
                 let _ = MessageList.add(item: MyMessage(text: "สวัสดีครับ", agent: false, bot: true))
             } else {
@@ -1513,10 +1662,17 @@ extension MINTEL_LiveChat  {
             NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
                                             object: nil,
                                             userInfo:nil)
+            */
         } else {
+            /*
             if (!menu) {
                 MINTEL_LiveChat.chatStarted = true
             }
+ */
+        }
+        
+        if (!menu) {
+            MINTEL_LiveChat.chatStarted = true
         }
         
         let params : Parameters = ["session_id": MINTEL_LiveChat.userId,"text": text]
@@ -1573,7 +1729,7 @@ extension MINTEL_LiveChat  {
                                             }
                                             return
                                         }
-                                        let quickReplyTitle = body["text"] as? String ?? ""
+                                        var quickReplyTitle = body["text"] as? String ?? ""
                                         let quickReply = body["quickReply"] as? [String: Any] ?? nil
                                         if (menu) {
                                             if (type == "text") {
@@ -1593,6 +1749,19 @@ extension MINTEL_LiveChat  {
                                                     let items = quickReply!["items"] as? [[String:Any]] ?? []
                                                     let _ = MessageList.add(item: MyMessage(text: quickReplyTitle, agent: true, menu: items))
                                                 } else {
+                                                    if (quickReplyTitle == "ขอบคุณสำหรับข้อมูลค่ะ อีกสักครู่เจ้าหน้าที่จะมาให้บริการคุณลูกค้าต่อจากนี้ค่ะ") {
+                                                        if (MINTEL_LiveChat.configuration?.language == "my") {
+                                                            quickReplyTitle = "အချက်အလက်အတွက်ကျေးဇူးတင်ပါသည်။ ခဏကြာ ဝန်ထမ်းမှ သင့်ကို စတင်ပြီး ဝန်ဆောင်မှုပေးလိမ့်မယ်။"
+                                                        } else if (MINTEL_LiveChat.configuration?.language == "km" ) {
+                                                            quickReplyTitle = "អរគុណសម្រាប់ព័ត៌មាន បន្តិចទៀតក្រុមការងារនឹងមកបម្រើសេវាកម្មជូនលោកអ្នក"
+                                                        }
+                                                    } else if (quickReplyTitle == "ระหว่างรอเจ้าหน้าที่มาให้บริการ คุณลูกค้าจะไม่สามารถพิมพ์ข้อความเพิ่มเติมได้") {
+                                                        if (MINTEL_LiveChat.configuration?.language == "my") {
+                                                            quickReplyTitle = "ဝန်ဆောင်မှုပေးရန် ဝန်ထမ်းကို စောင့်နေစဉ်။ သင်သည် နောက်ထပ် မက်ဆေ့ချ်များကိုရိုက်ထည့်နိုင်မည် မဟုတ်ပါ။"
+                                                        } else if (MINTEL_LiveChat.configuration?.language == "km" ) {
+                                                            quickReplyTitle = "ខណះពេលដែលកំពុងរងចាំលោកអ្នកនឹងមិនអាចវាយសារបន្ថែមបានទេ"
+                                                        }
+                                                    }
                                                     let _ = MessageList.add(item: MyMessage(text: quickReplyTitle, agent: true, bot: true))
                                                 }
                                             }
