@@ -1,0 +1,6 @@
+framework module MINTEL_LiveChat {
+  umbrella header "MINTEL_LiveChat-umbrella.h"
+
+  export *
+  module * { export * }
+}
