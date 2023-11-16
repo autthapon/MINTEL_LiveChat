@@ -1,6 +1,6 @@
 {
   "name": "MINTEL_LiveChat",
-  "version": "1.4.30",
+  "version": "1.4.39",
   "summary": "MINTEL_LiveChat Library",
   "description": "TODO: Add long description of the pod here.",
   "homepage": "https://github.com/autthapon/MINTEL_LiveChat/wiki",
@@ -13,14 +13,22 @@
   },
   "source": {
     "git": "https://github.com/autthapon/MINTEL_LiveChat.git",
-    "tag": "1.4.30"
+    "tag": "1.4.39"
   },
   "platforms": {
-    "ios": "13.0"
+    "ios": "12.0"
   },
   "swift_versions": "4.2",
   "source_files": "MINTEL_LiveChat/Classes/**/*",
   "resources": "MINTEL_LiveChat/Assets/**/*",
+  "pod_target_xcconfig": {
+    "EXCLUDED_ARCHS[sdk=iphonesimulator*]": "arm64 armv7",
+    "EXCLUDED_ARCHS[sdk=iphoneos*]": "i386 x86_64"
+  },
+  "user_target_xcconfig": {
+    "EXCLUDED_ARCHS[sdk=iphonesimulator*]": "arm64 armv7",
+    "EXCLUDED_ARCHS[sdk=iphoneos*]": "i386 x86_64"
+  },
   "dependencies": {
     "Alamofire": [
       "~> 4.8.2"
