@@ -1,6 +1,6 @@
 PODS:
   - Alamofire (4.8.2)
-  - MINTEL_LiveChat (1.4.41):
+  - MINTEL_LiveChat (1.4.42):
     - Alamofire (~> 4.8.2)
 
 DEPENDENCIES:
@@ -16,7 +16,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Alamofire: ae5c501addb7afdbb13687d7f2f722c78734c2d3
-  MINTEL_LiveChat: 1d671e68615d9dc5495b52240e9e0d4134b1a38d
+  MINTEL_LiveChat: e46d62c2db0ed6a46a82433ebccb1ce5d9ddda2a
 
 PODFILE CHECKSUM: d9ef792f94c2b4151177e625d7ecd40b6f48e583
 
