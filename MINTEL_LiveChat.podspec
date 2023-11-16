@@ -28,7 +28,7 @@ TODO: Add long description of the pod here.
   s.source           = { :git => 'https://github.com/autthapon/MINTEL_LiveChat.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
-  s.ios.deployment_target = '13.0'
+  s.ios.deployment_target = '11.0'
   s.swift_version = '4.2'
   
   s.source_files = 'MINTEL_LiveChat/Classes/**/*'
@@ -36,6 +36,8 @@ TODO: Add long description of the pod here.
   # s.resource_bundles = {
   #   'MINTEL_LiveChat' => ['MINTEL_LiveChat/Assets/*.png']
   # }
+  s.pod_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
+  s.user_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
   s.dependency 'Alamofire', '~> 4.8.2'
   s.vendored_frameworks = 'MINTEL_LiveChat/Framework/ServiceCore.framework', 'MINTEL_LiveChat/Framework/ServiceChat.framework'
   s.preserve_paths = 'MINTEL_LiveChat/Framework/*'
