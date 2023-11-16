@@ -1,0 +1,1001 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		05347D9C1704449B5FDBFBBAB8155F67 /* PaddingLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38332301AE42CB754787F75971667FD6 /* PaddingLabel.swift */; };
+		0779733B23DD5F634A0D32CE31C1DA7F /* ViewController+Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = E05D86B9A182DDE46524C245161A415B /* ViewController+Network.swift */; };
+		0AF419DC34591AD75D5D9138A4E5DBC4 /* Downloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A7CC57F5B2DFAD52D51222A5EB1B886 /* Downloader.swift */; };
+		119B37D7E7D3A59C6685FC0EFEE881CE /* TaskDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A50DCBCED5F02570DDA9386825ACB4CF /* TaskDelegate.swift */; };
+		2119BBBDD76C9B182007C9E8D3BD8DDA /* Timeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58ACD677FD4B95B260E1B1C656D08B84 /* Timeline.swift */; };
+		22A8052D7E65F227DABDC31999FF1FEB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1326D5118E133E447A951818DABCF17 /* Foundation.framework */; };
+		2908AEEA0F6D3F2787CCC6C7821E80D1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B0531E7B127753E3268A42F092375A02 /* Assets.xcassets */; };
+		298211FB6CE9F9EF84E2A0F3A3CE5F97 /* MINTEL_LiveChat-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = A956CC7E889202B43B37B92659CD206F /* MINTEL_LiveChat-dummy.m */; };
+		341183EB02E46BD95966C59B27D9322E /* InputTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDCBB13D3D7DB64FE6C8ACD8513DDDAD /* InputTextView.swift */; };
+		39FAC5417E0CAFE765F4A8F8B2A9B0F2 /* RepeatingTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55A6550CB221C15B3C859484B53341E1 /* RepeatingTimer.swift */; };
+		39FEC1A456F256AF1E81EC31C0CECA36 /* GridViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 574BEF02B9EA8B6A8F281934991411CA /* GridViewCell.swift */; };
+		3A1ECF4D1483A0E4CB92109EA01BD641 /* MessageList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67470B7CC09D54C8B76EFF8F2DD36FA3 /* MessageList.swift */; };
+		3DE8AA12C52787A0BA570717BB27AAB0 /* ServerTrustPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D7B86CF47C1835EA00FE7A8B8D5CCC5 /* ServerTrustPolicy.swift */; };
+		43C3C17BFDFD71F45C5A7AFB0C0BEF45 /* ResponseSerialization.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF15E9B6C2601FD9AD228CA2D657E44B /* ResponseSerialization.swift */; };
+		4C301CCA81AAFB4453B6B827F846E0AC /* Validation.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3AE0D4172A0ECD56EBFA08991A7C70 /* Validation.swift */; };
+		5227B1A14863A40D9D774F8117E36F7D /* MyTapGuesture.swift in Sources */ = {isa = PBXBuildFile; fileRef = D38936083E0A334CEBAF7AADC3D8BF4E /* MyTapGuesture.swift */; };
+		530C0EE3901FD6F65311713DAA388B9C /* PaddingTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0D23819BF3276771CE2C291AA294F10 /* PaddingTextView.swift */; };
+		537D7452E6C8C82D9C1908EA29706E35 /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = B86FC9B604FA843EF26A951C43C0CE8B /* Notifications.swift */; };
+		5CECD168465CF59B489253695D3FB51F /* NetworkReachabilityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C36DA43AFF8C1CD3C666DACA78B91C2 /* NetworkReachabilityManager.swift */; };
+		5FF599E4215AA0B10171E4FCB65F7BD2 /* TypingIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB118BED6DEB73754B1B4370E7382DEA /* TypingIndicator.swift */; };
+		60E0837751E1446206D2F6A0CFB1DD55 /* ChatBox.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C228B38B6E923206A0F88A5076A5E734 /* ChatBox.storyboard */; };
+		6D0464BDCD6CE52FE613303A5558DE30 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1326D5118E133E447A951818DABCF17 /* Foundation.framework */; };
+		6DF154F51210D4C446AA021F2DBA34A4 /* MultipartFormData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 616062C81FDAB5C58156D8D00F0FC48D /* MultipartFormData.swift */; };
+		70EA6F068498CEC1B273D6BB1E74EB4E /* Alamofire.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85FC5E8A366EFB3B0CF9816F6A90B258 /* Alamofire.swift */; };
+		72CD602260E07C7A1A985C3B1FA31C68 /* MINTEL_Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70BADB4E204B1AC79ECD76B9E1E8965 /* MINTEL_Notifications.swift */; };
+		8023EECE8437F0311A065A9C2F420E2E /* SessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98D3F4F1011789493720361780A1982D /* SessionManager.swift */; };
+		826E863DFD0AEC8D0072970916E5E2E5 /* LiveChatConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37DD6BD6CEFADDFFDEF5BD19256EAE78 /* LiveChatConfiguration.swift */; };
+		85379CCF081FC9C36F082E71D2DF4D2F /* SessionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EFB0C226D602EC371BECC5BD2CC9370 /* SessionDelegate.swift */; };
+		8C7FA55A128196C1D426B57210DABE67 /* ProgressHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39DF12093B2BCB9D2958C1172962CBC2 /* ProgressHUD.swift */; };
+		8D86AC70CCC44F14C7EE913C19F22002 /* ServiceCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49D42E64706C2E5C2116A8258CFA1E8E /* ServiceCore.framework */; };
+		90E42B43904F2F22CA3A8BBD0155D9A2 /* AFError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E63F367F44FC87833A1792B541781BB7 /* AFError.swift */; };
+		9146510540C8DAF109CC4BCCB0CA74A9 /* Alamofire-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = FFE4C558583FF9884EBA9DDF1C6F0DCD /* Alamofire-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9476244A6AE852536D07A71923EDC7AF /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 408AED65AF65BD7BCEAD4034BA10CDF9 /* ViewController.swift */; };
+		96C7DB447C5F2CBC8C5C2FEC459DD317 /* CustomTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C55AD78B4CA66D58445B71E077A4459 /* CustomTableViewCell.swift */; };
+		9BCBBFE03318F5DD172F9E1F3100F67B /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = B06A315E96FC5BCCAB1C5145D4BF1BCF /* Response.swift */; };
+		9E747F798842F0BA013C183251394495 /* MINTEL_SurveyController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 871727BC797FC1C9DE66CBDDC7DFF5E4 /* MINTEL_SurveyController.swift */; };
+		A0C3860ED7B531801BDF8C7916E16FA4 /* ServiceChat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86BCB6CA7FBAE527816B95064E1FC34D /* ServiceChat.framework */; };
+		A2154BEE96DEBC630B113BBB924FC409 /* MyMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CB0F6665B921A4DF8555F3158F1E5C4 /* MyMessage.swift */; };
+		A4B2E88AB515859CD2D96DC2C8807EDF /* Checkbox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DDA2536EBABD179AE22B81C5E4703E7 /* Checkbox.swift */; };
+		ACE5872D48CF22A82028FB75214FA1D0 /* Pods-MINTEL_LiveChat_Example-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = E7D687B4598A10B74F8C420F251BF53B /* Pods-MINTEL_LiveChat_Example-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BD08629122FCE853698D41D8DC9CA952 /* MINTEL_LiveChat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 676D86FC4E04F8B67BF30D19F5A67EBC /* MINTEL_LiveChat.swift */; };
+		C27C72B2D755F3A7B2D97089CA75146F /* Alamofire-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 0389D0AFC58E73A075F3F7740CE1D441 /* Alamofire-dummy.m */; };
+		C46AFD4A3BF94434310B8F98833E427F /* CustomCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C1FDD6BE69A721106CA64F88DD09F440 /* CustomCell.xib */; };
+		C7FF7AF546F21FF98348587F8D103961 /* MINTEL_LiveChat-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = E0F9AC92CF6BD3FEA54BCE055745E5B7 /* MINTEL_LiveChat-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C97EF7BE1661904AAD18D293940BA592 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1326D5118E133E447A951818DABCF17 /* Foundation.framework */; };
+		CE5BFA7E78F11C7BBF5A5F8860B92465 /* ViewController+Saleforce.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE8646614836D1D60C592C6400CAD6A0 /* ViewController+Saleforce.swift */; };
+		D46CB5AF7BE345C5D27ABF9DCF692881 /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DA11279AA1D6557BB10C9936E9B3A3 /* Result.swift */; };
+		D593E5BEB4221FF272DBF69E51945319 /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EE101F8BE2F43D16C24A9874C79A94A /* Request.swift */; };
+		DBD7D9DDCDE82085828E7E29B022BF7A /* CloseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E98FDD41EED6A549C89D669651F2B78 /* CloseViewController.swift */; };
+		ED5C79BA7492CB6B6C1A11A802687F6D /* BubbleCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6924BD7DD5BC671E2CC78C6695BEFB9 /* BubbleCircle.swift */; };
+		EF0610F3D90FF34B4098D068586E8702 /* Pods-MINTEL_LiveChat_Example-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 49ABD9B9EF1D44BC0FA1DB2E6E6A447A /* Pods-MINTEL_LiveChat_Example-dummy.m */; };
+		EFC1866D60FD03B24CFEAD3C6DD7B0C7 /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D1731FC94B63C52F8C366BFB8E6A81 /* Extension.swift */; };
+		F3FF7C6963EF4AD8BDEF11E9171233C4 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DDE32B36E31358B95A0A6FEDF7231FC /* File.swift */; };
+		F5C92DC8E274C4FC541267A97575BC05 /* ParameterEncoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8D7A47A590ED08C21AB24503841C370 /* ParameterEncoding.swift */; };
+		F788400743A1E2D3E4F69EF925DA8C70 /* ImagePreviewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70D8425F4B8190D402692CC8FC27EE7F /* ImagePreviewController.swift */; };
+		F93AEAF3659818E2308E0E5C70B66423 /* DispatchQueue+Alamofire.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47D8FC88383C541917CFD5ADA31DD7AB /* DispatchQueue+Alamofire.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		4E0541A3BEEC202975DBFB1B818DC429 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = EAAA1AD3A8A1B59AB91319EE40752C6D;
+			remoteInfo = Alamofire;
+		};
+		6310B083A59661231C5C7850A899C1EA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 536250FB499BEAF5E4ABF228482E78CE;
+			remoteInfo = MINTEL_LiveChat;
+		};
+		D2F42F73CB8A59D11FF2C0FD2B490DAC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = EAAA1AD3A8A1B59AB91319EE40752C6D;
+			remoteInfo = Alamofire;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		0389D0AFC58E73A075F3F7740CE1D441 /* Alamofire-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Alamofire-dummy.m"; sourceTree = "<group>"; };
+		0C96CDEC4805F115B4225E4EBFC020B7 /* Alamofire.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Alamofire.release.xcconfig; sourceTree = "<group>"; };
+		15C980DFEFAD77132D160D09D6F7AE99 /* Pods-MINTEL_LiveChat_Example-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-MINTEL_LiveChat_Example-Info.plist"; sourceTree = "<group>"; };
+		1C55AD78B4CA66D58445B71E077A4459 /* CustomTableViewCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CustomTableViewCell.swift; path = MINTEL_LiveChat/Classes/CustomTableViewCell.swift; sourceTree = "<group>"; };
+		1D2F06EA4D084EADC31C6BF0B7CABF6C /* Pods-MINTEL_LiveChat_Example-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-MINTEL_LiveChat_Example-frameworks.sh"; sourceTree = "<group>"; };
+		1E98FDD41EED6A549C89D669651F2B78 /* CloseViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CloseViewController.swift; path = MINTEL_LiveChat/Classes/CloseViewController.swift; sourceTree = "<group>"; };
+		2539C902DEF605FF55C5981D47238086 /* Pods-MINTEL_LiveChat_Example */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = "Pods-MINTEL_LiveChat_Example"; path = Pods_MINTEL_LiveChat_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		2C3E157B0EC035AB361A88C73720A4D8 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; path = README.md; sourceTree = "<group>"; };
+		2C50F83F93296D01A5B9009365A2671D /* Alamofire.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Alamofire.debug.xcconfig; sourceTree = "<group>"; };
+		2DDA2536EBABD179AE22B81C5E4703E7 /* Checkbox.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Checkbox.swift; path = MINTEL_LiveChat/Classes/Checkbox.swift; sourceTree = "<group>"; };
+		2EE101F8BE2F43D16C24A9874C79A94A /* Request.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Request.swift; path = Source/Request.swift; sourceTree = "<group>"; };
+		37DD6BD6CEFADDFFDEF5BD19256EAE78 /* LiveChatConfiguration.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LiveChatConfiguration.swift; path = MINTEL_LiveChat/Classes/LiveChatConfiguration.swift; sourceTree = "<group>"; };
+		38332301AE42CB754787F75971667FD6 /* PaddingLabel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PaddingLabel.swift; path = MINTEL_LiveChat/Classes/PaddingLabel.swift; sourceTree = "<group>"; };
+		39DF12093B2BCB9D2958C1172962CBC2 /* ProgressHUD.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ProgressHUD.swift; path = MINTEL_LiveChat/Classes/ProgressHUD.swift; sourceTree = "<group>"; };
+		3D7B86CF47C1835EA00FE7A8B8D5CCC5 /* ServerTrustPolicy.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ServerTrustPolicy.swift; path = Source/ServerTrustPolicy.swift; sourceTree = "<group>"; };
+		3EBE3CE6DE9B77FA58EAFF3C0E9515F6 /* MINTEL_LiveChat.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = MINTEL_LiveChat.release.xcconfig; sourceTree = "<group>"; };
+		3EFB0C226D602EC371BECC5BD2CC9370 /* SessionDelegate.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SessionDelegate.swift; path = Source/SessionDelegate.swift; sourceTree = "<group>"; };
+		408AED65AF65BD7BCEAD4034BA10CDF9 /* ViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ViewController.swift; path = MINTEL_LiveChat/Classes/ViewController.swift; sourceTree = "<group>"; };
+		47D8FC88383C541917CFD5ADA31DD7AB /* DispatchQueue+Alamofire.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "DispatchQueue+Alamofire.swift"; path = "Source/DispatchQueue+Alamofire.swift"; sourceTree = "<group>"; };
+		49ABD9B9EF1D44BC0FA1DB2E6E6A447A /* Pods-MINTEL_LiveChat_Example-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-MINTEL_LiveChat_Example-dummy.m"; sourceTree = "<group>"; };
+		49D42E64706C2E5C2116A8258CFA1E8E /* ServiceCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ServiceCore.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.0.sdk/System/Library/Frameworks/ServiceCore.framework; sourceTree = DEVELOPER_DIR; };
+		528C9E596948A9DF839E075CB0E45FCD /* Pods-MINTEL_LiveChat_Example-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-MINTEL_LiveChat_Example-acknowledgements.plist"; sourceTree = "<group>"; };
+		55A6550CB221C15B3C859484B53341E1 /* RepeatingTimer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RepeatingTimer.swift; path = MINTEL_LiveChat/Classes/RepeatingTimer.swift; sourceTree = "<group>"; };
+		574BEF02B9EA8B6A8F281934991411CA /* GridViewCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = GridViewCell.swift; path = MINTEL_LiveChat/Classes/GridViewCell.swift; sourceTree = "<group>"; };
+		58ACD677FD4B95B260E1B1C656D08B84 /* Timeline.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Timeline.swift; path = Source/Timeline.swift; sourceTree = "<group>"; };
+		5D797E9A5C5782CE845840781FA1CC81 /* Alamofire */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Alamofire; path = Alamofire.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		5DDE32B36E31358B95A0A6FEDF7231FC /* File.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = File.swift; path = MINTEL_LiveChat/Classes/File.swift; sourceTree = "<group>"; };
+		5ED047C2109FD8C989F0D93F032AAA29 /* Alamofire.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = Alamofire.modulemap; sourceTree = "<group>"; };
+		5FEB2726D8D5B1A0A657204329BCF4BD /* Alamofire-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Alamofire-prefix.pch"; sourceTree = "<group>"; };
+		616062C81FDAB5C58156D8D00F0FC48D /* MultipartFormData.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MultipartFormData.swift; path = Source/MultipartFormData.swift; sourceTree = "<group>"; };
+		655A87497E9CBAAF620388F36C2487C5 /* MINTEL_LiveChat-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "MINTEL_LiveChat-Info.plist"; sourceTree = "<group>"; };
+		67470B7CC09D54C8B76EFF8F2DD36FA3 /* MessageList.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MessageList.swift; path = MINTEL_LiveChat/Classes/MessageList.swift; sourceTree = "<group>"; };
+		676D86FC4E04F8B67BF30D19F5A67EBC /* MINTEL_LiveChat.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MINTEL_LiveChat.swift; path = MINTEL_LiveChat/Classes/MINTEL_LiveChat.swift; sourceTree = "<group>"; };
+		6B1091BD7D5CBDF4BCD3EAEA489DF147 /* Pods-MINTEL_LiveChat_Example-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-MINTEL_LiveChat_Example-acknowledgements.markdown"; sourceTree = "<group>"; };
+		6DDBEA2F3B50009F62B9CE0231700487 /* Pods-MINTEL_LiveChat_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-MINTEL_LiveChat_Example.release.xcconfig"; sourceTree = "<group>"; };
+		70D8425F4B8190D402692CC8FC27EE7F /* ImagePreviewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ImagePreviewController.swift; path = MINTEL_LiveChat/Classes/ImagePreviewController.swift; sourceTree = "<group>"; };
+		75942C52EC78A8753A6C71F78E768505 /* ServiceChat.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ServiceChat.framework; path = MINTEL_LiveChat/Framework/ServiceChat.framework; sourceTree = "<group>"; };
+		7C36DA43AFF8C1CD3C666DACA78B91C2 /* NetworkReachabilityManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NetworkReachabilityManager.swift; path = Source/NetworkReachabilityManager.swift; sourceTree = "<group>"; };
+		85FC5E8A366EFB3B0CF9816F6A90B258 /* Alamofire.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Alamofire.swift; path = Source/Alamofire.swift; sourceTree = "<group>"; };
+		86BCB6CA7FBAE527816B95064E1FC34D /* ServiceChat.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ServiceChat.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.0.sdk/System/Library/Frameworks/ServiceChat.framework; sourceTree = DEVELOPER_DIR; };
+		871727BC797FC1C9DE66CBDDC7DFF5E4 /* MINTEL_SurveyController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MINTEL_SurveyController.swift; path = MINTEL_LiveChat/Classes/MINTEL_SurveyController.swift; sourceTree = "<group>"; };
+		94C6D0662C2DA92CFA81E8A57FB6A824 /* MINTEL_LiveChat.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; path = MINTEL_LiveChat.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		98D3F4F1011789493720361780A1982D /* SessionManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SessionManager.swift; path = Source/SessionManager.swift; sourceTree = "<group>"; };
+		9A7CC57F5B2DFAD52D51222A5EB1B886 /* Downloader.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Downloader.swift; path = MINTEL_LiveChat/Classes/Downloader.swift; sourceTree = "<group>"; };
+		9CB0F6665B921A4DF8555F3158F1E5C4 /* MyMessage.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MyMessage.swift; path = MINTEL_LiveChat/Classes/MyMessage.swift; sourceTree = "<group>"; };
+		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		A0D1731FC94B63C52F8C366BFB8E6A81 /* Extension.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Extension.swift; path = MINTEL_LiveChat/Classes/Extension.swift; sourceTree = "<group>"; };
+		A1326D5118E133E447A951818DABCF17 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		A31DDF318E3E03B4DEA2F1B4182A555D /* Alamofire-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Alamofire-Info.plist"; sourceTree = "<group>"; };
+		A4BD30DC44D6E2626A573E31B4FD4315 /* MINTEL_LiveChat-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "MINTEL_LiveChat-prefix.pch"; sourceTree = "<group>"; };
+		A50DCBCED5F02570DDA9386825ACB4CF /* TaskDelegate.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TaskDelegate.swift; path = Source/TaskDelegate.swift; sourceTree = "<group>"; };
+		A6924BD7DD5BC671E2CC78C6695BEFB9 /* BubbleCircle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BubbleCircle.swift; path = MINTEL_LiveChat/Classes/BubbleCircle.swift; sourceTree = "<group>"; };
+		A956CC7E889202B43B37B92659CD206F /* MINTEL_LiveChat-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "MINTEL_LiveChat-dummy.m"; sourceTree = "<group>"; };
+		AE8646614836D1D60C592C6400CAD6A0 /* ViewController+Saleforce.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "ViewController+Saleforce.swift"; path = "MINTEL_LiveChat/Classes/ViewController+Saleforce.swift"; sourceTree = "<group>"; };
+		AF15E9B6C2601FD9AD228CA2D657E44B /* ResponseSerialization.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ResponseSerialization.swift; path = Source/ResponseSerialization.swift; sourceTree = "<group>"; };
+		B0531E7B127753E3268A42F092375A02 /* Assets.xcassets */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = MINTEL_LiveChat/Assets/Assets.xcassets; sourceTree = "<group>"; };
+		B06A315E96FC5BCCAB1C5145D4BF1BCF /* Response.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Response.swift; path = Source/Response.swift; sourceTree = "<group>"; };
+		B34591E6D9CCFCA2968A92AF9CAC1FA6 /* Pods-MINTEL_LiveChat_Example.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-MINTEL_LiveChat_Example.modulemap"; sourceTree = "<group>"; };
+		B55E3D0C8BDA03BF8907815A5D3E5691 /* MINTEL_LiveChat */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = MINTEL_LiveChat; path = MINTEL_LiveChat.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B75AB7AD3C660DAAE9F388C19934702B /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; path = LICENSE; sourceTree = "<group>"; };
+		B86FC9B604FA843EF26A951C43C0CE8B /* Notifications.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Notifications.swift; path = Source/Notifications.swift; sourceTree = "<group>"; };
+		BDB9B95D7E587DCFE24FAFC87DAB9D02 /* MINTEL_LiveChat.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = MINTEL_LiveChat.modulemap; sourceTree = "<group>"; };
+		C1FDD6BE69A721106CA64F88DD09F440 /* CustomCell.xib */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = file.xib; name = CustomCell.xib; path = MINTEL_LiveChat/Assets/CustomCell.xib; sourceTree = "<group>"; };
+		C228B38B6E923206A0F88A5076A5E734 /* ChatBox.storyboard */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = file.storyboard; name = ChatBox.storyboard; path = MINTEL_LiveChat/Assets/ChatBox.storyboard; sourceTree = "<group>"; };
+		D38936083E0A334CEBAF7AADC3D8BF4E /* MyTapGuesture.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MyTapGuesture.swift; path = MINTEL_LiveChat/Classes/MyTapGuesture.swift; sourceTree = "<group>"; };
+		DF3AE0D4172A0ECD56EBFA08991A7C70 /* Validation.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Validation.swift; path = Source/Validation.swift; sourceTree = "<group>"; };
+		E05D86B9A182DDE46524C245161A415B /* ViewController+Network.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "ViewController+Network.swift"; path = "MINTEL_LiveChat/Classes/ViewController+Network.swift"; sourceTree = "<group>"; };
+		E0D23819BF3276771CE2C291AA294F10 /* PaddingTextView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PaddingTextView.swift; path = MINTEL_LiveChat/Classes/PaddingTextView.swift; sourceTree = "<group>"; };
+		E0F9AC92CF6BD3FEA54BCE055745E5B7 /* MINTEL_LiveChat-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "MINTEL_LiveChat-umbrella.h"; sourceTree = "<group>"; };
+		E63F367F44FC87833A1792B541781BB7 /* AFError.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AFError.swift; path = Source/AFError.swift; sourceTree = "<group>"; };
+		E70BADB4E204B1AC79ECD76B9E1E8965 /* MINTEL_Notifications.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MINTEL_Notifications.swift; path = MINTEL_LiveChat/Classes/MINTEL_Notifications.swift; sourceTree = "<group>"; };
+		E76130E8DE541ABF0F38993EDEA9B304 /* MINTEL_LiveChat.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = MINTEL_LiveChat.debug.xcconfig; sourceTree = "<group>"; };
+		E7D687B4598A10B74F8C420F251BF53B /* Pods-MINTEL_LiveChat_Example-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-MINTEL_LiveChat_Example-umbrella.h"; sourceTree = "<group>"; };
+		EB0151EE938F50F93992024CEBB7406C /* ServiceCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ServiceCore.framework; path = MINTEL_LiveChat/Framework/ServiceCore.framework; sourceTree = "<group>"; };
+		EB118BED6DEB73754B1B4370E7382DEA /* TypingIndicator.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TypingIndicator.swift; path = MINTEL_LiveChat/Classes/TypingIndicator.swift; sourceTree = "<group>"; };
+		EDCBB13D3D7DB64FE6C8ACD8513DDDAD /* InputTextView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = InputTextView.swift; path = MINTEL_LiveChat/Classes/InputTextView.swift; sourceTree = "<group>"; };
+		F1DA11279AA1D6557BB10C9936E9B3A3 /* Result.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Result.swift; path = Source/Result.swift; sourceTree = "<group>"; };
+		F5101E98A3EB6C6ECC5E2906612A7E91 /* Pods-MINTEL_LiveChat_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-MINTEL_LiveChat_Example.debug.xcconfig"; sourceTree = "<group>"; };
+		F8D7A47A590ED08C21AB24503841C370 /* ParameterEncoding.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ParameterEncoding.swift; path = Source/ParameterEncoding.swift; sourceTree = "<group>"; };
+		FFE4C558583FF9884EBA9DDF1C6F0DCD /* Alamofire-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Alamofire-umbrella.h"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		1FDEBC1279186C4DE344C5D2CCE81B3D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6D0464BDCD6CE52FE613303A5558DE30 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8897E0986C4B83D2D10FB226827C75FE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				22A8052D7E65F227DABDC31999FF1FEB /* Foundation.framework in Frameworks */,
+				A0C3860ED7B531801BDF8C7916E16FA4 /* ServiceChat.framework in Frameworks */,
+				8D86AC70CCC44F14C7EE913C19F22002 /* ServiceCore.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EA2EB377932FAB76C6800A7385348A42 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C97EF7BE1661904AAD18D293940BA592 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		03C5C200A0787E300053CFA8F53CA094 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				2B875CFEA0454D2E6C6FD80782F64CDF /* iOS */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		21C5A3880864E5B63D4EB761DFAD6136 /* Pods-MINTEL_LiveChat_Example */ = {
+			isa = PBXGroup;
+			children = (
+				B34591E6D9CCFCA2968A92AF9CAC1FA6 /* Pods-MINTEL_LiveChat_Example.modulemap */,
+				6B1091BD7D5CBDF4BCD3EAEA489DF147 /* Pods-MINTEL_LiveChat_Example-acknowledgements.markdown */,
+				528C9E596948A9DF839E075CB0E45FCD /* Pods-MINTEL_LiveChat_Example-acknowledgements.plist */,
+				49ABD9B9EF1D44BC0FA1DB2E6E6A447A /* Pods-MINTEL_LiveChat_Example-dummy.m */,
+				1D2F06EA4D084EADC31C6BF0B7CABF6C /* Pods-MINTEL_LiveChat_Example-frameworks.sh */,
+				15C980DFEFAD77132D160D09D6F7AE99 /* Pods-MINTEL_LiveChat_Example-Info.plist */,
+				E7D687B4598A10B74F8C420F251BF53B /* Pods-MINTEL_LiveChat_Example-umbrella.h */,
+				F5101E98A3EB6C6ECC5E2906612A7E91 /* Pods-MINTEL_LiveChat_Example.debug.xcconfig */,
+				6DDBEA2F3B50009F62B9CE0231700487 /* Pods-MINTEL_LiveChat_Example.release.xcconfig */,
+			);
+			name = "Pods-MINTEL_LiveChat_Example";
+			path = "Target Support Files/Pods-MINTEL_LiveChat_Example";
+			sourceTree = "<group>";
+		};
+		2B875CFEA0454D2E6C6FD80782F64CDF /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				A1326D5118E133E447A951818DABCF17 /* Foundation.framework */,
+				86BCB6CA7FBAE527816B95064E1FC34D /* ServiceChat.framework */,
+				49D42E64706C2E5C2116A8258CFA1E8E /* ServiceCore.framework */,
+			);
+			name = iOS;
+			sourceTree = "<group>";
+		};
+		4C9AA0DCCB735E29C8FDF43836D87AD8 /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				BDB9B95D7E587DCFE24FAFC87DAB9D02 /* MINTEL_LiveChat.modulemap */,
+				A956CC7E889202B43B37B92659CD206F /* MINTEL_LiveChat-dummy.m */,
+				655A87497E9CBAAF620388F36C2487C5 /* MINTEL_LiveChat-Info.plist */,
+				A4BD30DC44D6E2626A573E31B4FD4315 /* MINTEL_LiveChat-prefix.pch */,
+				E0F9AC92CF6BD3FEA54BCE055745E5B7 /* MINTEL_LiveChat-umbrella.h */,
+				E76130E8DE541ABF0F38993EDEA9B304 /* MINTEL_LiveChat.debug.xcconfig */,
+				3EBE3CE6DE9B77FA58EAFF3C0E9515F6 /* MINTEL_LiveChat.release.xcconfig */,
+			);
+			name = "Support Files";
+			path = "Example/Pods/Target Support Files/MINTEL_LiveChat";
+			sourceTree = "<group>";
+		};
+		6C9FFEB600090AD8671CFB57AC52FA9C /* MINTEL_LiveChat */ = {
+			isa = PBXGroup;
+			children = (
+				B0531E7B127753E3268A42F092375A02 /* Assets.xcassets */,
+				A6924BD7DD5BC671E2CC78C6695BEFB9 /* BubbleCircle.swift */,
+				C228B38B6E923206A0F88A5076A5E734 /* ChatBox.storyboard */,
+				2DDA2536EBABD179AE22B81C5E4703E7 /* Checkbox.swift */,
+				1E98FDD41EED6A549C89D669651F2B78 /* CloseViewController.swift */,
+				C1FDD6BE69A721106CA64F88DD09F440 /* CustomCell.xib */,
+				1C55AD78B4CA66D58445B71E077A4459 /* CustomTableViewCell.swift */,
+				9A7CC57F5B2DFAD52D51222A5EB1B886 /* Downloader.swift */,
+				A0D1731FC94B63C52F8C366BFB8E6A81 /* Extension.swift */,
+				5DDE32B36E31358B95A0A6FEDF7231FC /* File.swift */,
+				574BEF02B9EA8B6A8F281934991411CA /* GridViewCell.swift */,
+				70D8425F4B8190D402692CC8FC27EE7F /* ImagePreviewController.swift */,
+				EDCBB13D3D7DB64FE6C8ACD8513DDDAD /* InputTextView.swift */,
+				37DD6BD6CEFADDFFDEF5BD19256EAE78 /* LiveChatConfiguration.swift */,
+				67470B7CC09D54C8B76EFF8F2DD36FA3 /* MessageList.swift */,
+				676D86FC4E04F8B67BF30D19F5A67EBC /* MINTEL_LiveChat.swift */,
+				E70BADB4E204B1AC79ECD76B9E1E8965 /* MINTEL_Notifications.swift */,
+				871727BC797FC1C9DE66CBDDC7DFF5E4 /* MINTEL_SurveyController.swift */,
+				9CB0F6665B921A4DF8555F3158F1E5C4 /* MyMessage.swift */,
+				D38936083E0A334CEBAF7AADC3D8BF4E /* MyTapGuesture.swift */,
+				38332301AE42CB754787F75971667FD6 /* PaddingLabel.swift */,
+				E0D23819BF3276771CE2C291AA294F10 /* PaddingTextView.swift */,
+				39DF12093B2BCB9D2958C1172962CBC2 /* ProgressHUD.swift */,
+				55A6550CB221C15B3C859484B53341E1 /* RepeatingTimer.swift */,
+				EB118BED6DEB73754B1B4370E7382DEA /* TypingIndicator.swift */,
+				408AED65AF65BD7BCEAD4034BA10CDF9 /* ViewController.swift */,
+				E05D86B9A182DDE46524C245161A415B /* ViewController+Network.swift */,
+				AE8646614836D1D60C592C6400CAD6A0 /* ViewController+Saleforce.swift */,
+				9231E54C77AEED09E6B6A40BB03455E4 /* Frameworks */,
+				B2C2B944774D02364A15D86FC21D4293 /* Pod */,
+				4C9AA0DCCB735E29C8FDF43836D87AD8 /* Support Files */,
+			);
+			name = MINTEL_LiveChat;
+			path = ../..;
+			sourceTree = "<group>";
+		};
+		7D02D4600E8C814A4EF1D8C7FF8FA146 /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				5ED047C2109FD8C989F0D93F032AAA29 /* Alamofire.modulemap */,
+				0389D0AFC58E73A075F3F7740CE1D441 /* Alamofire-dummy.m */,
+				A31DDF318E3E03B4DEA2F1B4182A555D /* Alamofire-Info.plist */,
+				5FEB2726D8D5B1A0A657204329BCF4BD /* Alamofire-prefix.pch */,
+				FFE4C558583FF9884EBA9DDF1C6F0DCD /* Alamofire-umbrella.h */,
+				2C50F83F93296D01A5B9009365A2671D /* Alamofire.debug.xcconfig */,
+				0C96CDEC4805F115B4225E4EBFC020B7 /* Alamofire.release.xcconfig */,
+			);
+			name = "Support Files";
+			path = "../Target Support Files/Alamofire";
+			sourceTree = "<group>";
+		};
+		83EB9A55F631A774F555C0EC1F1F7AB9 /* Development Pods */ = {
+			isa = PBXGroup;
+			children = (
+				6C9FFEB600090AD8671CFB57AC52FA9C /* MINTEL_LiveChat */,
+			);
+			name = "Development Pods";
+			sourceTree = "<group>";
+		};
+		90FDDC7F5D24472360CA259A8D40AE98 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				CC362FA3C7A87C2E5630BA06D8CB57BD /* Alamofire */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		9231E54C77AEED09E6B6A40BB03455E4 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				75942C52EC78A8753A6C71F78E768505 /* ServiceChat.framework */,
+				EB0151EE938F50F93992024CEBB7406C /* ServiceCore.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		B2C2B944774D02364A15D86FC21D4293 /* Pod */ = {
+			isa = PBXGroup;
+			children = (
+				B75AB7AD3C660DAAE9F388C19934702B /* LICENSE */,
+				94C6D0662C2DA92CFA81E8A57FB6A824 /* MINTEL_LiveChat.podspec */,
+				2C3E157B0EC035AB361A88C73720A4D8 /* README.md */,
+			);
+			name = Pod;
+			sourceTree = "<group>";
+		};
+		C9726694F468340877D2499DCC8962FF /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5D797E9A5C5782CE845840781FA1CC81 /* Alamofire */,
+				B55E3D0C8BDA03BF8907815A5D3E5691 /* MINTEL_LiveChat */,
+				2539C902DEF605FF55C5981D47238086 /* Pods-MINTEL_LiveChat_Example */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		CC362FA3C7A87C2E5630BA06D8CB57BD /* Alamofire */ = {
+			isa = PBXGroup;
+			children = (
+				E63F367F44FC87833A1792B541781BB7 /* AFError.swift */,
+				85FC5E8A366EFB3B0CF9816F6A90B258 /* Alamofire.swift */,
+				47D8FC88383C541917CFD5ADA31DD7AB /* DispatchQueue+Alamofire.swift */,
+				616062C81FDAB5C58156D8D00F0FC48D /* MultipartFormData.swift */,
+				7C36DA43AFF8C1CD3C666DACA78B91C2 /* NetworkReachabilityManager.swift */,
+				B86FC9B604FA843EF26A951C43C0CE8B /* Notifications.swift */,
+				F8D7A47A590ED08C21AB24503841C370 /* ParameterEncoding.swift */,
+				2EE101F8BE2F43D16C24A9874C79A94A /* Request.swift */,
+				B06A315E96FC5BCCAB1C5145D4BF1BCF /* Response.swift */,
+				AF15E9B6C2601FD9AD228CA2D657E44B /* ResponseSerialization.swift */,
+				F1DA11279AA1D6557BB10C9936E9B3A3 /* Result.swift */,
+				3D7B86CF47C1835EA00FE7A8B8D5CCC5 /* ServerTrustPolicy.swift */,
+				3EFB0C226D602EC371BECC5BD2CC9370 /* SessionDelegate.swift */,
+				98D3F4F1011789493720361780A1982D /* SessionManager.swift */,
+				A50DCBCED5F02570DDA9386825ACB4CF /* TaskDelegate.swift */,
+				58ACD677FD4B95B260E1B1C656D08B84 /* Timeline.swift */,
+				DF3AE0D4172A0ECD56EBFA08991A7C70 /* Validation.swift */,
+				7D02D4600E8C814A4EF1D8C7FF8FA146 /* Support Files */,
+			);
+			name = Alamofire;
+			path = Alamofire;
+			sourceTree = "<group>";
+		};
+		CF1408CF629C7361332E53B88F7BD30C = {
+			isa = PBXGroup;
+			children = (
+				9D940727FF8FB9C785EB98E56350EF41 /* Podfile */,
+				83EB9A55F631A774F555C0EC1F1F7AB9 /* Development Pods */,
+				03C5C200A0787E300053CFA8F53CA094 /* Frameworks */,
+				90FDDC7F5D24472360CA259A8D40AE98 /* Pods */,
+				C9726694F468340877D2499DCC8962FF /* Products */,
+				F22D5F1DFA574BAE28767029605F6EDF /* Targets Support Files */,
+			);
+			sourceTree = "<group>";
+		};
+		F22D5F1DFA574BAE28767029605F6EDF /* Targets Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				21C5A3880864E5B63D4EB761DFAD6136 /* Pods-MINTEL_LiveChat_Example */,
+			);
+			name = "Targets Support Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		5DABE40D8284946A924A02B546257DE2 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9146510540C8DAF109CC4BCCB0CA74A9 /* Alamofire-umbrella.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A5FBA8E5DFF5872A2E00F56628844A1D /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				ACE5872D48CF22A82028FB75214FA1D0 /* Pods-MINTEL_LiveChat_Example-umbrella.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F7E33944B026A36C9422861F3CAAE7B9 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C7FF7AF546F21FF98348587F8D103961 /* MINTEL_LiveChat-umbrella.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		536250FB499BEAF5E4ABF228482E78CE /* MINTEL_LiveChat */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 61A221F92AC561DD9D65DCB76375619D /* Build configuration list for PBXNativeTarget "MINTEL_LiveChat" */;
+			buildPhases = (
+				F7E33944B026A36C9422861F3CAAE7B9 /* Headers */,
+				D80493C649A63686CDDAEBD3FFEFBF3E /* Sources */,
+				8897E0986C4B83D2D10FB226827C75FE /* Frameworks */,
+				7EAED9CD89666C1A1C72567D2CFC0CFF /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				AB687DC7BA11159085D6A4F759CD64A7 /* PBXTargetDependency */,
+			);
+			name = MINTEL_LiveChat;
+			productName = MINTEL_LiveChat;
+			productReference = B55E3D0C8BDA03BF8907815A5D3E5691 /* MINTEL_LiveChat */;
+			productType = "com.apple.product-type.framework";
+		};
+		9C0E85F18E3698ED72A344F9DD3C05BF /* Pods-MINTEL_LiveChat_Example */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AFE4D3507296C6132218AF8E1C82745B /* Build configuration list for PBXNativeTarget "Pods-MINTEL_LiveChat_Example" */;
+			buildPhases = (
+				A5FBA8E5DFF5872A2E00F56628844A1D /* Headers */,
+				45895A1ADC0C454B516D66D99305CE56 /* Sources */,
+				EA2EB377932FAB76C6800A7385348A42 /* Frameworks */,
+				24B48BC601E233F012C9E7B06627AEDA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				E2381E53D04C449DF130F556D6B24A51 /* PBXTargetDependency */,
+				496B0AD8E27264A0F576863D3AE0D96B /* PBXTargetDependency */,
+			);
+			name = "Pods-MINTEL_LiveChat_Example";
+			productName = Pods_MINTEL_LiveChat_Example;
+			productReference = 2539C902DEF605FF55C5981D47238086 /* Pods-MINTEL_LiveChat_Example */;
+			productType = "com.apple.product-type.framework";
+		};
+		EAAA1AD3A8A1B59AB91319EE40752C6D /* Alamofire */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 887CAE7F79D14F7AF2714DC8BABA9E38 /* Build configuration list for PBXNativeTarget "Alamofire" */;
+			buildPhases = (
+				5DABE40D8284946A924A02B546257DE2 /* Headers */,
+				91DE88C3249026C72068864CF85B8193 /* Sources */,
+				1FDEBC1279186C4DE344C5D2CCE81B3D /* Frameworks */,
+				C2B76647EA315A3658A600739CC6D453 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Alamofire;
+			productName = Alamofire;
+			productReference = 5D797E9A5C5782CE845840781FA1CC81 /* Alamofire */;
+			productType = "com.apple.product-type.framework";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		BFDFE7DC352907FC980B868725387E98 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+			};
+			buildConfigurationList = 4821239608C13582E20E6DA73FD5F1F9 /* Build configuration list for PBXProject "Pods" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = CF1408CF629C7361332E53B88F7BD30C;
+			productRefGroup = C9726694F468340877D2499DCC8962FF /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				EAAA1AD3A8A1B59AB91319EE40752C6D /* Alamofire */,
+				536250FB499BEAF5E4ABF228482E78CE /* MINTEL_LiveChat */,
+				9C0E85F18E3698ED72A344F9DD3C05BF /* Pods-MINTEL_LiveChat_Example */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		24B48BC601E233F012C9E7B06627AEDA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7EAED9CD89666C1A1C72567D2CFC0CFF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2908AEEA0F6D3F2787CCC6C7821E80D1 /* Assets.xcassets in Resources */,
+				60E0837751E1446206D2F6A0CFB1DD55 /* ChatBox.storyboard in Resources */,
+				C46AFD4A3BF94434310B8F98833E427F /* CustomCell.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C2B76647EA315A3658A600739CC6D453 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		45895A1ADC0C454B516D66D99305CE56 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EF0610F3D90FF34B4098D068586E8702 /* Pods-MINTEL_LiveChat_Example-dummy.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		91DE88C3249026C72068864CF85B8193 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				90E42B43904F2F22CA3A8BBD0155D9A2 /* AFError.swift in Sources */,
+				70EA6F068498CEC1B273D6BB1E74EB4E /* Alamofire.swift in Sources */,
+				C27C72B2D755F3A7B2D97089CA75146F /* Alamofire-dummy.m in Sources */,
+				F93AEAF3659818E2308E0E5C70B66423 /* DispatchQueue+Alamofire.swift in Sources */,
+				6DF154F51210D4C446AA021F2DBA34A4 /* MultipartFormData.swift in Sources */,
+				5CECD168465CF59B489253695D3FB51F /* NetworkReachabilityManager.swift in Sources */,
+				537D7452E6C8C82D9C1908EA29706E35 /* Notifications.swift in Sources */,
+				F5C92DC8E274C4FC541267A97575BC05 /* ParameterEncoding.swift in Sources */,
+				D593E5BEB4221FF272DBF69E51945319 /* Request.swift in Sources */,
+				9BCBBFE03318F5DD172F9E1F3100F67B /* Response.swift in Sources */,
+				43C3C17BFDFD71F45C5A7AFB0C0BEF45 /* ResponseSerialization.swift in Sources */,
+				D46CB5AF7BE345C5D27ABF9DCF692881 /* Result.swift in Sources */,
+				3DE8AA12C52787A0BA570717BB27AAB0 /* ServerTrustPolicy.swift in Sources */,
+				85379CCF081FC9C36F082E71D2DF4D2F /* SessionDelegate.swift in Sources */,
+				8023EECE8437F0311A065A9C2F420E2E /* SessionManager.swift in Sources */,
+				119B37D7E7D3A59C6685FC0EFEE881CE /* TaskDelegate.swift in Sources */,
+				2119BBBDD76C9B182007C9E8D3BD8DDA /* Timeline.swift in Sources */,
+				4C301CCA81AAFB4453B6B827F846E0AC /* Validation.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D80493C649A63686CDDAEBD3FFEFBF3E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				ED5C79BA7492CB6B6C1A11A802687F6D /* BubbleCircle.swift in Sources */,
+				A4B2E88AB515859CD2D96DC2C8807EDF /* Checkbox.swift in Sources */,
+				DBD7D9DDCDE82085828E7E29B022BF7A /* CloseViewController.swift in Sources */,
+				96C7DB447C5F2CBC8C5C2FEC459DD317 /* CustomTableViewCell.swift in Sources */,
+				0AF419DC34591AD75D5D9138A4E5DBC4 /* Downloader.swift in Sources */,
+				EFC1866D60FD03B24CFEAD3C6DD7B0C7 /* Extension.swift in Sources */,
+				F3FF7C6963EF4AD8BDEF11E9171233C4 /* File.swift in Sources */,
+				39FEC1A456F256AF1E81EC31C0CECA36 /* GridViewCell.swift in Sources */,
+				F788400743A1E2D3E4F69EF925DA8C70 /* ImagePreviewController.swift in Sources */,
+				341183EB02E46BD95966C59B27D9322E /* InputTextView.swift in Sources */,
+				826E863DFD0AEC8D0072970916E5E2E5 /* LiveChatConfiguration.swift in Sources */,
+				3A1ECF4D1483A0E4CB92109EA01BD641 /* MessageList.swift in Sources */,
+				BD08629122FCE853698D41D8DC9CA952 /* MINTEL_LiveChat.swift in Sources */,
+				298211FB6CE9F9EF84E2A0F3A3CE5F97 /* MINTEL_LiveChat-dummy.m in Sources */,
+				72CD602260E07C7A1A985C3B1FA31C68 /* MINTEL_Notifications.swift in Sources */,
+				9E747F798842F0BA013C183251394495 /* MINTEL_SurveyController.swift in Sources */,
+				A2154BEE96DEBC630B113BBB924FC409 /* MyMessage.swift in Sources */,
+				5227B1A14863A40D9D774F8117E36F7D /* MyTapGuesture.swift in Sources */,
+				05347D9C1704449B5FDBFBBAB8155F67 /* PaddingLabel.swift in Sources */,
+				530C0EE3901FD6F65311713DAA388B9C /* PaddingTextView.swift in Sources */,
+				8C7FA55A128196C1D426B57210DABE67 /* ProgressHUD.swift in Sources */,
+				39FAC5417E0CAFE765F4A8F8B2A9B0F2 /* RepeatingTimer.swift in Sources */,
+				5FF599E4215AA0B10171E4FCB65F7BD2 /* TypingIndicator.swift in Sources */,
+				9476244A6AE852536D07A71923EDC7AF /* ViewController.swift in Sources */,
+				0779733B23DD5F634A0D32CE31C1DA7F /* ViewController+Network.swift in Sources */,
+				CE5BFA7E78F11C7BBF5A5F8860B92465 /* ViewController+Saleforce.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		496B0AD8E27264A0F576863D3AE0D96B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = MINTEL_LiveChat;
+			target = 536250FB499BEAF5E4ABF228482E78CE /* MINTEL_LiveChat */;
+			targetProxy = 6310B083A59661231C5C7850A899C1EA /* PBXContainerItemProxy */;
+		};
+		AB687DC7BA11159085D6A4F759CD64A7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Alamofire;
+			target = EAAA1AD3A8A1B59AB91319EE40752C6D /* Alamofire */;
+			targetProxy = 4E0541A3BEEC202975DBFB1B818DC429 /* PBXContainerItemProxy */;
+		};
+		E2381E53D04C449DF130F556D6B24A51 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Alamofire;
+			target = EAAA1AD3A8A1B59AB91319EE40752C6D /* Alamofire */;
+			targetProxy = D2F42F73CB8A59D11FF2C0FD2B490DAC /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		3DEE068E0B4B6CBD6CC03D09120A004A /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6DDBEA2F3B50009F62B9CE0231700487 /* Pods-MINTEL_LiveChat_Example.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Target Support Files/Pods-MINTEL_LiveChat_Example/Pods-MINTEL_LiveChat_Example-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-MINTEL_LiveChat_Example/Pods-MINTEL_LiveChat_Example.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		5241BBA602FF200D96C3647FF58C883F /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3EBE3CE6DE9B77FA58EAFF3C0E9515F6 /* MINTEL_LiveChat.release.xcconfig */;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/MINTEL_LiveChat/MINTEL_LiveChat-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/MINTEL_LiveChat/MINTEL_LiveChat-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "Target Support Files/MINTEL_LiveChat/MINTEL_LiveChat.modulemap";
+				PRODUCT_MODULE_NAME = MINTEL_LiveChat;
+				PRODUCT_NAME = MINTEL_LiveChat;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		65D46D532CBFA6A416DF5C912E856228 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E76130E8DE541ABF0F38993EDEA9B304 /* MINTEL_LiveChat.debug.xcconfig */;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/MINTEL_LiveChat/MINTEL_LiveChat-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/MINTEL_LiveChat/MINTEL_LiveChat-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "Target Support Files/MINTEL_LiveChat/MINTEL_LiveChat.modulemap";
+				PRODUCT_MODULE_NAME = MINTEL_LiveChat;
+				PRODUCT_NAME = MINTEL_LiveChat;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		69E972783715B5D7A8EE99A8880B5C9D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2C50F83F93296D01A5B9009365A2671D /* Alamofire.debug.xcconfig */;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/Alamofire/Alamofire-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/Alamofire/Alamofire-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "Target Support Files/Alamofire/Alamofire.modulemap";
+				PRODUCT_MODULE_NAME = Alamofire;
+				PRODUCT_NAME = Alamofire;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		8DE5143C03248BB6CD542DE3963D6F3A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"POD_CONFIGURATION_DEBUG=1",
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRIP_INSTALLED_PRODUCT = NO;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				SYMROOT = "${SRCROOT}/../build";
+			};
+			name = Debug;
+		};
+		9E406C6AAF85E580207CD97B0044DEAB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"POD_CONFIGURATION_RELEASE=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRIP_INSTALLED_PRODUCT = NO;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				SYMROOT = "${SRCROOT}/../build";
+			};
+			name = Release;
+		};
+		E200169C8EB84F3B2AE5C07D8F4222FD /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0C96CDEC4805F115B4225E4EBFC020B7 /* Alamofire.release.xcconfig */;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/Alamofire/Alamofire-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/Alamofire/Alamofire-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "Target Support Files/Alamofire/Alamofire.modulemap";
+				PRODUCT_MODULE_NAME = Alamofire;
+				PRODUCT_NAME = Alamofire;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		F00C9D35E73C7C059CCAC200CCB40B97 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = F5101E98A3EB6C6ECC5E2906612A7E91 /* Pods-MINTEL_LiveChat_Example.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Target Support Files/Pods-MINTEL_LiveChat_Example/Pods-MINTEL_LiveChat_Example-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-MINTEL_LiveChat_Example/Pods-MINTEL_LiveChat_Example.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		4821239608C13582E20E6DA73FD5F1F9 /* Build configuration list for PBXProject "Pods" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8DE5143C03248BB6CD542DE3963D6F3A /* Debug */,
+				9E406C6AAF85E580207CD97B0044DEAB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		61A221F92AC561DD9D65DCB76375619D /* Build configuration list for PBXNativeTarget "MINTEL_LiveChat" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				65D46D532CBFA6A416DF5C912E856228 /* Debug */,
+				5241BBA602FF200D96C3647FF58C883F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		887CAE7F79D14F7AF2714DC8BABA9E38 /* Build configuration list for PBXNativeTarget "Alamofire" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				69E972783715B5D7A8EE99A8880B5C9D /* Debug */,
+				E200169C8EB84F3B2AE5C07D8F4222FD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AFE4D3507296C6132218AF8E1C82745B /* Build configuration list for PBXNativeTarget "Pods-MINTEL_LiveChat_Example" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F00C9D35E73C7C059CCAC200CCB40B97 /* Debug */,
+				3DEE068E0B4B6CBD6CC03D09120A004A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+}
