@@ -1,6 +1,6 @@
 {
   "name": "MINTEL_LiveChat",
-  "version": "1.4.40",
+  "version": "1.4.41",
   "summary": "MINTEL_LiveChat Library",
   "description": "TODO: Add long description of the pod here.",
   "homepage": "https://github.com/autthapon/MINTEL_LiveChat/wiki",
@@ -13,7 +13,7 @@
   },
   "source": {
     "git": "https://github.com/autthapon/MINTEL_LiveChat.git",
-    "tag": "1.4.40"
+    "tag": "1.4.41"
   },
   "platforms": {
     "ios": "12.0"
