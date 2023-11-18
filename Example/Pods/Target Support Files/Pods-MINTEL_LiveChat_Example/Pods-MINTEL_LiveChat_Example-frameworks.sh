@@ -177,14 +177,14 @@ code_sign_if_enabled() {
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework"
-  install_framework "${PODS_ROOT}/../../MINTEL_LiveChat/Framework/ServiceCore.framework"
-  install_framework "${PODS_ROOT}/../../MINTEL_LiveChat/Framework/ServiceChat.framework"
+  install_framework "${PODS_ROOT}/MINTEL_LiveChat/MINTEL_LiveChat/Framework/ServiceCore.framework"
+  install_framework "${PODS_ROOT}/MINTEL_LiveChat/MINTEL_LiveChat/Framework/ServiceChat.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/MINTEL_LiveChat/MINTEL_LiveChat.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework"
-  install_framework "${PODS_ROOT}/../../MINTEL_LiveChat/Framework/ServiceCore.framework"
-  install_framework "${PODS_ROOT}/../../MINTEL_LiveChat/Framework/ServiceChat.framework"
+  install_framework "${PODS_ROOT}/MINTEL_LiveChat/MINTEL_LiveChat/Framework/ServiceCore.framework"
+  install_framework "${PODS_ROOT}/MINTEL_LiveChat/MINTEL_LiveChat/Framework/ServiceChat.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/MINTEL_LiveChat/MINTEL_LiveChat.framework"
 fi
 if [ "${COCOAPODS_PARALLEL_CODE_SIGN}" == "true" ]; then

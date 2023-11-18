@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'MINTEL_LiveChat'
-  s.version          = '1.4.43'
+  s.version          = '1.4.44'
   s.summary          = 'MINTEL_LiveChat Library'
 
 # This description is used to generate tags and improve search results.
@@ -28,16 +28,16 @@ TODO: Add long description of the pod here.
   s.source           = { :git => 'https://github.com/autthapon/MINTEL_LiveChat.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
-  s.platform = :ios, '12.0'
-  s.swift_version = '4.2'
+  s.platform = :ios, "12.0"
+  s.swift_version = "4.2"
   
   s.source_files = 'MINTEL_LiveChat/Classes/**/*'
   s.resources = "MINTEL_LiveChat/Assets/**/*"
   # s.resource_bundles = {
   #   'MINTEL_LiveChat' => ['MINTEL_LiveChat/Assets/*.png']
   # }
-  s.pod_target_xcconfig   = {'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64 armv7', 'EXCLUDED_ARCHS[sdk=iphoneos*]' => 'i386 x86_64' }
-  s.user_target_xcconfig  = {'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64 armv7', 'EXCLUDED_ARCHS[sdk=iphoneos*]' => 'i386 x86_64'}
+  s.pod_target_xcconfig   = {'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64 armv7'}
+  s.user_target_xcconfig  = {'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64 armv7'}
   s.dependency 'Alamofire', '~> 4.8.2'
   s.vendored_frameworks = 'MINTEL_LiveChat/Framework/ServiceCore.framework', 'MINTEL_LiveChat/Framework/ServiceChat.framework'
   s.preserve_paths = 'MINTEL_LiveChat/Framework/*'
