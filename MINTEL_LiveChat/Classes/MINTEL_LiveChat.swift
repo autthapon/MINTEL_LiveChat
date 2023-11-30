@@ -887,6 +887,7 @@ public class MINTEL_LiveChat: UIView {
             
             ServiceCloud.shared().chatCore.add(delegate: self)
             ServiceCloud.shared().chatCore.addEvent(delegate: self)
+            
             ServiceCloud.shared().chatCore.startSession(with: config) { (error, chat) in
                 MINTEL_LiveChat.chatStarted = true
                 MINTEL_LiveChat.chatInProgress = true
@@ -897,6 +898,7 @@ public class MINTEL_LiveChat: UIView {
             NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
                                             object: nil,
                                             userInfo:nil)
+             
         }
     }
     
@@ -1297,7 +1299,7 @@ extension MINTEL_LiveChat : SCSChatSessionDelegate {
         } else if previous == SCSChatSessionState.inactive && current == SCSChatSessionState.connecting {
             // Auto expand
             DispatchQueue.main.async {
-                self.tapAction(sender: UIButton(), survey: MINTEL_LiveChat.surveyMode)
+                //self.tapAction(sender: UIButton(), survey: MINTEL_LiveChat.surveyMode)
             }
         } else if previous == SCSChatSessionState.queued && current == SCSChatSessionState.ending {
             DispatchQueue.main.async {
