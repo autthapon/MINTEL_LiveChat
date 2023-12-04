@@ -237,10 +237,17 @@ public class MINTEL_LiveChat: UIView {
                     return "Thank you for the information. After a while, the staff will come to serve you from now on"
                 }
                 */
-                return "Thank you for the information. After a while, the staff will come to serve you from now on"
+                return "Thank you for the information. The staff will come to serve you soon"
             }
             if (str == "no_agent_available") {
-                return "Sorry, no agent available"
+                if (MINTEL_LiveChat.configuration?.language == "my") {
+                    return "ရုံးပိတ်ပိတ်ချိန်ဖြစ်ပါသည်။ကျေးဇူးပြု၍  မနက် ၉နာရီ မှ ည ၁၀ နာရီ အတွင်းဆက်သွယ်ပေးပါ။"
+                } else if (MINTEL_LiveChat.configuration?.language == "km" ) {
+                    return "ខណះពេលនេះជាវេលាក្រៅម៉ោងធ្វើការ សូមទំនាក់ទំនងនៅពេលក្រោយចាប់ពីម៉ោង 9:00 ព្រឹក - 10:00 យប់"
+                } else {
+                    return "Sorry, no agent available"
+                }
+                
             }
             if (str == "truemoney") {
                 return "True Money"
@@ -1258,13 +1265,13 @@ extension MINTEL_LiveChat : SCSChatSessionDelegate {
                     let bId = item["button"] as? String ?? ""
                     if (bId == currentButtonId) {
                         found = true
-                        let textToShow = item["text"] as? String ?? "ขออภัยครับ ไม่มีเจ้าหน้าที่ให้บริการในขณะนี้"
+                        let textToShow = item["text"] as? String ?? MINTEL_LiveChat.getLanguageString(str: "no_agent_available");
                         let _ = MessageList.add(item: MyMessage(systemMessageType1: textToShow))
                     }
                 })
                 
                 if (!found) {
-                    let _ = MessageList.add(item: MyMessage(systemMessageType1: "ขออภัยครับ ไม่มีเจ้าหน้าที่ให้บริการในขณะนี้"))
+                    let _ = MessageList.add(item: MyMessage(systemMessageType1: MINTEL_LiveChat.getLanguageString(str: "no_agent_available")))
                 }
                 
                 //let _ = MessageList.add(item: MyMessage(systemMessageType1: MINTEL_LiveChat.getLanguageString(str: "no_agent_available")))
