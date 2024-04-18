@@ -122,14 +122,17 @@ public class MINTEL_LiveChat: UIView {
                 
                 self.userImageView.isHidden = false
                 self.callCenterLabel.isHidden = false
+                //self.callCenterLabel.isHidden = false
                 self.callCenterLabel.text = MINTEL_LiveChat.getLanguageString(str: "end_conversation")
                 self.queueTitleLabel.isHidden = true
                 self.queueLabel.isHidden = true
             } else if (MINTEL_LiveChat.chatBotMode) {
-                self.userImageView.image = UIImage(named: "user", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil)
+                self.userImageView.image = UIImage(named: "end", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil)
+                //self.userImageView.image = UIImage(named: "user", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil)
                 self.userImageView.frame = MINTEL_LiveChat.userImageFrame
                 self.userImageView.isHidden = false
-                self.callCenterLabel.isHidden = false
+                self.callCenterLabel.isHidden = true
+                //self.callCenterLabel.isHidden = false
                 self.callCenterLabel.text = MINTEL_LiveChat.getLanguageString(str: "chatbot")
                 self.queueTitleLabel.isHidden = true
                 self.queueLabel.isHidden = true
@@ -157,10 +160,12 @@ public class MINTEL_LiveChat: UIView {
                     self.queueLabel.isHidden = false
                     break
                 case .joined:
-                    self.userImageView.image = UIImage(named: "agent", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil)
+                    //self.userImageView.image = UIImage(named: "agent", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil)
+                    self.userImageView.image = UIImage(named: "end", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil)
                     self.userImageView.frame = MINTEL_LiveChat.userImageFrame
                     self.userImageView.isHidden = false
-                    self.callCenterLabel.isHidden = false
+                    self.callCenterLabel.isHidden = true
+                    //self.callCenterLabel.isHidden = false
                     self.callCenterLabel.text = MINTEL_LiveChat.agentName
                     self.queueTitleLabel.isHidden = true
                     self.queueLabel.isHidden = true
