@@ -5,6 +5,9 @@
       location = "group:MINTEL_LiveChat.xcodeproj">
    </FileRef>
    <FileRef
+      location = "group:../SwiftImageCarousel-master/SwiftImageCarousel.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:Pods/Pods.xcodeproj">
    </FileRef>
 </Workspace>

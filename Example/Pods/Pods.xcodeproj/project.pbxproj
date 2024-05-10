@@ -89,6 +89,29 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		E67149BC2BEDD29C000C0801 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E67149CA2BEDDA86000C0801 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		0327D98956B1221561811FC4C1973AE1 /* ServiceCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ServiceCore.framework; path = MINTEL_LiveChat/Framework/ServiceCore.framework; sourceTree = "<group>"; };
 		0924B8357F522EB74BFE6F5A36933056 /* SessionDelegate.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SessionDelegate.swift; path = Source/SessionDelegate.swift; sourceTree = "<group>"; };
@@ -103,7 +126,7 @@
 		17A2CE92379FB851FD3DA2D1ED199179 /* ProgressHUD.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ProgressHUD.swift; path = MINTEL_LiveChat/Classes/ProgressHUD.swift; sourceTree = "<group>"; };
 		1D2F06EA4D084EADC31C6BF0B7CABF6C /* Pods-MINTEL_LiveChat_Example-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-MINTEL_LiveChat_Example-frameworks.sh"; sourceTree = "<group>"; };
 		2254D0D72AA6212AF6F58DBC64B5B69D /* ServerTrustPolicy.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ServerTrustPolicy.swift; path = Source/ServerTrustPolicy.swift; sourceTree = "<group>"; };
-		2539C902DEF605FF55C5981D47238086 /* Pods-MINTEL_LiveChat_Example */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = "Pods-MINTEL_LiveChat_Example"; path = Pods_MINTEL_LiveChat_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		2539C902DEF605FF55C5981D47238086 /* Pods_MINTEL_LiveChat_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MINTEL_LiveChat_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2619E162E7227FBE0FCF45000E0C1EDB /* Alamofire-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Alamofire-Info.plist"; sourceTree = "<group>"; };
 		27DB519AC5E690324451C827DA52F3CE /* MINTEL_LiveChat-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "MINTEL_LiveChat-Info.plist"; sourceTree = "<group>"; };
 		2F822E0434DF4845B6A978E19B4520E3 /* Assets.xcassets */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = MINTEL_LiveChat/Assets/Assets.xcassets; sourceTree = "<group>"; };
@@ -151,7 +174,7 @@
 		AE14306BECC528B78EAFD71D7DC666BF /* MultipartFormData.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MultipartFormData.swift; path = Source/MultipartFormData.swift; sourceTree = "<group>"; };
 		B2F564FA48C7B3494D0914B64BF9CF7B /* Timeline.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Timeline.swift; path = Source/Timeline.swift; sourceTree = "<group>"; };
 		B34591E6D9CCFCA2968A92AF9CAC1FA6 /* Pods-MINTEL_LiveChat_Example.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-MINTEL_LiveChat_Example.modulemap"; sourceTree = "<group>"; };
-		B55E3D0C8BDA03BF8907815A5D3E5691 /* MINTEL_LiveChat */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = MINTEL_LiveChat; path = MINTEL_LiveChat.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B55E3D0C8BDA03BF8907815A5D3E5691 /* MINTEL_LiveChat.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MINTEL_LiveChat.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B6A70D0891B5A11E9B296871C2585F22 /* CloseViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CloseViewController.swift; path = MINTEL_LiveChat/Classes/CloseViewController.swift; sourceTree = "<group>"; };
 		BCF8A63431B853C39AC93C7DEAD4599B /* SessionManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SessionManager.swift; path = Source/SessionManager.swift; sourceTree = "<group>"; };
 		BFDD82FBF69AD4716EDE8D56992280BD /* ParameterEncoding.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ParameterEncoding.swift; path = Source/ParameterEncoding.swift; sourceTree = "<group>"; };
@@ -356,8 +379,8 @@
 			isa = PBXGroup;
 			children = (
 				5D797E9A5C5782CE845840781FA1CC81 /* Alamofire */,
-				B55E3D0C8BDA03BF8907815A5D3E5691 /* MINTEL_LiveChat */,
-				2539C902DEF605FF55C5981D47238086 /* Pods-MINTEL_LiveChat_Example */,
+				B55E3D0C8BDA03BF8907815A5D3E5691 /* MINTEL_LiveChat.framework */,
+				2539C902DEF605FF55C5981D47238086 /* Pods_MINTEL_LiveChat_Example.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -419,6 +442,7 @@
 				D80493C649A63686CDDAEBD3FFEFBF3E /* Sources */,
 				8897E0986C4B83D2D10FB226827C75FE /* Frameworks */,
 				7EAED9CD89666C1A1C72567D2CFC0CFF /* Resources */,
+				E67149CA2BEDDA86000C0801 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -427,7 +451,7 @@
 			);
 			name = MINTEL_LiveChat;
 			productName = MINTEL_LiveChat;
-			productReference = B55E3D0C8BDA03BF8907815A5D3E5691 /* MINTEL_LiveChat */;
+			productReference = B55E3D0C8BDA03BF8907815A5D3E5691 /* MINTEL_LiveChat.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		9C0E85F18E3698ED72A344F9DD3C05BF /* Pods-MINTEL_LiveChat_Example */ = {
@@ -438,6 +462,7 @@
 				45895A1ADC0C454B516D66D99305CE56 /* Sources */,
 				EA2EB377932FAB76C6800A7385348A42 /* Frameworks */,
 				24B48BC601E233F012C9E7B06627AEDA /* Resources */,
+				E67149BC2BEDD29C000C0801 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -447,7 +472,7 @@
 			);
 			name = "Pods-MINTEL_LiveChat_Example";
 			productName = Pods_MINTEL_LiveChat_Example;
-			productReference = 2539C902DEF605FF55C5981D47238086 /* Pods-MINTEL_LiveChat_Example */;
+			productReference = 2539C902DEF605FF55C5981D47238086 /* Pods_MINTEL_LiveChat_Example.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		EAAA1AD3A8A1B59AB91319EE40752C6D /* Alamofire */ = {
@@ -697,6 +722,12 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Alamofire\"",
+					"\"${PODS_ROOT}/MINTEL_LiveChat/MINTEL_LiveChat/Framework\"",
+					"/Users/mintel/Library/Developer/Xcode/DerivedData/MINTEL_LiveChat-bsbrquabibnhkjddidbhxcpiqeeo/Build/Products/Debug-iphonesimulator\n/Users/mintel/Library/Developer/Xcode/DerivedData/MINTEL_LiveChat-bsbrquabibnhkjddidbhxcpiqeeo/Build/Products/Debug-iphonesimulator\n/Users/mintel/Library/Developer/Xcode/DerivedData/MINTEL_LiveChat-bsbrquabibnhkjddidbhxcpiqeeo/Build/Products/Debug-iphonesimulator/SwiftImageCarousel.framework",
+				);
 				GCC_PREFIX_HEADER = "Target Support Files/MINTEL_LiveChat/MINTEL_LiveChat-prefix.pch";
 				INFOPLIST_FILE = "Target Support Files/MINTEL_LiveChat/MINTEL_LiveChat-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -730,6 +761,12 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Alamofire\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/MINTEL_LiveChat\"",
+					"\"${PODS_ROOT}/MINTEL_LiveChat/MINTEL_LiveChat/Framework\"",
+				);
 				INFOPLIST_FILE = "Target Support Files/Pods-MINTEL_LiveChat_Example/Pods-MINTEL_LiveChat_Example-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
@@ -858,6 +895,12 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Alamofire\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/MINTEL_LiveChat\"",
+					"\"${PODS_ROOT}/MINTEL_LiveChat/MINTEL_LiveChat/Framework\"",
+				);
 				INFOPLIST_FILE = "Target Support Files/Pods-MINTEL_LiveChat_Example/Pods-MINTEL_LiveChat_Example-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
@@ -892,6 +935,11 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Alamofire\"",
+					"\"${PODS_ROOT}/MINTEL_LiveChat/MINTEL_LiveChat/Framework\"",
+				);
 				GCC_PREFIX_HEADER = "Target Support Files/MINTEL_LiveChat/MINTEL_LiveChat-prefix.pch";
 				INFOPLIST_FILE = "Target Support Files/MINTEL_LiveChat/MINTEL_LiveChat-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";

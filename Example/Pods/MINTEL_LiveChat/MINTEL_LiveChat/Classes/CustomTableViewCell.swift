@@ -8,6 +8,8 @@
 
 import UIKit
 import Alamofire
+import SwiftImageCarousel
+
 let menuHeight = 40
 
 extension CGRect{
@@ -26,6 +28,8 @@ extension CGPoint{
         self.init(x:x,y:y)
     }
 }
+
+
 
 func randomString(length: Int) -> String {
     
@@ -208,7 +212,7 @@ class CustomTableViewCell: UITableViewCell {
         self.contentView.addSubview(textView)
         
         let extSupports = ["pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx", "zip", "rar"]
-        let txtLower = txt.lowercased()
+        var txtLower = txt.lowercased()
         var isEndWithSupported = false
         for edd in extSupports {
             isEndWithSupported = txtLower.hasSuffix(edd)
@@ -376,8 +380,26 @@ class CustomTableViewCell: UITableViewCell {
                     }
                 }
             } else {
-                DispatchQueue.main.async {
-                    textView.isHidden = false
+                /*
+                txtLower = """
+            carousel/[{"imageUrl": "https://www.geeksforgeeks.org/wp-content/uploads/gfg_200X200-1.png", "url": "https://www.google.com"}, {"imageUrl": "https://i.stack.imgur.com/WQna0.png", "url": "https://www.microsoft.com"}]
+            """
+                 */
+                if txtLower.contains("carousel/") {
+                    let carStr = txtLower.replacingOccurrences(of: "carousel/", with: "")
+                    var carArr: [[String: String]]
+                    //carArr = try! JSONSerialization.jsonObject(with: carStr2, options: .mutableContainers) as! [Carousel]
+                    carArr = carStr.toJSON() as! [[String: String]]
+
+                    DispatchQueue.main.async {
+                        MessageList.setItemAt(index: index, item: MyMessage(carousel: carArr))
+                        tableView.reloadData()
+                    }
+
+                } else {
+                    DispatchQueue.main.async {
+                        textView.isHidden = false
+                    }
                 }
             }
         } else {
@@ -706,6 +728,63 @@ class CustomTableViewCell: UITableViewCell {
             btnDownload.frame = CGRect(x: imgView.frame.origin.x - CGFloat(35.0), y: imgView.frame.origin.y + imgView.frame.size.height - CGFloat(35), width: 30, height: 30)
             btnDownload.addTarget(self, action: #selector(download(_:)), for: .touchUpInside)
         }
+    }
+    
+    func renderCarouselCell(carousels:[[String: String]], time: Date, item: MyMessage, index: Int) {
+        
+        self.contentView.subviews.forEach { (view) in
+            view.removeFromSuperview()
+        }
+        
+        let storyboard = UIStoryboard (name: "Main", bundle: Bundle(for: SwiftImageCarouselVC.self))
+        let vc = storyboard.instantiateInitialViewController() as! SwiftImageCarouselVC
+
+        for c in carousels {
+            vc.contentImageURLs.append(c["imageUrl"] ?? "")
+        }
+       
+        /*
+        ["https://cdn.britannica.com/70/234870-050-D4D024BB/Orange-colored-cat-yawns-displaying-teeth.jpg", "https://w7.pngwing.com/pngs/444/310/png-transparent-amazon-com-amazon-prime-music-streaming-media-prime-now-payment-miscellaneous-text-logo-thumbnail.png", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRPniqg7_A0q3bfzWu5hhlksVlxvmSWPVH_8kT-b6ktKg&s"]
+*/
+        // Adding it to the container view
+        vc.willMove(toParent: self.topViewController())
+        self.contentView.addSubview(vc.view)
+        
+        let screen = UIScreen.main.bounds
+        let xPosition = 10.0
+        vc.view.frame = CGRect(x: xPosition, y: 10, width: self.contentView.frame.width, height: 300)
+        vc.didMove(toParent: self.topViewController())
+        vc.showModalGalleryOnTap = false
+        vc.swipeTimeIntervalSeconds = 10
+        vc.swiftImageCarouselVCDelegate = self
+
+         //carousel/[{"imageUrl": "https://www.geeksforgeeks.org/wp-content/uploads/gfg_200X200-1.png", "url": "https://www.google.com"}, {"imageUrl": "https://i.stack.imgur.com/WQna0.png", "url": "https://www.microsoft.com"}]
+        
+        /*
+        let img = image.MyResizeImage(targetSize: CGSize(width:270,height: 300))
+        let imgView = UIImageView(image: img)
+        self.contentView.addSubview(imgView)
+        let screen = UIScreen.main.bounds
+        
+        let xPosition = screen.width - img.size.width - 10.0
+        imgView.frame = CGRect(x: xPosition, y: 10, width: img.size.width, height: img.size.height)
+        imgView.layer.cornerRadius = 18
+        imgView.backgroundColor = UIColor(MyHexString: "#EBEBEB")
+        imgView.layer.masksToBounds = true
+        imgView.startAnimating()
+        */
+        
+        /*
+        let timelbl = UILabel()
+        self.contentView.addSubview(timelbl)
+        timelbl.frame = CGRect(x: UIScreen.main.bounds.size.width - 55, y: img.size.height + 15, width: 50, height: 13)
+        timelbl.font = UIFont.systemFont(ofSize: 12)
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "HH:mm"
+        let dateString = dateFormatter.string(from: time)
+        timelbl.text = dateString
+         */
     }
     
     @objc func download(_ sender:UIButton) {
@@ -1227,4 +1306,12 @@ class CustomTableViewCell: UITableViewCell {
         super.init(coder: coder)
     }
     
+}
+
+
+extension CustomTableViewCell: SwiftImageCarouselVCDelegate {
+    func didTapSwiftImageCarouselItemVC(swiftImageCarouselItemController: SwiftImageCarouselItemVC) {
+        // The user selected this swiftImageCarouselItemController
+        debugPrint(swiftImageCarouselItemController.itemIndex)
+    }
 }

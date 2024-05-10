@@ -15,6 +15,7 @@ public enum MyMessageKind : Equatable {
     case systemMessageType1(String)
     case systemMessageType2(String)
     case agentJoin(String)
+    case carousel([[String:String]])
     case typing
 }
 
@@ -94,5 +95,9 @@ class MyMessage {
     
     convenience init(image: UIImage, imageUrl:String, agent: Bool, bot : Bool) {
         self.init(kind: .image(image, imageUrl), agent: agent, bot: bot)
+    }
+    
+    convenience init(carousel: [[String: String]]) {
+        self.init(kind: .carousel(carousel), agent: false, bot: false)
     }
 }

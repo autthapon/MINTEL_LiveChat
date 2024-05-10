@@ -10,6 +10,8 @@ import UIKit
 import Photos
 import PhotosUI
 import AVFoundation
+import SwiftImageCarousel
+
 
 internal class CellIds {
     
@@ -19,6 +21,7 @@ internal class CellIds {
     static let systemMessageCellId = "systemMessageCellId"
     static let systemMessageType2CellId = "systemMessageType2CellId"
     static let imageMessageCellId = "imageCellId"
+    static let carouselMessageCellId = "carouselCellId"
     static let agentJoinCellId = "agentJoinCellId"
     static let fileCellid = "fileCellid"
     static let typingCellId = "typingCellId"
@@ -416,6 +419,7 @@ class ViewController: UIViewController {
         tableView.register(CustomTableViewCell.self, forCellReuseIdentifier: CellIds.systemMessageCellId)
         tableView.register(CustomTableViewCell.self, forCellReuseIdentifier: CellIds.systemMessageType2CellId)
         tableView.register(CustomTableViewCell.self, forCellReuseIdentifier: CellIds.imageMessageCellId)
+        tableView.register(CustomTableViewCell.self, forCellReuseIdentifier: CellIds.carouselMessageCellId)
         tableView.register(CustomTableViewCell.self, forCellReuseIdentifier: CellIds.agentJoinCellId)
         tableView.register(CustomTableViewCell.self, forCellReuseIdentifier: CellIds.fileCellid)
         tableView.register(CustomTableViewCell.self, forCellReuseIdentifier: CellIds.typingCellId)
@@ -562,6 +566,8 @@ extension ViewController: UITableViewDataSource {
                     cellIdentifierId = CellIds.receiverMenuCellid
                 case .image( _, _):
                     cellIdentifierId = CellIds.imageMessageCellId
+                case .carousel( _ ):
+                    cellIdentifierId = CellIds.carouselMessageCellId
                 case .agentJoin:
                     cellIdentifierId = CellIds.agentJoinCellId
                 case .typing:
@@ -606,6 +612,8 @@ extension ViewController: UITableViewDataSource {
                         let gesture = cell.tapGuesture ?? MyTapGuesture(target: self, action: #selector(didTap(_:)))
                         gesture.message = item
                         cell.addGestureRecognizer(gesture)
+                    case .carousel(let carousels):
+                        cell.renderCarouselCell(carousels: carousels, time: item!.sentDate, item: item!, index: indexPath.section)
                     case .agentJoin(let agentName):
                         cell.renderAgentJoin(agentName)
                     case .typing:
@@ -759,6 +767,8 @@ extension ViewController: UITableViewDelegate {
                     return CustomTableViewCell.calMenuCellHeight(title, menus, item!)
                 case .image(let image, _ ):
                     return CustomTableViewCell.calcImageCellHeight(image)
+                case .carousel(let carousel):
+                    return 350
                 case .agentJoin:
                     return CustomTableViewCell.calcAgentJoinCellHeight()
                 case .typing:
@@ -1478,3 +1488,4 @@ extension ViewController: PHPhotoLibraryChangeObserver {
 //        })
     }
 }
+
