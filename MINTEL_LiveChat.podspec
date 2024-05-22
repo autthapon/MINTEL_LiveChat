@@ -42,6 +42,6 @@ TODO: Add long description of the pod here.
   s.vendored_frameworks = 'MINTEL_LiveChat/Framework/ServiceCore.framework', 'MINTEL_LiveChat/Framework/ServiceChat.framework'
   s.preserve_paths = 'MINTEL_LiveChat/Framework/*'
   # s.public_header_files = 'Pod/Classes/**/*.h'
-  s.frameworks = 'ServiceCore', 'ServiceChat'
+  s.frameworks = 'ServiceCore', 'ServiceChat', 'SwiftImageCarousel'
   # s.dependency 'AFNetworking', '~> 2.3'
 end
