@@ -39,7 +39,7 @@ TODO: Add long description of the pod here.
   s.pod_target_xcconfig   = {'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64'}
   s.user_target_xcconfig  = {'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64'}
   s.dependency 'Alamofire', '~> 4.8.2'
-  s.vendored_frameworks = 'MINTEL_LiveChat/Framework/ServiceCore.framework', 'MINTEL_LiveChat/Framework/ServiceChat.framework'
+  s.vendored_frameworks = 'MINTEL_LiveChat/Framework/ServiceCore.framework', 'MINTEL_LiveChat/Framework/ServiceChat.framework', 'MINTEL_LiveChat/Framework/SwiftImageCarousel.framework'
   s.preserve_paths = 'MINTEL_LiveChat/Framework/*'
   # s.public_header_files = 'Pod/Classes/**/*.h'
   s.frameworks = 'ServiceCore', 'ServiceChat', 'SwiftImageCarousel'

@@ -726,7 +726,9 @@
 					"$(inherited)",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/Alamofire\"",
 					"\"${PODS_ROOT}/MINTEL_LiveChat/MINTEL_LiveChat/Framework\"",
-					"/Users/mintel/Library/Developer/Xcode/DerivedData/MINTEL_LiveChat-bsbrquabibnhkjddidbhxcpiqeeo/Build/Products/Debug-iphonesimulator\n/Users/mintel/Library/Developer/Xcode/DerivedData/MINTEL_LiveChat-bsbrquabibnhkjddidbhxcpiqeeo/Build/Products/Debug-iphonesimulator\n/Users/mintel/Library/Developer/Xcode/DerivedData/MINTEL_LiveChat-bsbrquabibnhkjddidbhxcpiqeeo/Build/Products/Debug-iphonesimulator/SwiftImageCarousel.framework",
+					"/Users/mintel/Library/Developer/Xcode/DerivedData/MINTEL_LiveChat-bsbrquabibnhkjddidbhxcpiqeeo/Build/Products/Debug-iphonesimulator",
+					"/Users/mintel/Library/Developer/Xcode/DerivedData/MINTEL_LiveChat-bsbrquabibnhkjddidbhxcpiqeeo/Build/Products/Debug-iphonesimulator",
+					"/Users/mintel/Library/Developer/Xcode/DerivedData/MINTEL_LiveChat-bsbrquabibnhkjddidbhxcpiqeeo/Build/Products/Debug-iphonesimulator/SwiftImageCarousel.framework",
 				);
 				GCC_PREFIX_HEADER = "Target Support Files/MINTEL_LiveChat/MINTEL_LiveChat-prefix.pch";
 				INFOPLIST_FILE = "Target Support Files/MINTEL_LiveChat/MINTEL_LiveChat-Info.plist";
