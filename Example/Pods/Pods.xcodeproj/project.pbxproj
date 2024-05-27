@@ -56,6 +56,12 @@
 		D46CB5AF7BE345C5D27ABF9DCF692881 /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE500A6FB94F4A2115D2D4ABC0E8AA18 /* Result.swift */; };
 		D593E5BEB4221FF272DBF69E51945319 /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61AA3FBDC0F79C85DBACB7FFC3730171 /* Request.swift */; };
 		DBD7D9DDCDE82085828E7E29B022BF7A /* CloseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A70D0891B5A11E9B296871C2585F22 /* CloseViewController.swift */; };
+		E6FF56142C04288C006B5473 /* SwiftImageCarouselItemVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6FF560F2C04288B006B5473 /* SwiftImageCarouselItemVC.swift */; };
+		E6FF56152C04288C006B5473 /* GalleryVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6FF56102C04288B006B5473 /* GalleryVC.swift */; };
+		E6FF56162C04288C006B5473 /* SwiftImageCarouselVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6FF56112C04288B006B5473 /* SwiftImageCarouselVC.swift */; };
+		E6FF56172C04288C006B5473 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6FF56122C04288B006B5473 /* Extensions.swift */; };
+		E6FF56182C04288C006B5473 /* GalleryItemVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6FF56132C04288B006B5473 /* GalleryItemVC.swift */; };
+		E6FF561A2C042D35006B5473 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E6FF56192C042D35006B5473 /* Main.storyboard */; };
 		ED5C79BA7492CB6B6C1A11A802687F6D /* BubbleCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 437C1181FAEF3117563C14FE047D5D01 /* BubbleCircle.swift */; };
 		EF0610F3D90FF34B4098D068586E8702 /* Pods-MINTEL_LiveChat_Example-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 49ABD9B9EF1D44BC0FA1DB2E6E6A447A /* Pods-MINTEL_LiveChat_Example-dummy.m */; };
 		EFC1866D60FD03B24CFEAD3C6DD7B0C7 /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 724444733060EDB9D7D5F1B78F660D9F /* Extension.swift */; };
@@ -187,6 +193,12 @@
 		DE500A6FB94F4A2115D2D4ABC0E8AA18 /* Result.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Result.swift; path = Source/Result.swift; sourceTree = "<group>"; };
 		E172602A24EF35E84D4C76B2879A5709 /* TaskDelegate.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TaskDelegate.swift; path = Source/TaskDelegate.swift; sourceTree = "<group>"; };
 		E5245BD84FECC4268140DF28AB4EBA15 /* Alamofire-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Alamofire-dummy.m"; sourceTree = "<group>"; };
+		E6FF560F2C04288B006B5473 /* SwiftImageCarouselItemVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SwiftImageCarouselItemVC.swift; path = MINTEL_LiveChat/Classes/SwiftImageCarouselItemVC.swift; sourceTree = "<group>"; };
+		E6FF56102C04288B006B5473 /* GalleryVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GalleryVC.swift; path = MINTEL_LiveChat/Classes/GalleryVC.swift; sourceTree = "<group>"; };
+		E6FF56112C04288B006B5473 /* SwiftImageCarouselVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SwiftImageCarouselVC.swift; path = MINTEL_LiveChat/Classes/SwiftImageCarouselVC.swift; sourceTree = "<group>"; };
+		E6FF56122C04288B006B5473 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Extensions.swift; path = MINTEL_LiveChat/Classes/Extensions.swift; sourceTree = "<group>"; };
+		E6FF56132C04288B006B5473 /* GalleryItemVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GalleryItemVC.swift; path = MINTEL_LiveChat/Classes/GalleryItemVC.swift; sourceTree = "<group>"; };
+		E6FF56192C042D35006B5473 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Main.storyboard; path = MINTEL_LiveChat/Assets/Main.storyboard; sourceTree = "<group>"; };
 		E7D687B4598A10B74F8C420F251BF53B /* Pods-MINTEL_LiveChat_Example-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-MINTEL_LiveChat_Example-umbrella.h"; sourceTree = "<group>"; };
 		F092CB0B2C1D12561DBEC82761348C87 /* GridViewCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = GridViewCell.swift; path = MINTEL_LiveChat/Classes/GridViewCell.swift; sourceTree = "<group>"; };
 		F5101E98A3EB6C6ECC5E2906612A7E91 /* Pods-MINTEL_LiveChat_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-MINTEL_LiveChat_Example.debug.xcconfig"; sourceTree = "<group>"; };
@@ -272,6 +284,11 @@
 				437C1181FAEF3117563C14FE047D5D01 /* BubbleCircle.swift */,
 				589B3577C61A3C682A18D0DDD08A9208 /* Checkbox.swift */,
 				B6A70D0891B5A11E9B296871C2585F22 /* CloseViewController.swift */,
+				E6FF56122C04288B006B5473 /* Extensions.swift */,
+				E6FF56132C04288B006B5473 /* GalleryItemVC.swift */,
+				E6FF56102C04288B006B5473 /* GalleryVC.swift */,
+				E6FF560F2C04288B006B5473 /* SwiftImageCarouselItemVC.swift */,
+				E6FF56112C04288B006B5473 /* SwiftImageCarouselVC.swift */,
 				C3F797EA6684B918C67CC1046853215D /* CustomTableViewCell.swift */,
 				9C49E596BD28F27F1CF15BC9656161BB /* Downloader.swift */,
 				724444733060EDB9D7D5F1B78F660D9F /* Extension.swift */,
@@ -315,6 +332,7 @@
 			children = (
 				2F822E0434DF4845B6A978E19B4520E3 /* Assets.xcassets */,
 				4DB1AEA4B2E5B0ED0C2BA780ABC1430B /* ChatBox.storyboard */,
+				E6FF56192C042D35006B5473 /* Main.storyboard */,
 				6797E3D9ABB2480E049FAA38EBDD9C4A /* CustomCell.xib */,
 			);
 			name = Resources;
@@ -537,6 +555,7 @@
 				2908AEEA0F6D3F2787CCC6C7821E80D1 /* Assets.xcassets in Resources */,
 				60E0837751E1446206D2F6A0CFB1DD55 /* ChatBox.storyboard in Resources */,
 				C46AFD4A3BF94434310B8F98833E427F /* CustomCell.xib in Resources */,
+				E6FF561A2C042D35006B5473 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -606,10 +625,15 @@
 				A2154BEE96DEBC630B113BBB924FC409 /* MyMessage.swift in Sources */,
 				5227B1A14863A40D9D774F8117E36F7D /* MyTapGuesture.swift in Sources */,
 				05347D9C1704449B5FDBFBBAB8155F67 /* PaddingLabel.swift in Sources */,
+				E6FF56152C04288C006B5473 /* GalleryVC.swift in Sources */,
 				530C0EE3901FD6F65311713DAA388B9C /* PaddingTextView.swift in Sources */,
+				E6FF56162C04288C006B5473 /* SwiftImageCarouselVC.swift in Sources */,
 				8C7FA55A128196C1D426B57210DABE67 /* ProgressHUD.swift in Sources */,
 				39FAC5417E0CAFE765F4A8F8B2A9B0F2 /* RepeatingTimer.swift in Sources */,
+				E6FF56182C04288C006B5473 /* GalleryItemVC.swift in Sources */,
 				5FF599E4215AA0B10171E4FCB65F7BD2 /* TypingIndicator.swift in Sources */,
+				E6FF56172C04288C006B5473 /* Extensions.swift in Sources */,
+				E6FF56142C04288C006B5473 /* SwiftImageCarouselItemVC.swift in Sources */,
 				9476244A6AE852536D07A71923EDC7AF /* ViewController.swift in Sources */,
 				0779733B23DD5F634A0D32CE31C1DA7F /* ViewController+Network.swift in Sources */,
 				CE5BFA7E78F11C7BBF5A5F8860B92465 /* ViewController+Saleforce.swift in Sources */,
@@ -712,7 +736,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 839B0AE5154EBC2261925FE27F59F118 /* MINTEL_LiveChat.debug.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
@@ -726,9 +750,6 @@
 					"$(inherited)",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/Alamofire\"",
 					"\"${PODS_ROOT}/MINTEL_LiveChat/MINTEL_LiveChat/Framework\"",
-					"/Users/mintel/Library/Developer/Xcode/DerivedData/MINTEL_LiveChat-bsbrquabibnhkjddidbhxcpiqeeo/Build/Products/Debug-iphonesimulator",
-					"/Users/mintel/Library/Developer/Xcode/DerivedData/MINTEL_LiveChat-bsbrquabibnhkjddidbhxcpiqeeo/Build/Products/Debug-iphonesimulator",
-					"/Users/mintel/Library/Developer/Xcode/DerivedData/MINTEL_LiveChat-bsbrquabibnhkjddidbhxcpiqeeo/Build/Products/Debug-iphonesimulator/SwiftImageCarousel.framework",
 				);
 				GCC_PREFIX_HEADER = "Target Support Files/MINTEL_LiveChat/MINTEL_LiveChat-prefix.pch";
 				INFOPLIST_FILE = "Target Support Files/MINTEL_LiveChat/MINTEL_LiveChat-Info.plist";
@@ -927,7 +948,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 6DD6FF21F66A1A263246FCF8C7E71844 /* MINTEL_LiveChat.release.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";

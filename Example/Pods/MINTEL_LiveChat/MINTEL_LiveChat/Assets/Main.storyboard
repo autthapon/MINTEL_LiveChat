@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES" initialViewController="AkL-qy-2tW">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Swift Image Carousel ItemVC-->
+        <scene sceneID="i2f-Xn-Jyi">
+            <objects>
+                <viewController storyboardIdentifier="SwiftImageCarouselItemVC" id="RfP-Jq-vR5" customClass="SwiftImageCarouselItemVC" customModule="SwiftImageCarousel" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Z4X-bv-dbc"/>
+                        <viewControllerLayoutGuide type="bottom" id="c4E-OT-4sJ"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Dxa-Cv-Rlz">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="iG6-GC-4H2">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <gestureRecognizers/>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <gestureRecognizers/>
+                        <constraints>
+                            <constraint firstItem="iG6-GC-4H2" firstAttribute="leading" secondItem="Dxa-Cv-Rlz" secondAttribute="leading" id="BBx-DH-6q6"/>
+                            <constraint firstAttribute="trailing" secondItem="iG6-GC-4H2" secondAttribute="trailing" id="I7S-Qy-wva"/>
+                            <constraint firstItem="iG6-GC-4H2" firstAttribute="top" secondItem="Z4X-bv-dbc" secondAttribute="bottom" id="NBU-0q-Gkg"/>
+                            <constraint firstItem="c4E-OT-4sJ" firstAttribute="top" secondItem="iG6-GC-4H2" secondAttribute="bottom" id="y1z-cF-9A0"/>
+                        </constraints>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="znN-UV-1Ea" appends="YES" id="GhB-q1-9D5"/>
+                        </connections>
+                    </view>
+                    <nil key="simulatedStatusBarMetrics"/>
+                    <connections>
+                        <outlet property="contentImageView" destination="iG6-GC-4H2" id="ddq-lv-PFi"/>
+                        <outlet property="view" destination="Dxa-Cv-Rlz" id="6tG-mC-ibm"/>
+                        <segue destination="h2c-yw-7tI" kind="modal" identifier="showGalleryVC" id="59m-Ao-9MX"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="7IJ-QC-FfU" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="znN-UV-1Ea">
+                    <connections>
+                        <action selector="tapView:" destination="RfP-Jq-vR5" id="PaY-dI-Ueb"/>
+                    </connections>
+                </tapGestureRecognizer>
+            </objects>
+            <point key="canvasLocation" x="190.5" y="1100.5"/>
+        </scene>
+        <!--GalleryVC-->
+        <scene sceneID="pq9-i2-uwq">
+            <objects>
+                <pageViewController storyboardIdentifier="GalleryVC" autoresizesArchivedViewToFullSize="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" transitionStyle="scroll" navigationOrientation="horizontal" spineLocation="none" id="h2c-yw-7tI" customClass="GalleryVC" customModule="SwiftImageCarousel" customModuleProvider="target" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="1n6-Js-uzE"/>
+                    <nil key="simulatedStatusBarMetrics"/>
+                </pageViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="zVL-2k-kSL" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="669" y="1101"/>
+        </scene>
+        <!--Gallery ItemVC-->
+        <scene sceneID="FO6-Mh-fAG">
+            <objects>
+                <viewController storyboardIdentifier="GalleryItemVC" id="y6f-61-PVO" customClass="GalleryItemVC" customModule="SwiftImageCarousel" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="4pb-9m-ukf"/>
+                        <viewControllerLayoutGuide type="bottom" id="uh7-qW-4MK"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Ayu-fa-5zg">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" maximumZoomScale="3" translatesAutoresizingMaskIntoConstraints="NO" id="xb8-AI-TVz">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="eY4-TJ-0hM">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                    </imageView>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="eY4-TJ-0hM" firstAttribute="centerY" secondItem="xb8-AI-TVz" secondAttribute="centerY" id="MgJ-Va-lTY"/>
+                                    <constraint firstAttribute="bottom" secondItem="eY4-TJ-0hM" secondAttribute="bottom" id="O19-k6-M0T"/>
+                                    <constraint firstAttribute="trailing" secondItem="eY4-TJ-0hM" secondAttribute="trailing" id="ZQq-Bq-MY0"/>
+                                    <constraint firstItem="eY4-TJ-0hM" firstAttribute="centerX" secondItem="xb8-AI-TVz" secondAttribute="centerX" id="d9e-ho-pmb"/>
+                                    <constraint firstItem="eY4-TJ-0hM" firstAttribute="top" secondItem="xb8-AI-TVz" secondAttribute="top" id="eSt-ek-6xR"/>
+                                    <constraint firstItem="eY4-TJ-0hM" firstAttribute="leading" secondItem="xb8-AI-TVz" secondAttribute="leading" id="kON-5o-ETa"/>
+                                </constraints>
+                            </scrollView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SFE-rT-WvK">
+                                <rect key="frame" x="16" y="15" width="30" height="30"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="SFE-rT-WvK" secondAttribute="height" multiplier="1:1" id="4zy-2e-4La"/>
+                                    <constraint firstAttribute="height" constant="30" id="6dQ-o5-dls"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="35"/>
+                                <state key="normal" title="✕">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="tapCloseButton:" destination="y6f-61-PVO" eventType="touchUpInside" id="Esv-De-Hah"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                        <gestureRecognizers/>
+                        <constraints>
+                            <constraint firstItem="xb8-AI-TVz" firstAttribute="top" secondItem="4pb-9m-ukf" secondAttribute="bottom" id="3Gz-tK-IOe"/>
+                            <constraint firstItem="xb8-AI-TVz" firstAttribute="leading" secondItem="Ayu-fa-5zg" secondAttribute="leading" id="Eeb-HB-Dqo"/>
+                            <constraint firstItem="SFE-rT-WvK" firstAttribute="width" secondItem="SFE-rT-WvK" secondAttribute="height" multiplier="1:1" id="Gfi-8q-7mX"/>
+                            <constraint firstItem="xb8-AI-TVz" firstAttribute="bottom" secondItem="uh7-qW-4MK" secondAttribute="top" id="YOq-DQ-tBq"/>
+                            <constraint firstItem="SFE-rT-WvK" firstAttribute="top" secondItem="4pb-9m-ukf" secondAttribute="bottom" constant="15" id="hlK-NX-2mh"/>
+                            <constraint firstAttribute="trailing" secondItem="xb8-AI-TVz" secondAttribute="trailing" id="sn8-dm-kWn"/>
+                            <constraint firstItem="SFE-rT-WvK" firstAttribute="leading" secondItem="Ayu-fa-5zg" secondAttribute="leadingMargin" id="tKw-i8-rIe"/>
+                        </constraints>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="AR7-m7-l7B" appends="YES" id="FY5-im-Y3h"/>
+                        </connections>
+                    </view>
+                    <navigationItem key="navigationItem" id="bIq-U5-YEn"/>
+                    <nil key="simulatedStatusBarMetrics"/>
+                    <connections>
+                        <outlet property="closeButton" destination="SFE-rT-WvK" id="01S-Cu-C42"/>
+                        <outlet property="contentImageView" destination="eY4-TJ-0hM" id="9yY-MF-LFh"/>
+                        <outlet property="scrollView" destination="xb8-AI-TVz" id="mIO-zD-5k4"/>
+                        <segue destination="WKU-un-ULr" kind="unwind" identifier="unwindToSwiftImageCarouselVC" unwindAction="unwindToSwiftImageCarouselVCWithSegue:" id="oOp-20-9Im"/>
+                    </connections>
+                </viewController>
+                <tapGestureRecognizer id="AR7-m7-l7B">
+                    <connections>
+                        <action selector="tapBigImage:" destination="y6f-61-PVO" id="Qe0-zU-uln"/>
+                    </connections>
+                </tapGestureRecognizer>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Mp2-Uu-PET" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="WKU-un-ULr" userLabel="Exit" sceneMemberID="exit"/>
+            </objects>
+            <point key="canvasLocation" x="1111.5" y="1100.5"/>
+        </scene>
+        <!--Swift Image CarouselVC-->
+        <scene sceneID="z2o-Jv-T7h">
+            <objects>
+                <pageViewController autoresizesArchivedViewToFullSize="NO" transitionStyle="scroll" navigationOrientation="horizontal" spineLocation="none" id="AkL-qy-2tW" customClass="SwiftImageCarouselVC" customModule="SwiftImageCarousel" customModuleProvider="target" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="Lv3-Hr-UaO"/>
+                </pageViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ATb-KL-Eai" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="191" y="372"/>
+        </scene>
+    </scenes>
+    <simulatedMetricsContainer key="defaultSimulatedMetrics">
+        <simulatedStatusBarMetrics key="statusBar"/>
+        <simulatedOrientationMetrics key="orientation"/>
+        <simulatedScreenMetrics key="destination" type="retina4_7.fullscreen"/>
+    </simulatedMetricsContainer>
+</document>

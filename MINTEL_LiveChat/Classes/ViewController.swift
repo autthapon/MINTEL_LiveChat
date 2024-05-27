@@ -10,7 +10,7 @@ import UIKit
 import Photos
 import PhotosUI
 import AVFoundation
-import SwiftImageCarousel
+//import SwiftImageCarousel
 
 
 internal class CellIds {
@@ -46,6 +46,9 @@ internal class SalesForceNotifId {
     static let agentLeftConference = "saleForceAgentLeftConference"
     static let didEnd = "saleForceDidEnd"
 }
+
+public var imageCache = NSCache<NSString, UIImage>()
+
 
 class ViewController: UIViewController {
     
@@ -496,7 +499,7 @@ class ViewController: UIViewController {
                 // Prevent crash 2/May/2023
                 //self.view.layoutIfNeeded()
                 self.tableView.setContentOffset(CGPoint(x: oldOffset.x, y: oldOffset.y - keyboardFrame.height + self.bottomHeight), animated: false)
-            }) {_ in
+            }) {_ in 
                 self.tableView.reloadData()
             }
         }

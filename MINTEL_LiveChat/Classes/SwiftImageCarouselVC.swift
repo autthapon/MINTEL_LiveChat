@@ -47,6 +47,8 @@ public class SwiftImageCarouselVC: UIPageViewController {
             getNextItemController()
         }
     }
+    
+    public var contentLinkURLs: [String] = [] 
 
     // MARK: - Delegate
     weak public var swiftImageCarouselVCDelegate: SwiftImageCarouselVCDelegate?
@@ -139,6 +141,7 @@ public class SwiftImageCarouselVC: UIPageViewController {
             let pageItemController = storyboard!.instantiateViewController(withIdentifier: "SwiftImageCarouselItemVC") as! SwiftImageCarouselItemVC
             pageItemController.itemIndex = itemIndex < contentImageURLs.count ? itemIndex : 0
             pageItemController.contentImageURLs = contentImageURLs
+            pageItemController.contentLinkURLs = contentLinkURLs
             pageItemController.swiftImageCarouselVCDelegate = swiftImageCarouselVCDelegate
             pageItemController.showModalGalleryOnTap = showModalGalleryOnTap
             pageItemController.contentMode = contentMode

@@ -10,7 +10,7 @@ import UIKit
 import Photos
 import PhotosUI
 import AVFoundation
-import SwiftImageCarousel
+//import SwiftImageCarousel
 
 
 internal class CellIds {
@@ -46,6 +46,9 @@ internal class SalesForceNotifId {
     static let agentLeftConference = "saleForceAgentLeftConference"
     static let didEnd = "saleForceDidEnd"
 }
+
+public var imageCache = NSCache<NSString, UIImage>()
+
 
 class ViewController: UIViewController {
     

@@ -8,7 +8,7 @@
 
 import UIKit
 import Alamofire
-import SwiftImageCarousel
+//import SwiftImageCarousel
 
 let menuHeight = 40
 
@@ -386,11 +386,19 @@ class CustomTableViewCell: UITableViewCell {
             """
                  */
                 if txtLower.contains("carousel/") {
-                    let carStr = txtLower.replacingOccurrences(of: "carousel/", with: "")
+                    let carStr = txt.replacingOccurrences(of: "carousel/", with: "")
                     var carArr: [[String: String]]
                     //carArr = try! JSONSerialization.jsonObject(with: carStr2, options: .mutableContainers) as! [Carousel]
                     carArr = carStr.toJSON() as! [[String: String]]
 
+                    // Clear it first
+                    /*
+                    DispatchQueue.main.async {
+                        MessageList.setItemAt(index: index, item: MyMessage(systemMessageType1: ""))
+                        tableView.reloadData()
+                    }
+                    */
+                    // Show again
                     DispatchQueue.main.async {
                         MessageList.setItemAt(index: index, item: MyMessage(carousel: carArr))
                         tableView.reloadData()
@@ -738,9 +746,12 @@ class CustomTableViewCell: UITableViewCell {
         
         let storyboard = UIStoryboard (name: "Main", bundle: Bundle(for: SwiftImageCarouselVC.self))
         let vc = storyboard.instantiateInitialViewController() as! SwiftImageCarouselVC
-
+        vc.showModalGalleryOnTap = false
+        
         for c in carousels {
+            debugPrint(c["imageUrl"])
             vc.contentImageURLs.append(c["imageUrl"] ?? "")
+            vc.contentLinkURLs.append(c["url"] ?? "")
         }
        
         /*
@@ -754,7 +765,7 @@ class CustomTableViewCell: UITableViewCell {
         let xPosition = 10.0
         vc.view.frame = CGRect(x: xPosition, y: 10, width: self.contentView.frame.width, height: 300)
         vc.didMove(toParent: self.topViewController())
-        vc.showModalGalleryOnTap = false
+        
         vc.swipeTimeIntervalSeconds = 10
         vc.swiftImageCarouselVCDelegate = self
 
@@ -1313,5 +1324,10 @@ extension CustomTableViewCell: SwiftImageCarouselVCDelegate {
     func didTapSwiftImageCarouselItemVC(swiftImageCarouselItemController: SwiftImageCarouselItemVC) {
         // The user selected this swiftImageCarouselItemController
         debugPrint(swiftImageCarouselItemController.itemIndex)
+        debugPrint(swiftImageCarouselItemController.contentLinkURLs[swiftImageCarouselItemController.itemIndex])
+        let urlString = swiftImageCarouselItemController.contentLinkURLs[swiftImageCarouselItemController.itemIndex]
+        if let url = URL(string: urlString), UIApplication.shared.canOpenURL(url)  {
+            UIApplication.shared.open(url)
+        }
     }
 }

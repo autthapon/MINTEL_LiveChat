@@ -13,6 +13,7 @@ class GalleryVC: UIPageViewController {
     // MARK: - Variables
     var pageIndicatorIndex = 0
     var contentImageURLs = [String]()
+    var contentLinkURLs = [String]()
     
     var noImage: UIImage? = nil
     /// Shows/hides the close button in the modal gallery. Default value is false.

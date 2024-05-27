@@ -34,6 +34,7 @@ public class SwiftImageCarouselItemVC: UIViewController {
 
     /// The array with the image URLs, passed to the GalleryVC.
     public var contentImageURLs: [String]!
+    public var contentLinkURLs: [String]!
 
     // MARK: - Functions
     @IBAction func tapView(_ sender: UITapGestureRecognizer) {
@@ -56,6 +57,7 @@ public class SwiftImageCarouselItemVC: UIViewController {
             if let scrollableGalleryVC = segue.destination as? GalleryVC {
                 scrollableGalleryVC.pageIndicatorIndex = itemIndex
                 scrollableGalleryVC.contentImageURLs = contentImageURLs
+                scrollableGalleryVC.contentLinkURLs = contentLinkURLs
                 scrollableGalleryVC.noImage = noImage
                 scrollableGalleryVC.showCloseButtonInModalGallery = showCloseButtonInModalGallery
             }

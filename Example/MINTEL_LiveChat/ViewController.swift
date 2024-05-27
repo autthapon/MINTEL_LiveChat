@@ -51,9 +51,9 @@ class ViewController: UIViewController {
 
         let firstname = "Note"
         let lastname = "Note"
-        let phone = "0818888888"
+        let phone = "0879108889"
         let email = ""
-        let tmnId = "11241313"
+        let tmnId = "tmn.10012386317"
         let disableBotMode = false
         let startupIntent = "00_home";
         
