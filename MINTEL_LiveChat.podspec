@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'MINTEL_LiveChat'
-  s.version          = '1.4.60'
+  s.version          = '1.4.61'
   s.summary          = 'MINTEL_LiveChat Library'
 
 # This description is used to generate tags and improve search results.
@@ -39,9 +39,9 @@ TODO: Add long description of the pod here.
   s.pod_target_xcconfig   = {'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64'}
   s.user_target_xcconfig  = {'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64'}
   s.dependency 'Alamofire', '~> 4.8.2'
-  s.vendored_frameworks = 'MINTEL_LiveChat/Framework/ServiceCore.framework', 'MINTEL_LiveChat/Framework/ServiceChat.framework', 'MINTEL_LiveChat/Framework/SwiftImageCarousel.framework'
+  s.vendored_frameworks = 'MINTEL_LiveChat/Framework/ServiceCore.framework', 'MINTEL_LiveChat/Framework/ServiceChat.framework'
   s.preserve_paths = 'MINTEL_LiveChat/Framework/*'
   # s.public_header_files = 'Pod/Classes/**/*.h'
-  s.frameworks = 'ServiceCore', 'ServiceChat', 'SwiftImageCarousel'
+  s.frameworks = 'ServiceCore', 'ServiceChat'
   # s.dependency 'AFNetworking', '~> 2.3'
 end
