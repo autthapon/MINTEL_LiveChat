@@ -386,18 +386,19 @@ class CustomTableViewCell: UITableViewCell {
             """
                  */
                 if txtLower.contains("carousel/") {
+                    //carousel/[{"imageUrl": "https://www.geeksforgeeks.org/wp-content/uploads/gfg_200X200-1.png", "url": "https://www.google.com"}, {"imageUrl": "https://i.stack.imgur.com/WQna0.png", "url": "https://www.microsoft.com"}]
+                    
                     let carStr = txt.replacingOccurrences(of: "carousel/", with: "")
                     var carArr: [[String: String]]
                     //carArr = try! JSONSerialization.jsonObject(with: carStr2, options: .mutableContainers) as! [Carousel]
                     carArr = carStr.toJSON() as! [[String: String]]
 
                     // Clear it first
-                    /*
                     DispatchQueue.main.async {
                         MessageList.setItemAt(index: index, item: MyMessage(systemMessageType1: ""))
                         tableView.reloadData()
                     }
-                    */
+                    
                     // Show again
                     DispatchQueue.main.async {
                         MessageList.setItemAt(index: index, item: MyMessage(carousel: carArr))
@@ -769,7 +770,7 @@ class CustomTableViewCell: UITableViewCell {
         vc.swipeTimeIntervalSeconds = 10
         vc.swiftImageCarouselVCDelegate = self
 
-         //carousel/[{"imageUrl": "https://www.geeksforgeeks.org/wp-content/uploads/gfg_200X200-1.png", "url": "https://www.google.com"}, {"imageUrl": "https://i.stack.imgur.com/WQna0.png", "url": "https://www.microsoft.com"}]
+         
         
         /*
         let img = image.MyResizeImage(targetSize: CGSize(width:270,height: 300))
