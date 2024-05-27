@@ -6,7 +6,7 @@
 	<dict>
 		<key>Headers/SwiftImageCarousel-Swift.h</key>
 		<data>
-		4Wpw6SB5n3MlRYskDxGH1bmJ/n4=
+		/+A0EpLHilVPAP0T6HEnwk0NE28=
 		</data>
 		<key>Headers/SwiftImageCarousel.h</key>
 		<data>
@@ -44,9 +44,25 @@
 		<data>
 		3eEqgzmcX7Y0Uw+bH0Ufu+5tr88=
 		</data>
+		<key>Modules/SwiftImageCarousel.swiftmodule/Project/arm64-apple-ios-simulator.swiftsourceinfo</key>
+		<data>
+		72UT8p21TVeqF65ffqPdOLv1iQ8=
+		</data>
 		<key>Modules/SwiftImageCarousel.swiftmodule/Project/x86_64-apple-ios-simulator.swiftsourceinfo</key>
 		<data>
 		PZnpflUaedgacAudPswDLJnD3xM=
+		</data>
+		<key>Modules/SwiftImageCarousel.swiftmodule/arm64-apple-ios-simulator.abi.json</key>
+		<data>
+		FSPnLbho3G+LL9smI3XgVOqBIQ4=
+		</data>
+		<key>Modules/SwiftImageCarousel.swiftmodule/arm64-apple-ios-simulator.swiftdoc</key>
+		<data>
+		QLysM3iJvipsRtIn19hAeaszxII=
+		</data>
+		<key>Modules/SwiftImageCarousel.swiftmodule/arm64-apple-ios-simulator.swiftmodule</key>
+		<data>
+		6xyI4gIHyz22O4jWt8g+u93KTrk=
 		</data>
 		<key>Modules/SwiftImageCarousel.swiftmodule/x86_64-apple-ios-simulator.abi.json</key>
 		<data>
@@ -58,7 +74,7 @@
 		</data>
 		<key>Modules/SwiftImageCarousel.swiftmodule/x86_64-apple-ios-simulator.swiftmodule</key>
 		<data>
-		NsU6e26YV11cZ7ourDFMAQc+C1g=
+		0HNArzHie2zBjUfhvH0Mc1oJz9I=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -71,7 +87,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			mLT+89/8WGF/JDpgfiAtBLQOMgNmsf1D8Yp8KsPFu7I=
+			7W5M91AyI7R1cqkkLHiKjfa/VP1xOcpHRZH7EVd2v5g=
 			</data>
 		</dict>
 		<key>Headers/SwiftImageCarousel.h</key>
@@ -130,11 +146,39 @@
 			L6CAtPgsBAcxLFu6uPDpDNEI0EEE0obaWtUBOFlDNNw=
 			</data>
 		</dict>
+		<key>Modules/SwiftImageCarousel.swiftmodule/Project/arm64-apple-ios-simulator.swiftsourceinfo</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			KsCwEHfhZv3sZ2baEcDAsJopOdlU4hIaeu1g4m44cS4=
+			</data>
+		</dict>
 		<key>Modules/SwiftImageCarousel.swiftmodule/Project/x86_64-apple-ios-simulator.swiftsourceinfo</key>
 		<dict>
 			<key>hash2</key>
 			<data>
 			/Lc+7sJgyeNCzdsv0PtLGyKuvetf+durXANIPwViqpg=
+			</data>
+		</dict>
+		<key>Modules/SwiftImageCarousel.swiftmodule/arm64-apple-ios-simulator.abi.json</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			KnRdWE4y6t4QM5zi5JDptPdHFgJy1Tku+7GLkZS2aNM=
+			</data>
+		</dict>
+		<key>Modules/SwiftImageCarousel.swiftmodule/arm64-apple-ios-simulator.swiftdoc</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			utCWdNYe98Mkx5/PzsmNRmtg6L4dqjR+oVd4rSF/iws=
+			</data>
+		</dict>
+		<key>Modules/SwiftImageCarousel.swiftmodule/arm64-apple-ios-simulator.swiftmodule</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			fs+s0HbtykedYAxjg8plqU73m8t5Tipp/NNn4btGF/c=
 			</data>
 		</dict>
 		<key>Modules/SwiftImageCarousel.swiftmodule/x86_64-apple-ios-simulator.abi.json</key>
@@ -155,7 +199,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			hXf4JBTNiOIwaYD0yW2wHBrZsXNvk8JThEHfyMOpza8=
+			R8q0KPVxB4FTwoaac+lkxHP+nMiPHXNrOG/6iSdhQGM=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>
