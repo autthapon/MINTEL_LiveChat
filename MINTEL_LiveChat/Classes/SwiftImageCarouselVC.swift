@@ -40,15 +40,15 @@ import UIKit
 
 ///  SwiftImageCarouselVC is the controller base class and initilizes the first view the user sees when a developer implements this carousel. It implements methods used for instantiating the proper page view, setting up the page controller appearance and setting up the timer used for automatic swiping of the page views.
 public class SwiftImageCarouselVC: UIPageViewController {
-    
+   
     /// The model array of image urls used in the carousel.
     public var contentImageURLs: [String] = [] {
         didSet {
             getNextItemController()
         }
     }
-    
-    public var contentLinkURLs: [String] = [] 
+   
+    public var contentLinkURLs: [String] = []
 
     // MARK: - Delegate
     weak public var swiftImageCarouselVCDelegate: SwiftImageCarouselVCDelegate?
@@ -97,7 +97,7 @@ public class SwiftImageCarouselVC: UIPageViewController {
             loadPageViewControllerWhenUnwinding(atIndex: galleryItemVC.itemIndex)
         }
     }
-    
+   
     /// Loads a view controller with the index from the unwind segue.
     ///
     /// - Parameter itemIndex: The index for the VC from the model that will be loaded
@@ -208,7 +208,16 @@ public class SwiftImageCarouselVC: UIPageViewController {
                     }
                 } else if view is UIPageControl {
                     pageControlFrameHeight = view.frame.height
+                    let pos = CGPoint(x: view.frame.origin.x, y: 250)
+                    view.frame = CGRect(origin: pos, size: view.frame.size)
                     view.backgroundColor = .clear
+                }
+            }
+        } else {
+            for view in self.view.subviews {
+                if view is UIPageControl {
+                    let pos = CGPoint(x: view.frame.origin.x, y: 250)
+                    view.frame = CGRect(origin: pos, size: view.frame.size)
                 }
             }
         }
@@ -220,12 +229,12 @@ public class SwiftImageCarouselVC: UIPageViewController {
             startTimer()
         }
     }
-    
+   
     public override func viewWillDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         timer.invalidate()
     }
-    
+   
     override public var prefersStatusBarHidden : Bool { return true }
 }
 
