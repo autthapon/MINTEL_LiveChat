@@ -653,7 +653,15 @@ extension ViewController: UITableViewDataSource {
                 let targetAction = myButton?.TMN_Menu["action"] as? [String:Any]
                 let text = targetAction?["text"] as? String ?? ""
                 if (text.count > 0) {
-                    
+                    if ("00_home" == text) {
+                        MINTEL_LiveChat.chatCanTyped = true
+                        DispatchQueue.global().async(execute: {
+                            DispatchQueue.main.sync {
+                                MINTEL_LiveChat.chatCanTyped = true
+                            }
+                        })
+                    }
+                                                     
                     if ("__00_app_endchat" == text) {
                         self.closeChat()
                     } else {

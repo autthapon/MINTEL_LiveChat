@@ -45,9 +45,11 @@ class ViewController: UIViewController {
         //let xApiKey:String              = "381b0ac187994f82bdc05c09d1034afa" // dev
         let surveryFormUrl:String       = "https://truemoney.secure.force.com/staffsurvey?uid=sessionId"
         let chatBotSurveyUrl:String     = "https://truemoney.secure.force.com/botsurvey?uid=sessionId"
-        let announcementUrl:String       = "https://asia-east2-acm-clt-chatbots.cloudfunctions.net/announcementmulti?uid=sessionId"
+        //let announcementUrl:String       = "https://asia-east2-acm-clt-chatbots.cloudfunctions.net/announcementmulti?uid=sessionId"
         //let announcementUrl:String       = "https://us-central1-test-tmn-bot.cloudfunctions.net/announcementmulti?uid=sessionId"
         // https://asia-east2-acm-clt-chatbots.cloudfunctions.net/onNewSessionMobile
+        let announcementUrl:String       = "https://asia-east2-acm-clt-chatbots-stg.cloudfunctions.net/announcementmulti?uid=sessionId"
+        //let announcementUrl:String       =
 
         let firstname = "Note"
         let lastname = "Note"
