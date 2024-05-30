@@ -748,9 +748,11 @@ class CustomTableViewCell: UITableViewCell {
         let storyboard = UIStoryboard (name: "Main", bundle: Bundle(for: SwiftImageCarouselVC.self))
         let vc = storyboard.instantiateInitialViewController() as! SwiftImageCarouselVC
         vc.showModalGalleryOnTap = false
+        vc.swipeTimeIntervalSeconds = 10
+        vc.swiftImageCarouselVCDelegate = self
         
         for c in carousels {
-            debugPrint(c["imageUrl"])
+            //debugPrint(c["imageUrl"])
             vc.contentImageURLs.append(c["imageUrl"] ?? "")
             vc.contentLinkURLs.append(c["url"] ?? "")
         }
@@ -758,45 +760,17 @@ class CustomTableViewCell: UITableViewCell {
         /*
         ["https://cdn.britannica.com/70/234870-050-D4D024BB/Orange-colored-cat-yawns-displaying-teeth.jpg", "https://w7.pngwing.com/pngs/444/310/png-transparent-amazon-com-amazon-prime-music-streaming-media-prime-now-payment-miscellaneous-text-logo-thumbnail.png", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRPniqg7_A0q3bfzWu5hhlksVlxvmSWPVH_8kT-b6ktKg&s"]
 */
-        // Adding it to the container view
-        vc.willMove(toParent: self.topViewController())
-        self.contentView.addSubview(vc.view)
+        
         
         let screen = UIScreen.main.bounds
         let xPosition = 10.0
         vc.view.frame = CGRect(x: xPosition, y: 10, width: self.contentView.frame.width, height: 300)
         vc.didMove(toParent: self.topViewController())
         
-        vc.swipeTimeIntervalSeconds = 10
-        vc.swiftImageCarouselVCDelegate = self
-
-         
         
-        /*
-        let img = image.MyResizeImage(targetSize: CGSize(width:270,height: 300))
-        let imgView = UIImageView(image: img)
-        self.contentView.addSubview(imgView)
-        let screen = UIScreen.main.bounds
-        
-        let xPosition = screen.width - img.size.width - 10.0
-        imgView.frame = CGRect(x: xPosition, y: 10, width: img.size.width, height: img.size.height)
-        imgView.layer.cornerRadius = 18
-        imgView.backgroundColor = UIColor(MyHexString: "#EBEBEB")
-        imgView.layer.masksToBounds = true
-        imgView.startAnimating()
-        */
-        
-        /*
-        let timelbl = UILabel()
-        self.contentView.addSubview(timelbl)
-        timelbl.frame = CGRect(x: UIScreen.main.bounds.size.width - 55, y: img.size.height + 15, width: 50, height: 13)
-        timelbl.font = UIFont.systemFont(ofSize: 12)
-        
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "HH:mm"
-        let dateString = dateFormatter.string(from: time)
-        timelbl.text = dateString
-         */
+        // Adding it to the container view
+        vc.willMove(toParent: self.topViewController())
+        self.contentView.addSubview(vc.view)
     }
     
     @objc func download(_ sender:UIButton) {
