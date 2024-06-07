@@ -48,7 +48,7 @@ class ViewController: UIViewController {
         //let announcementUrl:String       = "https://asia-east2-acm-clt-chatbots.cloudfunctions.net/announcementmulti?uid=sessionId"
         //let announcementUrl:String       = "https://us-central1-test-tmn-bot.cloudfunctions.net/announcementmulti?uid=sessionId"
         // https://asia-east2-acm-clt-chatbots.cloudfunctions.net/onNewSessionMobile
-        let announcementUrl:String       = "https://asia-east2-acm-clt-chatbots-stg.cloudfunctions.net/announcementmulti?uid=sessionId"
+        let announcementUrl:String       = "https://asia-east2-acm-clt-chatbots.cloudfunctions.net/announcementmulti?uid=sessionId"
         //let announcementUrl:String       =
 
         let firstname = "Note"
@@ -56,7 +56,7 @@ class ViewController: UIViewController {
         let phone = "0879108889"
         let email = ""
         let tmnId = "tmn.10012386317"
-        let disableBotMode = false
+        let disableBotMode = true
         let startupIntent = "00_home";
         
         let config = LiveChatConfiguration(withUserName: "Note", withSalesforceLiveAgentPod: liveagentPod, withSalesForceOrdId: ordID, withSalesforceDeployId: deployID, withSalesforceButtonId: buttonID, withWebHookBaseUrl: webhookUrl, withXApiKey: xApiKey, withUploadBaseUrl: uploadUrl, withSurveyChatbotUrl: chatBotSurveyUrl, withSurveyFormUrl: surveryFormUrl, withAnnouncementUrl: announcementUrl, withFirstName: firstname, withLastName: lastname, withEmail: email, withPhone: phone, withTmnId: tmnId, withDisableBotMode: disableBotMode, withLanguage: "th", withStartupIntent: startupIntent)

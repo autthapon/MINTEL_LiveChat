@@ -120,6 +120,7 @@ public class MINTEL_LiveChat: UIView {
                 // From DO truemoney
                 self.userImageView.frame = CGRect(x: self.userImageView.frame.origin.x + (self.userImageView.frame.size.width / 2) - 20, y:  self.userImageView.frame.origin.y + (self.userImageView.frame.size.height / 2) - 20, width: 40, height: 40)
                 
+                
                 self.userImageView.isHidden = false
                 self.callCenterLabel.isHidden = false
                 //self.callCenterLabel.isHidden = false
@@ -128,6 +129,9 @@ public class MINTEL_LiveChat: UIView {
                 self.queueLabel.isHidden = true
             } else if (MINTEL_LiveChat.chatBotMode) {
                 self.userImageView.image = UIImage(named: "end", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil)
+                // From DO truemoney
+                self.userImageView.frame = CGRect(x: self.userImageView.frame.origin.x + (self.userImageView.frame.size.width / 2) - 20, y:  self.userImageView.frame.origin.y + (self.userImageView.frame.size.height / 2) - 20, width: 40, height: 40)
+                
                 //self.userImageView.image = UIImage(named: "user", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil)
                 self.userImageView.frame = MINTEL_LiveChat.userImageFrame
                 self.userImageView.isHidden = false
@@ -162,6 +166,10 @@ public class MINTEL_LiveChat: UIView {
                 case .joined:
                     //self.userImageView.image = UIImage(named: "agent", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil)
                     self.userImageView.image = UIImage(named: "end", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil)
+                    
+                    // From DO truemoney
+                    self.userImageView.frame = CGRect(x: self.userImageView.frame.origin.x + (self.userImageView.frame.size.width / 2) - 20, y:  self.userImageView.frame.origin.y + (self.userImageView.frame.size.height / 2) - 20, width: 40, height: 40)
+                    
                     self.userImageView.frame = MINTEL_LiveChat.userImageFrame
                     self.userImageView.isHidden = false
                     self.callCenterLabel.isHidden = true
@@ -907,9 +915,19 @@ public class MINTEL_LiveChat: UIView {
                 MINTEL_LiveChat.chatCanTyped = true
             }
             
+            /*
             NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
                                             object: nil,
                                             userInfo:nil)
+            */
+            
+            let seconds = 1.0
+            DispatchQueue.main.asyncAfter(deadline: .now() + seconds) {
+                // Put your code which should be executed with a delay here
+                NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
+                object: nil,
+                userInfo:nil)
+            }
              
         }
     }
@@ -927,10 +945,21 @@ public class MINTEL_LiveChat: UIView {
         self.closeButton.MyRoundCorners([.topLeft, .topRight], radius: CGFloat(cornerRadius))
         self.closeButton.isUserInteractionEnabled = false
         
-        let image = UIImage(named: "user", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil)
+        let image = UIImage(named: "end", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil)
         self.userImageView = UIImageView(image: image)
         self.userImageView.contentMode = .scaleAspectFit
-        self.userImageView.frame = CGRect(x: 0, y: self.closeButton.frame.origin.y + self.closeButton.frame.size.height, width: self.frame.size.width, height: self.frame.size.height - (self.closeButton.frame.origin.y + self.closeButton.frame.size.height + 25))
+        
+        self.userImageView.frame = CGRect(x: 0,
+                                          y: self.closeButton.frame.origin.y + self.closeButton.frame.size.height,
+                                          width: self.frame.size.width,
+                                          height: self.frame.size.height - (self.closeButton.frame.origin.y + self.closeButton.frame.size.height + 25))
+         
+        
+        self.userImageView.frame = CGRect(x: self.userImageView.frame.origin.x + (self.userImageView.frame.size.width / 2) - 20,
+                                          y:  self.userImageView.frame.origin.y + (self.userImageView.frame.size.height / 2) - 20,
+                                          width: 40,
+                                          height: 40)
+        
         self.addSubview(self.userImageView)
         MINTEL_LiveChat.userImageFrame = self.userImageView.frame
         
@@ -1749,10 +1778,13 @@ extension MINTEL_LiveChat  {
                                             if (type == "text") {
                                                 if (quickReply != nil) {
                                                     let items = quickReply!["items"] as? [[String:Any]] ?? []
-                                                    MINTEL_LiveChat.chatMenus = items
-                                                    NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.chatMenuAvailable),
-                                                                                    object: nil,
-                                                                                    userInfo:nil)
+                                                    if (MINTEL_LiveChat.chatMenus.count == 0) {
+                                                        MINTEL_LiveChat.chatMenus = items
+                                                        NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.chatMenuAvailable),
+                                                                                        object: nil,
+                                                                                        userInfo:nil)
+                                                    }
+                                                    
 //                                                    debugPrint(items)
 //                                                    print("Menus Session")
                                                 }
@@ -1762,6 +1794,12 @@ extension MINTEL_LiveChat  {
                                                 if (quickReply != nil) {
                                                     let items = quickReply!["items"] as? [[String:Any]] ?? []
                                                     let _ = MessageList.add(item: MyMessage(text: quickReplyTitle, agent: true, menu: items))
+                                                    if (MINTEL_LiveChat.chatMenus.count == 0) {
+                                                        MINTEL_LiveChat.chatMenus = items
+                                                        NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.chatMenuAvailable),
+                                                                                        object: nil,
+                                                                                        userInfo:nil)
+                                                    }
                                                 } else {
                                                     if (quickReplyTitle == "ขอบคุณสำหรับข้อมูลค่ะ อีกสักครู่เจ้าหน้าที่จะมาให้บริการคุณลูกค้าต่อจากนี้ค่ะ") {
                                                         if (MINTEL_LiveChat.configuration?.language == "my") {
