@@ -915,19 +915,12 @@ public class MINTEL_LiveChat: UIView {
                 MINTEL_LiveChat.chatCanTyped = true
             }
             
-            /*
+            
             NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
                                             object: nil,
                                             userInfo:nil)
-            */
             
-            let seconds = 1.0
-            DispatchQueue.main.asyncAfter(deadline: .now() + seconds) {
-                // Put your code which should be executed with a delay here
-                NotificationCenter.default.post(name: Notification.Name(MINTELNotifId.botTyped),
-                object: nil,
-                userInfo:nil)
-            }
+            
              
         }
     }
@@ -1336,6 +1329,7 @@ extension MINTEL_LiveChat : SCSChatSessionDelegate {
         if previous == SCSChatSessionState.connecting && current == SCSChatSessionState.queued {
             DispatchQueue.main.async {
                 self.queueLabel.tag = Int.max
+                self.tapAction(sender: UIButton(), survey: MINTEL_LiveChat.surveyMode)
             }
         } else if previous == SCSChatSessionState.inactive && current == SCSChatSessionState.connecting {
             // Auto expand

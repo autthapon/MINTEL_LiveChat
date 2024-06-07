@@ -56,7 +56,7 @@ class ViewController: UIViewController {
         let phone = "0879108889"
         let email = ""
         let tmnId = "tmn.10012386317"
-        let disableBotMode = true
+        let disableBotMode = false
         let startupIntent = "00_home";
         
         let config = LiveChatConfiguration(withUserName: "Note", withSalesforceLiveAgentPod: liveagentPod, withSalesForceOrdId: ordID, withSalesforceDeployId: deployID, withSalesforceButtonId: buttonID, withWebHookBaseUrl: webhookUrl, withXApiKey: xApiKey, withUploadBaseUrl: uploadUrl, withSurveyChatbotUrl: chatBotSurveyUrl, withSurveyFormUrl: surveryFormUrl, withAnnouncementUrl: announcementUrl, withFirstName: firstname, withLastName: lastname, withEmail: email, withPhone: phone, withTmnId: tmnId, withDisableBotMode: disableBotMode, withLanguage: "th", withStartupIntent: startupIntent)
