@@ -31,6 +31,9 @@ class MessageList {
                     if msg.contains("คิวของคุณคือลำดับที่") {
                         return true
                     }
+                    if msg.contains("Your queue number is") {
+                        return true
+                    }
                 }
             case .systemMessageType2(let msg):
                 if item.kind == it.kind {
