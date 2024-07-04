@@ -220,7 +220,8 @@ public class MINTEL_LiveChat: UIView {
                 return "Chat started on "
             }
             if (str == "end_conversation_chat") {
-                return "The agent has left the chat"
+                //return "The agent has left the chat"
+                return "End this conversation as your session has expired"
             }
             if (str == "end_conversation_title") {
                 return "We are happy to assist you"
@@ -288,7 +289,8 @@ public class MINTEL_LiveChat: UIView {
                 return "เริ่มการสนทนา "
             }
             if (str == "end_conversation_chat") {
-                return "เจ้าหน้าที่ออกจากแชทแล้ว" // จบการสนทนา
+                //return "เจ้าหน้าที่ออกจากแชทแล้ว" // จบการสนทนา
+                return "ไม่มีการสนทนาในเวลาที่กำหนดจึงขอจบแขท"
             }
             if (str == "end_conversation_chatbot") {
                 return "เรายินดีที่ได้ช่วยเหลือคุณ"
