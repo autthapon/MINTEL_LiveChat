@@ -41,7 +41,7 @@ extension UIImageView {
             if let cachedImage = imageCache.object(forKey: encodedUrl as NSString) {
                 self.image = cachedImage
             } else {
-                return downloadImageAsync(contentsOf: encodedUrl) { image in
+                return downloadImageAsync(contentsOf: url) { image in
                     self.image = image
                     imageCache.setObject(image, forKey: encodedUrl as NSString, cost: 1)
                 }
