@@ -751,8 +751,8 @@ class CustomTableViewCell: UITableViewCell {
         vc.swipeTimeIntervalSeconds = 10
         vc.swiftImageCarouselVCDelegate = self
         
-        
         for c in carousels {
+            debugPrint("carousels loop")
             debugPrint(c["imageUrl"])
             //vc.contentImageURLs.append("https://cdn.britannica.com/70/234870-050-D4D024BB/Orange-colored-cat-yawns-displaying-teeth.jpg")
             //vc.contentImageURLs.append((c["imageUrl"] ?? "") + "&ext=.png")

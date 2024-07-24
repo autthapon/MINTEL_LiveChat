@@ -230,10 +230,12 @@ public class SwiftImageCarouselVC: UIPageViewController {
         }
     }
    
+    /*
     public override func viewWillDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         timer.invalidate()
     }
+     */
    
     override public var prefersStatusBarHidden : Bool { return true }
 }

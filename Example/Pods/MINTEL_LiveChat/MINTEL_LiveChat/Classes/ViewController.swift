@@ -332,7 +332,7 @@ class ViewController: UIViewController {
             self.inputTextViewBottomConstraint.constant = 0
             let oldOffset = self.tableView.contentOffset
             self.menuTableView.frame = CGRect(x: 0, y: UIScreen.main.bounds.size.height, width: UIScreen.main.bounds.size.width, height: CGFloat(height))
-            self.view.layoutIfNeeded()
+            //self.view.layoutIfNeeded()
             self.tableView.setContentOffset(CGPoint(x: oldOffset.x, y: oldOffset.y - keyboardFrame.height + self.bottomHeight), animated: false)
             self.inputTextView.becomeFirstResponder()
             self.tableView.scrollToBottom(animated: false)
@@ -1116,7 +1116,7 @@ extension ViewController: InputTextViewDelegate {
                 self.inputTextViewBottomConstraint.constant = 0
                 let oldOffset = self.tableView.contentOffset
                 self.imagePanelView.frame = CGRect(x: 0, y: UIScreen.main.bounds.size.height, width: UIScreen.main.bounds.size.width, height: CGFloat(height))
-                self.view.layoutIfNeeded()
+                //self.view.layoutIfNeeded()
                 self.tableView.setContentOffset(CGPoint(x: oldOffset.x, y: oldOffset.y - keyboardFrame.height + self.bottomHeight), animated: false)
                 self.inputTextView.becomeFirstResponder()
                 self.imagePanelView.reloadData()

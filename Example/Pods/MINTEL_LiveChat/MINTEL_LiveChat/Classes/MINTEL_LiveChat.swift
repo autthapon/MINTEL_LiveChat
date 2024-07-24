@@ -1331,7 +1331,10 @@ extension MINTEL_LiveChat : SCSChatSessionDelegate {
         if previous == SCSChatSessionState.connecting && current == SCSChatSessionState.queued {
             DispatchQueue.main.async {
                 self.queueLabel.tag = Int.max
-                self.tapAction(sender: UIButton(), survey: MINTEL_LiveChat.surveyMode)
+                if (MINTEL_LiveChat.configuration?.disableBotMode == true) {
+                    self.tapAction(sender: UIButton(), survey: MINTEL_LiveChat.surveyMode)
+                }
+                
             }
         } else if previous == SCSChatSessionState.inactive && current == SCSChatSessionState.connecting {
             // Auto expand
