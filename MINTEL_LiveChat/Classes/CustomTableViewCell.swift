@@ -307,6 +307,12 @@ class CustomTableViewCell: UITableViewCell {
                             let newMname = oldMname?.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)
                             let tempUrl = txt.replacingOccurrences(of: oooo, with: newMname!)
                             
+                            // Clear it first
+                            DispatchQueue.main.async {
+                                MessageList.setItemAt(index: index, item: MyMessage(systemMessageType1: ""))
+                                tableView.reloadData()
+                            }
+                            
                             URLSession.shared.dataTask(with: URL(string: tempUrl)!) { (data, response, error) in
                                 if error != nil {
                                     DispatchQueue.main.async {
@@ -343,6 +349,13 @@ class CustomTableViewCell: UITableViewCell {
                                 if contentType.contains("image") {
                                     DispatchQueue.main.async {
                                         textView.isHidden = true
+                                        
+                                        // Clear it first
+                                        DispatchQueue.main.async {
+                                            MessageList.setItemAt(index: index, item: MyMessage(systemMessageType1: ""))
+                                            tableView.reloadData()
+                                        }
+                                        
                                         URLSession.shared.dataTask(with: url) { (data, response, error) in
                                             if error != nil {
                                                 DispatchQueue.main.async {
@@ -357,12 +370,14 @@ class CustomTableViewCell: UITableViewCell {
                                                 }
                                                 return
                                             }
-
+                                            // Show again
                                             DispatchQueue.main.async {
                                                 let imaaa = UIImage(data: data!)
                                                 MessageList.setItemAt(index: index, item: MyMessage(image: imaaa!, imageUrl: txt, agent: !MINTEL_LiveChat.chatBotMode, bot: true))
                                                 tableView.reloadData()
                                             }
+
+                                            
                                         }.resume()
                                     }
                                 } else {
