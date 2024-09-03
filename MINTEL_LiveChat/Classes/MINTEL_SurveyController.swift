@@ -8,7 +8,7 @@
 import Foundation
 import WebKit
 
-class MINTEL_SurveyController : UIViewController, WKUIDelegate {
+class MINTEL_SurveyController : UIViewController, WKUIDelegate, WKNavigationDelegate {
     
     var webView:WKWebView!
     var url:URL? = nil
@@ -20,6 +20,7 @@ class MINTEL_SurveyController : UIViewController, WKUIDelegate {
         let config = WKWebViewConfiguration()
         webView = WKWebView(frame: .zero, configuration: config)
         webView.uiDelegate = self
+        webView.navigationDelegate = self
         view = webView
     }
     
@@ -54,6 +55,33 @@ class MINTEL_SurveyController : UIViewController, WKUIDelegate {
 //        super.viewDidDisappear(animated)
 //    }
     
+    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+        if navigationAction.navigationType == .linkActivated  {
+            /*
+            if let url = navigationAction.request.url,
+               let host = url.host, host.contains("survey?") !=
+                UIApplication.shared.canOpenURL(url) {
+                    UIApplication.shared.open(url)
+                    decisionHandler(.cancel)
+            } else {
+                // Open in web view
+                decisionHandler(.allow)
+            }
+             */
+            if let url = navigationAction.request.url,
+                UIApplication.shared.canOpenURL(url) {
+                    UIApplication.shared.open(url)
+                    decisionHandler(.cancel)
+            } else {
+                // Open in web view
+                decisionHandler(.allow)
+            }
+        } else {
+            // other navigation type, such as reload, back or forward buttons
+            decisionHandler(.allow)
+        }
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
