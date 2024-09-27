@@ -52,6 +52,8 @@ let padding: CGFloat = 8
 
 class CustomTableViewCell: UITableViewCell {
     
+    var bFirstRenderCarousel = true
+
     var tapGuesture:MyTapGuesture?
     var menuLabel:[UILabel] = []
     
@@ -780,11 +782,15 @@ class CustomTableViewCell: UITableViewCell {
 */
         
         
-        let screen = UIScreen.main.bounds
         let xPosition = 10.0
-        vc.view.frame = CGRect(x: xPosition, y: 10, width: self.contentView.frame.width, height: 300)
+        if (bFirstRenderCarousel == true) {
+            vc.view.frame = CGRect(x: xPosition, y: 10, width: self.contentView.frame.width, height: 100)
+            bFirstRenderCarousel = false
+        }
+        else {
+            vc.view.frame = CGRect(x: xPosition, y: 10, width: self.contentView.frame.width, height: 300)
+        }
         vc.didMove(toParent: self.topViewController())
-        
         
         // Adding it to the container view
         vc.willMove(toParent: self.topViewController())
