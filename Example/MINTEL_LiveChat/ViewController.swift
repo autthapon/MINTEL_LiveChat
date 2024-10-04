@@ -41,7 +41,6 @@ class ViewController: UIViewController {
         //let webhookUrl:String           = "https://asia-east2-acm-clt-chatbots.cloudfunctions.net" // prod
         let webhookUrl:String           = "https://asia-east2-acm-clt-chatbots-stg.cloudfunctions.net" // dev
         let uploadUrl:String            = "https://asia-east2-acm-clt-chatbots.cloudfunctions.net"
-        //let xApiKey:String              = "edf1ca88a09546f8a0667c81c93d1f31" // prod
         let xApiKey:String              = "" // dev
         let surveryFormUrl:String       = "https://truemoney.secure.force.com/staffsurvey?uid=sessionId"
         let chatBotSurveyUrl:String     = "https://truemoney.secure.force.com/botsurvey?uid=sessionId"
