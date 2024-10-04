@@ -565,7 +565,7 @@ public class MINTEL_LiveChat: UIView {
     internal func checkAgentMode() {
         let url = String(format: "%@/botconfig", MINTEL_LiveChat.configuration?.webHookBaseUrl ?? "")
         let header:HTTPHeaders = [
-            "x-api-key": MINTEL_LiveChat.configuration?.xApikey ?? "" // "381b0ac187994f82bdc05c09d1034afa"
+            "x-api-key": MINTEL_LiveChat.configuration?.xApikey ?? ""
         ]
         
         debugPrint("Check Bot Config")
@@ -608,7 +608,7 @@ public class MINTEL_LiveChat: UIView {
     internal func getBotConfig() {
             let url = String(format: "%@/botconfig", MINTEL_LiveChat.configuration?.webHookBaseUrl ?? "")
             let header:HTTPHeaders = [
-                "x-api-key": MINTEL_LiveChat.configuration?.xApikey ?? "" // "381b0ac187994f82bdc05c09d1034afa"
+                "x-api-key": MINTEL_LiveChat.configuration?.xApikey ?? ""
             ]
             
             debugPrint("Check Bot Config 2")
@@ -715,7 +715,7 @@ public class MINTEL_LiveChat: UIView {
 //        debugPrint("Url : " , params)
         let url = String(format: "%@/transferqueue", MINTEL_LiveChat.configuration?.webHookBaseUrl ?? "")
         let headers:HTTPHeaders = [
-            "x-api-key": MINTEL_LiveChat.configuration?.xApikey ?? "" // "edf1ca88a09546f8a0667c81c93d1f31"
+            "x-api-key": MINTEL_LiveChat.configuration?.xApikey ?? ""
         ]
         
         //MessageList.add(item: MyMessage(systemMessageType2: "กรุณารอสักครู่ 3"), remove: true)
@@ -1371,7 +1371,7 @@ extension MINTEL_LiveChat  {
         debugPrint("Get Announcement " + url)
         
         let headers:HTTPHeaders = [
-            "x-api-key": MINTEL_LiveChat.configuration?.xApikey ?? "" // "381b0ac187994f82bdc05c09d1034afa"
+            "x-api-key": MINTEL_LiveChat.configuration?.xApikey ?? ""
         ]
         
         do {
@@ -1525,7 +1525,7 @@ extension MINTEL_LiveChat  {
         ]
         let url = String(format: "%@/onNewSessionMobile", MINTEL_LiveChat.configuration?.webHookBaseUrl ?? "")
         let header:HTTPHeaders = [
-            "x-api-key": MINTEL_LiveChat.configuration?.xApikey ?? "" // "381b0ac187994f82bdc05c09d1034afa"
+            "x-api-key": MINTEL_LiveChat.configuration?.xApikey ?? ""
         ]
         
         
@@ -1734,7 +1734,7 @@ extension MINTEL_LiveChat  {
         let params : Parameters = ["session_id": MINTEL_LiveChat.userId,"text": text]
         let url = String(format: "%@/webhook", MINTEL_LiveChat.configuration?.webHookBaseUrl ?? "")
         let headers:HTTPHeaders = [
-            "x-api-key": MINTEL_LiveChat.configuration?.xApikey ?? "" // "edf1ca88a09546f8a0667c81c93d1f31"
+            "x-api-key": MINTEL_LiveChat.configuration?.xApikey ?? ""
         ]
         
         do {

@@ -38,11 +38,11 @@ class ViewController: UIViewController {
         
         
 //        let webhookUrl:String           = "https://asia-east2-tmn-chatbot-integration.cloudfunctions.net"
-        let webhookUrl:String           = "https://asia-east2-acm-clt-chatbots.cloudfunctions.net" // prod
-        //let webhookUrl:String           = "https://asia-east2-acm-clt-chatbots-stg.cloudfunctions.net" // dev
+        //let webhookUrl:String           = "https://asia-east2-acm-clt-chatbots.cloudfunctions.net" // prod
+        let webhookUrl:String           = "https://asia-east2-acm-clt-chatbots-stg.cloudfunctions.net" // dev
         let uploadUrl:String            = "https://asia-east2-acm-clt-chatbots.cloudfunctions.net"
-        let xApiKey:String              = "edf1ca88a09546f8a0667c81c93d1f31" // prod
-        //let xApiKey:String              = "381b0ac187994f82bdc05c09d1034afa" // dev
+        //let xApiKey:String              = "edf1ca88a09546f8a0667c81c93d1f31" // prod
+        let xApiKey:String              = "" // dev
         let surveryFormUrl:String       = "https://truemoney.secure.force.com/staffsurvey?uid=sessionId"
         let chatBotSurveyUrl:String     = "https://truemoney.secure.force.com/botsurvey?uid=sessionId"
         //let announcementUrl:String       = "https://asia-east2-acm-clt-chatbots.cloudfunctions.net/announcementmulti?uid=sessionId"
