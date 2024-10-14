@@ -18,6 +18,25 @@ var firstTimerDuration: Int = 2
 var secondTimerDuration: Int = 1
 var currentButtonId: String = "default"
 
+// Lang from botconfig
+var endChatTitleEn:String = ""
+var endChatTitleTh:String = ""
+
+var endChatMessageEn:String = ""
+var endChatMessageTh:String = ""
+
+var rateChatConfirmButtonEn:String = ""
+var rateChatConfirmButtonTh:String = ""
+
+var rateChatBackButtonEn:String = ""
+var rateChatBackButtonTh:String = ""
+
+var endChatBackButtonEn:String = ""
+var endChatBackButtonTh:String = ""
+
+var endChatConfirmButtonEn:String = ""
+var endChatConfirmButtonTh:String = ""
+
 protocol ChatDelegate{
     func terminate()
 }
@@ -227,18 +246,29 @@ public class MINTEL_LiveChat: UIView {
                 //return "The agent has left the chat"
                 return "The agent has left the chat"
             }
-            
+            if (str == "end_chat_button") {
+                return "End Chat"
+            }
             if (str == "end_conversation_title") {
-                return "We are happy to assist you"
+                return endChatTitleEn
             }
             if (str == "end_conversation_message") {
-                return "If you need more help\nYou can always contact us"
+                return endChatMessageEn
             }
             if (str == "end_conversation_confirm") {
-                return "Confirm End Conversation"
+                return endChatConfirmButtonEn
             }
             if (str == "end_conversation_back") {
-                return "Continue chat session"
+                return endChatBackButtonEn
+            }
+            if (str == "rate_conversation_confirm") {
+                return rateChatConfirmButtonEn
+            }
+            if (str == "rate_conversation_back") {
+                return rateChatBackButtonEn
+            }
+            if (str == "wait_agent_queue") {
+                return ""
             }
             if (str == "your_queue_number") {
                 return "Your queue number is "
@@ -302,20 +332,32 @@ public class MINTEL_LiveChat: UIView {
                 //return "เจ้าหน้าที่ออกจากแชทแล้ว" // จบการสนทนา
                 return "เจ้าหน้าที่ออกจากแชทแล้ว"
             }
+            if (str == "end_chat_button") {
+                return "จบแชท"
+            }
             if (str == "end_conversation_chatbot") {
                 return "เรายินดีที่ได้ช่วยเหลือคุณ"
             }
             if (str == "end_conversation_title") {
-                return "เรายินดีที่ได้ช่วยเหลือคุณ"
+                return endChatTitleTh
             }
             if (str == "end_conversation_message") {
-                return "ถ้าคุณต้องการความช่วยเหลือเพิ่ม\nสามารถติดต่อเราได้ตลอดนะ"
+                return endChatMessageTh
             }
             if (str == "end_conversation_confirm") {
-                return "จบการสนทนา"
+                return endChatConfirmButtonTh
             }
             if (str == "end_conversation_back") {
-                return "กลับไปแชทต่อ"
+                return endChatBackButtonTh
+            }
+            if (str == "rate_conversation_confirm") {
+                return rateChatConfirmButtonTh
+            }
+            if (str == "rate_conversation_back") {
+                return rateChatBackButtonTh
+            }
+            if (str == "wait_agent_queue") {
+                return "กรุณาตรวจสอบคิวของคุณเป็นระยะๆ\nเนื่องจากคิวอาจจะลดเร็วกว่าที่คุณคาดไว้"
             }
             if (str == "your_queue_number") {
                 return "คิวของคุณคือลำดับที่ "
@@ -594,6 +636,25 @@ public class MINTEL_LiveChat: UIView {
                     } else {
                         firstTimerDuration = (dict["activeChatReminder"] as? Int ?? 120) / 60
                         secondTimerDuration = (dict["chatTimeout"] as? Int ?? 60) / 60
+                        
+                        endChatTitleEn = dict["endChatTitleEn"] as? String ?? ""
+                        endChatTitleTh = dict["endChatTitleTh"] as? String ?? ""
+                        
+                        endChatMessageEn = dict["endChatMessageEn"] as? String ?? ""
+                        endChatMessageTh = dict["endChatMessageTh"] as? String ?? ""
+                        
+                        rateChatConfirmButtonEn = dict["rateChatConfirmButtonEn"] as? String ?? ""
+                        rateChatConfirmButtonTh = dict["rateChatConfirmButtonTh"] as? String ?? ""
+                        
+                        rateChatBackButtonEn = dict["rateChatBackButtonEn"] as? String ?? ""
+                        rateChatBackButtonTh = dict["rateChatBackButtonTh"] as? String ?? ""
+                        
+                        endChatBackButtonEn = dict["endChatBackButtonEn"] as? String ?? ""
+                        endChatBackButtonTh = dict["endChatBackButtonTh"] as? String ?? ""
+                        
+                        endChatConfirmButtonEn = dict["endChatConfirmButtonEn"] as? String ?? ""
+                        endChatConfirmButtonTh = dict["endChatConfirmButtonTh"] as? String ?? ""
+                                                
                         MINTEL_LiveChat.instance.loadFirstMessage()
                         self.tapAction(sender: UIButton(), survey: MINTEL_LiveChat.surveyMode)
 //                        MINTEL_LiveChat.chatUserTypedIn = true
@@ -1281,6 +1342,11 @@ extension MINTEL_LiveChat : SCSChatSessionDelegate {
             
             if (position.intValue <= self.queueLabel.tag && position.intValue > 0) {
                 MessageList.add(item: MyMessage(systemMessageType1: String(format: MINTEL_LiveChat.getLanguageString(str: "your_queue_number") + "%d", position.intValue)), remove: true)
+                
+                let waitQueue = MINTEL_LiveChat.getLanguageString(str: "wait_agent_queue")
+                if (waitQueue != "" && !MessageList.isSystemMessageType1Exist(text: waitQueue)) {
+                    MessageList.add(item: MyMessage(systemMessageType1: waitQueue))
+                }
             }
             
             NotificationCenter.default.post(name: Notification.Name(SalesForceNotifId.didUpdatePosition),
@@ -1323,6 +1389,12 @@ extension MINTEL_LiveChat : SCSChatSessionDelegate {
                 */
                 if (endEvent.reason == .agent) {
                     ending = MINTEL_LiveChat.getLanguageString(str: "agent_end_conversation_chat");
+                    
+                    // Open survey
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                        self.openSurvey(bot: MINTEL_LiveChat.chatBotMode)
+                    }
+                    
                 }
                 
                 let _ = MessageList.add(item: MyMessage(systemMessageType1: ending))
@@ -1435,7 +1507,7 @@ extension MINTEL_LiveChat  {
                                                                             object: nil,
                                                                             userInfo:nil)
                                 
-                                            MINTEL_LiveChat.sendPost(text: MINTEL_LiveChat.configuration?.startupIntent ?? "__00_home__greeting", menu: false)
+                                            MINTEL_LiveChat.sendPost(text: MINTEL_LiveChat.configuration?.startupIntent ?? "__00_home__greeting", menu: false, firstMessage: true)
  
                                         }
                                         
@@ -1697,7 +1769,7 @@ extension MINTEL_LiveChat  {
                                         userInfo:nil)
     }
     
-    internal static func sendPost(text: String, menu: Bool) {
+    internal static func sendPost(text: String, menu: Bool, firstMessage: Bool = false) {
         
         self.removeTyping()
         
@@ -1727,7 +1799,7 @@ extension MINTEL_LiveChat  {
  */
         }
         
-        if (!menu) {
+        if (!firstMessage) {
             MINTEL_LiveChat.chatStarted = true
         }
         

@@ -22,18 +22,37 @@ class MessageList {
         return MessageList.items.count - 1
     }
     
+    static internal func isSystemMessageType1Exist(text: String) -> Bool {
+        var ret:Bool = false
+        MessageList.items.forEach { (it) in
+            switch(it.kind) {
+            case .systemMessageType1(let msg):
+                if (msg.contains(text)) {
+                    ret = true
+                }
+            default:
+                ret = false
+            }
+        }
+        
+        return ret
+    }
+    
     static internal func remove(item: MyMessage, remove: Bool) {
         MessageList.items.removeAll { (it) -> Bool in
             
             switch(it.kind) {
             case .systemMessageType1(let msg):
                 if item.kind == it.kind {
-                    if msg.contains("คิวของคุณคือลำดับที่") {
+                    if msg.contains(MINTEL_LiveChat.getLanguageString(str: "your_queue_number")) {
                         return true
                     }
-                    if msg.contains("Your queue number is") {
+                    /*
+                    let waitQueue = MINTEL_LiveChat.getLanguageString(str: "wait_agent_queue")
+                    if (waitQueue != "" && msg.contains(waitQueue)) {
                         return true
                     }
+                     */
                 }
             case .systemMessageType2(let msg):
                 if item.kind == it.kind {
