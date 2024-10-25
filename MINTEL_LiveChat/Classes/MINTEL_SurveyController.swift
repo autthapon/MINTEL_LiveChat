@@ -89,7 +89,9 @@ class MINTEL_SurveyController : UIViewController, WKUIDelegate, WKNavigationDele
         self.btnCollapse.tintColor = UIColor.black
         self.navigationItem.leftBarButtonItem = self.btnCollapse
         
-        self.btnClose = UIBarButtonItem(image: UIImage(named: "close", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil), style: .plain, target: self, action: #selector(closeChat))
+        self.btnClose = UIBarButtonItem(title: MINTEL_LiveChat.getLanguageString(str: "end_chat_button") /*image: UIImage(named: "close", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil)*/, style: .plain, target: self, action: #selector(closeChat))
+        let attributes = [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 16)]
+        self.btnClose.setTitleTextAttributes(attributes, for: .normal)
         self.btnClose.tintColor = UIColor.black
         
         self.navigationItem.rightBarButtonItem = self.btnClose

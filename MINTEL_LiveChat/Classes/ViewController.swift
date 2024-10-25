@@ -154,13 +154,19 @@ class ViewController: UIViewController {
             self.navigationItem.rightBarButtonItem = nil
             self.navigationItem.titleView = UIImageView(image: UIImage(named: "true_bar_title", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil))
             
-            if (MINTEL_LiveChat.chatStarted) {
-                self.btnConfirmBack.setTitle(MINTEL_LiveChat.getLanguageString(str: "rate_conversation_back"), for: .normal)
-                self.btnConfirmExit.setTitle(MINTEL_LiveChat.getLanguageString(str: "rate_conversation_confirm"), for: .normal)
-            } else {
-                self.btnConfirmBack.setTitle(MINTEL_LiveChat.getLanguageString(str: "end_conversation_back"), for: .normal)
-                self.btnConfirmExit.setTitle(MINTEL_LiveChat.getLanguageString(str: "end_conversation_confirm"), for: .normal)
+            UIView.performWithoutAnimation {
+                if (MINTEL_LiveChat.chatStarted) {
+                    self.btnConfirmBack.setTitle(MINTEL_LiveChat.getLanguageString(str: "rate_conversation_back"), for: .normal)
+                    self.btnConfirmExit.setTitle(MINTEL_LiveChat.getLanguageString(str: "rate_conversation_confirm"), for: .normal)
+                } else {
+                    self.btnConfirmBack.setTitle(MINTEL_LiveChat.getLanguageString(str: "end_conversation_back"), for: .normal)
+                    self.btnConfirmExit.setTitle(MINTEL_LiveChat.getLanguageString(str: "end_conversation_confirm"), for: .normal)
+                }
+                
+                self.btnConfirmBack.layoutIfNeeded()
+                self.btnConfirmExit.layoutIfNeeded()
             }
+            
             
         } else {
             self.dismiss(animated: true, completion: nil)
@@ -172,15 +178,18 @@ class ViewController: UIViewController {
         self.viewConfirm.removeFromSuperview()
         
         self.navigationItem.titleView = UIImageView(image: UIImage(named: "true_bar_title", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil))
-        
-        
-        
+
         self.btnClose = UIBarButtonItem(title: MINTEL_LiveChat.getLanguageString(str: "end_chat_button"), /*image: UIImage(named: "close", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil),*/ style: .plain, target: self, action: #selector(self.closeChat))
+        let attributes = [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 16)]
+        self.btnClose.setTitleTextAttributes(attributes, for: .normal)
+        
         self.navigationItem.rightBarButtonItem = self.btnClose
     }
     
     @IBAction func confirmExitChat() {
         self.btnClose = UIBarButtonItem(title: MINTEL_LiveChat.getLanguageString(str: "end_chat_button"), /*image: UIImage(named: "close", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil),*/ style: .plain, target: self, action: #selector(self.closeChat))
+        let attributes = [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 16)]
+        self.btnClose.setTitleTextAttributes(attributes, for: .normal)
         self.navigationItem.rightBarButtonItem = self.btnClose
         
         MINTEL_LiveChat.instance.stopChat()
@@ -203,6 +212,8 @@ class ViewController: UIViewController {
         self.labelMessage.numberOfLines = 0
         
         self.btnClose = UIBarButtonItem(title: MINTEL_LiveChat.getLanguageString(str: "end_chat_button"), /*image: UIImage(named: "close", in: Bundle(for: MINTEL_LiveChat.self), compatibleWith: nil),*/ style: .plain, target: self, action: #selector(self.closeChat))
+        let attributes = [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 16)]
+        self.btnClose.setTitleTextAttributes(attributes, for: .normal)
         self.navigationItem.rightBarButtonItem = self.btnClose
         
         // Load image
