@@ -9,7 +9,7 @@ open class TypingIndicator: UIView {
     public var bounceOffset: CGFloat = 2.5
     
     /// A convenience accessor for the `backgroundColor` of each dot
-    open var dotColor: UIColor = UIColor.typingIndicatorDot {
+    open var dotColor: UIColor = UIColor.typingIndicatorDotColor {
         didSet {
             dots.forEach { $0.backgroundColor = dotColor }
         }

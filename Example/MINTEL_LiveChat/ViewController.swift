@@ -41,7 +41,7 @@ class ViewController: UIViewController {
         //let webhookUrl:String           = "https://asia-east2-acm-clt-chatbots.cloudfunctions.net" // prod
         let webhookUrl:String           = "https://asia-east2-acm-clt-chatbots-stg.cloudfunctions.net" // dev
         let uploadUrl:String            = "https://asia-east2-acm-clt-chatbots.cloudfunctions.net"
-        let xApiKey:String              = "" // dev
+        let xApiKey:String              = "381b0ac187994f82bdc05c09d1034afa" // dev
         let surveryFormUrl:String       = "https://truemoney.secure.force.com/staffsurvey?uid=sessionId"
         let chatBotSurveyUrl:String     = "https://truemoney.secure.force.com/botsurvey?uid=sessionId"
         //let announcementUrl:String       = "https://asia-east2-acm-clt-chatbots.cloudfunctions.net/announcementmulti?uid=sessionId"
@@ -77,10 +77,10 @@ class ViewController: UIViewController {
             let deployID:String             = "5722w0000009B6e";
             let buttonID:String             = "5732t000000Gmas"; // main
             //let buttonID:String             = "5732w0000009E15";
-    //        let webhookUrl:String           = "https://asia-east2-tmn-chatbot-integration.cloudfunctions.net"
-            let webhookUrl:String           = "https://asia-east2-acm-clt-chatbots.cloudfunctions.net"
+            //let webhookUrl:String           = "https://asia-east2-acm-clt-chatbots.cloudfunctions.net"
+            let webhookUrl:String           = "https://asia-east2-acm-clt-chatbots-stg.cloudfunctions.net" // dev
             let uploadUrl:String            = "https://asia-east2-acm-clt-chatbots.cloudfunctions.net"
-            let xApiKey:String              = ""
+            let xApiKey:String              = "381b0ac187994f82bdc05c09d1034afa"
             let surveryFormUrl:String       = "https://truemoney.secure.force.com/staffsurvey?uid=sessionId"
             let chatBotSurveyUrl:String     = "https://truemoney.secure.force.com/botsurvey?uid=sessionId"
             //let announcementUrl:String       = "https://us-central1-test-tmn-bot.cloudfunctions.net/announcementmulti?uid=sessionId"
@@ -92,7 +92,7 @@ class ViewController: UIViewController {
             let phone = "0818888889"
             let email = "a@a.com"
             let tmnId = "11241313"
-            let disableBotMode = true
+            let disableBotMode = false
             
             let config = LiveChatConfiguration(withUserName: "Note", withSalesforceLiveAgentPod: liveagentPod, withSalesForceOrdId: ordID, withSalesforceDeployId: deployID, withSalesforceButtonId: buttonID, withWebHookBaseUrl: webhookUrl, withXApiKey: xApiKey, withUploadBaseUrl: uploadUrl, withSurveyChatbotUrl: chatBotSurveyUrl, withSurveyFormUrl: surveryFormUrl, withAnnouncementUrl: announcementUrl, withFirstName: firstname, withLastName: lastname, withEmail: email, withPhone: phone, withTmnId: tmnId, withDisableBotMode: disableBotMode)
             

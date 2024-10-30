@@ -51,7 +51,7 @@ internal extension UIColor {
         self.init(red:red, green:green, blue:blue, alpha:alpha)
     }
     
-    static var typingIndicatorDot: UIColor { colorFromAssetBundle(named: "typingIndicatorDot") }
+    static var typingIndicatorDotColor: UIColor { colorFromAssetBundle(named: "typingIndicatorDot") }
 }
 
 //extension UILabel {
