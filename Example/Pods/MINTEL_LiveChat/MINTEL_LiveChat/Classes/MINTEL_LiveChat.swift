@@ -1392,7 +1392,12 @@ extension MINTEL_LiveChat : SCSChatSessionDelegate {
                     
                     // Open survey
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                        self.openSurvey(bot: MINTEL_LiveChat.chatBotMode)
+                        //self.openSurvey(bot: MINTEL_LiveChat.chatBotMode)
+                        
+                        let currentViewController = MINTEL_LiveChat.instance.topViewController() as? ViewController
+                        if let cu = currentViewController {
+                            cu.closeChat()
+                        }
                     }
                     
                 }
