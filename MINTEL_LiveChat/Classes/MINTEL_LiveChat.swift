@@ -335,9 +335,6 @@ public class MINTEL_LiveChat: UIView {
             if (str == "end_chat_button") {
                 return "จบแชท"
             }
-            if (str == "end_conversation_chatbot") {
-                return "เรายินดีที่ได้ช่วยเหลือคุณ"
-            }
             if (str == "end_conversation_title") {
                 return endChatTitleTh
             }
@@ -1382,11 +1379,7 @@ extension MINTEL_LiveChat : SCSChatSessionDelegate {
                 //let _ = MessageList.add(item: MyMessage(systemMessageType1: MINTEL_LiveChat.getLanguageString(str: "no_agent_available")))
             } else {
                 var ending = MINTEL_LiveChat.getLanguageString(str: "end_conversation_chat");
-                /*
-                if (MINTEL_LiveChat.chatBotMode == true) {
-                    ending = MINTEL_LiveChat.getLanguageString(str: "end_conversation_chatbot");
-                }
-                */
+                
                 if (endEvent.reason == .agent) {
                     ending = MINTEL_LiveChat.getLanguageString(str: "agent_end_conversation_chat");
                     
@@ -1632,7 +1625,7 @@ extension MINTEL_LiveChat  {
                 let _ = MessageList.add(item: MyMessage(text: "หากคุณลูกค้าไม่อยู่ในการสนทนา ทรูมันนี่ขอจบการสนทนาเพื่อดูแลลูกค้าท่านอื่นต่อนะคะ\n\nกรณีต้องการสอบถามข้อมูลเพิ่มเติม กรุณาคลิก จบแชท ปิดหน้าต่าง และเริ่มการสนทนาใหม่ได้ตลอด 24 ชั่วโมง\n\nขอบคุณที่ใช้บริการทรูมันนี่ สวัสดีค่ะ", agent: false, bot: true))
                 var ending = MINTEL_LiveChat.getLanguageString(str: "end_conversation_chat");
                 if (MINTEL_LiveChat.chatBotMode == true) {
-                    ending = MINTEL_LiveChat.getLanguageString(str: "end_conversation_chatbot");
+                    ending = MINTEL_LiveChat.getLanguageString(str: "end_conversation_title");
                 }
                 let _ = MessageList.add(item: MyMessage(systemMessageType1: ending))
                 MINTEL_LiveChat.chatCanTyped = false
@@ -1678,7 +1671,7 @@ extension MINTEL_LiveChat  {
                 let _ = MessageList.add(item: MyMessage(text: "หากคุณลูกค้าไม่อยู่ในการสนทนา ทรูมันนี่ขอจบการสนทนาเพื่อดูแลลูกค้าท่านอื่นต่อนะคะ\n\nกรณีต้องการสอบถามข้อมูลเพิ่มเติม กรุณาคลิก จบแชท ปิดหน้าต่าง และเริ่มการสนทนาใหม่ได้ตลอด 24 ชั่วโมง\n\nขอบคุณที่ใช้บริการทรูมันนี่ สวัสดีค่ะ", agent: false, bot: true))
                 var ending = MINTEL_LiveChat.getLanguageString(str: "end_conversation_chat");
                 if (MINTEL_LiveChat.chatBotMode == true) {
-                    ending = MINTEL_LiveChat.getLanguageString(str: "end_conversation_chatbot");
+                    ending = MINTEL_LiveChat.getLanguageString(str: "end_conversation_title");
                 }
                 let _ = MessageList.add(item: MyMessage(systemMessageType1: ending))
                 MINTEL_LiveChat.chatCanTyped = false
