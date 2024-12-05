@@ -1136,6 +1136,7 @@ public class MINTEL_LiveChat: UIView {
         if (MINTEL_LiveChat.surveyMode) {
             self.exitApp()
         } else {
+            /*
             if (!MINTEL_LiveChat.chatStarted) {
                 self.exitApp()
             } else {
@@ -1145,6 +1146,14 @@ public class MINTEL_LiveChat: UIView {
                 } else {
                     self.exitApp()
                 }
+            }
+             */
+            
+            if (MINTEL_LiveChat.chatInProgress) {
+                MINTEL_LiveChat.openConfirmExitPage = true
+                self.tapAction(sender: UIButton(), survey: false)
+            } else {
+                self.exitApp()
             }
         }
     }
